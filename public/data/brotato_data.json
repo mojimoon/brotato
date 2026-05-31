@@ -15275,8 +15275,8 @@
           "extra": {
             "chance": 25
           },
-          "text_en": "<span class=\"g\">+25</span> Luck",
-          "text_zh": "<span class=\"g\">+25</span>幸运"
+          "text_en": "<span class=\"g\">25%</span> chance to deal <span class=\"g\">1</span> (<span class=\"g\">25%[Luck]</span>) damage to a random enemy when you pick up a material",
+          "text_zh": "拾取材料时有<span class=\"g\">25%</span>概率对随机1名敌人造成<span class=\"g\">1</span>（<span class=\"g\">25%[幸运]</span>）伤害"
         }
       ],
       "unlocked_by_default": true,
@@ -17112,8 +17112,8 @@
           "custom_key": "temp_consumable_stats_while_max",
           "storage_method": 1,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">+1</span> HP Regeneration",
-          "text_zh": "<span class=\"g\">+1</span>生命再生"
+          "text_en": "<span class=\"g\">+1</span> HP Regeneration until the end of the wave when picking up a consumable while at maximum health",
+          "text_zh": "当在最大生命值下捡起一个消耗品时，可获得<span class=\"g\">+1</span>生命再生，直至敌袭结束"
         }
       ],
       "unlocked_by_default": true,
@@ -17927,8 +17927,8 @@
           "custom_key": "stats_on_level_up",
           "storage_method": 1,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">+1</span> HP Regeneration",
-          "text_zh": "<span class=\"g\">+1</span>生命再生"
+          "text_en": "<span class=\"g\">+1</span> HP Regeneration when you level up",
+          "text_zh": "升级时有<span class=\"g\">+1</span>生命再生"
         },
         {
           "key": "stat_attack_speed",
@@ -18284,8 +18284,8 @@
           "extra": {
             "value2": 50
           },
-          "text_en": "<span class=\"g\">+1</span> % Damage",
-          "text_zh": "<span class=\"g\">+1</span>%伤害"
+          "text_en": "<span class=\"g\">50%</span> chance to get <span class=\"g\">+1</span> % Damage when rerolling in the shop",
+          "text_zh": "刷新时有<span class=\"g\">50%</span>的概率在商店获得<span class=\"g\">+1</span>%伤害"
         },
         {
           "key": "stat_max_hp",
@@ -18297,8 +18297,8 @@
           "extra": {
             "value2": 10
           },
-          "text_en": "<span class=\"r\">-1</span> Max HP",
-          "text_zh": "<span class=\"r\">-1</span>最大生命值"
+          "text_en": "<span class=\"r\">10%</span> chance to get <span class=\"r\">-1</span> Max HP when rerolling in the shop",
+          "text_zh": "刷新时有<span class=\"r\">10%</span>的概率在商店获得<span class=\"r\">-1</span>最大生命值"
         }
       ],
       "unlocked_by_default": true,
@@ -18638,8 +18638,8 @@
           "extra": {
             "value2": 2
           },
-          "text_en": "<span class=\"g\">+20</span> % Damage",
-          "text_zh": "<span class=\"g\">+20</span>%伤害"
+          "text_en": "<span class=\"g\">+20</span> % Damage for <span class=\"g\">2</span> seconds after picking up a consumable",
+          "text_zh": "捡起消耗品后，<span class=\"g\">+20</span>%伤害持续<span class=\"g\">2</span>秒"
         },
         {
           "key": "stat_hp_regeneration",
@@ -18677,8 +18677,8 @@
           "custom_key": "stats_end_of_wave",
           "storage_method": 1,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">+5</span> XP Gain",
-          "text_zh": "<span class=\"g\">+5</span>%经验获得"
+          "text_en": "<span class=\"g\">+5</span> XP Gain at the end of each wave",
+          "text_zh": "每波结束时获得<span class=\"g\">+5</span>获得%经验"
         },
         {
           "key": "xp_gain",
@@ -18687,8 +18687,8 @@
           "custom_key": "stats_next_wave",
           "storage_method": 1,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">+50</span> XP Gain",
-          "text_zh": "<span class=\"g\">+50</span>%经验获得"
+          "text_en": "Gain <span class=\"g\">+50</span> material and XP for every living enemy at the end of a wave",
+          "text_zh": "在敌人攻击波结束时，每有1个活着的敌人，你获得<span class=\"g\">+50</span>个材料和经验值。"
         },
         {
           "key": "enemy_health",
@@ -18909,8 +18909,8 @@
           "extra": {
             "chance": 25
           },
-          "text_en": "<span class=\"g\">+25</span> Luck",
-          "text_zh": "<span class=\"g\">+25</span>幸运"
+          "text_en": "<span class=\"g\">25%</span> chance to deal <span class=\"g\">1</span> (<span class=\"g\">25%[Luck]</span>) damage to a random enemy when an enemy dies",
+          "text_zh": "敌人死亡时有<span class=\"g\">25%</span>概率对随机1名敌人造成<span class=\"g\">1</span>（<span class=\"g\">25%[幸运]</span>）伤害"
         }
       ],
       "unlocked_by_default": true,
@@ -19006,8 +19006,8 @@
           "custom_key": "stats_on_level_up",
           "storage_method": 1,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">+1</span> % Life Steal",
-          "text_zh": "<span class=\"g\">+1</span>%生命窃取"
+          "text_en": "<span class=\"g\">+1</span> % Life Steal when you level up",
+          "text_zh": "升级时有<span class=\"g\">+1</span>%生命窃取"
         },
         {
           "key": "stat_max_hp",
@@ -19016,8 +19016,8 @@
           "custom_key": "stats_on_level_up",
           "storage_method": 1,
           "effect_sign": 3,
-          "text_en": "<span class=\"r\">-1</span> Max HP",
-          "text_zh": "<span class=\"r\">-1</span>最大生命值"
+          "text_en": "<span class=\"r\">-1</span> Max HP when you level up",
+          "text_zh": "升级时有<span class=\"r\">-1</span>最大生命值"
         }
       ],
       "unlocked_by_default": false,
@@ -19449,8 +19449,8 @@
             "max_stacks": 1,
             "duration_secs": 3
           },
-          "text_en": "<span class=\"g\">+10</span> Elemental Damage",
-          "text_zh": "<span class=\"g\">+10</span>元素伤害"
+          "text_en": "Enemies take <span class=\"g\">10%</span> more damage for <span class=\"g\">3</span> seconds when first hit by Elemental Damage",
+          "text_zh": "敌人在首次被元素伤害命中时，会额外承受<span class=\"g\">10%</span>伤害，持续<span class=\"g\">3</span>秒"
         }
       ],
       "unlocked_by_default": true,
@@ -20106,8 +20106,8 @@
           "perm_stats_only": false,
           "stat_scaled": "materials",
           "nb_stat_scaled": 80,
-          "text_en": "<span class=\"g\">+1</span> Max HP",
-          "text_zh": "<span class=\"g\">+1</span>最大生命值"
+          "text_en": "<span class=\"g\">+1</span> Max HP for every <span class=\"g\">80</span> Materials you have",
+          "text_zh": "每<span class=\"g\">80</span>材料会<span class=\"g\">+1</span>最大生命值"
         }
       ],
       "unlocked_by_default": false,
@@ -20141,8 +20141,8 @@
           "perm_stats_only": true,
           "stat_scaled": "stat_luck",
           "nb_stat_scaled": 10,
-          "text_en": "<span class=\"g\">+1</span> % Damage",
-          "text_zh": "<span class=\"g\">+1</span>%伤害"
+          "text_en": "<span class=\"g\">+1</span> % Damage for every permanent <span class=\"g\">10</span> Luck you have",
+          "text_zh": "每永久持有<span class=\"g\">10</span>幸运会<span class=\"g\">+1</span>%伤害"
         },
         {
           "key": "item_pearl",
@@ -20430,8 +20430,8 @@
           "extra": {
             "chance": 100
           },
-          "text_en": "<span class=\"g\">+300</span> Melee Damage",
-          "text_zh": "<span class=\"g\">+300</span>近战伤害"
+          "text_en": "<span class=\"g\">100%</span> chance to deal <span class=\"g\">1</span> (<span class=\"g\">300%[Melee Damage]</span>) damage to an enemy when dodging their attack",
+          "text_zh": "在躲避敌人攻击时有<span class=\"g\">100%</span>概率对随机1名敌人造成<span class=\"g\">1</span>（<span class=\"g\">300%[近战伤害]</span>）伤害"
         }
       ],
       "unlocked_by_default": true,
@@ -20534,8 +20534,8 @@
           "extra": {
             "value2": 3
           },
-          "text_en": "<span class=\"g\">+10</span> % Speed",
-          "text_zh": "<span class=\"g\">+10</span>%速度"
+          "text_en": "<span class=\"g\">+10</span> % Speed for <span class=\"g\">3</span> seconds when you take damage",
+          "text_zh": "受到伤害后，<span class=\"g\">+10</span>%速度持续<span class=\"g\">3</span>秒"
         },
         {
           "key": "stat_elemental_damage",
@@ -20754,8 +20754,8 @@
           "extra": {
             "value2": 0
           },
-          "text_en": "<span class=\"g\">+1</span> Elemental Damage",
-          "text_zh": "<span class=\"g\">+1</span>元素伤害"
+          "text_en": "<span class=\"g\">+1</span> Elemental Damage every time you get an item that increases Elemental Damage",
+          "text_zh": "每次获得一个提升元素伤害的物品有<span class=\"g\">+1</span> 元素伤害"
         }
       ],
       "unlocked_by_default": true,
@@ -21576,8 +21576,8 @@
           "custom_key": "stats_on_level_up",
           "storage_method": 1,
           "effect_sign": 5,
-          "text_en": "<span class=\"p\">+1</span> Curse",
-          "text_zh": "<span class=\"p\">+1</span>诅咒"
+          "text_en": "<span class=\"p\">+1</span> Curse when you level up",
+          "text_zh": "升级时有<span class=\"p\">+1</span>诅咒"
         }
       ],
       "unlocked_by_default": false,
@@ -22194,8 +22194,8 @@
           "perm_stats_only": false,
           "stat_scaled": "knockback",
           "nb_stat_scaled": 1,
-          "text_en": "<span class=\"g\">+1</span> % Damage",
-          "text_zh": "<span class=\"g\">+1</span>%伤害"
+          "text_en": "<span class=\"g\">+1</span> % Damage for every <span class=\"g\">1</span> Knockback you have",
+          "text_zh": "每<span class=\"g\">1</span>击退会<span class=\"g\">+1</span>%伤害"
         }
       ],
       "unlocked_by_default": true,
@@ -22229,8 +22229,8 @@
           "perm_stats_only": false,
           "stat_scaled": "living_enemy",
           "nb_stat_scaled": 1,
-          "text_en": "<span class=\"g\">+1</span> % Attack Speed",
-          "text_zh": "<span class=\"g\">+1</span>%攻击速度"
+          "text_en": "<span class=\"g\">+1</span> % Attack Speed for every current living enemy",
+          "text_zh": "目前每一个存活的敌人<span class=\"g\">+1</span> %攻击速度"
         },
         {
           "key": "stat_armor",
@@ -22366,8 +22366,8 @@
           "perm_stats_only": true,
           "stat_scaled": "common_item",
           "nb_stat_scaled": 1,
-          "text_en": "<span class=\"g\">+1</span> HP Regeneration",
-          "text_zh": "<span class=\"g\">+1</span>生命再生"
+          "text_en": "<span class=\"g\">+1</span> HP Regeneration for every different Tier I item you have",
+          "text_zh": "每持有一异种I级别物品有<span class=\"g\">+1</span>生命再生"
         },
         {
           "key": "stat_hp_regeneration",
@@ -22382,8 +22382,8 @@
           "perm_stats_only": false,
           "stat_scaled": "legendary_item",
           "nb_stat_scaled": 1,
-          "text_en": "<span class=\"r\">-3</span> HP Regeneration",
-          "text_zh": "<span class=\"r\">-3</span>生命再生"
+          "text_en": "<span class=\"r\">-3</span> HP Regeneration for every different Tier IV item you have",
+          "text_zh": "每持有一异种IV级别物品有<span class=\"r\">-3</span>生命再生"
         }
       ],
       "unlocked_by_default": false,
@@ -22467,8 +22467,8 @@
           "perm_stats_only": false,
           "stat_scaled": "burning_enemy",
           "nb_stat_scaled": 1,
-          "text_en": "<span class=\"g\">+1</span> HP Regeneration",
-          "text_zh": "<span class=\"g\">+1</span>生命再生"
+          "text_en": "<span class=\"g\">+1</span> HP Regeneration for every currently burning enemy",
+          "text_zh": "目前每一个燃烧的敌人有<span class=\"g\">+1</span>生命再生"
         }
       ],
       "unlocked_by_default": true,
@@ -22517,8 +22517,8 @@
           "custom_key": "weapon_scaling_stats",
           "storage_method": 1,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">+10</span> Elemental Damage",
-          "text_zh": "<span class=\"g\">+10</span>元素伤害"
+          "text_en": "Weapon and pet damage additionally scales with <span class=\"g\">+10</span> Elemental Damage",
+          "text_zh": "武器和宠物伤害会受到<span class=\"g\">+10</span>元素伤害影响"
         },
         {
           "key": "burning_cooldown_reduction",
@@ -23081,8 +23081,8 @@
           "perm_stats_only": false,
           "stat_scaled": "structure",
           "nb_stat_scaled": 1,
-          "text_en": "<span class=\"r\">-1</span> Engineering",
-          "text_zh": "<span class=\"r\">-1</span>工程学"
+          "text_en": "<span class=\"r\">-1</span> Engineering for every <span class=\"r\">1</span> Structure you have",
+          "text_zh": "每<span class=\"r\">1</span>构筑物会<span class=\"r\">-1</span>工程学"
         },
         {
           "key": "fog_visibility",
@@ -23256,8 +23256,8 @@
           "custom_key": "weapon_scaling_stats",
           "storage_method": 1,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">+20</span> Engineering",
-          "text_zh": "<span class=\"g\">+20</span>工程学"
+          "text_en": "Weapon and pet damage additionally scales with <span class=\"g\">+20</span> Engineering",
+          "text_zh": "武器和宠物伤害会受到<span class=\"g\">+20</span>工程学影响"
         },
         {
           "key": "stat_ranged_damage",
@@ -23305,8 +23305,8 @@
           "custom_key": "stats_next_wave",
           "storage_method": 1,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">+100</span> XP Gain",
-          "text_zh": "<span class=\"g\">+100</span>%经验获得"
+          "text_en": "Gain <span class=\"g\">+100</span> material and XP for every living enemy at the end of a wave",
+          "text_zh": "在敌人攻击波结束时，每有1个活着的敌人，你获得<span class=\"g\">+100</span>个材料和经验值。"
         },
         {
           "key": "enemy_damage",
@@ -23441,8 +23441,8 @@
           "perm_stats_only": true,
           "stat_scaled": "stat_speed",
           "nb_stat_scaled": 1,
-          "text_en": "<span class=\"g\">+1</span> % Damage",
-          "text_zh": "<span class=\"g\">+1</span>%伤害"
+          "text_en": "<span class=\"g\">+1</span> % Damage for every permanent <span class=\"g\">1</span> % Speed you have",
+          "text_zh": "每永久持有<span class=\"g\">1</span>%速度会<span class=\"g\">+1</span>%伤害"
         },
         {
           "key": "stat_percent_damage",
@@ -23918,8 +23918,8 @@
           "perm_stats_only": true,
           "stat_scaled": "stat_armor",
           "nb_stat_scaled": 1,
-          "text_en": "<span class=\"g\">+1</span> Max HP",
-          "text_zh": "<span class=\"g\">+1</span>最大生命值"
+          "text_en": "<span class=\"g\">+1</span> Max HP for every permanent <span class=\"g\">1</span> Armor you have",
+          "text_zh": "每永久持有<span class=\"g\">1</span>护甲会<span class=\"g\">+1</span>最大生命值"
         },
         {
           "key": "stat_attack_speed",
@@ -23964,8 +23964,8 @@
           "perm_stats_only": true,
           "stat_scaled": "stat_elemental_damage",
           "nb_stat_scaled": 1,
-          "text_en": "<span class=\"g\">+1</span> Engineering",
-          "text_zh": "<span class=\"g\">+1</span>工程学"
+          "text_en": "<span class=\"g\">+1</span> Engineering for every permanent <span class=\"g\">1</span> Elemental Damage you have",
+          "text_zh": "每永久持有<span class=\"g\">1</span>元素伤害会<span class=\"g\">+1</span>工程学"
         },
         {
           "key": "stat_melee_damage",
@@ -24236,8 +24236,8 @@
           "custom_key": "stats_end_of_wave",
           "storage_method": 1,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">+3</span> % Damage",
-          "text_zh": "<span class=\"g\">+3</span>%伤害"
+          "text_en": "<span class=\"g\">+3</span> % Damage at the end of each wave",
+          "text_zh": "每波结束时获得<span class=\"g\">+3</span>%伤害"
         }
       ],
       "unlocked_by_default": true,
@@ -24439,8 +24439,8 @@
             "value2": 1,
             "value3": 4
           },
-          "text_en": "<span class=\"g\">+30</span> Elemental Damage",
-          "text_zh": "<span class=\"g\">+30</span>元素伤害"
+          "text_en": "<span class=\"g\">+30</span> Elemental Damage for every <span class=\"g\">5</span> burning enemies you kill during a wave (max per wave)",
+          "text_zh": "在一波敌袭中，每杀死<span class=\"g\">5</span>个燃烧的敌人<span class=\"g\">+30</span>元素伤害。每波最大值："
         },
         {
           "key": "stat_attack_speed",
@@ -24569,8 +24569,8 @@
           "custom_key": "upgrade_random_weapon",
           "storage_method": 1,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">+2</span> Armor",
-          "text_zh": "<span class=\"g\">+2</span>护甲"
+          "text_en": "<span class=\"g\">+2</span> Armor. Upgrades a random weapon",
+          "text_zh": "<span class=\"g\">+2</span>护甲。升级一把随机武器"
         }
       ],
       "unlocked_by_default": false,
@@ -24630,8 +24630,8 @@
           "custom_key": "stats_end_of_wave",
           "storage_method": 1,
           "effect_sign": 3,
-          "text_en": "<span class=\"r\">-1</span> Armor",
-          "text_zh": "<span class=\"r\">-1</span>护甲"
+          "text_en": "<span class=\"r\">-1</span> Armor at the end of each wave",
+          "text_zh": "每波结束时获得<span class=\"r\">-1</span>护甲"
         }
       ],
       "unlocked_by_default": true,
@@ -24773,8 +24773,8 @@
           "perm_stats_only": false,
           "stat_scaled": "stat_lifesteal",
           "nb_stat_scaled": 1,
-          "text_en": "<span class=\"g\">+2</span> % Damage",
-          "text_zh": "<span class=\"g\">+2</span>%伤害"
+          "text_en": "<span class=\"g\">+2</span> % Damage for every <span class=\"g\">1</span> % Life Steal you have",
+          "text_zh": "每<span class=\"g\">1</span>%生命窃取会<span class=\"g\">+2</span>%伤害"
         },
         {
           "key": "lose_hp_per_second",
@@ -25051,8 +25051,8 @@
           "perm_stats_only": true,
           "stat_scaled": "stat_speed",
           "nb_stat_scaled": -1,
-          "text_en": "<span class=\"g\">+2</span> HP Regeneration",
-          "text_zh": "<span class=\"g\">+2</span>生命再生"
+          "text_en": "<span class=\"g\">+2</span> HP Regeneration for every permanent <span class=\"g\">-1</span> % Speed you have",
+          "text_zh": "每永久持有<span class=\"g\">-1</span>%速度会<span class=\"g\">+2</span>生命再生"
         },
         {
           "key": "stat_speed",
@@ -25299,8 +25299,8 @@
           "extra": {
             "value2": 8
           },
-          "text_en": "<span class=\"g\">+1</span> Max HP",
-          "text_zh": "<span class=\"g\">+1</span>最大生命值"
+          "text_en": "<span class=\"g\">+1</span> Max HP when picking up a consumable while at maximum health (max per wave)",
+          "text_zh": "当在最大生命值下捡起一个消耗品时<span class=\"g\">+1</span>最大生命值。每波最大值："
         }
       ],
       "unlocked_by_default": true,
@@ -25553,8 +25553,8 @@
           "custom_key": "stats_end_of_wave",
           "storage_method": 1,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">+3</span> Max HP",
-          "text_zh": "<span class=\"g\">+3</span>最大生命值"
+          "text_en": "<span class=\"g\">+3</span> Max HP at the end of each wave",
+          "text_zh": "每波结束时获得<span class=\"g\">+3</span>最大生命值"
         },
         {
           "key": "stat_hp_regeneration",
@@ -25563,8 +25563,8 @@
           "custom_key": "stats_end_of_wave",
           "storage_method": 1,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">+1</span> HP Regeneration",
-          "text_zh": "<span class=\"g\">+1</span>生命再生"
+          "text_en": "<span class=\"g\">+1</span> HP Regeneration at the end of each wave",
+          "text_zh": "每波结束时获得<span class=\"g\">+1</span>生命再生"
         },
         {
           "key": "stat_lifesteal",
@@ -25573,8 +25573,8 @@
           "custom_key": "stats_end_of_wave",
           "storage_method": 1,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">+1</span> % Life Steal",
-          "text_zh": "<span class=\"g\">+1</span>%生命窃取"
+          "text_en": "<span class=\"g\">+1</span> % Life Steal at the end of each wave",
+          "text_zh": "每波结束时获得<span class=\"g\">+1</span>%生命窃取"
         }
       ],
       "unlocked_by_default": true,
@@ -25927,8 +25927,8 @@
           "perm_stats_only": false,
           "stat_scaled": "stat_crit_chance",
           "nb_stat_scaled": 1,
-          "text_en": "<span class=\"g\">+2</span> Luck",
-          "text_zh": "<span class=\"g\">+2</span>幸运"
+          "text_en": "<span class=\"g\">+2</span> Luck for every <span class=\"g\">1</span> % Crit Chance you have",
+          "text_zh": "每<span class=\"g\">1</span>%暴击率会<span class=\"g\">+2</span>幸运"
         },
         {
           "key": "stat_armor",
@@ -26422,8 +26422,8 @@
           "perm_stats_only": false,
           "stat_scaled": "stat_dodge",
           "nb_stat_scaled": 1,
-          "text_en": "<span class=\"g\">+2</span> % Attack Speed",
-          "text_zh": "<span class=\"g\">+2</span>%攻击速度"
+          "text_en": "<span class=\"g\">+2</span> % Attack Speed for every <span class=\"g\">1</span> % Dodge you have",
+          "text_zh": "每<span class=\"g\">1</span>%闪避会<span class=\"g\">+2</span>%攻击速度"
         },
         {
           "key": "stat_range",
@@ -26501,8 +26501,8 @@
           "custom_key": "stats_end_of_wave",
           "storage_method": 1,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">+3</span> Melee Damage",
-          "text_zh": "<span class=\"g\">+3</span>近战伤害"
+          "text_en": "<span class=\"g\">+3</span> Melee Damage at the end of each wave",
+          "text_zh": "每波结束时获得<span class=\"g\">+3</span>近战伤害"
         },
         {
           "key": "stat_engineering",
@@ -26511,8 +26511,8 @@
           "custom_key": "stats_end_of_wave",
           "storage_method": 1,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">+3</span> Engineering",
-          "text_zh": "<span class=\"g\">+3</span>工程学"
+          "text_en": "<span class=\"g\">+3</span> Engineering at the end of each wave",
+          "text_zh": "每波结束时获得<span class=\"g\">+3</span>工程学"
         },
         {
           "key": "stat_max_hp",
@@ -26521,8 +26521,8 @@
           "custom_key": "stats_end_of_wave",
           "storage_method": 1,
           "effect_sign": 3,
-          "text_en": "<span class=\"r\">-1</span> Max HP",
-          "text_zh": "<span class=\"r\">-1</span>最大生命值"
+          "text_en": "<span class=\"r\">-1</span> Max HP at the end of each wave",
+          "text_zh": "每波结束时获得<span class=\"r\">-1</span>最大生命值"
         }
       ],
       "unlocked_by_default": false,
@@ -26846,8 +26846,8 @@
           "custom_key": "stats_on_level_up",
           "storage_method": 1,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">+2</span> Melee Damage",
-          "text_zh": "<span class=\"g\">+2</span>近战伤害"
+          "text_en": "<span class=\"g\">+2</span> Melee Damage when you level up",
+          "text_zh": "升级时有<span class=\"g\">+2</span>近战伤害"
         },
         {
           "key": "stat_ranged_damage",
@@ -26856,8 +26856,8 @@
           "custom_key": "stats_on_level_up",
           "storage_method": 1,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">+1</span> Ranged Damage",
-          "text_zh": "<span class=\"g\">+1</span>远程伤害"
+          "text_en": "<span class=\"g\">+1</span> Ranged Damage when you level up",
+          "text_zh": "升级时有<span class=\"g\">+1</span>远程伤害"
         },
         {
           "key": "stat_elemental_damage",
@@ -26866,8 +26866,8 @@
           "custom_key": "stats_on_level_up",
           "storage_method": 1,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">+1</span> Elemental Damage",
-          "text_zh": "<span class=\"g\">+1</span>元素伤害"
+          "text_en": "<span class=\"g\">+1</span> Elemental Damage when you level up",
+          "text_zh": "升级时有<span class=\"g\">+1</span>元素伤害"
         },
         {
           "key": "stat_engineering",
@@ -26876,8 +26876,8 @@
           "custom_key": "stats_on_level_up",
           "storage_method": 1,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">+1</span> Engineering",
-          "text_zh": "<span class=\"g\">+1</span>工程学"
+          "text_en": "<span class=\"g\">+1</span> Engineering when you level up",
+          "text_zh": "升级时有<span class=\"g\">+1</span>工程学"
         },
         {
           "key": "stat_max_hp",
@@ -26886,8 +26886,8 @@
           "custom_key": "stats_on_level_up",
           "storage_method": 1,
           "effect_sign": 3,
-          "text_en": "<span class=\"r\">-2</span> Max HP",
-          "text_zh": "<span class=\"r\">-2</span>最大生命值"
+          "text_en": "<span class=\"r\">-2</span> Max HP when you level up",
+          "text_zh": "升级时有<span class=\"r\">-2</span>最大生命值"
         }
       ],
       "unlocked_by_default": false,
@@ -27024,8 +27024,8 @@
           "perm_stats_only": false,
           "stat_scaled": "stat_elemental_damage",
           "nb_stat_scaled": 1,
-          "text_en": "<span class=\"g\">+4%</span> Explosion Size",
-          "text_zh": "<span class=\"g\">+4%</span>爆炸范围"
+          "text_en": "<span class=\"g\">+4%</span> Explosion Size for every <span class=\"g\">1</span> Elemental Damage you have",
+          "text_zh": "每<span class=\"g\">1</span>元素伤害会<span class=\"g\">+4%</span>爆炸范围"
         },
         {
           "key": "effect_weapon_class_bonus",
@@ -27223,8 +27223,8 @@
           "perm_stats_only": true,
           "stat_scaled": "pet",
           "nb_stat_scaled": 1,
-          "text_en": "<span class=\"g\">+2</span> % Speed",
-          "text_zh": "<span class=\"g\">+2</span>%速度"
+          "text_en": "<span class=\"g\">+2</span> % Speed for every permanent <span class=\"g\">1</span> Pet you have",
+          "text_zh": "每永久持有<span class=\"g\">1</span>宠物会<span class=\"g\">+2</span>%速度"
         },
         {
           "key": "beast_master_effect",
@@ -27742,8 +27742,8 @@
           "perm_stats_only": false,
           "stat_scaled": "free_weapon_slots",
           "nb_stat_scaled": 1,
-          "text_en": "<span class=\"g\">+60</span> XP Gain",
-          "text_zh": "<span class=\"g\">+60</span>%经验获得"
+          "text_en": "<span class=\"g\">+60</span> XP Gain for every free weapon slot you have [<span class=\"g\">1</span>]",
+          "text_zh": "每有一个空闲的武器栏，将获得<span class=\"g\">+60</span>获得%经验[<span class=\"g\">1</span>]"
         },
         {
           "key": "level_upgrades_modifications",
@@ -27986,8 +27986,8 @@
           "perm_stats_only": true,
           "stat_scaled": "stat_max_hp",
           "nb_stat_scaled": 3,
-          "text_en": "<span class=\"g\">+1</span> % Damage",
-          "text_zh": "<span class=\"g\">+1</span>%伤害"
+          "text_en": "<span class=\"g\">+1</span> % Damage for every permanent <span class=\"g\">3</span> Max HP you have",
+          "text_zh": "每永久持有<span class=\"g\">3</span>最大生命值会<span class=\"g\">+1</span>%伤害"
         },
         {
           "key": "consumable_heal",
@@ -28186,8 +28186,8 @@
           "custom_key": "weapon_scaling_stats",
           "storage_method": 1,
           "effect_sign": 5,
-          "text_en": "<span class=\"p\">+35</span> Curse",
-          "text_zh": "<span class=\"p\">+35</span>诅咒"
+          "text_en": "Weapon and pet damage additionally scales with <span class=\"p\">+35</span> Curse",
+          "text_zh": "武器和宠物伤害会受到<span class=\"p\">+35</span>诅咒影响"
         },
         {
           "key": "item_fish_hook",
@@ -28206,8 +28206,8 @@
           "custom_key": "stats_on_level_up",
           "storage_method": 1,
           "effect_sign": 5,
-          "text_en": "<span class=\"p\">+1</span> Curse",
-          "text_zh": "<span class=\"p\">+1</span>诅咒"
+          "text_en": "<span class=\"p\">+1</span> Curse when you level up",
+          "text_zh": "升级时有<span class=\"p\">+1</span>诅咒"
         },
         {
           "key": "stat_range",
@@ -28216,8 +28216,8 @@
           "custom_key": "stats_end_of_wave",
           "storage_method": 1,
           "effect_sign": 3,
-          "text_en": "<span class=\"r\">-10</span> Range",
-          "text_zh": "<span class=\"r\">-10</span>范围"
+          "text_en": "<span class=\"r\">-10</span> Range at the end of each wave",
+          "text_zh": "每波结束时获得<span class=\"r\">-10</span>范围"
         },
         {
           "key": "xp_gain",
@@ -28226,8 +28226,8 @@
           "custom_key": "stats_end_of_wave",
           "storage_method": 1,
           "effect_sign": 3,
-          "text_en": "<span class=\"r\">-5</span> XP Gain",
-          "text_zh": "<span class=\"r\">-5</span>%经验获得"
+          "text_en": "<span class=\"r\">-5</span> XP Gain at the end of each wave",
+          "text_zh": "每波结束时获得<span class=\"r\">-5</span>获得%经验"
         }
       ],
       "unlocked_by_default": true,
@@ -28310,8 +28310,8 @@
           "perm_stats_only": false,
           "stat_scaled": "living_tree",
           "nb_stat_scaled": 1,
-          "text_en": "<span class=\"g\">+3</span> HP Regeneration",
-          "text_zh": "<span class=\"g\">+3</span>生命再生"
+          "text_en": "<span class=\"g\">+3</span> HP Regeneration for every current living tree",
+          "text_zh": "目前每一棵存活的树木有<span class=\"g\">+3</span>生命再生"
         },
         {
           "key": "dodge_cap",
@@ -28330,8 +28330,8 @@
           "custom_key": "temp_stats_on_dodge",
           "storage_method": 1,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">+3</span> % Attack Speed",
-          "text_zh": "<span class=\"g\">+3</span>%攻击速度"
+          "text_en": "<span class=\"g\">+3</span> % Attack Speed until the end of the wave when you dodge an attack",
+          "text_zh": "躲避攻击时有<span class=\"g\">+3</span>%攻击速度，直至敌袭结束"
         },
         {
           "key": "stat_lifesteal",
@@ -28445,8 +28445,8 @@
           "perm_stats_only": false,
           "stat_scaled": "different_item",
           "nb_stat_scaled": 1,
-          "text_en": "<span class=\"g\">+2</span> XP Gain",
-          "text_zh": "<span class=\"g\">+2</span>%经验获得"
+          "text_en": "<span class=\"g\">+2</span> XP Gain for every different DIFFERENT_ITEM you have",
+          "text_zh": "每持有一异种DIFFERENT_ITEM有<span class=\"g\">+2</span>获得%经验"
         },
         {
           "key": "stat_percent_damage",
@@ -28461,8 +28461,8 @@
           "perm_stats_only": true,
           "stat_scaled": "duplicate_item",
           "nb_stat_scaled": 1,
-          "text_en": "<span class=\"r\">-10</span> % Damage",
-          "text_zh": "<span class=\"r\">-10</span>%伤害"
+          "text_en": "<span class=\"r\">-10</span> % Damage for every duplicate item or weapon you have",
+          "text_zh": "每拥有一件复制道具或武器，将获得<span class=\"r\">-10</span>%伤害"
         },
         {
           "key": "enemy_health",
@@ -28544,8 +28544,8 @@
           "custom_key": "convert_stats_half_wave",
           "storage_method": 1,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">+1</span> Ranged Damage",
-          "text_zh": "<span class=\"g\">+1</span>远程伤害"
+          "text_en": "<span class=\"g\">+1</span> of your Ranged Damage are temporarily converted into halfway through a wave ( Ranged Damage = )",
+          "text_zh": "<span class=\"g\">+1</span>的远程伤害在敌袭中途后会暂时转换为 （ 远程伤害= ）"
         },
         {
           "key": "effect_reduce_stat_gains",
@@ -28723,8 +28723,8 @@
           "perm_stats_only": false,
           "stat_scaled": "stat_melee_damage",
           "nb_stat_scaled": 2,
-          "text_en": "<span class=\"g\">+1</span> HP Regeneration",
-          "text_zh": "<span class=\"g\">+1</span>生命再生"
+          "text_en": "<span class=\"g\">+1</span> HP Regeneration for every <span class=\"g\">2</span> Melee Damage you have",
+          "text_zh": "每<span class=\"g\">2</span>近战伤害会<span class=\"g\">+1</span>生命再生"
         },
         {
           "key": "stat_ranged_damage",
@@ -28737,8 +28737,8 @@
             "max_stacks": 1,
             "duration_secs": 3
           },
-          "text_en": "<span class=\"g\">+300</span> Ranged Damage",
-          "text_zh": "<span class=\"g\">+300</span>远程伤害"
+          "text_en": "Enemies take <span class=\"g\">300%</span> more Ranged Damage damage",
+          "text_zh": "敌人受到<span class=\"g\">300%</span>更多远程伤害伤害"
         },
         {
           "key": "stat_ranged_damage",
@@ -28942,8 +28942,8 @@
           "extra": {
             "value2": 33
           },
-          "text_en": "<span class=\"g\">+1</span> Luck",
-          "text_zh": "<span class=\"g\">+1</span>幸运"
+          "text_en": "<span class=\"g\">33%</span> chance to get <span class=\"g\">+1</span> Luck when you pick up a fruit",
+          "text_zh": "捡起水果时有<span class=\"g\">33%</span>的概率获得<span class=\"g\">+1</span>幸运"
         },
         {
           "key": "poisoned_fruit",
@@ -29025,8 +29025,8 @@
           "extra": {
             "value2": 6
           },
-          "text_en": "<span class=\"g\">+1</span> Engineering",
-          "text_zh": "<span class=\"g\">+1</span>工程学"
+          "text_en": "<span class=\"g\">+1</span> Engineering when killing at least <span class=\"g\">2</span> enemies with a direct weapon hit",
+          "text_zh": "使用直接武器杀死至少<span class=\"g\">2</span>名敌人时，可获得<span class=\"g\">+1</span>工程学"
         },
         {
           "key": "stat_melee_damage",
@@ -29041,8 +29041,8 @@
           "perm_stats_only": true,
           "stat_scaled": "stat_engineering",
           "nb_stat_scaled": 2,
-          "text_en": "<span class=\"g\">+1</span> Melee Damage",
-          "text_zh": "<span class=\"g\">+1</span>近战伤害"
+          "text_en": "<span class=\"g\">+1</span> Melee Damage for every permanent <span class=\"g\">2</span> Engineering you have",
+          "text_zh": "每永久持有<span class=\"g\">2</span>工程学会<span class=\"g\">+1</span>近战伤害"
         },
         {
           "key": "no_ranged_weapons",
@@ -29468,8 +29468,8 @@
           "custom_key": "consumable_stats_while_max",
           "storage_method": 1,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">+1</span> Harvesting",
-          "text_zh": "<span class=\"g\">+1</span>收获"
+          "text_en": "<span class=\"g\">+1</span> Harvesting when picking up a consumable while at maximum health",
+          "text_zh": "当在最大生命值下捡起一个消耗品时<span class=\"g\">+1</span>收获"
         },
         {
           "key": "gold_drops",
@@ -29576,8 +29576,8 @@
           "perm_stats_only": true,
           "stat_scaled": "item_bait",
           "nb_stat_scaled": 1,
-          "text_en": "<span class=\"g\">+2</span> Harvesting",
-          "text_zh": "<span class=\"g\">+2</span>收获"
+          "text_en": "<span class=\"g\">+2</span> Harvesting for every <span class=\"g\">1</span> Bait you have",
+          "text_zh": "每<span class=\"g\">1</span>诱饵会<span class=\"g\">+2</span>收获"
         },
         {
           "key": "upgraded_baits",
@@ -29744,8 +29744,8 @@
           "perm_stats_only": false,
           "stat_scaled": "stat_ranged_damage",
           "nb_stat_scaled": 1,
-          "text_en": "<span class=\"g\">+2</span> Melee Damage",
-          "text_zh": "<span class=\"g\">+2</span>近战伤害"
+          "text_en": "<span class=\"g\">+2</span> Melee Damage for every <span class=\"g\">1</span> Ranged Damage you have",
+          "text_zh": "每<span class=\"g\">1</span>远程伤害会<span class=\"g\">+2</span>近战伤害"
         },
         {
           "key": "stat_ranged_damage",
@@ -29760,8 +29760,8 @@
           "perm_stats_only": false,
           "stat_scaled": "stat_melee_damage",
           "nb_stat_scaled": 2,
-          "text_en": "<span class=\"g\">+1</span> Ranged Damage",
-          "text_zh": "<span class=\"g\">+1</span>远程伤害"
+          "text_en": "<span class=\"g\">+1</span> Ranged Damage for every <span class=\"g\">2</span> Melee Damage you have",
+          "text_zh": "每<span class=\"g\">2</span>近战伤害会<span class=\"g\">+1</span>远程伤害"
         },
         {
           "key": "max_melee_weapons",
@@ -30336,8 +30336,8 @@
           "perm_stats_only": false,
           "stat_scaled": "stat_range",
           "nb_stat_scaled": 10,
-          "text_en": "<span class=\"g\">+1</span> % Damage",
-          "text_zh": "<span class=\"g\">+1</span>%伤害"
+          "text_en": "<span class=\"g\">+1</span> % Damage for every <span class=\"g\">10</span> Range you have",
+          "text_zh": "每<span class=\"g\">10</span>范围会<span class=\"g\">+1</span>%伤害"
         },
         {
           "key": "effect_increase_stat_gains",
@@ -30520,8 +30520,8 @@
           "custom_key": "tier_iv_weapon_effects",
           "storage_method": 1,
           "effect_sign": 0,
-          "text_en": "<span class=\"g\">+25</span> % Damage",
-          "text_zh": "<span class=\"g\">+25</span>%伤害"
+          "text_en": "<span class=\"g\">+25</span> % Damage for every Tier IV weapon you have",
+          "text_zh": "每持有1件IV等级武器有<span class=\"g\">+25</span>%伤害"
         },
         {
           "key": "stat_attack_speed",
@@ -30530,8 +30530,8 @@
           "custom_key": "tier_iv_weapon_effects",
           "storage_method": 1,
           "effect_sign": 0,
-          "text_en": "<span class=\"g\">+25</span> % Attack Speed",
-          "text_zh": "<span class=\"g\">+25</span>%攻击速度"
+          "text_en": "<span class=\"g\">+25</span> % Attack Speed for every Tier IV weapon you have",
+          "text_zh": "每持有1件IV等级武器有<span class=\"g\">+25</span>%攻击速度"
         },
         {
           "key": "stat_max_hp",
@@ -30546,8 +30546,8 @@
           "perm_stats_only": false,
           "stat_scaled": "legendary_item",
           "nb_stat_scaled": 1,
-          "text_en": "<span class=\"g\">+5</span> Max HP",
-          "text_zh": "<span class=\"g\">+5</span>最大生命值"
+          "text_en": "<span class=\"g\">+5</span> Max HP for every different Tier IV item you have",
+          "text_zh": "每持有一异种IV级别物品有<span class=\"g\">+5</span>最大生命值"
         },
         {
           "key": "stat_percent_damage",
@@ -30556,8 +30556,8 @@
           "custom_key": "tier_i_weapon_effects",
           "storage_method": 1,
           "effect_sign": 1,
-          "text_en": "<span class=\"r\">-15</span> % Damage",
-          "text_zh": "<span class=\"r\">-15</span>%伤害"
+          "text_en": "<span class=\"r\">-15</span> % Damage for every Tier I weapon you have",
+          "text_zh": "每持有1件I等级武器有<span class=\"r\">-15</span>%伤害"
         },
         {
           "key": "stat_attack_speed",
@@ -30566,8 +30566,8 @@
           "custom_key": "tier_i_weapon_effects",
           "storage_method": 1,
           "effect_sign": 1,
-          "text_en": "<span class=\"r\">-15</span> % Attack Speed",
-          "text_zh": "<span class=\"r\">-15</span>%攻击速度"
+          "text_en": "<span class=\"r\">-15</span> % Attack Speed for every Tier I weapon you have",
+          "text_zh": "每持有1件I等级武器有<span class=\"r\">-15</span>%攻击速度"
         },
         {
           "key": "stat_max_hp",
@@ -30582,8 +30582,8 @@
           "perm_stats_only": false,
           "stat_scaled": "common_item",
           "nb_stat_scaled": 1,
-          "text_en": "<span class=\"r\">-2</span> Max HP",
-          "text_zh": "<span class=\"r\">-2</span>最大生命值"
+          "text_en": "<span class=\"r\">-2</span> Max HP for every different Tier I item you have",
+          "text_zh": "每持有一异种I级别物品有<span class=\"r\">-2</span>最大生命值"
         }
       ],
       "unlocked_by_default": false,
@@ -30640,8 +30640,8 @@
           "perm_stats_only": false,
           "stat_scaled": "stat_armor",
           "nb_stat_scaled": 1,
-          "text_en": "<span class=\"g\">+2</span> Melee Damage",
-          "text_zh": "<span class=\"g\">+2</span>近战伤害"
+          "text_en": "<span class=\"g\">+2</span> Melee Damage for every <span class=\"g\">1</span> Armor you have",
+          "text_zh": "每<span class=\"g\">1</span>护甲会<span class=\"g\">+2</span>近战伤害"
         },
         {
           "key": "stat_armor",
@@ -30770,8 +30770,8 @@
           "extra": {
             "chance": 100
           },
-          "text_en": "<span class=\"g\">+100</span> Max HP",
-          "text_zh": "<span class=\"g\">+100</span>最大生命值"
+          "text_en": "<span class=\"g\">100%</span> chance to deal <span class=\"g\">1</span> (<span class=\"g\">100%[Max HP]</span>) damage to a random enemy when you heal",
+          "text_zh": "在治疗时有<span class=\"g\">100%</span>概率对随机1名敌人造成<span class=\"g\">1</span>（<span class=\"g\">100%[最大生命值]</span>）伤害"
         },
         {
           "key": "effect_reduce_stat_gains",
@@ -30859,8 +30859,8 @@
           "custom_key": "stats_end_of_wave",
           "storage_method": 1,
           "effect_sign": 3,
-          "text_en": "<span class=\"r\">-3</span> Harvesting",
-          "text_zh": "<span class=\"r\">-3</span>收获"
+          "text_en": "<span class=\"r\">-3</span> Harvesting at the end of each wave",
+          "text_zh": "每波结束时获得<span class=\"r\">-3</span>收获"
         }
       ],
       "unlocked_by_default": false,
@@ -30931,8 +30931,8 @@
           "extra": {
             "chance": 75
           },
-          "text_en": "<span class=\"g\">+15</span> Luck",
-          "text_zh": "<span class=\"g\">+15</span>幸运"
+          "text_en": "<span class=\"g\">75%</span> chance to deal <span class=\"g\">1</span> (<span class=\"g\">15%[Luck]</span>) damage to a random enemy when you pick up a material",
+          "text_zh": "拾取材料时有<span class=\"g\">75%</span>概率对随机1名敌人造成<span class=\"g\">1</span>（<span class=\"g\">15%[幸运]</span>）伤害"
         },
         {
           "key": "stat_attack_speed",
@@ -31795,8 +31795,8 @@
           "perm_stats_only": false,
           "stat_scaled": "common_item",
           "nb_stat_scaled": 1,
-          "text_en": "<span class=\"g\">+10</span> % Damage",
-          "text_zh": "<span class=\"g\">+10</span>%伤害"
+          "text_en": "<span class=\"g\">+10</span> % Damage for every different Tier I item you have",
+          "text_zh": "每持有一异种I级别物品有<span class=\"g\">+10</span>%伤害"
         },
         {
           "key": "no_melee_weapons",
@@ -31887,8 +31887,8 @@
           "extra": {
             "value2": 25
           },
-          "text_en": "<span class=\"g\">+50</span> Max HP",
-          "text_zh": "<span class=\"g\">+50</span>最大生命值"
+          "text_en": "Hitting an enemy that has less than <span class=\"g\">+50</span> health has a Max HP (<span class=\"g\">25</span>) chance to charm it for seconds",
+          "text_zh": "击中生命值低于<span class=\"g\">+50</span>的敌人时，有最大生命值（<span class=\"g\">25</span>）的几率使其在 秒内受到魅惑"
         },
         {
           "key": "",
@@ -31915,8 +31915,8 @@
           "perm_stats_only": false,
           "stat_scaled": "stat_curse",
           "nb_stat_scaled": 5,
-          "text_en": "<span class=\"r\">-3</span> % Damage",
-          "text_zh": "<span class=\"r\">-3</span>%伤害"
+          "text_en": "<span class=\"r\">-3</span> % Damage for every <span class=\"r\">5</span> Curse you have",
+          "text_zh": "每<span class=\"r\">5</span>诅咒会<span class=\"r\">-3</span>%伤害"
         },
         {
           "key": "stat_armor",
@@ -31931,8 +31931,8 @@
           "perm_stats_only": false,
           "stat_scaled": "stat_curse",
           "nb_stat_scaled": 5,
-          "text_en": "<span class=\"r\">-1</span> Armor",
-          "text_zh": "<span class=\"r\">-1</span>护甲"
+          "text_en": "<span class=\"r\">-1</span> Armor for every <span class=\"r\">5</span> Curse you have",
+          "text_zh": "每<span class=\"r\">5</span>诅咒会<span class=\"r\">-1</span>护甲"
         },
         {
           "key": "stat_curse",
@@ -31941,8 +31941,8 @@
           "custom_key": "stats_end_of_wave",
           "storage_method": 1,
           "effect_sign": 5,
-          "text_en": "<span class=\"p\">+1</span> Curse",
-          "text_zh": "<span class=\"p\">+1</span>诅咒"
+          "text_en": "<span class=\"p\">+1</span> Curse at the end of each wave",
+          "text_zh": "每波结束时获得<span class=\"p\">+1</span>诅咒"
         }
       ],
       "unlocked_by_default": false,
@@ -32099,8 +32099,8 @@
           "perm_stats_only": false,
           "stat_scaled": "materials",
           "nb_stat_scaled": 25,
-          "text_en": "<span class=\"g\">+1</span> % Damage",
-          "text_zh": "<span class=\"g\">+1</span>%伤害"
+          "text_en": "<span class=\"g\">+1</span> % Damage for every <span class=\"g\">25</span> Materials you have",
+          "text_zh": "每<span class=\"g\">25</span>材料会<span class=\"g\">+1</span>%伤害"
         },
         {
           "key": "item_piggy_bank",
@@ -32359,8 +32359,8 @@
           "perm_stats_only": false,
           "stat_scaled": "stat_speed",
           "nb_stat_scaled": 2,
-          "text_en": "<span class=\"g\">+1</span> Melee Damage",
-          "text_zh": "<span class=\"g\">+1</span>近战伤害"
+          "text_en": "<span class=\"g\">+1</span> Melee Damage for every <span class=\"g\">2</span> % Speed you have",
+          "text_zh": "每<span class=\"g\">2</span>%速度会<span class=\"g\">+1</span>近战伤害"
         },
         {
           "key": "stat_armor",
@@ -32477,8 +32477,8 @@
           "perm_stats_only": false,
           "stat_scaled": "structure",
           "nb_stat_scaled": 1,
-          "text_en": "<span class=\"g\">+2</span> Armor",
-          "text_zh": "<span class=\"g\">+2</span>护甲"
+          "text_en": "<span class=\"g\">+2</span> Armor for every <span class=\"g\">1</span> Structure you have",
+          "text_zh": "每<span class=\"g\">1</span>构筑物会<span class=\"g\">+2</span>护甲"
         },
         {
           "key": "gold_drops",
@@ -32503,8 +32503,8 @@
           "perm_stats_only": false,
           "stat_scaled": "materials",
           "nb_stat_scaled": 15,
-          "text_en": "<span class=\"r\">-1</span> % Damage",
-          "text_zh": "<span class=\"r\">-1</span>%伤害"
+          "text_en": "<span class=\"r\">-1</span> % Damage for every <span class=\"r\">15</span> Materials you have",
+          "text_zh": "每<span class=\"r\">15</span>材料会<span class=\"r\">-1</span>%伤害"
         },
         {
           "key": "stat_speed",
@@ -32519,8 +32519,8 @@
           "perm_stats_only": false,
           "stat_scaled": "materials",
           "nb_stat_scaled": 30,
-          "text_en": "<span class=\"r\">-1</span>% Speed",
-          "text_zh": "<span class=\"r\">-1</span>%速度"
+          "text_en": "<span class=\"r\">-1</span> % Speed for every <span class=\"r\">30</span> Materials you have",
+          "text_zh": "每<span class=\"r\">30</span>材料会<span class=\"r\">-1</span>%速度"
         }
       ],
       "unlocked_by_default": false,
@@ -32603,8 +32603,8 @@
           "perm_stats_only": false,
           "stat_scaled": "structure",
           "nb_stat_scaled": 1,
-          "text_en": "<span class=\"g\">+2</span> Elemental Damage",
-          "text_zh": "<span class=\"g\">+2</span>元素伤害"
+          "text_en": "<span class=\"g\">+2</span> Elemental Damage for every <span class=\"g\">1</span> Structure you have",
+          "text_zh": "每<span class=\"g\">1</span>构筑物会<span class=\"g\">+2</span>元素伤害"
         },
         {
           "key": "next_level_xp_needed",
