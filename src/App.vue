@@ -191,7 +191,7 @@
             <div class="price-header">
               <span class="price-label">{{ waveSlider === 0 ? (isZh ? '基础价格' : 'Base Price') : (isZh ? '第' + waveSlider + '波价格' : 'Wave ' + waveSlider + ' Price') }}</span>
               <span class="price-value">{{ computedPrice }}</span>
-              <img src="/icons/items/materials/harvesting_icon.png" class="price-icon" />
+              <img :src="BASE + 'icons/items/materials/harvesting_icon.png'" class="price-icon" />
             </div>
             <div class="price-waves">
               <span class="price-wave">{{ isZh ? '第1波' : 'Wave 1' }}:</span><span class="ws-val">{{ priceAtWave(1) }}</span>
@@ -248,7 +248,7 @@
             <div class="price-header">
               <span class="price-label">{{ waveSlider === 0 ? (isZh ? '基础价格' : 'Base Price') : (isZh ? '第' + waveSlider + '波价格' : 'Wave ' + waveSlider + ' Price') }}</span>
               <span class="price-value">{{ computedPrice }}</span>
-              <img src="/icons/items/materials/harvesting_icon.png" class="price-icon" />
+              <img :src="BASE + 'icons/items/materials/harvesting_icon.png'" class="price-icon" />
             </div>
             <div class="price-waves">
               <span class="price-wave">{{ isZh ? '第1波' : 'Wave 1' }}：{{ priceAtWave(1) }}</span>
@@ -342,6 +342,8 @@
 import { ref, computed, onMounted, nextTick } from 'vue'
 import { Search, Sort } from '@element-plus/icons-vue'
 
+const BASE = import.meta.env.BASE_URL
+
 const rawData = ref({ weapons: [], items: [], characters: [], translations: {}, stat_icons: {}, sets: {} })
 const mainContentRef = ref(null)
 const gridItemRefs = ref({})
@@ -371,7 +373,7 @@ function tierDisplayName(tier) { const labels = ['T1', 'T2', 'T3', 'T4']; return
 function tierTagType(tier) { return ['info', '', 'warning', 'danger'][tier] || 'info' }
 
 function itemName(item) { return isZh.value ? item.name_zh : item.name_en }
-function getIconSrc(p) { return p ? `/icons/${p}` : '' }
+function getIconSrc(p) { return p ? `${BASE}icons/${p}` : '' }
 
 function statTr(key) {
   const trans = rawData.value.translations || {}
@@ -433,7 +435,7 @@ function renderSetBonusHtml(bonus) {
 
 function getStatIcon(statKey) {
   const map = rawData.value.stat_icons || {}
-  return map[statKey] ? `/icons/${map[statKey]}` : null
+  return map[statKey] ? `${BASE}icons/${map[statKey]}` : null
 }
 
 function resolveWeaponName(wid) {
@@ -610,7 +612,7 @@ function renderEffectPreprocessed(eff) {
     for (const [key, iconPath] of Object.entries(rawData.value.stat_icons || {})) {
       const displayName = statTr(key)
       if (displayName === statName) {
-        const iconSrc = `/icons/${iconPath}`
+        const iconSrc = `${BASE}icons/${iconPath}`
         return `<img src="${iconSrc}" class="stat-inline-icon" style="width:16px;height:16px;vertical-align:middle;margin:0 1px" title="${statName}" />`
       }
     }
@@ -864,7 +866,7 @@ function onTabChange() {
 
 // ---- Init ----
 onMounted(async () => {
-  const resp = await fetch('/data/brotato_data.json')
+  const resp = await fetch(BASE + 'data/brotato_data.json')
   rawData.value = await resp.json()
 })
 </script>
