@@ -10115,8 +10115,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "Burning spreads to an additional nearby enemy",
-          "text_zh": "燃烧蔓延至附近的另一名敌人"
+          "text_en": "<span class=\"g\">1</span> Burning Spread",
+          "text_zh": "<span class=\"g\">1</span>燃烧蔓延 "
         }
       ],
       "stats": {
@@ -14785,8 +14785,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "Burning spreads to an additional nearby enemy",
-          "text_zh": "燃烧蔓延至附近的另一名敌人"
+          "text_en": "<span class=\"g\">1</span> Burning Spread",
+          "text_zh": "<span class=\"g\">1</span>燃烧蔓延 "
         }
       ],
       "stats": {
@@ -15315,8 +15315,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">25</span> chance to instantly attract a material when it’s dropped",
-          "text_zh": "有<span class=\"g\">25</span>概率立即吸收掉落的材料"
+          "text_en": "<span class=\"g\">25%</span> chance to instantly attract a material when it’s dropped",
+          "text_zh": "有<span class=\"g\">25%</span>概率立即吸收掉落的材料"
         }
       ],
       "unlocked_by_default": true,
@@ -15346,8 +15346,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">15</span> materials when you pick up a crate",
-          "text_zh": "拾取箱子时<span class=\"g\">15</span>材料"
+          "text_en": "<span class=\"g\">+15</span> materials when you pick up a crate",
+          "text_zh": "拾取箱子时<span class=\"g\">+15</span>材料"
         },
         {
           "key": "stat_speed",
@@ -15667,8 +15667,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "projectile",
-          "text_zh": "投射物"
+          "text_en": "<span class=\"g\">1</span> projectile",
+          "text_zh": "<span class=\"g\">1</span>投射物"
         }
       ],
       "unlocked_by_default": true,
@@ -15953,8 +15953,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 0,
-          "text_en": "<span class=\"g\">-5</span> Items Price",
-          "text_zh": "<span class=\"g\">-5</span>道具价格"
+          "text_en": "<span class=\"g\">-5%</span> Items Price",
+          "text_zh": "<span class=\"g\">-5%</span>道具价格"
         }
       ],
       "unlocked_by_default": true,
@@ -15982,8 +15982,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "Heal <span class=\"g\">8</span> HP when picking up materials",
-          "text_zh": "拾取材料时恢复<span class=\"g\">8</span>生命值"
+          "text_en": "<span class=\"g\">8%</span> chance to heal 1 HP when picking up a material",
+          "text_zh": "拾取材料时有<span class=\"g\">8%</span>概率恢复1点生命值"
         },
         {
           "key": "stat_ranged_damage",
@@ -16121,8 +16121,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "% Explosion Damage",
-          "text_zh": "%爆炸伤害"
+          "text_en": "<span class=\"g\">+15%</span> Explosion Damage",
+          "text_zh": "<span class=\"g\">+15%</span>爆炸伤害"
         }
       ],
       "unlocked_by_default": true,
@@ -16817,7 +16817,7 @@
         "pickup",
         "pet"
       ],
-      "icon": "entities\\units\\pet\\lootworm\\lootworm_icon.png",
+      "icon": "items/all/lootworm/egg_lootworm_icon.png",
       "dlc": 0,
       "effects": [
         {
@@ -16827,8 +16827,11 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "Spawns a Lootworm pet that collects materials and destroys trees for the player. Each time it picks up a material, it has a <span class=\"g\">1</span> chance to double it",
-          "text_zh": "生成一个搜刮虫虫宠物，会为玩家收集材料和摧毁树木。每次拾取材料时，有<span class=\"g\">1</span>几率将其翻倍"
+          "extra": {
+            "double_chance": 0.1
+          },
+          "text_en": "Spawns a Lootworm pet that collects materials and destroys trees for the player. Each time it picks up a material, it has a <span class=\"g\">10%</span> chance to double it",
+          "text_zh": "生成一个搜刮虫虫宠物，会为玩家收集材料和摧毁树木。每次拾取材料时，有<span class=\"g\">10%</span>几率将其翻倍"
         }
       ],
       "unlocked_by_default": false,
@@ -17210,7 +17213,7 @@
         "stat_max_hp",
         "pet"
       ],
-      "icon": "entities\\units\\pet\\ratzilla\\ratzilla_icon.png",
+      "icon": "items/all/ratzilla/ratzilla_icon.png",
       "dlc": 0,
       "effects": [
         {
@@ -17322,8 +17325,8 @@
               ]
             ]
           },
-          "text_en": "<span class=\"g\">0%</span> chance to burn enemies",
-          "text_zh": "<span class=\"g\">0%</span>概率点燃敌人"
+          "text_en": "Attacks have a <span class=\"g\">25%</span> chance to deal <span class=\"g\">3x1</span> (<span class=\"g\">100%[Elemental Damage]</span>) burning damage",
+          "text_zh": "攻击有<span class=\"g\">25%</span>几率造成<span class=\"g\">3x1</span>（<span class=\"g\">100%[元素伤害]</span>）的燃烧伤害"
         }
       ],
       "unlocked_by_default": true,
@@ -17361,8 +17364,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "<span class=\"r\">-20</span> Piercing Damage. Can't go above base damage",
-          "text_zh": "<span class=\"r\">-20</span>贯通伤害，不会高于基础伤害"
+          "text_en": "<span class=\"r\">-20%</span> Piercing Damage. Can't go above base damage",
+          "text_zh": "<span class=\"r\">-20%</span>贯通伤害，不会高于基础伤害"
         },
         {
           "key": "stat_percent_damage",
@@ -17452,8 +17455,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "Burning spreads to an additional nearby enemy",
-          "text_zh": "燃烧蔓延至附近的另一名敌人"
+          "text_en": "<span class=\"g\">1</span> Burning Spread",
+          "text_zh": "<span class=\"g\">1</span>燃烧蔓延 "
         },
         {
           "key": "stat_max_hp",
@@ -17569,8 +17572,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "More trees spawn",
-          "text_zh": "生成更多树木"
+          "text_en": "<span class=\"g\">1</span> Trees",
+          "text_zh": "<span class=\"g\">1</span>树木"
         }
       ],
       "unlocked_by_default": true,
@@ -17659,8 +17662,8 @@
           "extra": {
             "value2": 20
           },
-          "text_en": "Remove <span class=\"g\">5%</span> speed cap",
-          "text_zh": "移除<span class=\"g\">5%</span>速度上限"
+          "text_en": "Hitting an enemy reduces their speed by <span class=\"g\">5%</span>, up to a max of <span class=\"g\">20%</span>",
+          "text_zh": "击中敌人时能使其降低<span class=\"g\">5%</span>速度，最高<span class=\"g\">20%</span>"
         },
         {
           "key": "stat_speed",
@@ -17747,8 +17750,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 1,
-          "text_en": "<span class=\"r\">-100%</span> HP at start of each wave",
-          "text_zh": "<span class=\"r\">-100%</span>每波开始时生命值"
+          "text_en": "Start next wave with <span class=\"r\">-100%</span> HP",
+          "text_zh": "下场敌袭以<span class=\"r\">-100%</span>生命值开始"
         }
       ],
       "unlocked_by_default": true,
@@ -17774,8 +17777,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">50%</span> chance for loot alien",
-          "text_zh": "<span class=\"g\">50%</span>概率出现拾取外星人"
+          "text_en": "<span class=\"g\">50%</span> chance for Loot Alien",
+          "text_zh": "<span class=\"g\">50%</span>概率出现战利品外星人"
         },
         {
           "key": "loot_alien_speed",
@@ -17784,8 +17787,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 1,
-          "text_en": "<span class=\"r\">+20%</span> Loot Alien speed",
-          "text_zh": "<span class=\"r\">+20%</span>拾取外星人速度"
+          "text_en": "Loot Alien movement speed <span class=\"r\">20%</span>",
+          "text_zh": "战利品外星人的移动速度<span class=\"r\">20%</span>"
         },
         {
           "key": "",
@@ -17794,8 +17797,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "0 ",
-          "text_zh": "0"
+          "text_en": "A whistle sound plays when a Loot Alien spawns",
+          "text_zh": "战利品外星人生成时会有哨响"
         }
       ],
       "unlocked_by_default": true,
@@ -18108,7 +18111,7 @@
         "stat_elemental_damage",
         "pet"
       ],
-      "icon": "entities\\units\\pet\\blazemander\\blazemander_icon.png",
+      "icon": "items/all/blazemander/blazemander_egg_icon.png",
       "dlc": 0,
       "effects": [
         {
@@ -18318,7 +18321,7 @@
         "explosive",
         "pet"
       ],
-      "icon": "entities\\units\\pet\\bonk_dog\\bonk_dog_icon.png",
+      "icon": "items/all/bonk_dog/meleedog_bowl_icon.png",
       "dlc": 0,
       "effects": [
         {
@@ -18371,7 +18374,7 @@
         "pet",
         "structure"
       ],
-      "icon": "entities\\units\\pet\\bot_o_mine\\bot_o_mine_icon.png",
+      "icon": "items/all/bot_o_mine/bot_o_mine_remote_icon.png",
       "dlc": 0,
       "effects": [
         {
@@ -18481,8 +18484,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "projectile",
-          "text_zh": "投射物"
+          "text_en": "<span class=\"g\">1</span> projectile",
+          "text_zh": "<span class=\"g\">1</span>投射物"
         }
       ],
       "unlocked_by_default": true,
@@ -18561,7 +18564,7 @@
         "pet",
         "stat_ranged_damage"
       ],
-      "icon": "entities\\units\\pet\\catling_gun\\catling_gun_icon.png",
+      "icon": "items/all/catling_gun/catling_gun_box_icon.png",
       "dlc": 0,
       "effects": [
         {
@@ -19037,7 +19040,7 @@
         "stat_lifesteal",
         "pet"
       ],
-      "icon": "entities\\units\\pet\\doc_moth\\doc_moth_icon.png",
+      "icon": "items/all/doc_moth/healBosster_flower_icon.png",
       "dlc": 0,
       "effects": [
         {
@@ -19265,8 +19268,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "Enemies have a higher chance of dropping fruits",
-          "text_zh": "敌人掉落水果的几率更高"
+          "text_en": "<span class=\"g\">1</span> ENEMY_FRUIT_DROPS",
+          "text_zh": "<span class=\"g\">1</span>ENEMY_FRUIT_DROPS"
         },
         {
           "key": "stat_hp_regeneration",
@@ -20208,8 +20211,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "Your structures can crit",
-          "text_zh": "你的构筑物可以暴击"
+          "text_en": "<span class=\"g\">1</span> STRUCTURES_CAN_CRIT",
+          "text_zh": "<span class=\"g\">1</span>STRUCTURES_CAN_CRIT"
         },
         {
           "key": "stat_crit_chance",
@@ -20269,8 +20272,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "Killing a tree spawns a turret",
-          "text_zh": "杀死一棵树木会生成炮塔"
+          "text_en": "<span class=\"g\">1</span> TREE_TURRETS",
+          "text_zh": "<span class=\"g\">1</span>TREE_TURRETS"
         }
       ],
       "unlocked_by_default": true,
@@ -20298,8 +20301,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">15</span> Piercing Damage. Can't go above base damage",
-          "text_zh": "<span class=\"g\">15</span>贯通伤害，不会高于基础伤害"
+          "text_en": "<span class=\"g\">15%</span> Piercing Damage. Can't go above base damage",
+          "text_zh": "<span class=\"g\">15%</span>贯通伤害，不会高于基础伤害"
         },
         {
           "key": "stat_percent_damage",
@@ -20712,8 +20715,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 0,
-          "text_en": "% Enemy Speed",
-          "text_zh": "%敌人速度"
+          "text_en": "<span class=\"g\">-8</span> % Enemy Speed",
+          "text_zh": "<span class=\"g\">-8</span>%敌人速度"
         },
         {
           "key": "stat_speed",
@@ -21228,8 +21231,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 1,
-          "text_en": "% Enemy health",
-          "text_zh": "%敌人生命值"
+          "text_en": "<span class=\"r\">10</span> % Enemy health",
+          "text_zh": "<span class=\"r\">10</span>%敌人生命值"
         }
       ],
       "unlocked_by_default": true,
@@ -21716,8 +21719,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 1,
-          "text_en": "% Enemy health",
-          "text_zh": "%敌人生命值"
+          "text_en": "<span class=\"r\">10</span> % Enemy health",
+          "text_zh": "<span class=\"r\">10</span>%敌人生命值"
         },
         {
           "key": "enemy_damage",
@@ -21726,8 +21729,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 1,
-          "text_en": "% Enemy damage",
-          "text_zh": "%敌人伤害"
+          "text_en": "<span class=\"r\">10</span> % Enemy damage",
+          "text_zh": "<span class=\"r\">10</span>%敌人伤害"
         },
         {
           "key": "stat_curse",
@@ -21862,8 +21865,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "This mirror duplicated an item",
-          "text_zh": "这面镜子复制了一个道具"
+          "text_en": "0 ",
+          "text_zh": "0"
         }
       ],
       "unlocked_by_default": true,
@@ -21937,8 +21940,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "projectile",
-          "text_zh": "投射物"
+          "text_en": "<span class=\"g\">1</span> projectile",
+          "text_zh": "<span class=\"g\">1</span>投射物"
         }
       ],
       "unlocked_by_default": true,
@@ -22321,8 +22324,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "Bonus is lost when taking damage",
-          "text_zh": "受到伤害时会失去奖励"
+          "text_en": "0 ",
+          "text_zh": "0"
         },
         {
           "key": "stat_engineering",
@@ -22790,8 +22793,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "% Explosion Damage",
-          "text_zh": "%爆炸伤害"
+          "text_en": "<span class=\"g\">+10%</span> Explosion Damage",
+          "text_zh": "<span class=\"g\">+10%</span>爆炸伤害"
         },
         {
           "key": "explosion_size",
@@ -22908,7 +22911,7 @@
       "tags": [
         "pet"
       ],
-      "icon": "entities\\units\\pet\\jellyshield\\jellyshield_icon.png",
+      "icon": "items/all/jellyshield/jellyshield_egg_icon.png",
       "dlc": 0,
       "effects": [
         {
@@ -22978,8 +22981,8 @@
           "custom_key": "",
           "storage_method": 2,
           "effect_sign": 3,
-          "text_en": "Weapons can no longer be upgraded or recycled",
-          "text_zh": "武器无法再升级或回收"
+          "text_en": "<span class=\"g\">1</span> LOCK_CURRENT_WEAPONS",
+          "text_zh": "<span class=\"g\">1</span>LOCK_CURRENT_WEAPONS"
         }
       ],
       "unlocked_by_default": true,
@@ -23167,8 +23170,8 @@
           "custom_key": "duplicate_item",
           "storage_method": 1,
           "effect_sign": 3,
-          "text_en": "Duplicates the next item you get from the shop (item limits can't be exceeded)",
-          "text_zh": "复制你从商店获得的下一个道具（不能超过道具限制）"
+          "text_en": "<span class=\"g\">1</span> Mirror",
+          "text_zh": "<span class=\"g\">1</span>镜子"
         }
       ],
       "unlocked_by_default": true,
@@ -23478,8 +23481,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "This goldfish is resting after a hard day's work",
-          "text_zh": "这条金鱼辛苦工作了一天之后，正在休息"
+          "text_en": "0 ",
+          "text_zh": "0"
         }
       ],
       "unlocked_by_default": true,
@@ -23842,8 +23845,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 1,
-          "text_en": "% Enemy damage",
-          "text_zh": "%敌人伤害"
+          "text_en": "<span class=\"r\">15</span> % Enemy damage",
+          "text_zh": "<span class=\"r\">15</span>%敌人伤害"
         }
       ],
       "unlocked_by_default": false,
@@ -24295,8 +24298,8 @@
           "extra": {
             "spawn_cooldown": -1
           },
-          "text_en": "Spawns a little bot that slows down nearby enemies",
-          "text_zh": "生成1个小型机器人，使周围敌人减速"
+          "text_en": "<span class=\"g\">1</span> WANDERING_BOT",
+          "text_zh": "<span class=\"g\">1</span>WANDERING_BOT"
         }
       ],
       "unlocked_by_default": true,
@@ -24810,8 +24813,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "This hourglass broke after resetting the wave counter, also losing all its effects.",
-          "text_zh": "这个沙漏在重置波次之后损坏了，已经失去了所有效果。"
+          "text_en": "0 ",
+          "text_zh": "0"
         },
         {
           "key": "hp_start_next_wave",
@@ -24820,8 +24823,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 1,
-          "text_en": "<span class=\"r\">-100%</span> HP at start of each wave",
-          "text_zh": "<span class=\"r\">-100%</span>每波开始时生命值"
+          "text_en": "Start next wave with <span class=\"r\">-100%</span> HP",
+          "text_zh": "下场敌袭以<span class=\"r\">-100%</span>生命值开始"
         }
       ],
       "unlocked_by_default": true,
@@ -25172,8 +25175,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "% Explosion Damage",
-          "text_zh": "%爆炸伤害"
+          "text_en": "<span class=\"g\">+60%</span> Explosion Damage",
+          "text_zh": "<span class=\"g\">+60%</span>爆炸伤害"
         },
         {
           "key": "explosion_size",
@@ -25681,8 +25684,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 1,
-          "text_en": "<span class=\"r\">-100%</span> HP at start of each wave",
-          "text_zh": "<span class=\"r\">-100%</span>每波开始时生命值"
+          "text_en": "Start next wave with <span class=\"r\">-100%</span> HP",
+          "text_zh": "下场敌袭以<span class=\"r\">-100%</span>生命值开始"
         }
       ],
       "unlocked_by_default": false,
@@ -26540,7 +26543,7 @@
       "tags": [
         "pet"
       ],
-      "icon": "entities\\units\\pet\\scapegoat\\scapegoat_icon.png",
+      "icon": "items/all/scapegoat/scapegoat_balofhay_icon.png",
       "dlc": 0,
       "effects": [
         {
@@ -26639,8 +26642,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">100</span> chance to instantly attract a material when it’s dropped",
-          "text_zh": "有<span class=\"g\">100</span>概率立即吸收掉落的材料"
+          "text_en": "<span class=\"g\">100%</span> chance to instantly attract a material when it’s dropped",
+          "text_zh": "有<span class=\"g\">100%</span>概率立即吸收掉落的材料"
         }
       ],
       "unlocked_by_default": true,
@@ -26919,8 +26922,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 0,
-          "text_en": "<span class=\"g\">-95</span> Weapons Price",
-          "text_zh": "<span class=\"g\">-95</span>武器价格"
+          "text_en": "<span class=\"g\">-95%</span> Weapons Price",
+          "text_zh": "<span class=\"g\">-95%</span>武器价格"
         },
         {
           "key": "stat_harvesting",
@@ -27008,8 +27011,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "% Explosion Damage",
-          "text_zh": "%爆炸伤害"
+          "text_en": "<span class=\"g\">+175%</span> Explosion Damage",
+          "text_zh": "<span class=\"g\">+175%</span>爆炸伤害"
         },
         {
           "key": "explosion_size",
@@ -27121,8 +27124,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 0,
-          "text_en": "<span class=\"g\">-20</span> Items Price",
-          "text_zh": "<span class=\"g\">-20</span>道具价格"
+          "text_en": "<span class=\"g\">-20%</span> Items Price",
+          "text_zh": "<span class=\"g\">-20%</span>道具价格"
         },
         {
           "key": "weapon_slot_upgrades",
@@ -27141,8 +27144,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "You start with one weapon slot",
-          "text_zh": "你开始时拥有一个武器栏"
+          "text_en": "<span class=\"r\">-5</span> Weapon Slot",
+          "text_zh": "<span class=\"r\">-5</span>武器栏"
         },
         {
           "key": "minimum_weapons_in_shop",
@@ -27233,8 +27236,8 @@
           "custom_key": "",
           "storage_method": 2,
           "effect_sign": 3,
-          "text_en": "Pet damage also scales with Melee Damage, Ranged Damage, Elemental Damage, and Engineering",
-          "text_zh": "宠物伤害同时受到近战伤害、远程伤害、元素伤害和工程学影响"
+          "text_en": "<span class=\"g\">1</span> BEAST_MASTER_EFFECT",
+          "text_zh": "<span class=\"g\">1</span>BEAST_MASTER_EFFECT"
         },
         {
           "key": "stat_luck",
@@ -27900,8 +27903,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 1,
-          "text_en": "% Enemy health",
-          "text_zh": "%敌人生命值"
+          "text_en": "<span class=\"r\">100</span> % Enemy health",
+          "text_zh": "<span class=\"r\">100</span>%敌人生命值"
         },
         {
           "key": "effect_reduce_stat_gains",
@@ -28284,8 +28287,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "More trees spawn",
-          "text_zh": "生成更多树木"
+          "text_en": "<span class=\"g\">6</span> Trees",
+          "text_zh": "<span class=\"g\">6</span>树木"
         },
         {
           "key": "cryptid",
@@ -28471,8 +28474,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 1,
-          "text_en": "% Enemy health",
-          "text_zh": "%敌人生命值"
+          "text_en": "<span class=\"r\">25</span> % Enemy health",
+          "text_zh": "<span class=\"r\">25</span>%敌人生命值"
         }
       ],
       "unlocked_by_default": true,
@@ -28757,8 +28760,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 1,
-          "text_en": "% Enemy health",
-          "text_zh": "%敌人生命值"
+          "text_en": "<span class=\"r\">250</span> % Enemy health",
+          "text_zh": "<span class=\"r\">250</span>%敌人生命值"
         }
       ],
       "unlocked_by_default": false,
@@ -28929,8 +28932,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "Enemies have a higher chance of dropping fruits",
-          "text_zh": "敌人掉落水果的几率更高"
+          "text_en": "<span class=\"g\">3</span> ENEMY_FRUIT_DROPS",
+          "text_zh": "<span class=\"g\">3</span>ENEMY_FRUIT_DROPS"
         },
         {
           "key": "stat_luck",
@@ -29215,8 +29218,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 0,
-          "text_en": "<span class=\"g\">-25</span> Items Price",
-          "text_zh": "<span class=\"g\">-25</span>道具价格"
+          "text_en": "<span class=\"g\">-25%</span> Items Price",
+          "text_zh": "<span class=\"g\">-25%</span>道具价格"
         },
         {
           "key": "effect_increase_stat_gains",
@@ -29309,8 +29312,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "More trees spawn",
-          "text_zh": "生成更多树木"
+          "text_en": "<span class=\"g\">12</span> Trees",
+          "text_zh": "<span class=\"g\">12</span>树木"
         },
         {
           "key": "item_lumberjack_shirt",
@@ -29379,8 +29382,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 1,
-          "text_en": "% Enemy Speed",
-          "text_zh": "%敌人速度"
+          "text_en": "<span class=\"r\">10</span> % Enemy Speed",
+          "text_zh": "<span class=\"r\">10</span>%敌人速度"
         },
         {
           "key": "stat_percent_damage",
@@ -29665,8 +29668,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 1,
-          "text_en": "<span class=\"r\">+20</span> Items Price",
-          "text_zh": "<span class=\"r\">+20</span>道具价格"
+          "text_en": "<span class=\"r\">+20%</span> Items Price",
+          "text_zh": "<span class=\"r\">+20%</span>道具价格"
         },
         {
           "key": "disable_item_locking",
@@ -29675,8 +29678,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "Can't lock items",
-          "text_zh": "无法锁定道具"
+          "text_en": "<span class=\"g\">1</span> DISABLE_ITEM_LOCKING",
+          "text_zh": "<span class=\"g\">1</span>DISABLE_ITEM_LOCKING"
         },
         {
           "key": "lock",
@@ -30002,8 +30005,8 @@
           "custom_key": "consumable_stats_while_max",
           "storage_method": 1,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">1</span> Explosion Damage when picking up a consumable while at maximum health",
-          "text_zh": "当在最大生命值下捡起一个消耗品时<span class=\"g\">1</span>%爆炸伤害"
+          "text_en": "<span class=\"g\">+1%</span> Explosion Damage when picking up a consumable while at maximum health",
+          "text_zh": "当在最大生命值下捡起一个消耗品时<span class=\"g\">+1%</span>爆炸伤害"
         },
         {
           "key": "explode_on_consumable",
@@ -30047,8 +30050,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 1,
-          "text_en": "<span class=\"r\">+25</span> Items Price",
-          "text_zh": "<span class=\"r\">+25</span>道具价格"
+          "text_en": "<span class=\"r\">+25%</span> Items Price",
+          "text_zh": "<span class=\"r\">+25%</span>道具价格"
         },
         {
           "key": "xp_gain",
@@ -30447,8 +30450,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 1,
-          "text_en": "% Enemy health",
-          "text_zh": "%敌人生命值"
+          "text_en": "<span class=\"r\">175</span> % Enemy health",
+          "text_zh": "<span class=\"r\">175</span>%敌人生命值"
         },
         {
           "key": "enemy_damage",
@@ -30457,8 +30460,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 1,
-          "text_en": "% Enemy damage",
-          "text_zh": "%敌人伤害"
+          "text_en": "<span class=\"r\">35</span> % Enemy damage",
+          "text_zh": "<span class=\"r\">35</span>%敌人伤害"
         }
       ],
       "unlocked_by_default": false,
@@ -31284,8 +31287,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 1,
-          "text_en": "<span class=\"r\">+50</span> Items Price",
-          "text_zh": "<span class=\"r\">+50</span>道具价格"
+          "text_en": "<span class=\"r\">+50%</span> Items Price",
+          "text_zh": "<span class=\"r\">+50%</span>道具价格"
         }
       ],
       "unlocked_by_default": false,
@@ -31448,8 +31451,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 0,
-          "text_en": "% Enemy Speed",
-          "text_zh": "%敌人速度"
+          "text_en": "<span class=\"g\">-25</span> % Enemy Speed",
+          "text_zh": "<span class=\"g\">-25</span>%敌人速度"
         },
         {
           "key": "stat_harvesting",
@@ -31563,8 +31566,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "You can only equip one weapon at a time",
-          "text_zh": "同时仅能装备1种武器"
+          "text_en": "<span class=\"r\">-5</span> Weapon Slot",
+          "text_zh": "<span class=\"r\">-5</span>武器栏"
         }
       ],
       "unlocked_by_default": false,
@@ -32119,8 +32122,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 1,
-          "text_en": "<span class=\"r\">+50</span> Items Price",
-          "text_zh": "<span class=\"r\">+50</span>道具价格"
+          "text_en": "<span class=\"r\">+50%</span> Items Price",
+          "text_zh": "<span class=\"r\">+50%</span>道具价格"
         }
       ],
       "unlocked_by_default": false,
@@ -33115,8 +33118,8 @@
           "custom_key": "DIE_IN_ONE_HIT",
           "storage_method": 2,
           "effect_sign": 3,
-          "text_en": "This character dies in One Hit",
-          "text_zh": "这个角色受到一次伤害就会死亡"
+          "text_en": "<span class=\"g\">1</span> DIE_IN_ONE_HIT",
+          "text_zh": "<span class=\"g\">1</span>DIE_IN_ONE_HIT"
         },
         {
           "key": "item_tardigrade",
@@ -33155,8 +33158,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "Shop items and crates are cleared of items focusing on Max HP, HP Regeneration, % Life Steal and Armor",
-          "text_zh": "商店物品和箱子中不会出现任何最大生命值、生命再生、生命窃取和护甲物品"
+          "text_en": "0 ",
+          "text_zh": "0"
         }
       ],
       "unlocked_by_default": false,
