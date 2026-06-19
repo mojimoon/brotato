@@ -9,8 +9,8 @@
     <!-- Tabs -->
     <el-tabs v-model="activeTab" class="main-tabs" @tab-change="onTabChange">
       <el-tab-pane name="weapons"><template #label>{{ isZh ? '武器' : 'Weapons' }}</template></el-tab-pane>
-      <el-tab-pane name="items"><template #label>{{ isZh ? '道具' : 'Items' }}</template></el-tab-pane>
-      <el-tab-pane name="characters"><template #label>{{ isZh ? '角色' : 'Characters' }}</template></el-tab-pane>
+      <el-tab-pane name="items"><template #label>{{ isZh ? '道具 (TODO)' : 'Items (TODO)' }}</template></el-tab-pane>
+      <el-tab-pane name="characters"><template #label>{{ isZh ? '角色 (TODO)' : 'Characters (TODO)' }}</template></el-tab-pane>
     </el-tabs>
 
     <!-- Filters -->
@@ -744,7 +744,8 @@ const activeTierWeapons = computed(() => {
 
 const activeWeaponData = computed(() => {
   if (activeTierWeapons.value.length === 0) return selectedItem.value || {}
-  return activeTierWeapons.value[currentTierIndex.value] || activeTierWeapons.value[0]
+  const found = activeTierWeapons.value.find(tw => tw.tier === currentTierIndex.value)
+  return found || activeTierWeapons.value[0]
 })
 
 const activeWeaponTier = computed(() => activeWeaponData.value.tier || 0)
@@ -794,7 +795,7 @@ function selectItem(item) {
   // Remember tier: use sticky tier, but clamp to available tiers
   if (activeTab.value === 'weapons') {
     const family = weaponFamilies.value.find(f => f.id === item.id)
-    const maxTier = family ? family.tiers.length - 1 : 0
+    const maxTier = family && family.tiers.length > 0 ? family.tiers[family.tiers.length - 1].tier : 0
     currentTierIndex.value = Math.min(stickyTierIndex.value, maxTier)
   }
   // waveSlider stays as-is (user's choice persists)

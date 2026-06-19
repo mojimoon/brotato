@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Brotato D6 环境弹幕预览</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#12121f;color:#c8c8d0;font-family:'Segoe UI',system-ui,sans-serif;display:flex;flex-direction:column;align-items:center;min-height:100vh;padding:14px}
+h1{font-size:20px;color:#ca61ff;letter-spacing:1px;margin-bottom:2px}
+.subtitle{font-size:12px;color:#777;margin-bottom:10px}
+canvas{border:1px solid #2a2a3a;border-radius:6px;background:#080812;display:block}
+.toolbar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px;max-width:1040px;justify-content:center;align-items:center}
+.tab-btn{padding:6px 13px;border:1px solid #3a3a4a;border-radius:14px;background:#1e1e30;color:#999;cursor:pointer;font-size:12px;transition:all .18s;white-space:nowrap}
+.tab-btn:hover{background:#2a2a44;color:#ccc}
+.tab-btn.active{background:#ca61ff;border-color:#ca61ff;color:#fff}
+.tab-sep{width:1px;background:#2a2a3a;align-self:stretch;margin:0 2px}
+.ctrl-btn{padding:5px 11px;border:1px solid #3a3a4a;border-radius:12px;background:#1e1e30;color:#999;cursor:pointer;font-size:11px;transition:all .15s}
+.ctrl-btn:hover{background:#2a2a44}
+.ctrl-btn.on{background:#ca61ff55;border-color:#ca61ff;color:#ca61ff}
+.speed-badge{font-size:11px;color:#888;min-width:50px;text-align:center}
+.info-row{display:flex;gap:20px;font-size:11px;color:#666;margin-bottom:6px;max-width:1040px;flex-wrap:wrap;justify-content:center}
+.info-row span{display:flex;align-items:center;gap:3px}
+.info-k{color:#555}.info-v{color:#ca61ff;font-weight:600}
+.pattern-desc{max-width:1040px;margin-top:8px;padding:9px 13px;background:#1a1a2a;border-radius:6px;font-size:12px;color:#888;line-height:1.55;border-left:3px solid #ca61ff}
+.pattern-desc b{color:#ca61ff}
+.pattern-desc em{color:#aaa;font-style:normal}
+.wave-slider{display:flex;align-items:center;gap:8px;margin-left:4px}
+.wave-slider input{width:120px;accent-color:#ca61ff}
+.wave-slider label{font-size:11px;color:#777}
+</style>
+</head>
+<body>
+
+<h1>Brotato 噩梦难度 — 环境弹幕系统</h1>
+<div class="subtitle">Difficulty 6 · Bullet Hell (Game-Accurate Simulation)</div>
+
+<div class="toolbar" id="toolbar"></div>
+
+<div class="info-row">
+  <span><span class="info-k">波次</span><span class="info-v" id="iWave">10</span></span>
+  <span><span class="info-k">弹速</span><span class="info-v" id="iSpd">-</span></span>
+  <span><span class="info-k">伤害</span><span class="info-v" id="iDmg">-</span></span>
+  <span><span class="info-k">冷却</span><span class="info-v" id="iCD">-</span></span>
+  <span><span class="info-k">正弦</span><span class="info-v" id="iSin">-</span></span>
+  <span><span class="info-k">生成器</span><span class="info-v" id="iGen">-</span></span>
+  <span><span class="info-k">子弹数</span><span class="info-v" id="iCnt">0</span></span>
+</div>
+
+<div class="wave-slider">
+  <label>Wave</label>
+  <input type="range" id="waveSlider" min="1" max="20" value="10" step="1">
+  <label id="waveLabel">10</label>
+</div>
+
+<canvas id="cv" width="1040" height="640"></canvas>
+
+<div class="pattern-desc" id="desc"></div>
+
+<script>
+// ===================== GAME-ACCURATE ENGINE =====================
+const GAME_W = 1200, GAME_H = 680;
+const MARGIN = 100;  // bullet_hell_projectile.gd line 5
+const CANVAS_W = 1040, CANVAS_H = 640;
+const SCALE = Math.min(CANVAS_W / GAME_W, CANVAS_H / GAME_H);
+const OX = (CANVAS_W - GAME_W * SCALE) / 2;
+const OY = (CANVAS_H - GAME_H * SCALE) / 2;
+const tx = x => OX + x * SCALE;
+const ty = y => OY + y * SCALE;
+const ts = s => s * SCALE;
+
+const cv = document.getElementById('cv');
+const ctx = cv.getContext('2d');
+
+// Anchor positions (zone_service.gd line 145-165)
+const ANCHOR = {
+  TOP_LEFT:     [0, 0],
+  TOP_CENTER:   [GAME_W/2, 0],
+  TOP_RIGHT:    [GAME_W, 0],
+  CENTER_LEFT:  [0, GAME_H/2],
+  CENTER:       [GAME_W/2, GAME_H/2],
+  CENTER_RIGHT: [GAME_W, GAME_H/2],
+  BOTTOM_LEFT:  [0, GAME_H],
+  BOTTOM_CENTER:[GAME_W/2, GAME_H],
+  BOTTOM_RIGHT: [GAME_W, GAME_H]
+};
+
+let wave = 10, speedMul = 1, paused = false, elapsed = 0;
+let bullets = [], spawners = [], patternDefs = [];
+let currentId = 'top';
+
+// ===================== Bullet =====================
+class Bullet {
+  constructor(x, y, vx, vy, sinAx, sinAy, sinSx, sinSy, color) {
+    this.x = x; this.y = y;
+    this.vx = vx; this.vy = vy;
+    this.sinAx = sinAx||0; this.sinAy = sinAy||0;
+    this.sinSx = sinSx||0; this.sinSy = sinSy||0;
+    this.stx = Math.random()*Math.PI*2;
+    this.sty = Math.random()*Math.PI*2;
+    this.alive = true; this.color = color||'#ca61ff';
+    this.r = 6;
+  }
+  update(dt) {
+    // projectile.gd line 43-44: sinusoidal_offset = sin(time)*amp*0.5; pos += (vel+off)*dt
+    let sx=0,sy=0;
+    if(this.sinAx){this.stx+=dt*this.sinSx;sx=Math.sin(this.stx)*this.sinAx*0.5}
+    if(this.sinAy){this.sty+=dt*this.sinSy;sy=Math.sin(this.sty)*this.sinAy*0.5}
+    this.x += (this.vx + sx) * dt;
+    this.y += (this.vy + sy) * dt;
+    if(this.x<-MARGIN||this.x>GAME_W+MARGIN||this.y<-MARGIN||this.y>GAME_H+MARGIN) this.alive=false;
+  }
+  draw() {
+    ctx.save();
+    ctx.shadowColor=this.color;ctx.shadowBlur=14;
+    ctx.fillStyle=this.color;
+    ctx.beginPath();ctx.arc(tx(this.x),ty(this.y),ts(this.r),0,Math.PI*2);ctx.fill();
+    ctx.shadowBlur=0;ctx.fillStyle='#fff';
+    ctx.beginPath();ctx.arc(tx(this.x),ty(this.y),ts(this.r*0.35),0,Math.PI*2);ctx.fill();
+    ctx.restore();
+  }
+}
+
+// ===================== Spawner =====================
+class Spawner {
+  constructor(x, y, dirX, dirY, interval, startCD, sinAx, sinAy, sinSx, sinSy, color) {
+    this.x=x;this.y=y;this.dirX=dirX;this.dirY=dirY;
+    this.interval=interval; // seconds between shots (spawn_rate * spawn_rate_factor)
+    this.startCD=startCD; this.color=color||'#ca61ff';
+    this.sinAx=sinAx||0;this.sinAy=sinAy||0;
+    this.sinSx=sinSx||0;this.sinSy=sinSy||0;
+    this.tick=-startCD; // bullet_hell.gd line 17: tick_progression = -start_cool_down
+    this.fired=false;
+  }
+  update(dt) {
+    // bullets_generator.gd line 87-91
+    this.tick += dt;
+    let fired = [];
+    while(this.tick > this.interval) {
+      this.tick -= this.interval;
+      this.fired = true;
+      fired.push(new Bullet(this.x, this.y, this.dirX, this.dirY,
+        this.sinAx, this.sinAy, this.sinSx, this.sinSy, this.color));
+    }
+    return fired;
+  }
+  drawSpawner() {
+    if(!this.fired && elapsed < this.startCD) return;
+    let pulse = 0.5+0.5*Math.sin(elapsed*3);
+    ctx.fillStyle=`rgba(202,97,255,${0.25+pulse*0.35})`;
+    ctx.beginPath();ctx.arc(tx(this.x),ty(this.y),ts(9+pulse*3),0,Math.PI*2);ctx.fill();
+  }
+}
+
+// ===================== Pattern Builder =====================
+function dupHoriz(anchorKey, offsetY, xSpacing, nCopies, startCD, dirX, dirY, sinAx, sinAy, sinSx, sinSy, interval, color) {
+  let [ax,ay] = ANCHOR[anchorKey];
+  let list = [];
+  for(let i=0;i<nCopies;i++) {
+    let x = ax + i*xSpacing;
+    list.push(new Spawner(x, ay+offsetY, dirX, dirY, interval, startCD, sinAx, sinAy, sinSx, sinSy, color));
+  }
+  return list;
+}
+
+function dupVert(anchorKey, offsetX, ySpacing, nCopies, startCD, dirX, dirY, sinAx, sinAy, sinSx, sinSy, interval, color) {
+  let [ax,ay] = ANCHOR[anchorKey];
+  let list = [];
+  for(let i=0;i<nCopies;i++) {
+    let y = ay + i*ySpacing;
+    list.push(new Spawner(ax+offsetX, y, dirX, dirY, interval, startCD, sinAx, sinAy, sinSx, sinSy, color));
+  }
+  return list;
+}
+
+// Auto-calculation of duplications (bullets_generator.gd line 44-55)
+// dup_along=1 (horiz): n = floor((zoneMax - pos) / step) + 1
+// dup_along=2 (vert):  n = floor((zoneMax - pos) / step) + 1
+function calcDupHoriz(startX, step) { return Math.floor((GAME_W - startX) / step) + 1; }
+function calcDupVert(startY, step) { return Math.floor((GAME_H - startY) / step) + 1; }
+
+function buildPattern(id) {
+  spawners=[];bullets=[];elapsed=0;
+  // Effective spawn_rate after wave modifier: rate - wave/20 (bullet_hell.gd line 23)
+  // velocity: speed + wave*2 (line 24)
+  function rate(base) { return Math.max(0.1, base - wave/20); }
+  function speed(base) { return base + wave*2; }
+
+  let spd, info = {};
+
+  switch(id) {
+  // ===== 平行弹幕 Type 1: BulletHell_Top.tscn =====
+  case 'top':
+    spd = speed(200);
+    info = { name:'平行弹幕 Type 1', src:'BulletHell_Top.tscn', spd:spd, dmg:'3+1/波', rate:rate(2.2).toFixed(1)+'s', sin:'X ±100px @3Hz', gens:2, desc:'<b>4个生成器</b> (2排×2水平复制)。子弹同向↓，间隔640px覆盖全宽。第2排偏移320px，延迟0.5s。正弦±100px@3Hz。<br><em>躲避:</em> 在正弦波峰间隙走位。' };
+    // Generator 1: anchor=TOP_LEFT, offset(0,-64), dup_horiz x640 -> 2 copies
+    spawners.push(...dupHoriz('TOP_LEFT', -64, 640, calcDupHoriz(0,640), 0, 0, spd, 100, 0, 3, 0, rate(2.2)*2.0, '#ca61ff'));
+    // Generator 2: anchor=TOP_LEFT, offset(320,-64), dup_horiz x640 -> 2 copies, start_cd=0.5
+    spawners.push(...dupHoriz('TOP_LEFT', -64, 640, calcDupHoriz(320,640), 0.5, 0, spd, 100, 0, 3, 0, rate(2.2)*2.0, '#d480ff'));
+    break;
+
+  case 'bottom':
+    spd = speed(200);
+    info = { name:'平行弹幕 Type 1 — Bottom', src:'BulletHell_Bottom.tscn', spd:spd, dmg:'3+1/波', rate:rate(2.2).toFixed(1)+'s', sin:'X ±100px @3Hz', gens:2, desc:'同Top但方向↑，从底部向上发射。参数完全对称。' };
+    spawners.push(...dupHoriz('BOTTOM_LEFT', 64, 640, calcDupHoriz(0,640), 0, 0, -spd, 100, 0, 3, 0, rate(2.2)*2.0, '#ca61ff'));
+    spawners.push(...dupHoriz('BOTTOM_LEFT', 64, 640, calcDupHoriz(320,640), 0.5, 0, -spd, 100, 0, 3, 0, rate(2.2)*2.0, '#d480ff'));
+    break;
+
+  case 'left':
+    spd = speed(200);
+    info = { name:'平行弹幕 Type 1 — Left', src:'BulletHell_Left.tscn', spd:spd, dmg:'3+1/波', rate:rate(2.2).toFixed(1)+'s', sin:'Y ±100px @3Hz', gens:2, desc:'从左侧→右。垂直复制640px，偏移320px延迟0.5s。' };
+    spawners.push(...dupVert('TOP_LEFT', -64, 640, calcDupVert(0,640), 0, spd, 0, 0, 100, 0, 3, rate(2.2)*2.0, '#ca61ff'));
+    spawners.push(...dupVert('TOP_LEFT', -64, 640, calcDupVert(320,640), 0.5, spd, 0, 0, 100, 0, 3, rate(2.2)*2.0, '#d480ff'));
+    break;
+
+  case 'right':
+    spd = speed(200);
+    info = { name:'平行弹幕 Type 1 — Right', src:'BulletHell_Right.tscn', spd:spd, dmg:'3+1/波', rate:rate(2.2).toFixed(1)+'s', sin:'Y ±100px @3Hz', gens:2, desc:'从右侧→左。垂直复制640px，偏移320px延迟0.5s。' };
+    spawners.push(...dupVert('TOP_RIGHT', 64, 640, calcDupVert(0,640), 0, -spd, 0, 0, 100, 0, 3, rate(2.2)*2.0, '#ca61ff'));
+    spawners.push(...dupVert('TOP_RIGHT', 64, 640, calcDupVert(320,640), 0.5, -spd, 0, 0, 100, 0, 3, rate(2.2)*2.0, '#d480ff'));
+    break;
+
+  // ===== 交错弹幕 Type 2: BulletHell_Top_2.tscn =====
+  case 'top2':
+    spd = speed(200);
+    info = { name:'交错弹幕 Type 2', src:'BulletHell_Top_2.tscn', spd:spd, dmg:'3+1/波', rate:rate(3.0).toFixed(1)+'s', sin:'X ±600px @1Hz <b>反向!</b>', gens:2, desc:'<b>关键：两排反向正弦!</b> G1: sin=-600(左摆,粉), G2: sin=+600(右摆,蓝)。同Y=-64，水平偏移300px。无start延迟。<br><em>躲避:</em> 两波交叉形成X形图案，站在交叉中心点最安全。' };
+    // G1: anchor=TOP_LEFT, offset(0,-64), sinX=-600, dupHoriz 600px
+    spawners.push(...dupHoriz('TOP_LEFT', -64, 600, calcDupHoriz(0,600), 0, 0, spd, -600, 0, 1, 0, rate(3.0)*1.0, '#ff6b9d'));
+    // G2: anchor=TOP_LEFT, offset(300,-64), sinX=+600, dupHoriz 600px
+    spawners.push(...dupHoriz('TOP_LEFT', -64, 600, calcDupHoriz(300,600), 0, 0, spd, 600, 0, 1, 0, rate(3.0)*1.0, '#6bc5ff'));
+    break;
+
+  case 'bottom2':
+    spd = speed(200);
+    info = { name:'交错弹幕 Type 2 — Bottom_2', src:'BulletHell_Bottom_2.tscn', spd:spd, dmg:'3+1/波', rate:rate(3.0).toFixed(1)+'s', sin:'X ±600px @1Hz 反向', gens:2, desc:'同Top_2但从底部↑发射。反向正弦交叉。' };
+    spawners.push(...dupHoriz('BOTTOM_LEFT', 64, 600, calcDupHoriz(0,600), 0, 0, -spd, -600, 0, 1, 0, rate(3.0)*1.0, '#ff6b9d'));
+    spawners.push(...dupHoriz('BOTTOM_LEFT', 64, 600, calcDupHoriz(300,600), 0, 0, -spd, 600, 0, 1, 0, rate(3.0)*1.0, '#6bc5ff'));
+    break;
+
+  case 'left2':
+    spd = speed(200);
+    info = { name:'交错弹幕 Type 2 — Left_2', src:'BulletHell_Left_2.tscn', spd:spd, dmg:'3+1/波', rate:rate(3.0).toFixed(1)+'s', sin:'Y ±600px @1Hz 反向', gens:2, desc:'左侧→右，反向正弦Y轴交叉。' };
+    spawners.push(...dupVert('TOP_LEFT', -64, 600, calcDupVert(0,600), 0, spd, 0, 0, -600, 0, 1, rate(3.0)*1.0, '#ff6b9d'));
+    spawners.push(...dupVert('TOP_LEFT', -64, 600, calcDupVert(300,600), 0, spd, 0, 0, 600, 0, 1, rate(3.0)*1.0, '#6bc5ff'));
+    break;
+
+  case 'right2':
+    spd = speed(200);
+    info = { name:'交错弹幕 Type 2 — Right_2', src:'BulletHell_Right_2.tscn', spd:spd, dmg:'3+1/波', rate:rate(3.0).toFixed(1)+'s', sin:'Y ±600px @1Hz 反向', gens:2, desc:'右侧←左，反向正弦Y轴交叉。' };
+    spawners.push(...dupVert('TOP_RIGHT', 64, 600, calcDupVert(0,600), 0, -spd, 0, 0, -600, 0, 1, rate(3.0)*1.0, '#ff6b9d'));
+    spawners.push(...dupVert('TOP_RIGHT', 64, 600, calcDupVert(300,600), 0, -spd, 0, 0, 600, 0, 1, rate(3.0)*1.0, '#6bc5ff'));
+    break;
+
+  // ===== 密集平行弹幕 Type 3: BulletHell_Top_3.tscn =====
+  case 'top3':
+    spd = speed(200);
+    let xBases3 = [-400, -250, -100]; // offset from anchor
+    // 6 generators, each dup_horiz 450px, spawn_rate_factor=6.0
+    // Actually re-reading Top_3: it has 6 nodes (right_spawn..right_spawn6), offset Y=-100
+    // duplications depend on position: (1200 - (-400))/450 + 1 = 4.6 → 4
+    info = { name:'密集平行弹幕 Type 3', src:'BulletHell_Top_3.tscn', spd:spd, dmg:'3+1/波', rate:rate(2.0).toFixed(1)+'s ×6', sin:'X ±50px @1Hz', gens:6, desc:'<b>6个生成器</b>交替发射(间隔0.166s)，spawn_rate_factor=6.0。水平复制450px。正弦±50px@1Hz小幅摆动。<br><em>躲避:</em> 极高密度弹幕墙，需在小幅正弦波的微空隙中穿行。' };
+    for(let i=0;i<6;i++) {
+      let xOff = xBases3[i%3];
+      let cd = Math.floor(i/3)*0.5 + (i%3)*0.166;
+      // Anchor is TOP_LEFT(0,0), offset Y=-100
+      let startX = 0 + xOff;
+      let nDups = calcDupHoriz(startX, 450);
+      spawners.push(...dupHoriz('TOP_LEFT', -100, 450, nDups, cd, 0, spd, 50, 0, 1, 0, rate(2.0)*6.0, '#b86bff'));
+    }
+    break;
+
+  case 'right3':
+    spd = speed(200);
+    info = { name:'密集平行弹幕 Type 3 — Right_3', src:'BulletHell_Right_3.tscn', spd:spd, dmg:'3+1/波', rate:rate(2.0).toFixed(1)+'s ×6', sin:'Y ±50px @1Hz', gens:6, desc:'同Top_3但从右侧←左。6个生成器，垂直复制450px，间隔0.166s。' };
+    let yBases3 = [-400, -250, -100];
+    for(let i=0;i<6;i++) {
+      let yOff = yBases3[i%3];
+      let cd = Math.floor(i/3)*0.5 + (i%3)*0.166;
+      // Anchor is TOP_RIGHT(GAME_W,0), offset X=64
+      let startY = 0 + yOff;
+      let nDups = calcDupVert(startY, 450);
+      spawners.push(...dupVert('TOP_RIGHT', 64, 450, nDups, cd, -spd, 0, 0, 50, 0, 1, rate(2.0)*6.0, '#b86bff'));
+    }
+    break;
+
+  // ===== 网格蛇形: BulletHell_0.tscn =====
+  case 'grid':
+    spd = speed(150);
+    info = { name:'网格蛇形弹幕', src:'BulletHell_0.tscn', spd:spd, dmg:'3+1/波', rate:rate(4.0).toFixed(1)+'s', sin:'X,Y ±250px @1Hz', gens:1, desc:'<b>唯一双轴正弦!</b> anchor=TOP_LEFT, offset(-64,-250)。垂直复制312px，间隔1s。位置随机±200px。<br><em>躲避:</em> 8字形轨迹最难预测，需同时观察X/Y两轴运动。' };
+    // anchor=TOP_LEFT, offset(-64,-250), dup_vert=312px, dup_start_cd=1.0
+    // sin=(250,250), sin_speed=(1,1)
+    let nRows = calcDupVert(-250, 312);
+    for(let i=0;i<nRows;i++) {
+      let y = 0 + (-250) + i*312; // anchor(0,0) + offset(-64,-250) + i*312
+      let randY = y + (Math.random()-0.5)*400; // position_spawn_randomness Y=200
+      spawners.push(new Spawner(-64, randY, 0, spd, rate(4.0)*1.0, 0+i*1.0, 250, 250, 1, 1, '#ff9944'));
+    }
+    break;
+
+  // ===== 双向交错: BulletHell_1.tscn =====
+  case 'bidi':
+    spd = speed(150);
+    info = { name:'双向交错弹幕', src:'BulletHell_1.tscn', spd:spd, dmg:'3+1/波', rate:rate(4.0).toFixed(1)+'s', sin:'Y ±210px @1.5Hz', gens:2, desc:'<b>左右双向对射!</b> 左(粉)→右, anchor=TOP_LEFT, offset(-64,62), 垂直复制624px(偏移0.5s), 随机偏移±200px。<br>右(蓝)←左, anchor=CENTER_RIGHT, offset(64,250), 垂直复制-624px。<br><em>躲避:</em> 中央碰撞区最危险，垂直走位寻找空隙。' };
+    // Left: TOP_LEFT, offset(-64,62), dup_vert=624px, dup_cd=0.5, random Y±200
+    let nL = calcDupVert(62, 624);
+    for(let i=0;i<nL;i++) {
+      let y = 62 + i*624;
+      let randY = y + (Math.random()-0.5)*400;
+      spawners.push(new Spawner(-64, randY, spd, 0, rate(4.0)*1.0, 0+i*0.5, 0, 210, 0, 1.5, '#ff6b9d'));
+    }
+    // Right: CENTER_RIGHT, offset(64,250), dup_vert=-624px
+    let nR = calcDupVert(250, -624);
+    for(let i=0;i<nR;i++) {
+      let y = GAME_H/2 + 250 + i*(-624); // anchor is CENTER_RIGHT = (GAME_W, GAME_H/2)
+      let randY = y + (Math.random()-0.5)*400;
+      spawners.push(new Spawner(GAME_W+64, randY, -spd, 0, rate(4.0)*1.0, 0+i*0.5, 0, 210, 0, 1.5, '#6bc5ff'));
+    }
+    break;
+
+  default:
+    return buildPattern('top');
+  }
+  return info;
+}
+
+// ===================== Init =====================
+let patternInfo = buildPattern('top');
+
+function loadPattern(id) {
+  currentId = id;
+  patternInfo = buildPattern(id);
+  updateUI();
+}
+
+// ===================== UI =====================
+const PATTERNS = [
+  {id:'top',     label:'平行↑↓ Type 1',  group:''},
+  {id:'bottom',  label:'Bottom',          group:'Type 1'},
+  {id:'left',    label:'Left',            group:'Type 1'},
+  {id:'right',   label:'Right',           group:'Type 1'},
+  {id:'top2',    label:'交错 Type 2',     group:''},
+  {id:'bottom2', label:'Bottom_2',        group:'Type 2'},
+  {id:'left2',   label:'Left_2',          group:'Type 2'},
+  {id:'right2',  label:'Right_2',         group:'Type 2'},
+  {id:'top3',    label:'密集 Type 3',     group:''},
+  {id:'right3',  label:'Right_3',         group:'Type 3'},
+  {id:'grid',    label:'网格蛇形 BH_0',   group:''},
+  {id:'bidi',    label:'双向交错 BH_1',   group:''},
+];
+
+const tb = document.getElementById('toolbar');
+PATTERNS.forEach((p,i) => {
+  if(i>0&&PATTERNS[i-1].group!==p.group&&p.group){
+    let s=document.createElement('span');s.className='tab-sep';tb.appendChild(s);
+  }
+  let b=document.createElement('button');b.className='tab-btn';b.id='tab_'+p.id;
+  b.textContent=p.label;b.onclick=()=>loadPattern(p.id);tb.appendChild(b);
+});
+
+// Controls
+let ctrlHTML = `
+<span class="tab-sep"></span>
+<button class="ctrl-btn" id="btnPause">⏯</button>
+<button class="ctrl-btn" id="btnSlow">◀◀</button>
+<button class="ctrl-btn on" id="btn1x">1×</button>
+<button class="ctrl-btn" id="btnFast">▶▶</button>
+<span class="speed-badge" id="spdBadge">1×</span>
+`;
+tb.insertAdjacentHTML('beforeend', ctrlHTML);
+
+document.getElementById('btnPause').onclick=()=>{paused=!paused};
+document.getElementById('btnSlow').onclick=()=>{speedMul=Math.max(0.25,speedMul/2);updateSpeedUI()};
+document.getElementById('btn1x').onclick=()=>{speedMul=1;updateSpeedUI()};
+document.getElementById('btnFast').onclick=()=>{speedMul=Math.min(8,speedMul*2);updateSpeedUI()};
+
+document.getElementById('waveSlider').oninput=function(){
+  wave=parseInt(this.value);
+  document.getElementById('waveLabel').textContent=wave;
+  patternInfo=buildPattern(currentId);updateUI();
+};
+
+function updateSpeedUI(){
+  document.getElementById('spdBadge').textContent=speedMul+'×';
+  ['btnSlow','btn1x','btnFast'].forEach(id=>document.getElementById(id).classList.remove('on'));
+  if(speedMul===1)document.getElementById('btn1x').classList.add('on');
+}
+
+function updateUI(){
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab_'+currentId)?.classList.add('active');
+  document.getElementById('iWave').textContent=wave;
+  document.getElementById('iSpd').textContent=patternInfo.spd;
+  document.getElementById('iDmg').textContent=patternInfo.dmg;
+  document.getElementById('iCD').textContent=patternInfo.rate;
+  document.getElementById('iSin').innerHTML=patternInfo.sin;
+  document.getElementById('iGen').textContent=patternInfo.gens;
+  document.getElementById('iCnt').textContent=bullets.length;
+  document.getElementById('desc').innerHTML='<b>'+patternInfo.name+'</b> &nbsp;<em>('+patternInfo.src+')</em><br>'+patternInfo.desc;
+}
+updateUI();
+
+// ===================== Draw Background =====================
+function drawGrid() {
+  ctx.strokeStyle='rgba(50,50,70,0.25)';ctx.lineWidth=0.5;
+  for(let x=0;x<=GAME_W;x+=200){ctx.beginPath();ctx.moveTo(tx(x),ty(0));ctx.lineTo(tx(x),ty(GAME_H));ctx.stroke()}
+  for(let y=0;y<=GAME_H;y+=200){ctx.beginPath();ctx.moveTo(tx(0),ty(y));ctx.lineTo(tx(GAME_W),ty(y));ctx.stroke()}
+  // Center crosshair
+  ctx.strokeStyle='rgba(255,255,255,0.05)';ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(tx(GAME_W/2),ty(0));ctx.lineTo(tx(GAME_W/2),ty(GAME_H));ctx.stroke();
+  ctx.beginPath();ctx.moveTo(tx(0),ty(GAME_H/2));ctx.lineTo(tx(GAME_W),ty(GAME_H/2));ctx.stroke();
+  // Border
+  ctx.strokeStyle='rgba(100,100,130,0.35)';ctx.lineWidth=1;
+  ctx.strokeRect(tx(0),ty(0),ts(GAME_W),ts(GAME_H));
+  // Despawn margin
+  ctx.strokeStyle='rgba(255,50,50,0.12)';ctx.setLineDash([4,8]);
+  ctx.strokeRect(tx(-MARGIN),ty(-MARGIN),ts(GAME_W+MARGIN*2),ts(GAME_H+MARGIN*2));
+  ctx.setLineDash([]);
+}
+
+// ===================== Main Loop =====================
+let lastT = performance.now();
+function loop(ts) {
+  let dt = (ts - lastT) / 1000; lastT = ts;
+  if(dt > 0.1) dt = 0.1;
+
+  if(!paused) {
+    let rdt = dt * speedMul;
+    elapsed += rdt;
+
+    // Update spawners
+    for(let s of spawners) {
+      let newBs = s.update(rdt);
+      for(let b of newBs) bullets.push(b);
+    }
+
+    // Update bullets
+    for(let b of bullets) b.update(rdt);
+    bullets = bullets.filter(b=>b.alive);
+    document.getElementById('iCnt').textContent = bullets.length;
+  }
+
+  // Draw
+  ctx.clearRect(0,0,CANVAS_W,CANVAS_H);
+  drawGrid();
+
+  // Sinusoidal preview (trace path for first spawner)
+  if(spawners.length>0) {
+    let s = spawners[0];
+    ctx.strokeStyle='rgba(202,97,255,0.1)';ctx.lineWidth=1;
+    ctx.beginPath();
+    let px=s.x,py=s.y;ctx.moveTo(tx(px),ty(py));
+    for(let t=0;t<5;t+=0.03) {
+      let sx=0,sy=0;
+      if(s.sinAx){sx=Math.sin(t*s.sinSx)*s.sinAx*0.5}
+      if(s.sinAy){sy=Math.sin(t*s.sinSy)*s.sinAy*0.5}
+      px=s.x+(s.dirX*200+sx)*t;py=s.y+(s.dirY*200+sy)*t;
+      ctx.lineTo(tx(px),ty(py));
+    }
+    ctx.stroke();
+  }
+
+  // Spawners
+  for(let s of spawners) s.drawSpawner();
+
+  // Direction arrows from spawners
+  ctx.strokeStyle='rgba(202,97,255,0.15)';ctx.lineWidth=1;ctx.setLineDash([3,6]);
+  let drawn={};
+  for(let s of spawners){
+    let key=s.x+','+s.y;if(drawn[key])continue;drawn[key]=true;
+    ctx.beginPath();ctx.moveTo(tx(s.x),ty(s.y));
+    ctx.lineTo(tx(s.x+s.dirX*50),ty(s.y+s.dirY*50));ctx.stroke();
+  }
+  ctx.setLineDash([]);
+
+  // Bullets
+  for(let b of bullets) b.draw();
+
+  // Info overlay
+  ctx.fillStyle='rgba(255,255,255,0.4)';ctx.font='11px monospace';ctx.textAlign='right';
+  ctx.fillText('Wave '+wave+' · '+bullets.length+' bullets · '+speedMul+'×', tx(GAME_W)-12, ty(18));
+
+  requestAnimationFrame(loop);
+}
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>
