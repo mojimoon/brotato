@@ -19,100 +19,94 @@
 
     <!-- Tabs -->
     <el-tabs v-model="activeTab" type="card" class="main-tabs" @tab-change="onTabChange">
-      <el-tab-pane name="weapons"><template #label><el-icon style="vertical-align:middle;margin-right:4px"><Aim /></el-icon>{{ isZh ? '武器' : 'Weapons' }}</template></el-tab-pane>
-      <el-tab-pane name="items"><template #label><el-icon style="vertical-align:middle;margin-right:4px"><Box /></el-icon>{{ isZh ? '道具' : 'Items' }}</template></el-tab-pane>
-      <el-tab-pane name="characters"><template #label><el-icon style="vertical-align:middle;margin-right:4px"><User /></el-icon>{{ isZh ? '角色' : 'Characters' }}</template></el-tab-pane>
+      <el-tab-pane name="weapons"><template #label><el-icon style="vertical-align:middle;margin-right:4px"><Aim /></el-icon>{{ S.weapons }}</template></el-tab-pane>
+      <el-tab-pane name="items"><template #label><el-icon style="vertical-align:middle;margin-right:4px"><Box /></el-icon>{{ S.items }}</template></el-tab-pane>
+      <el-tab-pane name="characters"><template #label><el-icon style="vertical-align:middle;margin-right:4px"><User /></el-icon>{{ S.characters }}</template></el-tab-pane>
     </el-tabs>
 
     <!-- Filters -->
     <div class="filters">
-      <el-input v-model="searchText" :placeholder="isZh ? '搜索...' : 'Search...'" clearable class="search-input" @input="onFilterChange">
+      <el-input v-model="searchText" :placeholder="S.search" clearable class="search-input" @input="onFilterChange">
         <template #prefix><el-icon><Search /></el-icon></template>
       </el-input>
 
-      <!-- Tier -->
       <el-dropdown v-if="activeTab !== 'characters'" trigger="click" popper-class="dark-dropdown" @command="(v) => { filterTier = v; onFilterChange(); }">
         <el-button class="filter-btn" :class="{ 'has-value': filterTier !== null }">
-          {{ filterTier !== null ? tierDisplayName(filterTier) : (isZh ? '稀有度' : 'Rarity') }}
+          {{ filterTier !== null ? tierDisplayName(filterTier) : S.tier }}
           <el-icon class="el-icon--right"><ArrowDown /></el-icon>
         </el-button>
         <template #dropdown>
           <el-dropdown-menu>
-            <el-dropdown-item :command="null" :class="{ 'is-active-opt': filterTier === null }">{{ isZh ? '全部' : 'All' }}</el-dropdown-item>
+            <el-dropdown-item :command="null" :class="{ 'is-active-opt': filterTier === null }">{{ S.all }}</el-dropdown-item>
             <el-dropdown-item v-for="n in 4" :key="n-1" :command="n-1" :class="{ 'is-active-opt': filterTier === n-1 }">{{ tierDisplayName(n-1) }}</el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>
 
-      <!-- Type -->
       <el-dropdown v-if="activeTab === 'weapons'" trigger="click" popper-class="dark-dropdown" @command="(v) => { filterType = v; onFilterChange(); }">
         <el-button class="filter-btn" :class="{ 'has-value': !!filterType }">
-          {{ filterType === 'melee' ? (isZh ? '近战' : 'Melee') : filterType === 'ranged' ? (isZh ? '远战' : 'Ranged') : (isZh ? '类型' : 'Type') }}
+          {{ filterType ? S[filterType] : S.type }}
           <el-icon class="el-icon--right"><ArrowDown /></el-icon>
         </el-button>
         <template #dropdown>
           <el-dropdown-menu>
-            <el-dropdown-item :command="null" :class="{ 'is-active-opt': !filterType }">{{ isZh ? '全部' : 'All' }}</el-dropdown-item>
-            <el-dropdown-item command="melee" :class="{ 'is-active-opt': filterType === 'melee' }">{{ isZh ? '近战' : 'Melee' }}</el-dropdown-item>
-            <el-dropdown-item command="ranged" :class="{ 'is-active-opt': filterType === 'ranged' }">{{ isZh ? '远战' : 'Ranged' }}</el-dropdown-item>
+            <el-dropdown-item :command="null" :class="{ 'is-active-opt': !filterType }">{{ S.all }}</el-dropdown-item>
+            <el-dropdown-item command="melee" :class="{ 'is-active-opt': filterType === 'melee' }">{{ S.melee }}</el-dropdown-item>
+            <el-dropdown-item command="ranged" :class="{ 'is-active-opt': filterType === 'ranged' }">{{ S.ranged }}</el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>
 
-      <!-- Set -->
       <el-dropdown v-if="activeTab === 'weapons'" trigger="click" popper-class="dark-dropdown" @command="(v) => { filterSet = v; onFilterChange(); }">
         <el-button class="filter-btn" :class="{ 'has-value': filterSet !== null }">
-          {{ filterSet !== null ? ((availableSets.find(s => s.key === filterSet) || {}).label || filterSet) : (isZh ? '武器类别' : 'Set') }}
+          {{ filterSet !== null ? ((availableSets.find(s => s.key === filterSet) || {}).label || filterSet) : S.set }}
           <el-icon class="el-icon--right"><ArrowDown /></el-icon>
         </el-button>
         <template #dropdown>
           <el-dropdown-menu>
-            <el-dropdown-item :command="null" :class="{ 'is-active-opt': filterSet === null }">{{ isZh ? '全部' : 'All' }}</el-dropdown-item>
+            <el-dropdown-item :command="null" :class="{ 'is-active-opt': filterSet === null }">{{ S.all }}</el-dropdown-item>
             <el-dropdown-item v-for="s in availableSets" :key="s.key" :command="s.key" :class="{ 'is-active-opt': filterSet === s.key }">{{ s.label }}</el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>
 
-      <!-- DLC -->
       <el-dropdown trigger="click" popper-class="dark-dropdown" @command="(v) => { filterDlc = v; onFilterChange(); }">
         <el-button class="filter-btn" :class="{ 'has-value': filterDlc !== null }">
-          {{ filterDlc === 0 ? (isZh ? '本体' : 'Base') : filterDlc === 1 ? 'DLC' : (isZh ? '来源' : 'Source') }}
+          {{ filterDlc === 0 ? S.base : filterDlc === 1 ? 'DLC' : S.source }}
           <el-icon class="el-icon--right"><ArrowDown /></el-icon>
         </el-button>
         <template #dropdown>
           <el-dropdown-menu>
-            <el-dropdown-item :command="null" :class="{ 'is-active-opt': filterDlc === null }">{{ isZh ? '全部' : 'All' }}</el-dropdown-item>
-            <el-dropdown-item :command="0" :class="{ 'is-active-opt': filterDlc === 0 }">{{ isZh ? '本体' : 'Base Game' }}</el-dropdown-item>
+            <el-dropdown-item :command="null" :class="{ 'is-active-opt': filterDlc === null }">{{ S.all }}</el-dropdown-item>
+            <el-dropdown-item :command="0" :class="{ 'is-active-opt': filterDlc === 0 }">{{ S.baseGame }}</el-dropdown-item>
             <el-dropdown-item :command="1" :class="{ 'is-active-opt': filterDlc === 1 }">DLC</el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>
 
-      <!-- Tag -->
       <el-dropdown v-if="activeTab === 'items' || activeTab === 'characters'" trigger="click" popper-class="dark-dropdown" @command="(v) => { filterTag = v; onFilterChange(); }">
         <el-button class="filter-btn" :class="{ 'has-value': filterTag !== null }">
-          {{ filterTag !== null ? tagTr(filterTag) : (isZh ? '道具标签' : 'Tag') }}
+          {{ filterTag !== null ? tagTr(filterTag) : S.tag }}
           <el-icon class="el-icon--right"><ArrowDown /></el-icon>
         </el-button>
         <template #dropdown>
           <el-dropdown-menu>
-            <el-dropdown-item :command="null" :class="{ 'is-active-opt': filterTag === null }">{{ isZh ? '全部' : 'All' }}</el-dropdown-item>
+            <el-dropdown-item :command="null" :class="{ 'is-active-opt': filterTag === null }">{{ S.all }}</el-dropdown-item>
             <el-dropdown-item v-for="t in allTags" :key="t" :command="t" :class="{ 'is-active-opt': filterTag === t }">{{ tagTr(t) }}</el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>
 
-      <!-- Sort -->
       <el-dropdown v-if="activeTab === 'weapons' || activeTab === 'items'" trigger="click" popper-class="dark-dropdown" @command="(v) => { sortBy = v; onFilterChange(); }">
         <el-button class="filter-btn sort-btn" :class="{ 'has-value': sortBy !== 'default' }">
           <el-icon style="margin-right:4px"><Sort /></el-icon>
-          {{ sortBy === 'price' ? (isZh ? '价格' : 'Price') : (isZh ? '默认' : 'Default') }}
+          {{ sortBy === 'price' ? S.price : S.default }}
           <el-icon class="el-icon--right"><ArrowDown /></el-icon>
         </el-button>
         <template #dropdown>
           <el-dropdown-menu>
-            <el-dropdown-item command="default" :class="{ 'is-active-opt': sortBy === 'default' }">{{ isZh ? '默认' : 'Default' }}</el-dropdown-item>
-            <el-dropdown-item command="price" :class="{ 'is-active-opt': sortBy === 'price' }">{{ isZh ? '价格' : 'Price' }}</el-dropdown-item>
+            <el-dropdown-item command="default" :class="{ 'is-active-opt': sortBy === 'default' }">{{ S.default }}</el-dropdown-item>
+            <el-dropdown-item command="price" :class="{ 'is-active-opt': sortBy === 'price' }">{{ S.price }}</el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>
@@ -150,9 +144,8 @@
             <div class="detail-title-wrap">
               <h2 :style="{ color: tierColor(activeWeaponTier) }">{{ itemName(selectedItem) }}</h2>
               <div class="detail-badges">
-                <span class="type-badge" :class="selectedItem.type">{{ selectedItem.type === 'melee' ? (isZh ? '近战' : 'Melee') : (isZh ? '远战' : 'Ranged') }}</span>
+                <span class="type-badge" :class="selectedItem.type">{{ S[selectedItem.type] }}</span>
                 <span v-if="selectedItem.dlc" class="dlc-badge">DLC</span>
-                <!-- Set tooltips only (no inline text) -->
                 <el-tooltip v-for="(setNameKey, si) in (selectedItem.sets || [])" :key="si" placement="top" effect="dark" :hide-after="0">
                   <template #content>
                     <div class="set-tooltip-content">
@@ -165,30 +158,22 @@
                   <span class="set-badge">{{ setTr(setNameKey) }}</span>
                 </el-tooltip>
               </div>
-
             </div>
           </div>
 
-          <!-- Tier Tabs -->
           <div class="tier-tabs" v-if="activeTierWeapons.length > 1">
-            <button
-              v-for="(tw, idx) in allFourTierSlots"
-              :key="idx"
-              class="tier-tab"
+            <button v-for="(tw, idx) in allFourTierSlots" :key="idx" class="tier-tab"
               :class="{ active: currentTierIndex === idx && tw !== null, disabled: tw === null }"
               :disabled="tw === null"
               :style="tw !== null ? { background: currentTierIndex === idx ? tierColor(idx) : tierBgColor(idx), borderColor: tierColor(idx), color: currentTierIndex === idx ? '#fff' : tierColor(idx) } : {}"
-              @click="tw !== null && (currentTierIndex = idx, stickyTierIndex = idx)"
-            >
+              @click="tw !== null && (currentTierIndex = idx, stickyTierIndex = idx)">
               T{{ idx + 1 }}
             </button>
           </div>
 
-          <!-- Stats -->
           <div v-if="activeWeaponData.stats" class="detail-section">
-            <!-- Damage -->
             <div class="weapon-stat-row">
-              <span class="ws-label">{{ isZh ? '伤害' : 'Damage' }}</span>
+              <span class="ws-label">{{ S.damage }}</span>
               <span class="ws-val">{{ activeWeaponData.stats.damage }}</span>
               <span v-if="activeWeaponData.stats.scaling_stats?.length" class="ws-scaling">
                 (<template v-for="(ss, i) in activeWeaponData.stats.scaling_stats" :key="i">
@@ -199,104 +184,54 @@
               </span>
             </div>
 
-            <!-- Crit -->
             <div class="weapon-stat-row">
-              <span class="ws-label">{{ isZh ? '暴击' : 'Crit' }}</span>
+              <span class="ws-label">{{ S.crit }}</span>
               <span class="ws-val">{{ (activeWeaponData.stats.crit_chance * 100).toFixed(0) }}%</span>
               <span class="ws-val crit-dmg">x{{ activeWeaponData.stats.crit_damage }}</span>
             </div>
 
-            <!-- Cooldown -->
             <div class="weapon-stat-row">
-              <span class="ws-label">{{ isZh ? '冷却' : 'Cooldown' }}</span>
+              <span class="ws-label">{{ S.cooldown }}</span>
               <span class="ws-val">{{ (activeWeaponData.stats.cooldown / 60).toFixed(2) }}s</span>
             </div>
 
-            <!-- Knockback -->
             <div v-if="activeWeaponData.stats.knockback !== 0" class="weapon-stat-row">
-              <span class="ws-label">{{ isZh ? '击退' : 'Knockback' }}</span>
+              <span class="ws-label">{{ S.knockback }}</span>
               <span class="ws-val">{{ activeWeaponData.stats.knockback }}</span>
             </div>
 
-            <!-- Range (melee shows attack type) -->
             <div class="weapon-stat-row">
-              <span class="ws-label">{{ isZh ? '范围' : 'Range' }}</span>
+              <span class="ws-label">{{ S.range }}</span>
               <span class="ws-val">{{ activeWeaponData.stats.max_range }}
                 <span v-if="activeWeaponData.type === 'melee'" class="ws-attack-type">{{ meleeAttackTypeText }}</span>
               </span>
             </div>
 
-            <!-- Accuracy (hide at 100%) -->
             <div v-if="(activeWeaponData.stats.accuracy * 100) < 100" class="weapon-stat-row">
-              <span class="ws-label">{{ isZh ? '命中率' : 'Accuracy' }}</span>
+              <span class="ws-label">{{ S.accuracy }}</span>
               <span class="ws-val">{{ (activeWeaponData.stats.accuracy * 100).toFixed(0) }}%</span>
             </div>
 
-            <!-- Lifesteal -->
             <div v-if="activeWeaponData.stats.lifesteal > 0" class="weapon-stat-row">
-              <span class="ws-label">{{ isZh ? '生命窃取' : 'Lifesteal' }}</span>
+              <span class="ws-label">{{ S.lifesteal }}</span>
               <span class="ws-val">{{ (activeWeaponData.stats.lifesteal * 100).toFixed(0) }}%</span>
             </div>
 
-            <!-- Piercing (ranged) -->
             <div v-if="activeWeaponData.type === 'ranged' && activeWeaponData.stats.piercing > 0" class="weapon-stat-row">
-              <span class="ws-label">{{ isZh ? '贯通' : 'Piercing' }}</span>
+              <span class="ws-label">{{ S.piercing }}</span>
               <span class="ws-val">{{ activeWeaponData.stats.piercing }}
-                <span v-if="activeWeaponData.stats.piercing_dmg_reduction > 0" class="ws-attack-type"> (-{{ (activeWeaponData.stats.piercing_dmg_reduction * 100).toFixed(0) }}% {{ isZh ? '伤害' : 'dmg' }})</span>
+                <span v-if="activeWeaponData.stats.piercing_dmg_reduction > 0" class="ws-attack-type"> (-{{ (activeWeaponData.stats.piercing_dmg_reduction * 100).toFixed(0) }}% {{ S.dmg }})</span>
               </span>
             </div>
 
-            <!-- Bounce -->
             <div v-if="activeWeaponData.type === 'ranged' && activeWeaponData.stats.bounce > 0" class="weapon-stat-row">
-              <span class="ws-label">{{ isZh ? '反弹' : 'Bounce' }}</span>
+              <span class="ws-label">{{ S.bounce }}</span>
               <span class="ws-val">{{ activeWeaponData.stats.bounce }}</span>
             </div>
 
-            <!-- Projectiles -->
             <div v-if="activeWeaponData.type === 'ranged' && activeWeaponData.stats.nb_projectiles > 1" class="weapon-stat-row">
-              <span class="ws-label">{{ isZh ? '投射物' : 'Projectiles' }}</span>
+              <span class="ws-label">{{ S.projectiles }}</span>
               <span class="ws-val">{{ activeWeaponData.stats.nb_projectiles }}</span>
-            </div>
-          </div>
-
-          <!-- Price Section (weapons) -->
-          <div v-if="getBasePrice() > 1" class="detail-section price-section">
-            <div class="price-formula">
-              <span class="price-label">{{ isZh ? '基础价格' : 'Base Price' }}</span>
-              <span class="price-base">{{ getBasePrice() }}</span>
-              <span class="price-op"> (+ {{ getWaveIncrement().toFixed(1) }}</span>
-              <template v-if="waveSlider > 0">
-                <span class="price-op"> × {{ waveSlider }}) =</span>
-                <span class="price-final">{{ computedPrice }}</span>
-              </template>
-              <span v-else class="price-op">)</span>
-              <img :src="BASE + 'icons/items/materials/harvesting_icon.png'" class="price-icon" />
-            </div>
-            <table class="price-table">
-              <tbody>
-                <tr><th>{{ isZh ? '波次' : 'Wave' }}</th><th>1</th><th>4</th><th>8</th><th>14</th><th>19</th></tr>
-                <tr><td>{{ isZh ? '价格' : 'Price' }}</td>
-                  <td>{{ showPriceCell(1) ? priceAtWave(1) : '—' }}</td>
-                  <td>{{ showPriceCell(4) ? priceAtWave(4) : '—' }}</td>
-                  <td>{{ priceAtWave(8) }}</td>
-                  <td>{{ priceAtWave(14) }}</td>
-                  <td>{{ priceAtWave(19) }}</td>
-                </tr>
-              </tbody>
-            </table>
-            <div class="price-slider-row">
-              <el-slider v-model="waveSlider" :min="0" :max="19" :step="1" :marks="waveSliderMarks" class="price-slider" />
-            </div>
-          </div>
-
-          <!-- Effects (pre-rendered from JSON) -->
-          <div v-if="activeWeaponData.effects?.length" class="detail-section">
-            <h3 class="section-title">{{ isZh ? '效果' : 'Effects' }}</h3>
-            <div class="effects-list">
-              <div v-for="(eff, idx) in activeWeaponData.effects" :key="idx" class="effect-item">
-                <span class="eff-prefix" v-html="renderEffectPrefix(eff)"></span>
-                <span class="eff-text" v-html="renderEffectText(eff)"></span>
-              </div>
             </div>
           </div>
         </template>
@@ -311,58 +246,20 @@
               <h2 :style="{ color: tierColor(selectedItem.tier) }">{{ itemName(selectedItem) }}</h2>
               <div class="detail-badges">
                 <span v-if="selectedItem.dlc" class="dlc-badge">DLC</span>
-                <span v-if="isUniqueItem(selectedItem)" class="limit-badge unique">{{ isZh ? '独特' : 'Unique' }}</span>
-                <span v-else-if="isLimitedItem(selectedItem)" class="limit-badge limited">{{ isZh ? '限制' : 'Limited' }}({{ selectedItem.max_nb }})</span>
+                <span v-if="isUniqueItem(selectedItem)" class="limit-badge unique">{{ S.unique }}</span>
+                <span v-else-if="isLimitedItem(selectedItem)" class="limit-badge limited">{{ S.limited }}({{ selectedItem.max_nb }})</span>
                 <span v-for="tag in sortedItemTags(selectedItem)" :key="tag" class="tag-badge clickable" :class="specialTagClass(tag)" @click.stop="onTagClick(tag)">
                   <el-tooltip placement="top" effect="dark" :hide-after="0">
                     <template #content>
                       <div class="tag-tooltip-content">
                         <div class="tag-tooltip-name">{{ tagTr(tag) }}</div>
-                        <div v-if="tagItems(tag).length" class="tag-tooltip-line">{{ isZh ? '道具' : 'Items' }}：{{ tagItems(tag).join(', ') }}</div>
-                        <div v-if="tagCharacters(tag).length" class="tag-tooltip-line">{{ isZh ? '角色' : 'Characters' }}：{{ tagCharacters(tag).join(', ') }}</div>
+                        <div v-if="tagItems(tag).length" class="tag-tooltip-line">{{ S.items }}：{{ tagItems(tag).join(', ') }}</div>
+                        <div v-if="tagCharacters(tag).length" class="tag-tooltip-line">{{ S.characters }}：{{ tagCharacters(tag).join(', ') }}</div>
                       </div>
                     </template>
                     {{ tagTr(tag) }}
                   </el-tooltip>
                 </span>
-              </div>
-            </div>
-          </div>
-          <!-- Price Section (items) -->
-          <div v-if="(selectedItem.value || 0) > 1" class="detail-section price-section">
-            <div class="price-formula">
-              <span class="price-label">{{ isZh ? '基础价格' : 'Base Price' }}</span>
-              <span class="price-base">{{ getBasePrice() }}</span>
-              <span class="price-op"> (+ {{ getWaveIncrement() }}</span>
-              <template v-if="waveSlider > 0">
-                <span class="price-op"> × {{ waveSlider }}) =</span>
-                <span class="price-final">{{ computedPrice }}</span>
-              </template>
-              <span v-else class="price-op">)</span>
-              <img :src="BASE + 'icons/items/materials/harvesting_icon.png'" class="price-icon" />
-            </div>
-            <table class="price-table">
-              <tbody>
-                <tr><th>{{ isZh ? '波次' : 'Wave' }}</th><th>1</th><th>4</th><th>8</th><th>14</th><th>19</th></tr>
-                <tr><td>{{ isZh ? '价格' : 'Price' }}</td>
-                  <td>{{ showPriceCell(1) ? priceAtWave(1) : '—' }}</td>
-                  <td>{{ showPriceCell(4) ? priceAtWave(4) : '—' }}</td>
-                  <td>{{ priceAtWave(8) }}</td>
-                  <td>{{ priceAtWave(14) }}</td>
-                  <td>{{ priceAtWave(19) }}</td>
-                </tr>
-              </tbody>
-            </table>
-            <div class="price-slider-row">
-              <el-slider v-model="waveSlider" :min="0" :max="19" :step="1" :marks="waveSliderMarks" class="price-slider" />
-            </div>
-          </div>
-          <div v-if="selectedItem.effects?.length" class="detail-section">
-            <h3 class="section-title">{{ isZh ? '效果' : 'Effects' }}</h3>
-            <div class="effects-list">
-              <div v-for="(eff, idx) in selectedItem.effects" :key="idx" class="effect-item">
-                <span class="eff-prefix" v-html="renderEffectPrefix(eff)"></span>
-                <span class="eff-text" v-html="renderEffectText(eff)"></span>
               </div>
             </div>
           </div>
@@ -378,32 +275,11 @@
               <h2>{{ itemName(selectedItem) }}</h2>
               <div class="detail-badges">
                 <span v-if="selectedItem.dlc" class="dlc-badge">DLC</span>
-                <span v-for="tag in (selectedItem.tags || [])" :key="tag" class="tag-badge clickable" :class="specialTagClass(tag)" @click.stop="onTagClick(tag)">
-                  <el-tooltip placement="top" effect="dark" :hide-after="0">
-                    <template #content>
-                      <div class="tag-tooltip-content">
-                        <div class="tag-tooltip-name">{{ tagTr(tag) }}</div>
-                        <div v-if="tagItems(tag).length" class="tag-tooltip-line">{{ isZh ? '道具' : 'Items' }}：{{ tagItems(tag).join(', ') }}</div>
-                        <div v-if="tagCharacters(tag).length" class="tag-tooltip-line">{{ isZh ? '角色' : 'Characters' }}：{{ tagCharacters(tag).join(', ') }}</div>
-                      </div>
-                    </template>
-                    {{ tagTr(tag) }}
-                  </el-tooltip>
-                </span>
-              </div>
-            </div>
-          </div>
-          <div v-if="selectedItem.effects?.length" class="detail-section">
-            <h3 class="section-title">{{ isZh ? '效果' : 'Effects' }}</h3>
-            <div class="effects-list">
-              <div v-for="(eff, idx) in selectedItem.effects" :key="idx" class="effect-item">
-                <span class="eff-prefix" v-html="renderEffectPrefix(eff)"></span>
-                <span class="eff-text" v-html="renderEffectText(eff)"></span>
               </div>
             </div>
           </div>
           <div v-if="selectedItem.starting_weapons?.length" class="detail-section">
-            <h3 class="section-title">{{ isZh ? '起始武器' : 'Starting Weapons' }}</h3>
+            <h3 class="section-title">{{ S.startingWeapons }}</h3>
             <div class="starting-weapons-grid">
               <div v-for="wid in selectedItem.starting_weapons" :key="wid" class="grid-item starting-weapon-card" @click="navigateToWeapon(wid)">
                 <div class="item-icon" :style="{ borderColor: tierColor(getWeaponById(wid)?.tier ?? 0), background: tierBgColor(getWeaponById(wid)?.tier ?? 0) }">
@@ -414,15 +290,15 @@
             </div>
           </div>
           <div v-if="(selectedItem.wanted_tags || []).length" class="detail-section">
-            <h3 class="section-title">{{ isZh ? '偏好标签' : 'Preferred Tags' }}</h3>
+            <h3 class="section-title">{{ S.preferredTags }}</h3>
             <div class="tags-wrap">
               <span v-for="tag in selectedItem.wanted_tags" :key="tag" class="tag-badge clickable" @click.stop="onTagClick(tag)">
                 <el-tooltip placement="top" effect="dark" :hide-after="0">
                   <template #content>
                     <div class="tag-tooltip-content">
                       <div class="tag-tooltip-name">{{ tagTr(tag) }}</div>
-                      <div v-if="tagItems(tag).length" class="tag-tooltip-line">{{ isZh ? '道具' : 'Items' }}：{{ tagItems(tag).join(', ') }}</div>
-                      <div v-if="tagCharacters(tag).length" class="tag-tooltip-line">{{ isZh ? '角色' : 'Characters' }}：{{ tagCharacters(tag).join(', ') }}</div>
+                      <div v-if="tagItems(tag).length" class="tag-tooltip-line">{{ S.items }}：{{ tagItems(tag).join(', ') }}</div>
+                      <div v-if="tagCharacters(tag).length" class="tag-tooltip-line">{{ S.characters }}：{{ tagCharacters(tag).join(', ') }}</div>
                     </div>
                   </template>
                   {{ tagTr(tag) }}
@@ -431,11 +307,51 @@
             </div>
           </div>
         </template>
+
+        <!-- Shared: Price Section (weapons & items) -->
+        <div v-if="showPrice" class="detail-section price-section">
+          <div class="price-formula">
+            <span class="price-label">{{ S.basePrice }}</span>
+            <span class="price-base">{{ getBasePrice() }}</span>
+            <span class="price-op">({{ S.perWave }}+</span>
+            <span class="price-incr">{{ getWaveIncrement().toFixed(1) }}</span>
+            <template v-if="waveSlider > 0">
+              <span class="price-op"> × {{ waveSlider }} =</span>
+              <span class="price-final">{{ computedPrice }}</span>
+            </template>
+            <span v-else class="price-op">)</span>
+            <img :src="BASE + 'icons/items/materials/harvesting_icon.png'" class="price-icon" />
+          </div>
+          <table class="price-table">
+            <tr><th>{{ S.wave }}</th><th>1</th><th>4</th><th>8</th><th>14</th><th>19</th></tr>
+            <tr><td>{{ S.price }}</td>
+              <td>{{ showPriceCell(1) ? priceAtWave(1) : '—' }}</td>
+              <td>{{ showPriceCell(4) ? priceAtWave(4) : '—' }}</td>
+              <td>{{ priceAtWave(8) }}</td>
+              <td>{{ priceAtWave(14) }}</td>
+              <td>{{ priceAtWave(19) }}</td>
+            </tr>
+          </table>
+          <div class="price-slider-row">
+            <el-slider v-model="waveSlider" :min="0" :max="20" :step="1" :marks="waveSliderMarks" class="price-slider" />
+          </div>
+        </div>
+
+        <!-- Shared: Effects Section -->
+        <div v-if="currentEffects?.length" class="detail-section">
+          <h3 class="section-title">{{ S.effects }}</h3>
+          <div class="effects-list">
+            <div v-for="(eff, idx) in currentEffects" :key="idx" class="effect-item">
+              <span class="eff-prefix" v-html="renderEffectPrefix(eff)"></span>
+              <span class="eff-text" v-html="renderEffectText(eff)"></span>
+            </div>
+          </div>
+        </div>
       </div>
 
       <!-- Empty -->
       <div class="detail-panel empty-panel" v-else>
-        <el-empty :description="isZh ? '点击左侧查看详情' : 'Click to see details'" />
+        <el-empty :description="S.clickToSee" />
       </div>
     </div>
   </div>
@@ -447,6 +363,36 @@ import { Search, Sort, User, Sunny, Moon, Box, Aim, ArrowDown } from '@element-p
 
 const BASE = import.meta.env.BASE_URL
 
+// ---- Shared string dictionary ----
+const S = computed(() => isZh.value ? {
+  weapons: '武器', items: '道具', characters: '角色',
+  search: '搜索...', all: '全部', tier: '稀有度', type: '类型',
+  melee: '近战', ranged: '远战', set: '武器类别', source: '来源',
+  base: '本体', baseGame: '本体', tag: '道具标签', sort: '排序',
+  default: '默认', price: '价格',
+  damage: '伤害', crit: '暴击', cooldown: '冷却', knockback: '击退',
+  range: '范围', accuracy: '命中率', lifesteal: '生命窃取', piercing: '贯通',
+  bounce: '反弹', projectiles: '投射物', dmg: '伤害',
+  basePrice: '基础价格', perWave: '每波', wave: '波次',
+  effects: '效果', startingWeapons: '起始武器', preferredTags: '偏好标签',
+  unique: '独特', limited: '限制',
+  clickToSee: '点击左侧查看详情',
+} : {
+  weapons: 'Weapons', items: 'Items', characters: 'Characters',
+  search: 'Search...', all: 'All', tier: 'Rarity', type: 'Type',
+  melee: 'Melee', ranged: 'Ranged', set: 'Set', source: 'Source',
+  base: 'Base', baseGame: 'Base Game', tag: 'Tag', sort: 'Sort',
+  default: 'Default', price: 'Price',
+  damage: 'Damage', crit: 'Crit', cooldown: 'Cooldown', knockback: 'Knockback',
+  range: 'Range', accuracy: 'Accuracy', lifesteal: 'Lifesteal', piercing: 'Piercing',
+  bounce: 'Bounce', projectiles: 'Projectiles', dmg: 'dmg',
+  basePrice: 'Base Price', perWave: '/wave', wave: 'Wave',
+  effects: 'Effects', startingWeapons: 'Starting Weapons', preferredTags: 'Preferred Tags',
+  unique: 'Unique', limited: 'Limited',
+  clickToSee: 'Click to see details',
+})
+
+// ---- Reactivity ----
 const rawData = ref({ weapons: [], items: [], characters: [], translations: {}, stat_icons: {}, sets: {} })
 const mainContentRef = ref(null)
 const gridItemRefs = ref({})
@@ -460,12 +406,11 @@ const filterSet = ref(null)
 const selectedItem = ref(null)
 const currentTierIndex = ref(0)
 const waveSlider = ref(0)
-const stickyTierIndex = ref(0) // remembered tier across selections
+const stickyTierIndex = ref(0)
 const filterTag = ref(null)
 const sortBy = ref('default')
 const isDark = ref(true)
 
-// Apply theme class to body
 watch(isDark, (v) => {
   document.documentElement.classList.toggle('light-theme', !v)
   document.body.classList.toggle('light-theme', !v)
@@ -479,8 +424,8 @@ function tierColor(tier) { return TIER_COLORS[tier] || '#aaaaaa' }
 function tierBgColor(tier) { return TIER_BG_COLORS[tier] || 'rgba(170,170,170,0.1)' }
 const TIER_SELECTED_BG = ['rgba(170,170,170,0.35)', 'rgba(92,196,255,0.30)', 'rgba(183,92,255,0.30)', 'rgba(255,61,61,0.30)']
 function tierSelectedBg(tier) { return TIER_SELECTED_BG[tier] || TIER_SELECTED_BG[0] }
-function tierDisplayName(tier) { const labels = ['T1', 'T2', 'T3', 'T4']; return labels[tier] || 'T1' }
-function tierTagType(tier) { return ['info', '', 'warning', 'danger'][tier] || 'info' }
+function tierDisplayName(tier) { return ['T1','T2','T3','T4'][tier] || 'T1' }
+function tierTagType(tier) { return ['info','','warning','danger'][tier] || 'info' }
 
 function itemName(item) { return isZh.value ? item.name_zh : item.name_en }
 function getIconSrc(p) { return p ? `${BASE}icons/${p}` : '' }
@@ -495,27 +440,17 @@ function statTr(key) {
 function setTr(key) {
   if (!key) return ''
   const sets = rawData.value.sets || {}
-  // Check manual sets data
-  if (sets[key] && sets[key]._manual) {
-    return isZh.value ? sets[key].name_zh : sets[key].name_en
-  }
+  if (sets[key] && sets[key]._manual) return isZh.value ? sets[key].name_zh : sets[key].name_en
   const trans = rawData.value.translations || {}
   if (trans[key]) return isZh.value ? (trans[key].zh || key) : (trans[key].en || key)
   return key.replace('WEAPON_CLASS_', '').replace(/_/g, ' ')
 }
 
-function getSetBonuses(setNameKey) {
-  // sets data: { name_key: [[tier1_effects], [tier2_effects], ...] }
-  // or _manual: { tiers: [{en, zh}, ...] }
+function getSetBonuses(key) {
   const sets = rawData.value.sets || {}
-  const setData = sets[setNameKey]
-  if (!setData) return []
-  if (setData._manual) {
-    // Manual format: tiers array of {en, zh}
-    return setData.tiers
-  }
-  // Standard format: array of arrays of effects
-  return setData
+  const sd = sets[key]
+  if (!sd) return []
+  return sd._manual ? sd.tiers : sd
 }
 
 function setBonusText(bonus) {
@@ -523,24 +458,16 @@ function setBonusText(bonus) {
   if (typeof bonus === 'string') return bonus
   if (bonus.en || bonus.zh) return isZh.value ? (bonus.zh || bonus.en) : (bonus.en || bonus.zh)
   if (!Array.isArray(bonus)) return ''
-  return bonus.map(eff => {
-    const lang = isZh.value ? 'zh' : 'en'
-    return eff['text_' + lang] || eff.text_en || ''
-  }).join(' / ')
+  const lang = isZh.value ? 'zh' : 'en'
+  return bonus.map(e => e['text_' + lang] || e.text_en || '').join(' / ')
 }
 
 function renderSetBonusHtml(bonus) {
-  // Get the raw text first
-  const rawText = setBonusText(bonus)
-  if (!rawText) return ''
-  
-  // Process color markers from Python preprocessor
-  let text = rawText
-  text = text.replace(/<span class="g">/g, '<span style="color:#22c55e">')
-  text = text.replace(/<span class="r">/g, '<span style="color:#ef4444">')
-  text = text.replace(/<span class="p">/g, '<span style="color:#a855f7">')
-  
-  return text
+  const raw = setBonusText(bonus)
+  if (!raw) return ''
+  return raw.replace(/<span class="g">/g, '<span style="color:#22c55e">')
+    .replace(/<span class="r">/g, '<span style="color:#ef4444">')
+    .replace(/<span class="p">/g, '<span style="color:#a855f7">')
 }
 
 function getStatIcon(statKey) {
@@ -548,49 +475,27 @@ function getStatIcon(statKey) {
   return map[statKey] ? `${BASE}icons/${map[statKey]}` : null
 }
 
-function resolveWeaponName(wid) {
-  const w = rawData.value.weapons.find(x => x.id === wid)
-  return w ? itemName(w) : wid
-}
-
-function getWeaponById(wid) {
-  return rawData.value.weapons.find(x => x.id === wid) || null
-}
+function getWeaponById(wid) { return rawData.value.weapons.find(x => x.id === wid) || null }
 
 // ---- Tag translations ----
 const TAG_TRANSLATIONS = {
-  consumable: { en: 'Consumable', zh: '消耗品' },
-  economy: { en: 'Economy', zh: '经济' },
-  exploration: { en: 'Exploration', zh: '探索' },
-  explosive: { en: 'Explosive', zh: '爆炸' },
-  knockback: { en: 'Knockback', zh: '击退' },
-  less_enemies: { en: 'Less Enemies', zh: '减少敌人' },
-  less_enemy_speed: { en: 'Less Enemy Speed', zh: '减少敌人速度' },
-  lock: { en: 'Lock', zh: '锁定' },
-  more_enemies: { en: 'More Enemies', zh: '更多敌人' },
-  number_of_enemies: { en: 'Enemy Count', zh: '敌人数量' },
-  pet: { en: 'Pet', zh: '宠物' },
-  pickup: { en: 'Pickup', zh: '拾取' },
-  stand_still: { en: 'Stand Still', zh: '静止' },
-  stat_armor: { en: 'Armor', zh: '护甲' },
-  stat_attack_speed: { en: 'Attack Speed', zh: '攻击速度' },
-  stat_crit_chance: { en: 'Crit Chance', zh: '暴击率' },
-  stat_curse: { en: 'Curse', zh: '诅咒' },
-  stat_dodge: { en: 'Dodge', zh: '闪避' },
-  stat_elemental_damage: { en: 'Elemental Damage', zh: '元素伤害' },
-  stat_engineering: { en: 'Engineering', zh: '工程学' },
-  stat_harvesting: { en: 'Harvesting', zh: '收获' },
-  stat_hp_regeneration: { en: 'HP Regen', zh: '生命再生' },
-  stat_lifesteal: { en: 'Lifesteal', zh: '生命窃取' },
-  stat_luck: { en: 'Luck', zh: '幸运' },
-  stat_max_hp: { en: 'Max HP', zh: '最大生命' },
-  stat_melee_damage: { en: 'Melee Damage', zh: '近战伤害' },
-  stat_percent_damage: { en: '% Damage', zh: '%伤害' },
-  stat_range: { en: 'Range', zh: '范围' },
-  stat_ranged_damage: { en: 'Ranged Damage', zh: '远程伤害' },
-  stat_speed: { en: 'Speed', zh: '速度' },
-  structure: { en: 'Structure', zh: '构筑物' },
-  xp_gain: { en: 'XP Gain', zh: '经验获取' },
+  consumable: { en: 'Consumable', zh: '消耗品' }, economy: { en: 'Economy', zh: '经济' },
+  exploration: { en: 'Exploration', zh: '探索' }, explosive: { en: 'Explosive', zh: '爆炸' },
+  knockback: { en: 'Knockback', zh: '击退' }, less_enemies: { en: 'Less Enemies', zh: '减少敌人' },
+  less_enemy_speed: { en: 'Less Enemy Speed', zh: '减少敌人速度' }, lock: { en: 'Lock', zh: '锁定' },
+  more_enemies: { en: 'More Enemies', zh: '更多敌人' }, number_of_enemies: { en: 'Enemy Count', zh: '敌人数量' },
+  pet: { en: 'Pet', zh: '宠物' }, pickup: { en: 'Pickup', zh: '拾取' },
+  stand_still: { en: 'Stand Still', zh: '静止' }, stat_armor: { en: 'Armor', zh: '护甲' },
+  stat_attack_speed: { en: 'Attack Speed', zh: '攻击速度' }, stat_crit_chance: { en: 'Crit Chance', zh: '暴击率' },
+  stat_curse: { en: 'Curse', zh: '诅咒' }, stat_dodge: { en: 'Dodge', zh: '闪避' },
+  stat_elemental_damage: { en: 'Elemental Damage', zh: '元素伤害' }, stat_engineering: { en: 'Engineering', zh: '工程学' },
+  stat_harvesting: { en: 'Harvesting', zh: '收获' }, stat_hp_regeneration: { en: 'HP Regen', zh: '生命再生' },
+  stat_lifesteal: { en: 'Lifesteal', zh: '生命窃取' }, stat_luck: { en: 'Luck', zh: '幸运' },
+  stat_max_hp: { en: 'Max HP', zh: '最大生命' }, stat_melee_damage: { en: 'Melee Damage', zh: '近战伤害' },
+  stat_percent_damage: { en: '% Damage', zh: '%伤害' }, stat_range: { en: 'Range', zh: '范围' },
+  stat_ranged_damage: { en: 'Ranged Damage', zh: '远程伤害' }, stat_speed: { en: 'Speed', zh: '速度' },
+  structure: { en: 'Structure', zh: '构筑物' }, xp_gain: { en: 'XP Gain', zh: '经验获取' },
+  pet_or_tongue: { en: 'Pet/Tongue', zh: '宠物/舌头' },
 }
 
 function tagTr(tag) {
@@ -599,23 +504,12 @@ function tagTr(tag) {
   return isZh.value ? t.zh : t.en
 }
 
-// Special tag types with distinct background colors
 const SPECIAL_TAGS = ['pet', 'structure']
-function specialTagClass(tag) {
-  if (tag === 'pet') return 'tag-pet'
-  if (tag === 'structure') return 'tag-structure'
-  return ''
-}
+function specialTagClass(tag) { return SPECIAL_TAGS.includes(tag) ? 'tag-' + tag : '' }
 
-// Limited / Unique item helpers
-function isUniqueItem(item) {
-  return item && item.max_nb === 1
-}
-function isLimitedItem(item) {
-  return item && item.max_nb > 1
-}
+function isUniqueItem(item) { return item && item.max_nb === 1 }
+function isLimitedItem(item) { return item && item.max_nb > 1 }
 
-// Sort tags: pet first, then structure, then others alphabetically
 const TAG_SORT_ORDER = { pet: 0, structure: 1 }
 function sortedItemTags(item) {
   if (!item || !item.tags) return []
@@ -627,118 +521,72 @@ function sortedItemTags(item) {
   })
 }
 
-// ---- All unique tags (for filter) ----
-const allTags = computed(() => {
-  const tagSet = new Set()
-  if (activeTab.value === 'items') {
-    for (const item of rawData.value.items) {
-      for (const t of (item.tags || [])) tagSet.add(t)
-    }
-  } else if (activeTab.value === 'characters') {
-    for (const c of rawData.value.characters) {
-      for (const t of (c.wanted_tags || [])) tagSet.add(t)
-      for (const t of (c.tags || [])) tagSet.add(t)
-    }
-  }
-  return [...tagSet].sort((a, b) => tagTr(a).localeCompare(tagTr(b)))
-})
-
-// ---- Tag tooltip helpers ----
+// ---- Tooltip helpers ----
 function tagItems(tag) {
-  return (rawData.value.items || [])
-    .filter(item => (item.tags || []).includes(tag))
-    .map(item => itemName(item))
-    .slice(0, 10)
+  return (rawData.value.items || []).filter(i => (i.tags || []).includes(tag)).map(i => itemName(i)).slice(0, 10)
 }
-
 function tagCharacters(tag) {
-  return (rawData.value.characters || [])
-    .filter(c => (c.wanted_tags || []).includes(tag) || (c.tags || []).includes(tag))
-    .map(c => itemName(c))
-    .slice(0, 10)
+  return (rawData.value.characters || []).filter(c => (c.wanted_tags || []).includes(tag) || (c.tags || []).includes(tag)).map(c => itemName(c)).slice(0, 10)
 }
-
-// ---- Tag click → filter ----
 function onTagClick(tag) {
-  if (activeTab.value === 'characters') {
-    // From character page: navigate to items tab and filter by tag
-    pendingNavigate.value = true
-    activeTab.value = 'items'
-    filterTag.value = tag
-  } else {
-    filterTag.value = tag
-    selectedItem.value = null
-  }
+  if (activeTab.value === 'characters') { pendingNavigate.value = true; activeTab.value = 'items'; filterTag.value = tag }
+  else { filterTag.value = tag; selectedItem.value = null }
 }
 
-// ---- Navigate to weapon from character starting weapon ----
 function navigateToWeapon(wid) {
-  // wid is like "weapon_fist_1", extract family ID
   const familyId = wid.replace(/_\d+$/, '')
-  pendingNavigate.value = true
-  activeTab.value = 'weapons'
-  filterType.value = null
-  filterSet.value = null
-  filterTag.value = null
-  // Use nextTick to ensure tab switch completes before selecting
+  pendingNavigate.value = true; activeTab.value = 'weapons'
+  filterType.value = null; filterSet.value = null; filterTag.value = null
   setTimeout(() => {
     const family = weaponFamilies.value.find(f => f.id === familyId)
-    if (family) {
-      selectItem(family)
-    }
+    if (family) selectItem(family)
   }, 100)
 }
 
-// ---- Effect rendering - uses preprocessed text from JSON ----
+// ---- Effect rendering ----
 function getSignColor(eff) {
   const es = eff.effect_sign ?? 3
-  if (es === 0) return '#22c55e'  // POSITIVE = green (even if value is negative, like Coupon -5%)
-  if (es === 1) return '#ef4444'  // NEGATIVE = red
-  if (es === 2) return ''         // NEUTRAL = no color (e.g. Gentle Alien +5% enemies)
-  if (es === 5) return '#a855f7'  // CURSE = purple
-  // FROM_VALUE (3): green for positive, red for negative
-  const value = eff.value ?? 0
-  if (value > 0) return '#22c55e'
-  if (value < 0) return '#ef4444'
-  return ''
+  if (es === 0) return '#22c55e'; if (es === 1) return '#ef4444'
+  if (es === 2) return ''; if (es === 5) return '#a855f7'
+  const v = eff.value ?? 0
+  return v > 0 ? '#22c55e' : v < 0 ? '#ef4444' : ''
+}
+
+function resolveStatIcon(iconKey) {
+  const fullKey = 'stat_' + iconKey
+  const icons = rawData.value.stat_icons || {}
+  if (icons[fullKey]) return `${BASE}icons/${icons[fullKey]}`
+  for (const [k, p] of Object.entries(icons)) {
+    if (k.replace('stat_', '') === iconKey) return `${BASE}icons/${p}`
+  }
+  return null
 }
 
 function renderEffectPrefix(eff) {
   const iconKey = eff.icon
-  if (!iconKey) return '・'
-  const fullKey = 'stat_' + iconKey
-  const iconPath = (rawData.value.stat_icons || {})[fullKey]
-  if (iconPath) {
-    return `<img src="${BASE}icons/${iconPath}" class="stat-prefix-icon" title="${statTr(fullKey)}" />`
+  if (!iconKey) return '·'
+  const src = resolveStatIcon(iconKey)
+  if (src) {
+    return `<img src="${src}" class="stat-prefix-icon" title="${statTr('stat_' + iconKey)}" />`
   }
-  for (const [key, path] of Object.entries(rawData.value.stat_icons || {})) {
-    if (key.replace('stat_', '') === iconKey) {
-      return `<img src="${BASE}icons/${path}" class="stat-prefix-icon" title="${statTr(key)}" />`
-    }
-  }
-  return '・'
+  return '·'
 }
 
 function renderEffectText(eff) {
   const lang = isZh.value ? 'zh' : 'en'
   let text = eff['text_' + lang] || eff.text_en || ''
   if (!text) return `${eff.value} ${statTr(eff.key)}`
-
   text = text.replace(/<span class="g">/g, '<span style="color:#22c55e">')
-  text = text.replace(/<span class="r">/g, '<span style="color:#ef4444">')
-  text = text.replace(/<span class="p">/g, '<span style="color:#a855f7">')
-  text = text.replace(/<\/span>/g, '</span>')
-
-  text = text.replace(/<icon>([^<]+)<\/icon>/g, (match, icKey) => {
-    const fullKey = 'stat_' + icKey
-    const iconPath = (rawData.value.stat_icons || {})[fullKey]
-    if (iconPath) return `<img src="${BASE}icons/${iconPath}" class="stat-inline-icon" title="${statTr(fullKey)}" />`
-    for (const [key, path] of Object.entries(rawData.value.stat_icons || {})) {
-      if (key.replace('stat_', '') === icKey) return `<img src="${BASE}icons/${path}" class="stat-inline-icon" title="${statTr(key)}" />`
+    .replace(/<span class="r">/g, '<span style="color:#ef4444">')
+    .replace(/<span class="p">/g, '<span style="color:#a855f7">')
+  text = text.replace(/<icon>([^<]+)<\/icon>/g, (m, icKey) => {
+    const src = resolveStatIcon(icKey)
+    if (src) {
+      const fullKey = 'stat_' + icKey
+      return `<img src="${src}" class="stat-inline-icon" title="${statTr(fullKey)}" />`
     }
-    return match
+    return m
   })
-
   return text
 }
 
@@ -764,127 +612,114 @@ const weaponFamilies = computed(() => {
 const allItemsRaw = computed(() => rawData.value.items)
 const allCharactersRaw = computed(() => rawData.value.characters)
 
-// All unique weapon sets/classes across all weapons
 const availableSets = computed(() => {
-  const seen = new Set()
-  const result = []
+  const seen = new Set(); const result = []
   for (const w of rawData.value.weapons) {
     for (const s of (w.sets || [])) {
-      if (!seen.has(s)) {
-        seen.add(s)
-        result.push({ key: s, label: setTr(s) })
-      }
+      if (!seen.has(s)) { seen.add(s); result.push({ key: s, label: setTr(s) }) }
     }
   }
   result.sort((a, b) => a.label.localeCompare(b.label))
   return result
 })
 
+// ---- All unique tags ----
+const allTags = computed(() => {
+  const tagSet = new Set()
+  if (activeTab.value === 'items') {
+    for (const item of rawData.value.items) { for (const t of (item.tags || [])) tagSet.add(t) }
+  } else if (activeTab.value === 'characters') {
+    for (const c of rawData.value.characters) { for (const t of (c.wanted_tags || [])) tagSet.add(t) }
+  }
+  return [...tagSet].sort((a, b) => tagTr(a).localeCompare(tagTr(b)))
+})
+
 // ---- Display list ----
 const currentDisplayList = computed(() => {
   let list
-  if (activeTab.value === 'weapons') {
-    list = [...weaponFamilies.value]
-  } else if (activeTab.value === 'items') {
-    list = [...allItemsRaw.value]
-  } else {
-    // Characters: use in-game order
-    list = sortCharacters([...allCharactersRaw.value])
-  }
-  
+  if (activeTab.value === 'weapons') list = [...weaponFamilies.value]
+  else if (activeTab.value === 'items') list = [...allItemsRaw.value]
+  else list = sortCharacters([...allCharactersRaw.value])
+
   if (searchText.value) {
     const q = searchText.value.toLowerCase()
-    list = list.filter(item => (item.name_en || '').toLowerCase().includes(q) || (item.name_zh || '').includes(q) || (item.id || '').toLowerCase().includes(q))
+    list = list.filter(i => (i.name_en || '').toLowerCase().includes(q) || (i.name_zh || '').includes(q) || (i.id || '').toLowerCase().includes(q))
   }
-  if (filterTier.value !== null && filterTier.value !== '' && filterTier.value !== undefined && activeTab.value !== 'characters') {
-    list = list.filter(item => item.tier === filterTier.value)
-  }
-  if (filterDlc.value !== null && filterDlc.value !== '' && filterDlc.value !== undefined) list = list.filter(item => item.dlc === filterDlc.value)
-  if (activeTab.value === 'weapons' && filterType.value && filterType.value !== '') list = list.filter(item => item.type === filterType.value)
-  if (activeTab.value === 'weapons' && filterSet.value && filterSet.value !== '') list = list.filter(item => (item.sets || []).includes(filterSet.value))
+  if (filterTier.value != null && filterTier.value !== '' && activeTab.value !== 'characters') list = list.filter(i => i.tier === filterTier.value)
+  if (filterDlc.value != null && filterDlc.value !== '') list = list.filter(i => i.dlc === filterDlc.value)
+  if (activeTab.value === 'weapons' && filterType.value && filterType.value !== '') list = list.filter(i => i.type === filterType.value)
+  if (activeTab.value === 'weapons' && filterSet.value && filterSet.value !== '') list = list.filter(i => (i.sets || []).includes(filterSet.value))
   if ((activeTab.value === 'items' || activeTab.value === 'characters') && filterTag.value && filterTag.value !== '') {
-    list = list.filter(item => (item.tags || []).includes(filterTag.value) || (item.wanted_tags || []).includes(filterTag.value))
+    list = list.filter(i => (i.tags || []).includes(filterTag.value) || (i.wanted_tags || []).includes(filterTag.value))
   }
-  
-  // Sort
-  if (sortBy.value === 'price' && (activeTab.value === 'weapons' || activeTab.value === 'items')) {
-    list.sort((a, b) => (a.value || 0) - (b.value || 0))
-  } else if (activeTab.value === 'items' && sortBy.value === 'default') {
-    // Items: default sort by tier then name
-    list.sort((a, b) => a.tier - b.tier || (a.name_en || '').localeCompare(b.name_en || ''))
-  } else if (activeTab.value === 'weapons' && sortBy.value === 'default') {
-    // Weapons: default sort by tier then name (same as weaponFamilies original order)
-    list.sort((a, b) => a.tier - b.tier || (a.name_en || '').localeCompare(b.name_en || ''))
-  }
-  
+
+  const byTierThenName = (a, b) => a.tier - b.tier || (a.name_en || '').localeCompare(b.name_en || '')
+  if (sortBy.value === 'price') list.sort((a, b) => (a.value || 0) - (b.value || 0))
+  else if (activeTab.value === 'weapons' || activeTab.value === 'items') list.sort(byTierThenName)
   return list
 })
 
-// ---- Character ordering (in-game order) ----
+// ---- Character ordering ----
 const CHAR_BASE_ORDER = [
-  'character_well_rounded', 'character_brawler', 'character_crazy', 'character_ranger',
-  'character_mage', 'character_chunky', 'character_old', 'character_lucky',
-  'character_mutant', 'character_generalist', 'character_loud', 'character_multitasker',
-  'character_wildling', 'character_pacifist', 'character_gladiator', 'character_saver',
-  'character_sick', 'character_farmer', 'character_ghost', 'character_speedy',
-  'character_entrepreneur', 'character_engineer', 'character_explorer', 'character_doctor',
-  'character_hunter', 'character_artificer', 'character_arms_dealer', 'character_streamer',
-  'character_cyborg', 'character_glutton', 'character_jack', 'character_lich',
-  'character_apprentice', 'character_cryptid', 'character_fisherman', 'character_golem',
-  'character_king', 'character_renegade', 'character_one_arm', 'character_bull', 
-  'character_soldier', 'character_masochist', 'character_knight', 'character_demon', 
-  'character_baby', 'character_vagabond', 'character_technomage', 'character_vampire', 
-  'character_beast_master', 'character_wounded',
+  'character_well_rounded','character_brawler','character_crazy','character_ranger',
+  'character_mage','character_chunky','character_old','character_lucky',
+  'character_mutant','character_generalist','character_loud','character_multitasker',
+  'character_wildling','character_pacifist','character_gladiator','character_saver',
+  'character_sick','character_farmer','character_ghost','character_speedy',
+  'character_entrepreneur','character_engineer','character_explorer','character_doctor',
+  'character_hunter','character_artificer','character_arms_dealer','character_streamer',
+  'character_cyborg','character_glutton','character_jack','character_lich',
+  'character_apprentice','character_cryptid','character_fisherman','character_golem',
+  'character_king','character_renegade','character_one_arm','character_bull',
+  'character_soldier','character_masochist','character_knight','character_demon',
+  'character_baby','character_vagabond','character_technomage','character_vampire',
+  'character_beast_master','character_wounded',
 ]
 const CHAR_DLC_ORDER = [
-  'character_sailor', 'character_curious', 'character_builder', 'character_captain',
-  'character_creature', 'character_chef', 'character_druid', 'character_dwarf',
-  'character_gangster', 'character_diver', 'character_hiker', 'character_buccaneer',
-  'character_ogre', 'character_romantic',
+  'character_sailor','character_curious','character_builder','character_captain',
+  'character_creature','character_chef','character_druid','character_dwarf',
+  'character_gangster','character_diver','character_hiker','character_buccaneer',
+  'character_ogre','character_romantic',
 ]
 const CHAR_ORDER_MAP = {}
 CHAR_BASE_ORDER.forEach((id, i) => { CHAR_ORDER_MAP[id] = i })
 CHAR_DLC_ORDER.forEach((id, i) => { CHAR_ORDER_MAP[id] = i + CHAR_BASE_ORDER.length })
-
 function sortCharacters(chars) {
-  return chars.sort((a, b) => {
-    const oa = CHAR_ORDER_MAP[a.id] ?? 9999
-    const ob = CHAR_ORDER_MAP[b.id] ?? 9999
-    return oa - ob
-  })
+  return chars.sort((a, b) => (CHAR_ORDER_MAP[a.id] ?? 9999) - (CHAR_ORDER_MAP[b.id] ?? 9999))
 }
 
-// ---- Active weapon tier ----
+// ---- Active weapon ----
 const activeTierWeapons = computed(() => {
   if (activeTab.value !== 'weapons' || !selectedItem.value) return []
-  const family = weaponFamilies.value.find(f => f.id === selectedItem.value.id)
-  return family ? family.tiers : []
+  const f = weaponFamilies.value.find(f => f.id === selectedItem.value.id)
+  return f ? f.tiers : []
 })
 
 const activeWeaponData = computed(() => {
   if (activeTierWeapons.value.length === 0) return selectedItem.value || {}
-  const found = activeTierWeapons.value.find(tw => tw.tier === currentTierIndex.value)
-  return found || activeTierWeapons.value[0]
+  return activeTierWeapons.value.find(tw => tw.tier === currentTierIndex.value) || activeTierWeapons.value[0]
 })
 
 const activeWeaponTier = computed(() => activeWeaponData.value.tier || 0)
 
 const allFourTierSlots = computed(() => {
   const slots = [null, null, null, null]
-  for (const tw of activeTierWeapons.value) {
-    slots[tw.tier] = tw
-  }
+  for (const tw of activeTierWeapons.value) slots[tw.tier] = tw
   return slots
 })
 
-// ---- Melee attack type text ----
+// ---- Shared computed: effects source ----
+const currentEffects = computed(() => {
+  if (activeTab.value === 'weapons') return activeWeaponData.value?.effects
+  if (activeTab.value === 'items' || activeTab.value === 'characters') return selectedItem.value?.effects
+  return null
+})
+
 const meleeAttackTypeText = computed(() => {
   const stats = activeWeaponData.value?.stats
   if (!stats || activeWeaponData.value?.type !== 'melee') return ''
-  // attack_type: 0 = THRUST, 1 = SWEEP
-  const at = stats.attack_type
-  if (at === 0) return isZh.value ? '(突刺)' : '(Thrust)'
-  if (at === 1) return isZh.value ? '(横扫)' : '(Sweep)'
+  if (stats.attack_type === 0) return isZh.value ? '(突刺)' : '(Thrust)'
+  if (stats.attack_type === 1) return isZh.value ? '(横扫)' : '(Sweep)'
   return ''
 })
 
@@ -897,16 +732,11 @@ function getBasePrice() {
 
 function priceAtWave(wave) {
   const bp = getBasePrice()
-  /* if (wave > 20) {
-    const endless_wave = Math.max(0, wave - 20)
-    const endless_mult = 2.0 + Math.max(0, (wave - 35) * 0.2)
-    const endless_factor = Math.max(0, ((endless_wave * (endless_wave + 1)) / 2) / 100) * endless_mult
-    return Math.floor(bp * (1 + wave * 0.1 + endless_factor))
-  } */
   return Math.floor(bp + wave + (bp * wave * 0.1))
 }
 
 const computedPrice = computed(() => priceAtWave(waveSlider.value))
+const showPrice = computed(() => (activeTab.value === 'weapons' || activeTab.value === 'items') && getBasePrice() > 1)
 
 function getWaveIncrement() { return getBasePrice() * 0.1 + 1 }
 
@@ -918,35 +748,24 @@ function getCurrentTier() {
 
 function showPriceCell(wave) {
   const tier = getCurrentTier()
-  if (tier >= 3 && wave < 8) return false
-  if (tier >= 2 && wave < 4) return false
+  if (tier >= 4 && wave <= 4) return false
+  if (tier >= 3 && wave === 1) return false
   return true
 }
 
-const waveSliderMarks = computed(() => ({
-  1: '1',
-  4: '4',
-  8: '8',
-  14: '14',
-  19: '19',
-}))
+const waveSliderMarks = computed(() => ({ 1:'1', 4:'4', 8:'8', 14:'14', 19:'19' }))
 
 // ---- Selection ----
 function selectItem(item) {
   selectedItem.value = item
-  // Remember tier: use sticky tier, but clamp to available tiers
   if (activeTab.value === 'weapons') {
     const family = weaponFamilies.value.find(f => f.id === item.id)
     const maxTier = family && family.tiers.length > 0 ? family.tiers[family.tiers.length - 1].tier : 0
     currentTierIndex.value = Math.min(stickyTierIndex.value, maxTier)
   }
-  // waveSlider stays as-is (user's choice persists)
-  // Scroll selected item into view
   nextTick(() => {
     const el = gridItemRefs.value[item.id]
-    if (el) {
-      el.scrollIntoView({ block: 'nearest', behavior: 'smooth' })
-    }
+    if (el) el.scrollIntoView({ block: 'nearest', behavior: 'smooth' })
   })
 }
 
@@ -954,60 +773,43 @@ function selectItem(item) {
 function getGridColumns() {
   const gridEl = mainContentRef.value?.querySelector('.grid-panel')
   if (!gridEl) return 4
-  const style = getComputedStyle(gridEl)
-  const colTemplate = style.gridTemplateColumns
-  // Count columns from template
-  const cols = colTemplate.split(' ').length
-  return cols > 0 ? cols : 4
+  const colTemplate = getComputedStyle(gridEl).gridTemplateColumns
+  return colTemplate.split(' ').length || 4
 }
 
 function onKeyDown(e) {
   const list = currentDisplayList.value
   if (!list.length) return
-
-  const currentIdx = selectedItem.value ? list.findIndex(item => item.id === selectedItem.value.id) : -1
+  const currentIdx = selectedItem.value ? list.findIndex(i => i.id === selectedItem.value.id) : -1
   const cols = getGridColumns()
   let nextIdx = currentIdx
-
   switch (e.key) {
-    case 'ArrowUp':
-      nextIdx = Math.max(0, currentIdx - cols)
-      break
-    case 'ArrowDown':
-      nextIdx = Math.min(list.length - 1, currentIdx + cols)
-      break
-    case 'ArrowLeft':
-      if (currentIdx > 0) nextIdx = currentIdx - 1
-      break
-    case 'ArrowRight':
-      if (currentIdx < list.length - 1) nextIdx = currentIdx + 1
-      break
-    default:
-      return
+    case 'ArrowUp': nextIdx = Math.max(0, currentIdx - cols); break
+    case 'ArrowDown': nextIdx = Math.min(list.length - 1, currentIdx + cols); break
+    case 'ArrowLeft': if (currentIdx > 0) nextIdx = currentIdx - 1; break
+    case 'ArrowRight': if (currentIdx < list.length - 1) nextIdx = currentIdx + 1; break
+    default: return
   }
-
   if (nextIdx !== currentIdx && nextIdx >= 0 && nextIdx < list.length) {
-    e.preventDefault()
-    selectItem(list[nextIdx])
+    e.preventDefault(); selectItem(list[nextIdx])
   }
 }
-function onFilterChange() { /* keep selectedItem, allow viewing item even when filtered out */ }
-const pendingNavigate = ref(false) // flag: external navigation pending, skip auto-select
+
+function onFilterChange() {}
+const pendingNavigate = ref(false)
+
 function onTabChange() {
-  filterType.value = null; filterSet.value = null; filterTag.value = null; sortBy.value = 'default'; searchText.value = ''; filterTier.value = null; filterDlc.value = null
+  filterType.value = null; filterSet.value = null; filterTag.value = null
+  sortBy.value = 'default'; searchText.value = ''; filterTier.value = null; filterDlc.value = null
   if (!pendingNavigate.value) {
     selectedItem.value = null
-    // Auto-select first item after DOM updates
     setTimeout(() => {
-      if (currentDisplayList.value.length > 0) {
-        selectItem(currentDisplayList.value[0])
-      }
+      if (currentDisplayList.value.length > 0) selectItem(currentDisplayList.value[0])
     }, 50)
   }
   pendingNavigate.value = false
 }
 
-// ---- Init ----
 onMounted(async () => {
   const resp = await fetch(BASE + 'data/brotato_data.json')
   rawData.value = await resp.json()
@@ -1033,7 +835,6 @@ body { background: #1a1d28; color: #ccc; font-family: 'Segoe UI', system-ui, san
 .main-tabs { background: #151822; padding: 0 24px; }
 .main-tabs :deep(.el-tabs__header) { margin: 0; }
 .main-tabs :deep(.el-tabs__nav-wrap::after) { display: none; }
-/* Card tabs — dark override */
 .el-tabs--card > .el-tabs__header { border-bottom: 1px solid #2a2d3a; background: #151822; }
 .el-tabs--card > .el-tabs__header .el-tabs__nav { border: none; }
 .el-tabs--card > .el-tabs__header .el-tabs__item {
@@ -1058,9 +859,7 @@ body { background: #1a1d28; color: #ccc; font-family: 'Segoe UI', system-ui, san
   min-width: 110px; justify-content: space-between; border-radius: 6px !important;
   transition: all .15s !important;
 }
-.filter-btn:hover {
-  background: #2a2d3a !important; border-color: #5a5d6e !important; color: #fff !important;
-}
+.filter-btn:hover { background: #2a2d3a !important; border-color: #5a5d6e !important; color: #fff !important; }
 .filter-btn.has-value { color: #eae2b0 !important; }
 .sort-btn { border-style: dashed !important; min-width: 100px; }
 .sort-btn:hover { border-color: #6a6d7e !important; }
@@ -1111,7 +910,6 @@ body { background: #1a1d28; color: #ccc; font-family: 'Segoe UI', system-ui, san
 .dlc-badge { font-size: 11px; padding: 3px 8px; border-radius: 4px; background: #a855f7; color: #fff; font-weight: 600; }
 .set-badge { font-size: 11px; padding: 3px 8px; border-radius: 4px; background: #3a3d4e; color: #ccc; cursor: help; font-weight: 600; transition: background .15s; }
 .set-badge:hover { background: #4a4d5e; }
-.detail-price { font-size: 14px; color: #eae2b0; margin-top: 4px; }
 
 /* Tier Tabs */
 .tier-tabs { display: flex; gap: 4px; margin-bottom: 12px; }
@@ -1140,8 +938,8 @@ body { background: #1a1d28; color: #ccc; font-family: 'Segoe UI', system-ui, san
 .stat-prefix-icon { width: 13px; height: 13px; vertical-align: middle; image-rendering: pixelated; }
 
 /* Price Section */
-.price-section { margin-top: 12px; padding: 14px 16px; background: #22253a; border-radius: 8px; border: 1px solid #2a2d3a; display: flex; flex-wrap: wrap; gap: 10px 14px; align-items: flex-start; }
-.price-formula { display: flex; align-items: baseline; gap: 4px; flex-wrap: wrap; flex: 1 1 320px; min-width: 0; margin-bottom: 0; }
+.price-section { margin-top: 12px; padding: 14px 16px; background: #22253a; border-radius: 8px; border: 1px solid #2a2d3a; }
+.price-formula { display: flex; align-items: baseline; gap: 4px; flex-wrap: wrap; margin-bottom: 10px; }
 .price-label { font-size: 13px; color: #bbb; }
 .price-base { font-size: 16px; font-weight: 700; color: #fff; }
 .price-final { font-size: 16px; font-weight: 700; color: #eae2b0; }
@@ -1149,14 +947,12 @@ body { background: #1a1d28; color: #ccc; font-family: 'Segoe UI', system-ui, san
 .price-op { font-size: 13px; color: #888; }
 .price-icon { width: 18px; height: 18px; image-rendering: pixelated; vertical-align: middle; }
 
-/* Price table */
-.price-table { width: 100%; max-width: 50%; flex: 1 1 280px; border-collapse: collapse; margin-bottom: 0; font-size: 13px; }
+.price-table { width: 100%; border-collapse: collapse; margin-bottom: 8px; font-size: 13px; }
 .price-table th, .price-table td { padding: 5px 8px; text-align: center; border: 1px solid #2a2d3a; }
 .price-table th { color: #888; font-weight: 600; }
 .price-table td { color: #ddd; }
 
-/* Slider */
-.price-slider-row { flex: 0 0 100%; padding: 0 8px; }
+.price-slider-row { padding: 0 8px; }
 .price-slider { --el-slider-height: 4px; }
 .price-slider :deep(.el-slider__runway) { background: #2a2d3a; margin: 0; }
 .price-slider :deep(.el-slider__bar) { background: #ff3d3d; }
@@ -1172,11 +968,8 @@ body { background: #1a1d28; color: #ccc; font-family: 'Segoe UI', system-ui, san
 .eff-prefix { flex-shrink: 0; width: 8px; text-align: center; color: #777; display: flex; align-items: center; justify-content: center; line-height: 1; }
 .eff-text { flex: 1; min-width: 0; }
 
-/* Starting Weapons Grid - matches left panel grid-item style */
-.starting-weapons-grid {
-  display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-  gap: 5px;
-}
+/* Starting Weapons Grid */
+.starting-weapons-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 5px; }
 .starting-weapon-card { cursor: pointer; }
 
 /* Tags */
@@ -1184,8 +977,6 @@ body { background: #1a1d28; color: #ccc; font-family: 'Segoe UI', system-ui, san
 .tag-badge { font-size: 11px; padding: 4px 10px; border-radius: 4px; background: #2a2d44; color: #bbb; font-weight: 600; line-height: 1.4; display: inline-block; transition: all .15s; }
 .tag-badge.clickable { cursor: pointer; }
 .tag-badge.clickable:hover { background: #3a3d58; color: #fff; }
-.weapon-link { background: #2d2d1f; color: #eae2b0; }
-.weapon-link:hover { background: #4a4a2f; color: #fff; }
 .limit-badge { font-size: 11px; padding: 4px 10px; border-radius: 4px; color: #fff; font-weight: 600; line-height: 1.4; }
 .limit-badge.unique { background: #c0392b; }
 .limit-badge.limited { background: #d35400; }
@@ -1207,23 +998,20 @@ body { background: #1a1d28; color: #ccc; font-family: 'Segoe UI', system-ui, san
 .el-select .el-input .el-input__suffix .el-icon { color: #888 !important; }
 .el-select .el-input__wrapper { background-color: #22253a !important; border-color: #3a3d4e !important; }
 .el-select .el-tag { background-color: #2a2d3a !important; border-color: #444 !important; color: #ccc !important; }
-/* Prevent browser autofill from overriding dark styles */
 .el-input__inner:-webkit-autofill,
 .el-input__inner:-webkit-autofill:hover,
 .el-input__inner:-webkit-autofill:focus { -webkit-box-shadow: 0 0 0 30px #22253a inset !important; -webkit-text-fill-color: #ccc !important; transition: background-color 5000s ease-in-out 0s; }
 
-/* Dropdown popper — covers both el-select and el-dropdown */
+/* Dropdown popper */
 .dark-dropdown, .dark-dropdown.el-popper { background-color: #22253a !important; border: 1px solid #3a3d4e !important; border-radius: 6px !important; box-shadow: 0 4px 12px rgba(0,0,0,.4) !important; }
 .dark-dropdown .el-select-dropdown, .dark-dropdown .el-scrollbar, .dark-dropdown .el-scrollbar__wrap, .dark-dropdown .el-scrollbar__view,
 .dark-dropdown .el-select-dropdown__list, .dark-dropdown .el-dropdown-menu { background-color: #22253a !important; }
 .dark-dropdown .el-popper__arrow::before { background: #22253a !important; border-color: #3a3d4e !important; }
-/* Select dropdown items */
 .dark-dropdown .el-select-dropdown__item { color: #bbb !important; padding: 8px 14px !important; font-size: 13px; transition: background .12s, color .12s; display: flex; align-items: center; min-height: 32px; line-height: 1.2; }
 .dark-dropdown .el-select-dropdown__item:hover { background-color: #2e3148 !important; color: #fff !important; }
 .dark-dropdown .el-select-dropdown__item.is-selected, .dark-dropdown .el-select-dropdown__item.selected { color: #ff3d3d !important; font-weight: 600; }
 .dark-dropdown .el-select-dropdown__item.is-hovering { background-color: #2e3148 !important; }
 .dark-dropdown .el-select-dropdown__empty { color: #777 !important; padding: 10px; }
-/* Dropdown menu items */
 .dark-dropdown .el-dropdown-menu__item { color: #bbb !important; padding: 8px 14px !important; font-size: 13px; transition: background .12s, color .12s; line-height: 1.2; }
 .dark-dropdown .el-dropdown-menu__item:hover { background-color: #2e3148 !important; color: #fff !important; }
 .dark-dropdown .el-dropdown-menu__item.is-active-opt { color: #ff3d3d !important; font-weight: 600; }
@@ -1317,7 +1105,6 @@ body.light-theme .tag-structure:hover { background: #ffe0b2 !important; color: #
 body.light-theme .el-input.is-focus .el-input__wrapper { border-color: #ff3d3d !important; box-shadow: 0 0 0 1px #ff3d3d inset !important; }
 body.light-theme .el-select .el-select__caret { color: #555 !important; }
 body.light-theme .el-select .el-tag { background-color: #e8eaed !important; border-color: #ccc !important; color: #333 !important; }
-/* Light theme dropdown */
 body.light-theme .dark-dropdown, body.light-theme .dark-dropdown.el-popper { background-color: #fff !important; border-color: #ccc !important; box-shadow: 0 2px 8px rgba(0,0,0,.08) !important; }
 body.light-theme .dark-dropdown .el-select-dropdown, body.light-theme .dark-dropdown .el-scrollbar, body.light-theme .dark-dropdown .el-dropdown-menu, body.light-theme .dark-dropdown .el-dropdown-menu__item { background-color: #fff !important; }
 body.light-theme .dark-dropdown .el-dropdown-menu__item { color: #222 !important; }
