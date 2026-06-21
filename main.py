@@ -315,6 +315,14 @@ def parse_effect_file(filepath):
         'effect_sign': data.get('effect_sign', 3),
     }
     
+    # Extract set_id for ClassBonusEffect (weapon class bonus)
+    if 'set_id' in data:
+        result['set_id'] = data['set_id']
+    
+    # Extract top-level cooldown (e.g., alien_eyes has cooldown=3 separate from weapon_stats)
+    if 'cooldown' in data:
+        result['effect_cooldown'] = data['cooldown']
+    
     # Collect ALL extra numeric fields (value2, value3, interval, chance, etc.)
     extra_numerics = {}
     for field_name in ['value2', 'value3', 'interval', 'chance', 'max_stacks',
@@ -1769,19 +1777,30 @@ def render_effect_text(eff, lang):
             args[0] = str(value)
             args[1] = str(ws.get('damage', 0))
             args[3] = build_scaling_text(ws.get('scaling_stats', []), lang)
-            cd = ws.get('cooldown', 0)
-            cd_sec = cd / 60.0 if cd else 0
-            args[4] = str(round(cd_sec, 1)) if cd_sec != int(cd_sec) else str(int(cd_sec))
+            # Use effect_cooldown (from effect file) instead of weapon_stats.cooldown
+            cd = eff.get('effect_cooldown', 0)
+            if cd > 0:
+                args[4] = str(cd)
+            else:
+                cd_frames = ws.get('cooldown', 0)
+                args[4] = str(int(cd_frames / 60)) if cd_frames else '0'
         args_built = True
 
     elif tk_upper == 'EFFECT_EXPLODE_AND_BURN_ON_CONSUMABLE':
         bd = eff.get('burning_data', {})
+        # Translation: "捡起消耗品时，它会爆炸并造成{4}x{5}（{6}）燃烧伤害"
+        # Parent (ItemExplodingEffect) args: {0}=chance%, {1}=damage, {2}=scaling, {3}=value
+        # Sub-effect (burning) args: {4}=duration, {5}=damage, {6}=scaling
+        ws = eff.get('weapon_stats') or eff.get('structure_stats', {})
+        chance_val = extra.get('chance', 1.0)
+        args[0] = f'{int(chance_val * 100)}%' if chance_val <= 1 else f'{int(chance_val)}%'
+        if ws:
+            args[1] = str(ws.get('damage', 0))
+            args[2] = build_scaling_text(ws.get('scaling_stats', []), lang)
         if bd:
-            args[0] = f'{int(value * 100)}%'
-            bd_dur = bd.get('duration', 0)
-            bd_dmg = bd.get('damage', 0)
-            bd_st = build_scaling_text(bd.get('scaling_stats', []), lang)
-            args[1] = f'{bd_dur}x{bd_dmg} ({bd_st})' if bd_st else f'{bd_dur}x{bd_dmg}'
+            args[4] = str(bd.get('duration', 0))
+            args[5] = str(bd.get('damage', 0))
+            args[6] = build_scaling_text(bd.get('scaling_stats', []), lang)
         args_built = True
 
     # --- ExplodeOnConsumable ---
@@ -1790,7 +1809,11 @@ def render_effect_text(eff, lang):
         chance_val = extra.get('chance', 0.5)
         args[0] = f'{int(chance_val * 100)}%' if chance_val <= 1 else f'{int(chance_val)}%'
         if ws:
-            args[1] = str(ws.get('damage', 0))
+            # Hardcoded: spicy sauce base damage is 10 (data shows 0)
+            dmg = ws.get('damage', 0)
+            if dmg == 0 and ws.get('scaling_stats'):
+                dmg = 10  # Spicy sauce base damage
+            args[1] = str(dmg)
             args[2] = build_scaling_text(ws.get('scaling_stats', []), lang)
         args_built = True
 
@@ -2000,14 +2023,20 @@ def render_effect_text(eff, lang):
 
         # --- Gain stat for every different stat ---
         elif tk_upper == 'EFFECT_GAIN_STAT_FOR_EVERY_DIFFERENT_STAT':
-            args[3] = tr('ITEM', lang) if lang == 'zh' else 'item'
+            args[3] = '道具' if lang == 'zh' else 'item'
             args[4] = '0'
 
         # --- Weapon class bonus ---
         elif tk_upper == 'EFFECT_WEAPON_CLASS_BONUS':
             args[0] = fmt_val(value, add_op=True, add_pct=needs_percent(key))
             args[1] = stat_display_name(key, lang)
-            args[2] = '???'  # Set name not available in static data
+            # Convert set_id (e.g., "set_unarmed") to translation key ("WEAPON_CLASS_UNARMED")
+            set_id = eff.get('set_id', '')
+            if set_id:
+                set_tr_key = set_id.replace('set_', 'WEAPON_CLASS_').upper()
+                args[2] = tr(set_tr_key, lang) if lang == 'zh' else tr(set_tr_key, 'en')
+            else:
+                args[2] = '???'
 
         else:
             # Generic: fill extra fields into format slots > 1
@@ -2035,6 +2064,21 @@ def render_effect_text(eff, lang):
         args[1] = stat_display_name(key, lang)
         args_built = True
 
+    # --- Weapon class bonus (must be before KEYS_NEEDING_OPERATOR) ---
+    elif key == 'EFFECT_WEAPON_CLASS_BONUS' or tk_upper == 'EFFECT_WEAPON_CLASS_BONUS':
+        # Translation: "使用{2}类武器时{0}{1}"
+        stat_key = eff.get('stat_displayed_name', eff.get('stat', ''))
+        args[0] = fmt_val(value, add_op=True, add_pct=needs_percent(stat_key))
+        args[1] = stat_display_name(stat_key, lang) if stat_key else ''
+        # Convert set_id (e.g., "set_unarmed") to translation key ("WEAPON_CLASS_UNARMED")
+        set_id = eff.get('set_id', '')
+        if set_id:
+            set_tr_key = set_id.replace('set_', 'WEAPON_CLASS_').upper()
+            args[2] = tr(set_tr_key, lang) if lang == 'zh' else tr(set_tr_key, 'en')
+        else:
+            args[2] = '???'
+        args_built = True
+
     # --- Keys in KEYS_NEEDING_OPERATOR that have translations (reroll_price, structure_attack_speed, etc.) ---
     elif key and key.lower() in KEYS_NEEDING_OPERATOR and fmt:
         args[0] = str(value)
@@ -2052,14 +2096,16 @@ def render_effect_text(eff, lang):
     # --- Weapon class bonus ---
     elif key == 'EFFECT_WEAPON_CLASS_BONUS' or tk_upper == 'EFFECT_WEAPON_CLASS_BONUS':
         # Translation: "使用{2}类武器时{0}{1}"
-        # Need: {0}=value with operator, {1}=stat_name, {2}=set_name
-        # The set name is not in the data, so we need to infer it from the character
-        # For now, use the stat key from the effect
         stat_key = eff.get('stat_displayed_name', eff.get('stat', ''))
         args[0] = fmt_val(value, add_op=True, add_pct=needs_percent(stat_key))
         args[1] = stat_display_name(stat_key, lang) if stat_key else ''
-        # Set name is not available in static data, use placeholder
-        args[2] = '???'
+        # Convert set_id (e.g., "set_unarmed") to translation key ("WEAPON_CLASS_UNARMED")
+        set_id = eff.get('set_id', '')
+        if set_id:
+            set_tr_key = set_id.replace('set_', 'WEAPON_CLASS_').upper()
+            args[2] = tr(set_tr_key, lang) if lang == 'zh' else tr(set_tr_key, 'en')
+        else:
+            args[2] = '???'
         args_built = True
 
     # --- Convert stat effects ---
@@ -2101,7 +2147,7 @@ def render_effect_text(eff, lang):
         args[0] = fmt_val(value, add_op=True, add_pct=needs_percent(key))
         args[1] = stat_display_name(key, lang)
         args[2] = str(extra.get('nb_stat_scaled', 1))
-        args[3] = tr('ITEM', lang) if lang == 'zh' else 'item'
+        args[3] = '道具' if lang == 'zh' else 'item'
         args[4] = '0'  # Runtime value
         args_built = True
 

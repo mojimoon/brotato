@@ -17875,6 +17875,7 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
+          "effect_cooldown": 3,
           "auto_target_enemy": false,
           "weapon_stats": {
             "cooldown": 60,
@@ -17901,8 +17902,8 @@
             "bounce_dmg_reduction": 0.5,
             "projectile_speed": 500
           },
-          "text_en": "Shoots <span class=\"g\">6</span> alien eyes around you every <span class=\"g\">1</span> seconds dealing <span class=\"g\">1</span> (<span class=\"g\">50%<span class=\"ic\" data-ic=\"max_hp\"></span></span>) damage each",
-          "text_zh": "每<span class=\"g\">1</span>秒向周围发射<span class=\"g\">6</span>颗异形眼球，每颗眼球造成<span class=\"g\">1</span>（<span class=\"g\">50%<span class=\"ic\" data-ic=\"max_hp\"></span></span>）伤害"
+          "text_en": "Shoots <span class=\"g\">6</span> alien eyes around you every <span class=\"g\">3</span> seconds dealing <span class=\"g\">1</span> (<span class=\"g\">50%<span class=\"ic\" data-ic=\"max_hp\"></span></span>) damage each",
+          "text_zh": "每<span class=\"g\">3</span>秒向周围发射<span class=\"g\">6</span>颗异形眼球，每颗眼球造成<span class=\"g\">1</span>（<span class=\"g\">50%<span class=\"ic\" data-ic=\"max_hp\"></span></span>）伤害"
         }
       ],
       "unlocked_by_default": true,
@@ -20823,8 +20824,8 @@
             "effect_scale": 1.0,
             "is_healing": false
           },
-          "text_en": "Consumables have a <span class=\"g\">50%</span> chance to explode for <span class=\"g\">0</span> (<span class=\"g\">100%<span class=\"ic\" data-ic=\"max_hp\"></span></span>) damage when picked up",
-          "text_zh": "当捡起消耗品时有<span class=\"g\">50%</span>概率爆炸，造成<span class=\"g\">0</span>（<span class=\"g\">100%<span class=\"ic\" data-ic=\"max_hp\"></span></span>）伤害"
+          "text_en": "Consumables have a <span class=\"g\">50%</span> chance to explode for <span class=\"g\">10</span> (<span class=\"g\">100%<span class=\"ic\" data-ic=\"max_hp\"></span></span>) damage when picked up",
+          "text_zh": "当捡起消耗品时有<span class=\"g\">50%</span>概率爆炸，造成<span class=\"g\">10</span>（<span class=\"g\">100%<span class=\"ic\" data-ic=\"max_hp\"></span></span>）伤害"
         }
       ],
       "unlocked_by_default": false,
@@ -21393,6 +21394,7 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
+          "effect_cooldown": -1,
           "auto_target_enemy": false,
           "weapon_stats": {
             "cooldown": 60,
@@ -27037,10 +27039,11 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
+          "set_id": "set_tool",
           "stat_displayed_name": "stat_percent_damage",
           "stat_name": "stat_percent_damage",
-          "text_en": "<span class=\"g\">+100</span> <span class=\"g\"> with weapons</span> with weapons",
-          "text_zh": "使用类武器时<span class=\"g\">+100</span><span class=\"g\">使用类武器时 </span>"
+          "text_en": "<span class=\"g\">+100</span> <span class=\"g\">% Damage</span> with <span class=\"g\">Tool</span> weapons",
+          "text_zh": "使用<span class=\"g\">工具</span>类武器时<span class=\"g\">+100</span><span class=\"g\">%伤害</span>"
         },
         {
           "key": "stat_percent_damage",
@@ -27297,10 +27300,11 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
+          "set_id": "set_unarmed",
           "stat_displayed_name": "stat_attack_speed",
           "stat_name": "attack_speed_mod",
-          "text_en": "<span class=\"g\">+50</span> <span class=\"g\"> with weapons</span> with weapons",
-          "text_zh": "使用类武器时<span class=\"g\">+50</span><span class=\"g\">使用类武器时 </span>"
+          "text_en": "<span class=\"g\">+50</span> <span class=\"g\">% Attack Speed</span> with <span class=\"g\">Unarmed</span> weapons",
+          "text_zh": "使用<span class=\"g\">徒手</span>类武器时<span class=\"g\">+50</span><span class=\"g\">%攻击速度</span>"
         },
         {
           "key": "weapon_fist_1",
@@ -27883,8 +27887,8 @@
             "effect_scale": 1.0,
             "is_healing": false
           },
-          "text_en": "Consumables explode for x burning damage when picked up",
-          "text_zh": "捡起消耗品时，它会爆炸并造成x燃烧伤害"
+          "text_en": "Consumables explode for <span class=\"g\">5</span>x<span class=\"g\">1</span> (<span class=\"g\">100%<span class=\"ic\" data-ic=\"elemental_damage\"></span></span>) burning damage when picked up",
+          "text_zh": "捡起消耗品时，它会爆炸并造成<span class=\"g\">5</span>x<span class=\"g\">1</span>（<span class=\"g\">100%<span class=\"ic\" data-ic=\"elemental_damage\"></span></span>）燃烧伤害"
         },
         {
           "key": "item_scared_sausage",
@@ -28085,10 +28089,11 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
+          "set_id": "set_precise",
           "stat_displayed_name": "stat_range",
           "stat_name": "max_range",
-          "text_en": "<span class=\"g\">+100</span> <span class=\"g\"> with weapons</span> with weapons",
-          "text_zh": "使用类武器时<span class=\"g\">+100</span><span class=\"g\">使用类武器时 </span>"
+          "text_en": "<span class=\"g\">+100</span> <span class=\"g\">Range</span> with <span class=\"g\">Precise</span> weapons",
+          "text_zh": "使用<span class=\"g\">精准</span>类武器时<span class=\"g\">+100</span><span class=\"g\">范围</span>"
         },
         {
           "key": "stat_attack_speed",
@@ -28697,10 +28702,11 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
+          "set_id": "set_precise",
           "stat_displayed_name": "stat_crit_damage",
           "stat_name": "crit_damage",
-          "text_en": "<span class=\"g\">+200</span> <span class=\"g\"> with weapons</span> with weapons",
-          "text_zh": "使用类武器时<span class=\"g\">+200</span><span class=\"g\">使用类武器时 </span>"
+          "text_en": "<span class=\"g\">+200</span> <span class=\"g\">Crit Damage</span> with <span class=\"g\">Precise</span> weapons",
+          "text_zh": "使用<span class=\"g\">精准</span>类武器时<span class=\"g\">+200</span><span class=\"g\">％暴击伤害</span>"
         },
         {
           "key": "effect_increase_stat_gains",
@@ -28798,10 +28804,11 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
+          "set_id": "set_medical",
           "stat_displayed_name": "stat_attack_speed",
           "stat_name": "attack_speed_mod",
-          "text_en": "<span class=\"g\">+200</span> <span class=\"g\"> with weapons</span> with weapons",
-          "text_zh": "使用类武器时<span class=\"g\">+200</span><span class=\"g\">使用类武器时 </span>"
+          "text_en": "<span class=\"g\">+200</span> <span class=\"g\">% Attack Speed</span> with <span class=\"g\">Medical</span> weapons",
+          "text_zh": "使用<span class=\"g\">医疗</span>类武器时<span class=\"g\">+200</span><span class=\"g\">%攻击速度</span>"
         },
         {
           "key": "stat_hp_regeneration",
@@ -29826,10 +29833,11 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
+          "set_id": "set_ethereal",
           "stat_displayed_name": "stat_damage",
           "stat_name": "damage",
-          "text_en": "<span class=\"g\">+10</span> <span class=\"g\"> with weapons</span> with weapons",
-          "text_zh": "使用类武器时<span class=\"g\">+10</span><span class=\"g\">使用类武器时 </span>"
+          "text_en": "<span class=\"g\">+10</span> <span class=\"g\">Damage</span> with <span class=\"g\">Ethereal</span> weapons",
+          "text_zh": "使用<span class=\"g\">虚灵</span>类武器时<span class=\"g\">+10</span><span class=\"g\">伤害</span>"
         },
         {
           "key": "stat_dodge",
@@ -32990,10 +32998,11 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
+          "set_id": "set_primitive",
           "stat_displayed_name": "stat_lifesteal",
           "stat_name": "lifesteal",
-          "text_en": "<span class=\"g\">+30</span> <span class=\"g\"> with weapons</span> with weapons",
-          "text_zh": "使用类武器时<span class=\"g\">+30</span><span class=\"g\">使用类武器时 </span>"
+          "text_en": "<span class=\"g\">+30</span> <span class=\"g\">% Life Steal</span> with <span class=\"g\">Primitive</span> weapons",
+          "text_zh": "使用<span class=\"g\">原始</span>类武器时<span class=\"g\">+30</span><span class=\"g\">%生命窃取</span>"
         },
         {
           "key": "weapon_stick_1",
