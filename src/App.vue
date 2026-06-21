@@ -9,8 +9,8 @@
     <!-- Tabs -->
     <el-tabs v-model="activeTab" class="main-tabs" @tab-change="onTabChange">
       <el-tab-pane name="weapons"><template #label>{{ isZh ? '武器' : 'Weapons' }}</template></el-tab-pane>
-      <el-tab-pane name="items"><template #label>{{ isZh ? '道具 (TODO)' : 'Items (TODO)' }}</template></el-tab-pane>
-      <el-tab-pane name="characters"><template #label>{{ isZh ? '角色 (TODO)' : 'Characters (TODO)' }}</template></el-tab-pane>
+      <el-tab-pane name="items"><template #label>{{ isZh ? '道具' : 'Items' }}</template></el-tab-pane>
+      <el-tab-pane name="characters"><template #label>{{ isZh ? '角色' : 'Characters' }}</template></el-tab-pane>
     </el-tabs>
 
     <!-- Filters -->
@@ -26,7 +26,7 @@
       </el-select>
       <el-select v-if="activeTab === 'weapons'" v-model="filterType" :placeholder="isZh ? '类型' : 'Type'" clearable class="filter-select" popper-class="dark-dropdown" @change="onFilterChange">
         <el-option :label="isZh ? '近战' : 'Melee'" value="melee" />
-        <el-option :label="isZh ? '远程' : 'Ranged'" value="ranged" />
+        <el-option :label="isZh ? '远战' : 'Ranged'" value="ranged" />
       </el-select>
       <el-select v-if="activeTab === 'weapons'" v-model="filterSet" :placeholder="isZh ? '武器类别' : 'Set'" clearable class="filter-select" popper-class="dark-dropdown" @change="onFilterChange">
         <el-option v-for="setEntry in availableSets" :key="setEntry.key" :label="setEntry.label" :value="setEntry.key" />
@@ -77,7 +77,7 @@
             <div class="detail-title-wrap">
               <h2 :style="{ color: tierColor(activeWeaponTier) }">{{ itemName(selectedItem) }}</h2>
               <div class="detail-badges">
-                <span class="type-badge" :class="selectedItem.type">{{ selectedItem.type === 'melee' ? (isZh ? '近战' : 'Melee') : (isZh ? '远程' : 'Ranged') }}</span>
+                <span class="type-badge" :class="selectedItem.type">{{ selectedItem.type === 'melee' ? (isZh ? '近战' : 'Melee') : (isZh ? '远战' : 'Ranged') }}</span>
                 <span v-if="selectedItem.dlc" class="dlc-badge">DLC</span>
                 <!-- Set tooltips only (no inline text) -->
                 <el-tooltip v-for="(setNameKey, si) in (selectedItem.sets || [])" :key="si" placement="top" effect="dark" :hide-after="0">
@@ -605,10 +605,29 @@ function renderEffectPreprocessed(eff) {
   // All closing tags are the same
   text = text.replace(/<\/span>/g, '</span>')
 
-  // Step 2: Replace [远程伤害] style stat references with icons
-  // Match [中文stat名] or [EnglishStatName] patterns
+  // Step 2: Replace <span class="ic" data-ic="ranged_damage"></span> with stat icons
+  text = text.replace(/<span class="ic" data-ic="([^"]+)"><\/span>/g, (match, icKey) => {
+    // icKey is like "ranged_damage", look up "stat_ranged_damage" in stat_icons
+    const fullKey = 'stat_' + icKey
+    const iconPath = (rawData.value.stat_icons || {})[fullKey]
+    if (iconPath) {
+      const iconSrc = `${BASE}icons/${iconPath}`
+      const displayName = statTr(fullKey)
+      return `<img src="${iconSrc}" class="stat-inline-icon" style="width:16px;height:16px;vertical-align:middle;margin:0 1px" title="${displayName}" />`
+    }
+    // Fallback: try matching without stat_ prefix
+    for (const [key, path] of Object.entries(rawData.value.stat_icons || {})) {
+      if (key.replace('stat_', '') === icKey) {
+        const iconSrc = `${BASE}icons/${path}`
+        const displayName = statTr(key)
+        return `<img src="${iconSrc}" class="stat-inline-icon" style="width:16px;height:16px;vertical-align:middle;margin:0 1px" title="${displayName}" />`
+      }
+    }
+    return match
+  })
+
+  // Step 3: Also handle legacy [stat名] format for backward compatibility
   text = text.replace(/\[([^\]]+)\]/g, (match, statName) => {
-    // Look up the stat key from display name
     for (const [key, iconPath] of Object.entries(rawData.value.stat_icons || {})) {
       const displayName = statTr(key)
       if (displayName === statName) {
@@ -616,7 +635,6 @@ function renderEffectPreprocessed(eff) {
         return `<img src="${iconSrc}" class="stat-inline-icon" style="width:16px;height:16px;vertical-align:middle;margin:0 1px" title="${statName}" />`
       }
     }
-    // If no icon found, return the text as-is (keep brackets)
     return match
   })
 
@@ -912,11 +930,12 @@ body { background: #121520; color: #ccc; font-family: 'Segoe UI', system-ui, san
 /* Main */
 .main-content { flex: 1; display: flex; overflow: hidden; height: calc(100vh - 158px); }
 
-/* Grid - max 50% width */
+/* Grid - max 50% width, independent scroll */
 .grid-panel {
   flex: 0 1 50%; max-width: 50%; overflow-y: auto; padding: 10px;
   display: grid; grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
   gap: 5px; align-content: start; background: #121520;
+  position: relative;
 }
 .grid-item {
   background: #1a1d28; border-radius: 6px; padding: 8px 4px; cursor: pointer;
@@ -933,8 +952,13 @@ body { background: #121520; color: #ccc; font-family: 'Segoe UI', system-ui, san
 .item-name-text { font-size: 12px; font-weight: 600; text-align: center; max-width: 80px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .item-dlc-badge { position: absolute; top: 3px; right: 3px; font-size: 8px; padding: 1px 3px; border-radius: 3px; background: #a855f7; color: #fff; font-weight: bold; }
 
-/* Detail Panel */
-.detail-panel { flex: 1; min-width: 0; background: #0f131a; border-left: 2px solid #222; overflow-y: auto; padding: 20px; }
+/* Detail Panel - sticky position, independent scroll */
+.detail-panel {
+  flex: 1; min-width: 0; background: #0f131a; border-left: 2px solid #222;
+  overflow-y: auto; padding: 20px;
+  position: sticky; top: 0; align-self: flex-start;
+  height: 100%;
+}
 .empty-panel { display: flex; align-items: center; justify-content: center; }
 
 .detail-header { display: flex; gap: 14px; align-items: center; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid #222; }

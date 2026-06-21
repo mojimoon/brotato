@@ -1,0 +1,1615 @@
+{
+  "label": "merged",
+  "exported_at": "2026-06-21T06:11:44.215Z",
+  "total": 89,
+  "matched": 86,
+  "manual": 1,
+  "skipped": 2,
+  "unmatched": 0,
+  "entries": [
+    {
+      "key": "EFFECT_ADDITIONAL_WEAPON_BONUS",
+      "category": "effect",
+      "original_key": "stat_percent_damage",
+      "text_key": "effect_additional_weapon_bonus",
+      "sources": [
+        "base"
+      ],
+      "status": "matched",
+      "matched_missing_key_id": "B_452",
+      "en": "{0} {1} for every weapon you have [{2}]",
+      "zh": "每持有1件武器{0}{1} [{2}]",
+      "source_names": [
+        "excalibur",
+        "multitasker"
+      ],
+      "occurrence_count": 2
+    },
+    {
+      "key": "EFFECT_ALL_WEAPONS_COUNT_FOR_SETS",
+      "category": "effect",
+      "original_key": "all_weapons_count_for_sets",
+      "text_key": "effect_all_weapons_count_for_sets",
+      "sources": [
+        "base"
+      ],
+      "status": "matched",
+      "matched_missing_key_id": "B_951",
+      "en": "Equipped weapons always contribute to the class bonuses of other equipped weapons",
+      "zh": "装备的武器总是会对其他装备武器提供类别加成",
+      "source_names": [
+        "effects"
+      ],
+      "occurrence_count": 1
+    },
+    {
+      "key": "EFFECT_BONUS_CURRENT_HEALTH_DAMAGE",
+      "category": "effect",
+      "original_key": "bonus_current_health_damage",
+      "text_key": "effect_bonus_current_health_damage",
+      "sources": [
+        "dlc1"
+      ],
+      "status": "matched",
+      "matched_missing_key_id": "D_178",
+      "en": "Deals {0} of an enemy’s current health as bonus damage ({2} for bosses and elites)",
+      "zh": "造成敌人当前生命值的{0}以作为奖励伤害（头目和精英怪的{2}）",
+      "source_names": [
+        "chainsaw"
+      ],
+      "occurrence_count": 2
+    },
+    {
+      "key": "EFFECT_BONUS_NON_ELEMENTAL_DAMAGE_AGAINST_BURNING_TARGETS",
+      "category": "effect",
+      "original_key": "bonus_non_elemental_damage_against_burning_targets",
+      "text_key": "effect_bonus_non_elemental_damage_against_burning_targets",
+      "sources": [
+        "dlc1"
+      ],
+      "status": "matched",
+      "matched_missing_key_id": "D_62",
+      "en": "{0} damage from non elemental sources against burning targets",
+      "zh": "对燃烧目标造成非属性来源的{0}伤害",
+      "source_names": [
+        "effects"
+      ],
+      "occurrence_count": 1
+    },
+    {
+      "key": "EFFECT_BONUS_WEAPON_CLASS_DAMAGE_AGAINST_CURSED_ENEMIES",
+      "category": "effect",
+      "original_key": "weapon_class_naval",
+      "text_key": "effect_bonus_weapon_class_damage_against_cursed_enemies",
+      "sources": [
+        "dlc1"
+      ],
+      "status": "matched",
+      "matched_missing_key_id": "D_81",
+      "en": "{0} damage with {1} weapons against cursed enemies",
+      "zh": "使用{1}武器对被诅咒的敌人造成{0}伤害",
+      "source_names": [
+        "effects"
+      ],
+      "occurrence_count": 1
+    },
+    {
+      "key": "EFFECT_BOUNCE_ON_CRIT",
+      "category": "effect",
+      "original_key": "bounce_on_crit",
+      "text_key": "effect_bounce_on_crit",
+      "sources": [
+        "base"
+      ],
+      "status": "matched",
+      "matched_missing_key_id": "B_269",
+      "en": "Bounces up to {0} times on critical hit",
+      "zh": "暴击时最多能反弹{0}次",
+      "source_names": [
+        "shuriken"
+      ],
+      "occurrence_count": 4
+    },
+    {
+      "key": "EFFECT_BOUNCING",
+      "category": "effect",
+      "original_key": "bounce",
+      "text_key": "effect_bouncing",
+      "sources": [
+        "base"
+      ],
+      "status": "matched",
+      "matched_missing_key_id": "B_1050",
+      "en": "Your projectiles gain {0} bounce",
+      "zh": "你的投射物获得{0}次反弹",
+      "source_names": [
+        "ricochet"
+      ],
+      "occurrence_count": 1
+    },
+    {
+      "key": "EFFECT_BREAK_ON_HIT",
+      "category": "effect",
+      "original_key": "break_on_hit",
+      "text_key": "effect_break_on_hit",
+      "sources": [
+        "dlc1"
+      ],
+      "status": "matched",
+      "matched_missing_key_id": "D_230",
+      "en": "Has a {0} chance to break and drop {2} materials on hit",
+      "zh": "命中时武器有{0}几率损坏并掉落{2}材料",
+      "source_names": [
+        "brick"
+      ],
+      "occurrence_count": 4
+    },
+    {
+      "key": "EFFECT_BUILDER_TURRET_ALT",
+      "category": "effect",
+      "original_key": "stat_engineering",
+      "text_key": "effect_builder_turret_alt",
+      "sources": [
+        "dlc1"
+      ],
+      "status": "matched",
+      "matched_missing_key_id": "D_61",
+      "en": "This turret's stats are derived from your best ranged weapon's base stats and scale with {4} ({5})",
+      "zh": "此炮塔的属性基于你最佳远程武器的基础属性，并随着{4}（{5}）升级",
+      "source_names": [
+        "effects"
+      ],
+      "occurrence_count": 4
+    },
+    {
+      "key": "EFFECT_BUILDER_TURRET_UPGRADE",
+      "category": "effect",
+      "original_key": "projectile",
+      "text_key": "effect_builder_turret_upgrade",
+      "sources": [
+        "dlc1"
+      ],
+      "status": "skipped",
+      "matched_missing_key_id": null,
+      "en": "",
+      "zh": "",
+      "source_names": [
+        "effects"
+      ],
+      "occurrence_count": 1
+    },
+    {
+      "key": "EFFECT_BURNING_COOLDOWN_INCREASE",
+      "category": "effect",
+      "original_key": "burning_cooldown_reduction",
+      "text_key": "effect_burning_cooldown_increase",
+      "sources": [
+        "base"
+      ],
+      "status": "matched",
+      "matched_missing_key_id": "B_140",
+      "en": "Burning activates {0} slower",
+      "zh": "燃烧速度降低{0}",
+      "source_names": [
+        "effects"
+      ],
+      "occurrence_count": 1
+    },
+    {
+      "key": "EFFECT_BURNING_ENEMY_HP_PERCENT_DAMAGE",
+      "category": "effect",
+      "original_key": "burning_enemy_hp_percent_damage",
+      "text_key": "effect_burning_enemy_hp_percent_damage",
+      "sources": [
+        "base"
+      ],
+      "status": "matched",
+      "matched_missing_key_id": "B_798",
+      "en": "Burning deals an additional {0} of current enemy HP as damage ({2} for bosses and elites)",
+      "zh": "燃烧会额外造成相当于当前敌人生命值的{0}的伤害（对头目和精英怪则为{2}）",
+      "source_names": [
+        "effects"
+      ],
+      "occurrence_count": 1
+    },
+    {
+      "key": "EFFECT_BURN_CHANCE",
+      "category": "effect",
+      "original_key": "burn_chance",
+      "text_key": "effect_burn_chance",
+      "sources": [
+        "base"
+      ],
+      "status": "matched",
+      "matched_missing_key_id": "B_176",
+      "en": "Attacks have a {0} chance to deal {1}x{2} ({3}) burning damage",
+      "zh": "攻击有{0}机率造成{1}x{2}（{3}）的燃烧伤害",
+      "source_names": [
+        "scared_sausage"
+      ],
+      "occurrence_count": 1
+    },
+    {
+      "key": "EFFECT_CANT_ATTACK_WHILE_MOVING",
+      "category": "effect",
+      "original_key": "can_attack_while_moving",
+      "text_key": "effect_cant_attack_while_moving",
+      "sources": [
+        "base"
+      ],
+      "status": "matched",
+      "matched_missing_key_id": "B_1187",
+      "en": "You can’t attack while moving",
+      "zh": "移动时无法攻击",
+      "source_names": [
+        "soldier"
+      ],
+      "occurrence_count": 1
+    },
+    {
+      "key": "EFFECT_CHANCE_EXPLODE_ON_HIT",
+      "category": "effect",
+      "original_key": "explode_on_hit",
+      "text_key": "effect_chance_explode_on_hit",
+      "sources": [
+        "dlc1"
+      ],
+      "status": "matched",
+      "matched_missing_key_id": "D_227",
+      "en": "You have a {0} chance to explode for {1} ({2}) damage when you get hit",
+      "zh": "当你被击中时，有{0}概率爆炸，造成{1}（{2}）伤害",
+      "source_names": [
+        "effects"
+      ],
+      "occurrence_count": 1
+    },
+    {
+      "key": "EFFECT_CONSUMABLE_HEAL_OVER_TIME",
+      "category": "effect",
+      "original_key": "consumable_heal_over_time",
+      "text_key": "effect_consumable_heal_over_time",
+      "sources": [
+        "dlc1"
+      ],
+      "status": "matched",
+      "matched_missing_key_id": "D_255",
+      "en": "Consumables heal you over {0} seconds instead of instantly",
+      "zh": "消耗品会在{0}秒内持续为你治疗，而非瞬间治疗",
+      "source_names": [
+        "effects"
+      ],
+      "occurrence_count": 1
+    },
+    {
+      "key": "EFFECT_CONVERT_STAT_END_OF_WAVE",
+      "category": "effect",
+      "original_key": "materials",
+      "text_key": "effect_convert_stat_end_of_wave",
+      "sources": [
+        "base"
+      ],
+      "status": "matched",
+      "matched_missing_key_id": "B_956",
+      "en": "{0} of your {1} are converted into {2} at the end of a wave ({3} {1} = {4} {2})",
+      "zh": "{0}的{1}在敌袭结束后会转换为{2}（{3}{1}={4}{2}）",
+      "source_names": [
+        "demon"
+      ],
+      "occurrence_count": 1
+    },
+    {
+      "key": "EFFECT_CRIT_ON_HITTING_BURNING_TARGET",
+      "category": "effect",
+      "original_key": "crit_on_hitting_burning_target",
+      "text_key": "effect_crit_on_hitting_burning_target",
+      "sources": [
+        "dlc1"
+      ],
+      "status": "matched",
+      "matched_missing_key_id": "D_46",
+      "en": "Always crits when hitting burning targets",
+      "zh": "击中燃烧目标时总是造成暴击",
+      "source_names": [
+        "spoon"
+      ],
+      "occurrence_count": 1
+    },
+    {
+      "key": "EFFECT_CURSED_STARTING_ITEM",
+      "category": "effect",
+      "original_key": "item_fish_hook",
+      "text_key": "effect_cursed_starting_item",
+      "sources": [
+        "dlc1"
+      ],
+      "status": "matched",
+      "matched_missing_key_id": "B_677",
+      "en": "You start with {0} cursed {1}",
+      "zh": "初始拥有{0}被诅咒的{1}",
+      "source_names": [
+        "effects"
+      ],
+      "occurrence_count": 1
+    },
+    {
+      "key": "EFFECT_DESTROY_WEAPONS",
+      "category": "effect",
+      "original_key": "destroy_weapons",
+      "text_key": "effect_destroy_weapons",
+      "sources": [
+        "base"
+      ],
+      "status": "matched",
+      "matched_missing_key_id": "B_921",
+      "en": "All of your weapons are destroyed when entering a shop",
+      "zh": "进入商店后，所有武器都会遭到破坏",
+      "source_names": [
+        "arms_dealer"
+      ],
+      "occurrence_count": 1
+    },
+    {
+      "key": "EFFECT_DODGE_CAP",
+      "category": "effect",
+      "original_key": "dodge_cap",
+      "text_key": "effect_dodge_cap",
+      "sources": [
+        "base",
+        "dlc1"
+      ],
+      "status": "matched",
+      "matched_missing_key_id": "B_101",
+      "en": "Dodge is capped at {0}",
+      "zh": "闪避上限为{0}",
+      "source_names": [
+        "cryptid",
+        "effects",
+        "ghost",
+        "ghost_outfit"
+      ],
+      "occurrence_count": 4
+    },
+    {
+      "key": "EFFECT_DOUBLE_BOSS",
+      "category": "effect",
+      "original_key": "double_boss",
+      "text_key": "effect_double_boss",
+      "sources": [
+        "base"
+      ],
+      "status": "matched",
+      "matched_missing_key_id": "B_619",
+      "en": "Two bosses appear at once",
+      "zh": "同时出现两个头目",
+      "source_names": [
+        "difficulties"
+      ],
+      "occurrence_count": 1
+    },
+    {
+      "key": "EFFECT_DOUBLE_LIFESTEAL_BONUS",
+      "category": "effect",
+      "original_key": "double_lifesteal_bonus",
+      "text_key": "EFFECT_DOUBLE_LIFESTEAL_BONUS",
+      "sources": [
+        "base"
+      ],
+      "status": "manual",
+      "matched_missing_key_id": null,
+      "en": "Spawns a Doc Moth pet that flies around the map. When the player is inside its aura, their HP regeneration and Life Steal are doubled",
+      "zh": "生成一个蛾医生宠物，绕着地图飞行。当玩家处于其光环内时，玩家的生命再生和生命窃取属性翻倍。",
+      "source_names": [
+        "doc_moth"
+      ],
+      "occurrence_count": 1
+    },
+    {
+      "key": "EFFECT_ELITES",
+      "category": "effect",
+      "original_key": "effect_elites",
+      "text_key": "",
+      "sources": [
+        "base"
+      ],
+      "status": "matched",
+      "matched_missing_key_id": "B_1084",
+      "en": "Elites and hordes appear",
+      "zh": "精英怪和敌群出现",
+      "source_names": [
+        "difficulties"
+      ],
+      "occurrence_count": 4
+    },
+    {
+      "key": "EFFECT_ENEMY_GOLD_DROPS",
+      "category": "effect",
+      "original_key": "enemy_gold_drops",
+      "text_key": "effect_enemy_gold_drops",
+      "sources": [
+        "base",
+        "dlc1"
+      ],
+      "status": "matched",
+      "matched_missing_key_id": "B_785",
+      "en": "{0} materials dropped from enemies",
+      "zh": "{0}敌人掉落的材料",
+      "source_names": [
+        "cryptid",
+        "effects",
+        "explorer",
+        "fisherman"
+      ],
+      "occurrence_count": 5
+    },
+    {
+      "key": "EFFECT_EXPLODE_CUSTOM",
+      "category": "effect",
+      "original_key": "effect_explode_custom",
+      "text_key": "",
+      "sources": [
+        "base"
+      ],
+      "status": "matched",
+      "matched_missing_key_id": "B_246",
+      "en": "Projectiles have a {0} chance to explode on hit",
+      "zh": "投射物命中时有{0}爆炸",
+      "source_names": [
+        "shredder"
+      ],
+      "occurrence_count": 3
+    },
+    {
+      "key": "EFFECT_EXPLODE_MELEE",
+      "category": "effect",
+      "original_key": "effect_explode_melee",
+      "text_key": "",
+      "sources": [
+        "base"
+      ],
+      "status": "matched",
+      "matched_missing_key_id": "B_306",
+      "en": "{0} chance to explode on hit",
+      "zh": "击中时有{0}概率爆炸",
+      "source_names": [
+        "dextroyer",
+        "plank",
+        "plasma_sledgehammer",
+        "power_fist"
+      ],
+      "occurrence_count": 9
+    },
+    {
+      "key": "EFFECT_EXPLODE_ON_CONSUMABLE",
+      "category": "effect",
+      "original_key": "explode_on_consumable",
+      "text_key": "effect_explode_on_consumable",
+      "sources": [
+        "base"
+      ],
+      "status": "matched",
+      "matched_missing_key_id": "B_445",
+      "en": "Consumables have a {0} chance to explode for {1} ({2}) damage when picked up",
+      "zh": "当捡起消耗品时有{0}概率爆炸，造成{1}（{2}）伤害",
+      "source_names": [
+        "glutton",
+        "spicy_sauce"
+      ],
+      "occurrence_count": 2
+    },
+    {
+      "key": "EFFECT_EXPLODE_ON_DEATH",
+      "category": "effect",
+      "original_key": "explode_on_death",
+      "text_key": "effect_explode_on_death",
+      "sources": [
+        "base"
+      ],
+      "status": "matched",
+      "matched_missing_key_id": "B_1169",
+      "en": "Enemies have a {0} chance to explode for {1} ({2}) damage when they die",
+      "zh": "敌人死亡时有{0}概率爆炸，造成{1}（{2}）伤害",
+      "source_names": [
+        "rip_and_tear"
+      ],
+      "occurrence_count": 1
+    },
+    {
+      "key": "EFFECT_EXPLODE_ON_HIT",
+      "category": "effect",
+      "original_key": "explode_on_hit",
+      "text_key": "effect_explode_on_hit",
+      "sources": [
+        "base"
+      ],
+      "status": "matched",
+      "matched_missing_key_id": "B_344",
+      "en": "You explode for {1} ({2}) damage when you take damage",
+      "zh": "当你受到伤害时会爆炸，造成{1}（{2}）伤害",
+      "source_names": [
+        "bull"
+      ],
+      "occurrence_count": 1
+    },
+    {
+      "key": "EFFECT_EXPLODE_WHEN_BELOW_HP",
+      "category": "effect",
+      "original_key": "explode_when_below_hp",
+      "text_key": "effect_explode_when_below_hp",
+      "sources": [
+        "dlc1"
+      ],
+      "status": "matched",
+      "matched_missing_key_id": "D_68",
+      "en": "Once per wave, you explode for {1} ({2}) damage when you fall below {4} health",
+      "zh": "每次敌袭中，当你生命值低于{4}时，你会爆炸并造成{1}（{2}）伤害",
+      "source_names": [
+        "effects"
+      ],
+      "occurrence_count": 1
+    },
+    {
+      "key": "EFFECT_EXTRA_ENEMIES_NEXT_WAVE",
+      "category": "effect",
+      "original_key": "extra_enemies_next_wave",
+      "text_key": "effect_extra_enemies_next_wave",
+      "sources": [
+        "base"
+      ],
+      "status": "matched",
+      "matched_missing_key_id": "B_659",
+      "en": "Special enemies appear at the beginning of the next wave",
+      "zh": "下场敌袭一开始会出现特殊敌人",
+      "source_names": [
+        "bait"
+      ],
+      "occurrence_count": 1
+    },
+    {
+      "key": "EFFECT_EXTRA_LOOT_ALIENS",
+      "category": "effect",
+      "original_key": "extra_loot_aliens",
+      "text_key": "effect_extra_loot_aliens",
+      "sources": [
+        "dlc1"
+      ],
+      "status": "matched",
+      "matched_missing_key_id": "D_252",
+      "en": "{0} additional loot aliens appear every wave",
+      "zh": "每次敌袭会多出现{0}个战利品外星人",
+      "source_names": [
+        "effects"
+      ],
+      "occurrence_count": 1
+    },
+    {
+      "key": "EFFECT_EXTRA_LOOT_ALIENS_NEXT_WAVE",
+      "category": "effect",
+      "original_key": "extra_loot_aliens_next_wave",
+      "text_key": "effect_extra_loot_aliens_next_wave",
+      "sources": [
+        "base"
+      ],
+      "status": "matched",
+      "matched_missing_key_id": "B_193",
+      "en": "{0} additional loot aliens appear during the next wave",
+      "zh": "在下场敌袭中会出现{0}个额外的战利品外星人",
+      "source_names": [
+        "lure"
+      ],
+      "occurrence_count": 1
+    },
+    {
+      "key": "EFFECT_GAIN_PCT_GOLD_START_WAVE",
+      "category": "effect",
+      "original_key": "gain_pct_gold_start_wave",
+      "text_key": "effect_gain_pct_gold_start_wave",
+      "sources": [
+        "base"
+      ],
+      "status": "matched",
+      "matched_missing_key_id": "B_365",
+      "en": "{0} of your materials at the start of waves",
+      "zh": "敌袭开始时{0}材料",
+      "source_names": [
+        "entrepreneur"
+      ],
+      "occurrence_count": 1
+    },
+    {
+      "key": "EFFECT_GAIN_PCT_GOLD_START_WAVE_LIMITED",
+      "category": "effect",
+      "original_key": "gain_pct_gold_start_wave",
+      "text_key": "effect_gain_pct_gold_start_wave_limited",
+      "sources": [
+        "base"
+      ],
+      "status": "matched",
+      "matched_missing_key_id": "B_587",
+      "en": "{0} of your materials at the start of waves (stops working at wave {1})",
+      "zh": "敌袭开始时{0}材料（在第{1}波敌袭后结束）",
+      "source_names": [
+        "piggy_bank"
+      ],
+      "occurrence_count": 1
+    },
+    {
+      "key": "EFFECT_GAIN_STAT_END_OF_WAVE",
+      "category": "effect",
+      "original_key": "xp_gain",
+      "text_key": "effect_gain_stat_end_of_wave",
+      "sources": [
+        "base",
+        "dlc1"
+      ],
+      "status": "matched",
+      "matched_missing_key_id": "B_961",
+      "en": "{0} {1} at the end of a wave",
+      "zh": "敌袭结束后{0}{1}",
+      "source_names": [
+        "effects",
+        "grinds_magical_leaf",
+        "loud",
+        "robot_arm",
+        "vigilante_ring"
+      ],
+      "occurrence_count": 15
+    },
+    {
+      "key": "EFFECT_GAIN_STAT_EVERY_KILLED_ENEMIES",
+      "category": "effect",
+      "original_key": "effect_gain_stat_every_killed_enemies",
+      "text_key": "",
+      "sources": [
+        "base"
+      ],
+      "status": "matched",
+      "matched_missing_key_id": "B_523",
+      "en": "{0} {1} for every {2} enemies you kill during a wave with this weapon",
+      "zh": "使用该武器在敌袭中每击杀{2}名敌人便会{0}{1}",
+      "source_names": [
+        "ghost_axe",
+        "ghost_flint",
+        "ghost_scepter"
+      ],
+      "occurrence_count": 12
+    },
+    {
+      "key": "EFFECT_GIANT_CRIT_DAMAGE",
+      "category": "effect",
+      "original_key": "giant_crit_damage",
+      "text_key": "effect_giant_crit_damage",
+      "sources": [
+        "base"
+      ],
+      "status": "matched",
+      "matched_missing_key_id": "B_913",
+      "en": "Critical hits deal {0} of an enemy’s current health as bonus damage ({2} for bosses and elites)",
+      "zh": "暴击造成敌人当前生命值的{0}以作为奖励伤害（头目和精英怪的{2}）",
+      "source_names": [
+        "giant_belt"
+      ],
+      "occurrence_count": 1
+    },
+    {
+      "key": "EFFECT_GOLD_DROPS",
+      "category": "effect",
+      "original_key": "gold_drops",
+      "text_key": "effect_gold_drops",
+      "sources": [
+        "base",
+        "dlc1"
+      ],
+      "status": "matched",
+      "matched_missing_key_id": "B_661",
+      "en": "{0} materials dropped",
+      "zh": "掉落{0}材料",
+      "source_names": [
+        "effects",
+        "evil_hat",
+        "farmer",
+        "jack",
+        "streamer"
+      ],
+      "occurrence_count": 5
+    },
+    {
+      "key": "EFFECT_GROUP_STRUCTURES",
+      "category": "effect",
+      "original_key": "group_structures",
+      "text_key": "effect_group_structures",
+      "sources": [
+        "base"
+      ],
+      "status": "matched",
+      "matched_missing_key_id": "B_1111",
+      "en": "Structures spawn close to each other",
+      "zh": "构筑物会生成在彼此附近",
+      "source_names": [
+        "engineer"
+      ],
+      "occurrence_count": 1
+    },
+    {
+      "key": "EFFECT_GUARANTEED_SHOP_ITEM",
+      "category": "effect",
+      "original_key": "item_bait",
+      "text_key": "effect_guaranteed_shop_item",
+      "sources": [
+        "base"
+      ],
+      "status": "matched",
+      "matched_missing_key_id": "B_25",
+      "en": "Shops always sell a {0}",
+      "zh": "商店通常销售一件{0}",
+      "source_names": [
+        "fisherman"
+      ],
+      "occurrence_count": 1
+    },
+    {
+      "key": "EFFECT_HARVESTING_GROWTH",
+      "category": "effect",
+      "original_key": "harvesting_growth",
+      "text_key": "effect_harvesting_growth",
+      "sources": [
+        "base"
+      ],
+      "status": "matched",
+      "matched_missing_key_id": "B_85",
+      "en": "Harvesting increases by an additional {0} at the end of a wave",
+      "zh": "敌袭结束时，收获提高{0}",
+      "source_names": [
+        "crown",
+        "farmer"
+      ],
+      "occurrence_count": 2
+    },
+    {
+      "key": "EFFECT_HEAL_ON_CRIT_KILL",
+      "category": "effect",
+      "original_key": "heal_on_crit_kill",
+      "text_key": "effect_heal_on_crit_kill",
+      "sources": [
+        "base"
+      ],
+      "status": "matched",
+      "matched_missing_key_id": "B_521",
+      "en": "{0} chance to heal 1 HP when killing an enemy with a critical hit",
+      "zh": "暴击杀死敌人时有{0}概率治疗一点生命值",
+      "source_names": [
+        "tentacle"
+      ],
+      "occurrence_count": 1
+    },
+    {
+      "key": "EFFECT_HEAL_ON_KILL",
+      "category": "effect",
+      "original_key": "heal_on_kill",
+      "text_key": "effect_heal_on_kill",
+      "sources": [
+        "dlc1"
+      ],
+      "status": "matched",
+      "matched_missing_key_id": "D_84",
+      "en": "{0} chance to heal 1 HP when killing an enemy",
+      "zh": "杀死敌人时有{0}的几率恢复1点生命值",
+      "source_names": [
+        "effects"
+      ],
+      "occurrence_count": 1
+    },
+    {
+      "key": "EFFECT_HEAL_WHEN_PICKUP_GOLD",
+      "category": "effect",
+      "original_key": "heal_when_pickup_gold",
+      "text_key": "effect_heal_when_pickup_gold",
+      "sources": [
+        "base"
+      ],
+      "status": "matched",
+      "matched_missing_key_id": "B_1116",
+      "en": "{0} chance to heal 1 HP when picking up a material",
+      "zh": "拾取材料时有{0}概率恢复1点生命",
+      "source_names": [
+        "cute_monkey"
+      ],
+      "occurrence_count": 1
+    },
+    {
+      "key": "EFFECT_HIT_PROTECTION",
+      "category": "effect",
+      "original_key": "hit_protection",
+      "text_key": "effect_hit_protection",
+      "sources": [
+        "base"
+      ],
+      "status": "matched",
+      "matched_missing_key_id": "B_545",
+      "en": "Nullifies the damage of one hit taken every wave",
+      "zh": "在每一波敌袭中会抵消受到的攻击伤害",
+      "source_names": [
+        "tardigrade"
+      ],
+      "occurrence_count": 1
+    },
+    {
+      "key": "EFFECT_HP_REGEN_BONUS_DOUBLE",
+      "category": "effect",
+      "original_key": "hp_regen_bonus",
+      "text_key": "effect_hp_regen_bonus_double",
+      "sources": [
+        "base"
+      ],
+      "status": "matched",
+      "matched_missing_key_id": "B_110",
+      "en": "HP Regeneration is doubled when you have less than {2} health",
+      "zh": "当生命值低于{2}时，生命再生双倍",
+      "source_names": [
+        "doc_moth",
+        "potion"
+      ],
+      "occurrence_count": 2
+    },
+    {
+      "key": "EFFECT_HP_SHOP",
+      "category": "effect",
+      "original_key": "hp_shop",
+      "text_key": "effect_hp_shop",
+      "sources": [
+        "base"
+      ],
+      "status": "matched",
+      "matched_missing_key_id": "B_267",
+      "en": "You buy items using Max HP instead of materials",
+      "zh": "使用最大生命值替代材料购买道具",
+      "source_names": [
+        "demon"
+      ],
+      "occurrence_count": 1
+    },
+    {
+      "key": "EFFECT_HP_START_NEXT_WAVE",
+      "category": "effect",
+      "original_key": "hp_start_next_wave",
+      "text_key": "effect_hp_start_next_wave",
+      "sources": [
+        "base"
+      ],
+      "status": "matched",
+      "matched_missing_key_id": "B_1100",
+      "en": "Start the next wave with 1 HP",
+      "zh": "下场敌袭以1点生命值开始",
+      "source_names": [
+        "hourglass",
+        "weird_ghost"
+      ],
+      "occurrence_count": 3
+    },
+    {
+      "key": "EFFECT_INCREASE_STAT_GAINS",
+      "category": "effect",
+      "original_key": "effect_increase_stat_gains",
+      "text_key": "",
+      "sources": [
+        "base",
+        "dlc1"
+      ],
+      "status": "matched",
+      "matched_missing_key_id": "B_287",
+      "en": "{0} modifications are increased by {1}",
+      "zh": "{0}的修改增加{1}",
+      "source_names": [
+        "arms_dealer",
+        "bull",
+        "chunky",
+        "cyborg",
+        "doctor",
+        "effects",
+        "engineer",
+        "entrepreneur",
+        "golem",
+        "hunter",
+        "lucky",
+        "mage",
+        "one_arm",
+        "ranger"
+      ],
+      "occurrence_count": 17
+    },
+    {
+      "key": "EFFECT_ITEM_STEALS_SPAWNS_ELITE",
+      "category": "effect",
+      "original_key": "item_steals_spawns_random_elite",
+      "text_key": "effect_item_steals_spawns_elite",
+      "sources": [
+        "dlc1"
+      ],
+      "status": "matched",
+      "matched_missing_key_id": "D_148",
+      "en": "Stealing from the shop can spawn an elite",
+      "zh": "从商店偷窃会生成精英怪",
+      "source_names": [
+        "effects"
+      ],
+      "occurrence_count": 1
+    },
+    {
+      "key": "EFFECT_LIGHTNING_ON_HIT",
+      "category": "effect",
+      "original_key": "effect_lightning_on_hit",
+      "text_key": "",
+      "sources": [
+        "base"
+      ],
+      "status": "matched",
+      "matched_missing_key_id": "B_338",
+      "en": "Hitting an enemy spawns a lightning projectile that bounces {2} times and deals {1} ({3}) damage",
+      "zh": "击中敌人时产生雷电投射物，反弹{2}次，造成{1}（{3}）伤害",
+      "source_names": [
+        "dextroyer",
+        "lightning_shiv"
+      ],
+      "occurrence_count": 5
+    },
+    {
+      "key": "EFFECT_LOOT_ALIEN_CHANCE",
+      "category": "effect",
+      "original_key": "loot_alien_chance",
+      "text_key": "effect_loot_alien_chance",
+      "sources": [
+        "dlc1"
+      ],
+      "status": "matched",
+      "matched_missing_key_id": "D_120",
+      "en": "{0} chance for loot aliens to appear",
+      "zh": "有{0}几率出现战利品外星人",
+      "source_names": [
+        "effects"
+      ],
+      "occurrence_count": 1
+    },
+    {
+      "key": "EFFECT_LOOT_ALIEN_SPEED",
+      "category": "effect",
+      "original_key": "loot_alien_speed",
+      "text_key": "effect_loot_alien_speed",
+      "sources": [
+        "dlc1"
+      ],
+      "status": "matched",
+      "matched_missing_key_id": "D_99",
+      "en": "{0} movement speed for loot aliens",
+      "zh": "战利品外星人的移动速度{0}",
+      "source_names": [
+        "effects"
+      ],
+      "occurrence_count": 1
+    },
+    {
+      "key": "EFFECT_LOSE_HP_PER_SECOND",
+      "category": "effect",
+      "original_key": "lose_hp_per_second",
+      "text_key": "effect_lose_hp_per_second",
+      "sources": [
+        "base"
+      ],
+      "status": "matched",
+      "matched_missing_key_id": "B_1072",
+      "en": "You take {0} damage per second (does not give invulnerability time)",
+      "zh": "每秒受到{0}伤害（不给予无敌时间）",
+      "source_names": [
+        "blood_donation",
+        "bloody_hand",
+        "scythe",
+        "sick"
+      ],
+      "occurrence_count": 4
+    },
+    {
+      "key": "EFFECT_MAX_WEAPONS",
+      "category": "effect",
+      "original_key": "weapon_slot",
+      "text_key": "effect_max_weapons",
+      "sources": [
+        "base"
+      ],
+      "status": "matched",
+      "matched_missing_key_id": "B_332",
+      "en": "You can equip up to {0} weapons at a time",
+      "zh": "同时能装备{0}种武器",
+      "source_names": [
+        "multitasker"
+      ],
+      "occurrence_count": 1
+    },
+    {
+      "key": "EFFECT_MAX_WEAPON_TIER",
+      "category": "effect",
+      "original_key": "max_weapon_tier",
+      "text_key": "effect_max_weapon_tier",
+      "sources": [
+        "base"
+      ],
+      "status": "matched",
+      "matched_missing_key_id": "B_1071",
+      "en": "You can’t equip weapons above tier {0}",
+      "zh": "你无法装备{0}级别以上的武器",
+      "source_names": [
+        "wildling"
+      ],
+      "occurrence_count": 1
+    },
+    {
+      "key": "EFFECT_MINIMUM_WEAPON_IN_SHOP",
+      "category": "effect",
+      "original_key": "minimum_weapons_in_shop",
+      "text_key": "effect_minimum_weapon_in_shop",
+      "sources": [
+        "base"
+      ],
+      "status": "matched",
+      "matched_missing_key_id": "B_75",
+      "en": "Shops always sell at least one weapon",
+      "zh": "商店通常销售至少一把武器",
+      "source_names": [
+        "arms_dealer",
+        "effects"
+      ],
+      "occurrence_count": 2
+    },
+    {
+      "key": "EFFECT_MIN_WEAPON_TIER",
+      "category": "effect",
+      "original_key": "min_weapon_tier",
+      "text_key": "effect_min_weapon_tier",
+      "sources": [
+        "base",
+        "dlc1"
+      ],
+      "status": "matched",
+      "matched_missing_key_id": "B_374",
+      "en": "You can only equip tier {0} weapons or above",
+      "zh": "你仅能够装备{0}级别或以上的武器",
+      "source_names": [
+        "effects",
+        "knight"
+      ],
+      "occurrence_count": 2
+    },
+    {
+      "key": "EFFECT_MORE_ELITES",
+      "category": "effect",
+      "original_key": "effect_more_elites",
+      "text_key": "",
+      "sources": [
+        "base"
+      ],
+      "status": "matched",
+      "matched_missing_key_id": "B_325",
+      "en": "More elites and hordes appear",
+      "zh": "更多的精英怪和敌群出现",
+      "source_names": [
+        "difficulties"
+      ],
+      "occurrence_count": 2
+    },
+    {
+      "key": "EFFECT_NO_DUPLICATE_WEAPONS",
+      "category": "effect",
+      "original_key": "no_duplicate_weapons",
+      "text_key": "effect_no_duplicate_weapons",
+      "sources": [
+        "base"
+      ],
+      "status": "matched",
+      "matched_missing_key_id": "B_818",
+      "en": "You can't equip two of the same weapon at the same time",
+      "zh": "无法同时装备两件相同的武器",
+      "source_names": [
+        "effects"
+      ],
+      "occurrence_count": 1
+    },
+    {
+      "key": "EFFECT_NO_HEAL",
+      "category": "effect",
+      "original_key": "no_heal",
+      "text_key": "effect_no_heal",
+      "sources": [
+        "base"
+      ],
+      "status": "matched",
+      "matched_missing_key_id": "B_965",
+      "en": "You can’t heal in any way",
+      "zh": "你无法治疗",
+      "source_names": [
+        "golem"
+      ],
+      "occurrence_count": 1
+    },
+    {
+      "key": "EFFECT_NO_MELEE_WEAPONS",
+      "category": "effect",
+      "original_key": "no_melee_weapons",
+      "text_key": "effect_no_melee_weapons",
+      "sources": [
+        "base"
+      ],
+      "status": "matched",
+      "matched_missing_key_id": "B_436",
+      "en": "You can't equip melee weapons",
+      "zh": "无法装备近战武器",
+      "source_names": [
+        "ranger",
+        "renegade"
+      ],
+      "occurrence_count": 2
+    },
+    {
+      "key": "EFFECT_NO_RANGED_WEAPONS",
+      "category": "effect",
+      "original_key": "no_ranged_weapons",
+      "text_key": "effect_no_ranged_weapons",
+      "sources": [
+        "base",
+        "dlc1"
+      ],
+      "status": "matched",
+      "matched_missing_key_id": "B_577",
+      "en": "You can't equip ranged weapons",
+      "zh": "无法装备远战武器",
+      "source_names": [
+        "effects",
+        "gladiator",
+        "knight"
+      ],
+      "occurrence_count": 4
+    },
+    {
+      "key": "EFFECT_NO_STRUCTURES",
+      "category": "effect",
+      "original_key": "structure",
+      "text_key": "effect_no_structures",
+      "sources": [
+        "dlc1"
+      ],
+      "status": "matched",
+      "matched_missing_key_id": "D_280",
+      "en": "You can't have structures",
+      "zh": "你无法建造构筑物",
+      "source_names": [
+        "effects"
+      ],
+      "occurrence_count": 1
+    },
+    {
+      "key": "EFFECT_NO_WEAPONS",
+      "category": "effect",
+      "original_key": "weapon_slot",
+      "text_key": "effect_no_weapons",
+      "sources": [
+        "base"
+      ],
+      "status": "matched",
+      "matched_missing_key_id": "B_2",
+      "en": "This character can't equip weapons",
+      "zh": "这个角色无法装备武器",
+      "source_names": [
+        "beast_master",
+        "bull"
+      ],
+      "occurrence_count": 2
+    },
+    {
+      "key": "EFFECT_ONE_SHOT_TREES",
+      "category": "effect",
+      "original_key": "one_shot_trees",
+      "text_key": "effect_one_shot_trees",
+      "sources": [
+        "base"
+      ],
+      "status": "matched",
+      "matched_missing_key_id": "B_849",
+      "en": "Trees die in one hit",
+      "zh": "树木能被一击毙命",
+      "source_names": [
+        "lumberjack_shirt"
+      ],
+      "occurrence_count": 1
+    },
+    {
+      "key": "EFFECT_ON_HIT",
+      "category": "effect",
+      "original_key": "stat_percent_damage",
+      "text_key": "effect_on_hit",
+      "sources": [
+        "base"
+      ],
+      "status": "matched",
+      "matched_missing_key_id": "B_547",
+      "en": "{0} {1} when you take damage until the end of the wave",
+      "zh": "受到攻击时{0}{1}，直至敌袭结束",
+      "source_names": [
+        "masochist",
+        "scythe",
+        "triangle_of_power"
+      ],
+      "occurrence_count": 3
+    },
+    {
+      "key": "EFFECT_PIERCING_DAMAGE_SHORT",
+      "category": "effect",
+      "original_key": "piercing_damage",
+      "text_key": "effect_piercing_damage_short",
+      "sources": [
+        "base"
+      ],
+      "status": "matched",
+      "matched_missing_key_id": "B_1114",
+      "en": "{0} Piercing Damage",
+      "zh": "{0}贯通伤害",
+      "source_names": [
+        "sharp_bullet"
+      ],
+      "occurrence_count": 1
+    },
+    {
+      "key": "EFFECT_PROJECTILES_ON_DEATH",
+      "category": "effect",
+      "original_key": "projectiles_on_death",
+      "text_key": "effect_projectiles_on_death",
+      "sources": [
+        "base"
+      ],
+      "status": "matched",
+      "matched_missing_key_id": "B_408",
+      "en": "One bullet dealing {1} ({3}) damage is fired from an enemy corpse when they die",
+      "zh": "当敌人死亡时，发射一枚能造成{1}（{3}）伤害的子弹",
+      "source_names": [
+        "baby_with_a_beard"
+      ],
+      "occurrence_count": 1
+    },
+    {
+      "key": "EFFECT_RECYCLING_GAINS",
+      "category": "effect",
+      "original_key": "recycling_gains",
+      "text_key": "effect_recycling_gains",
+      "sources": [
+        "base"
+      ],
+      "status": "matched",
+      "matched_missing_key_id": "B_1005",
+      "en": "Gain {0} more materials from recycling items",
+      "zh": "回收道具时额外获得{0}个材料",
+      "source_names": [
+        "entrepreneur",
+        "recycling_machine"
+      ],
+      "occurrence_count": 2
+    },
+    {
+      "key": "EFFECT_RELOAD_TURRETS_ON_SHOOT",
+      "category": "effect",
+      "original_key": "reload_turrets_on_shoot",
+      "text_key": "effect_reload_turrets_on_shoot",
+      "sources": [
+        "dlc1"
+      ],
+      "status": "matched",
+      "matched_missing_key_id": "D_174",
+      "en": "Resets the cooldown of all offensive turrets when attacking",
+      "zh": "攻击时重置所有攻击型炮塔的冷却时间",
+      "source_names": [
+        "war_hammer"
+      ],
+      "occurrence_count": 1
+    },
+    {
+      "key": "EFFECT_RELOAD_WHEN_PICKUP_GOLD",
+      "category": "effect",
+      "original_key": "reload_when_pickup_gold",
+      "text_key": "effect_reload_when_pickup_gold",
+      "sources": [
+        "dlc1"
+      ],
+      "status": "matched",
+      "matched_missing_key_id": "D_15",
+      "en": "Cooldown is reset when you pick up a material",
+      "zh": "捡起材料后会重置冷却时间",
+      "source_names": [
+        "blunderbuss"
+      ],
+      "occurrence_count": 1
+    },
+    {
+      "key": "EFFECT_REMOVE_SPEED",
+      "category": "effect",
+      "original_key": "remove_speed",
+      "text_key": "effect_remove_speed",
+      "sources": [
+        "base"
+      ],
+      "status": "matched",
+      "matched_missing_key_id": "B_0",
+      "en": "Hitting an enemy removes {0} of their speed. Max {2}",
+      "zh": "击中敌人时能使其降低{0}速度，最高{2}",
+      "source_names": [
+        "ugly_tooth"
+      ],
+      "occurrence_count": 1
+    },
+    {
+      "key": "EFFECT_SLOW_IN_ZONE",
+      "category": "effect",
+      "original_key": "effect_slow_in_zone",
+      "text_key": "",
+      "sources": [
+        "base",
+        "dlc1"
+      ],
+      "status": "matched",
+      "matched_missing_key_id": "B_820",
+      "en": "Slows enemies in a radius around the projectile",
+      "zh": "使投射物周围的敌人减速",
+      "source_names": [
+        "harpoon_gun",
+        "taser"
+      ],
+      "occurrence_count": 2
+    },
+    {
+      "key": "EFFECT_STARTING_ITEM",
+      "category": "effect",
+      "original_key": "item_dangerous_bunny",
+      "text_key": "effect_starting_item",
+      "sources": [
+        "base",
+        "dlc1"
+      ],
+      "status": "matched",
+      "matched_missing_key_id": "B_424",
+      "en": "You start with {0} {1}",
+      "zh": "初始拥有{0}{1}",
+      "source_names": [
+        "arms_dealer",
+        "beast_master",
+        "brawler",
+        "crazy",
+        "cyborg",
+        "effects",
+        "engineer",
+        "explorer",
+        "mage",
+        "pacifist",
+        "ranger",
+        "saver",
+        "wildling",
+        "wounded"
+      ],
+      "occurrence_count": 19
+    },
+    {
+      "key": "EFFECT_STAT_BELOW_HALF_HEALTH",
+      "category": "effect",
+      "original_key": "stat_attack_speed",
+      "text_key": "effect_stat_below_half_health",
+      "sources": [
+        "base"
+      ],
+      "status": "matched",
+      "matched_missing_key_id": "B_1101",
+      "en": "{0} {1} when you have less than 50% health",
+      "zh": "当生命值低于50%时有{0}{1}",
+      "source_names": [
+        "golem"
+      ],
+      "occurrence_count": 2
+    },
+    {
+      "key": "EFFECT_STAT_NEXT_WAVE",
+      "category": "effect",
+      "original_key": "xp_gain",
+      "text_key": "effect_stat_next_wave",
+      "sources": [
+        "base",
+        "dlc1"
+      ],
+      "status": "matched",
+      "matched_missing_key_id": "B_42",
+      "en": "{0} {1} during the next wave",
+      "zh": "下场敌袭期间{0} {1}",
+      "source_names": [
+        "effects",
+        "peacock"
+      ],
+      "occurrence_count": 5
+    },
+    {
+      "key": "EFFECT_STAT_WHILE_MOVING",
+      "category": "effect",
+      "original_key": "stat_percent_damage",
+      "text_key": "effect_stat_while_moving",
+      "sources": [
+        "base"
+      ],
+      "status": "matched",
+      "matched_missing_key_id": "B_288",
+      "en": "{0} {1} while moving",
+      "zh": "当移动时{0}{1}",
+      "source_names": [
+        "streamer"
+      ],
+      "occurrence_count": 2
+    },
+    {
+      "key": "EFFECT_STAT_WHILE_NOT_MOVING",
+      "category": "effect",
+      "original_key": "stat_armor",
+      "text_key": "effect_stat_while_not_moving",
+      "sources": [
+        "base",
+        "dlc1"
+      ],
+      "status": "matched",
+      "matched_missing_key_id": "B_914",
+      "en": "{0} {1} while standing still",
+      "zh": "当站立不动时{0}{1}",
+      "source_names": [
+        "barricade",
+        "chameleon",
+        "effects",
+        "jousting_lance",
+        "speedy",
+        "statue"
+      ],
+      "occurrence_count": 9
+    },
+    {
+      "key": "EFFECT_STRONGER_ELITES_ON_KILL",
+      "category": "effect",
+      "original_key": "stronger_elites_on_kill",
+      "text_key": "effect_stronger_elites_on_kill",
+      "sources": [
+        "dlc1"
+      ],
+      "status": "matched",
+      "matched_missing_key_id": "D_105",
+      "en": "All future elites and bosses become stronger when you kill an elite or a boss",
+      "zh": "当你击杀一个精英怪或头目时，所有未来的精英怪和头目都会变更强",
+      "source_names": [
+        "effects"
+      ],
+      "occurrence_count": 1
+    },
+    {
+      "key": "EFFECT_STRONGER_LOOT_ALIENS_ON_KILL",
+      "category": "effect",
+      "original_key": "stronger_loot_aliens_on_kill",
+      "text_key": "effect_stronger_loot_aliens_on_kill",
+      "sources": [
+        "dlc1"
+      ],
+      "status": "matched",
+      "matched_missing_key_id": "D_265",
+      "en": "All future loot aliens become stronger when you kill a loot alien",
+      "zh": "当你击杀一个战利品外星人时，所有未来的战利品外星人都会变得更强",
+      "source_names": [
+        "effects"
+      ],
+      "occurrence_count": 1
+    },
+    {
+      "key": "EFFECT_STRUCTURES_COOLDOWN_REDUCTION",
+      "category": "effect",
+      "original_key": "stat_attack_speed",
+      "text_key": "effect_structures_cooldown_reduction",
+      "sources": [
+        "base"
+      ],
+      "status": "matched",
+      "matched_missing_key_id": "B_328",
+      "en": "Increases the attack speed of your structures by {0} ({1})",
+      "zh": "构建物的攻击速度提升{0} （{1}）",
+      "source_names": [
+        "improved_tools"
+      ],
+      "occurrence_count": 1
+    },
+    {
+      "key": "EFFECT_UNIQUE_WEAPON_BONUS",
+      "category": "effect",
+      "original_key": "stat_attack_speed",
+      "text_key": "effect_unique_weapon_bonus",
+      "sources": [
+        "base"
+      ],
+      "status": "matched",
+      "matched_missing_key_id": "B_529",
+      "en": "{0} {1} for every different weapon you have [{2}]",
+      "zh": "持有每一异种武器{0}{1} [{2}]",
+      "source_names": [
+        "effects",
+        "focus",
+        "gladiator",
+        "spider"
+      ],
+      "occurrence_count": 4
+    },
+    {
+      "key": "EFFECT_UPGRADED_BAITS",
+      "category": "effect",
+      "original_key": "upgraded_baits",
+      "text_key": "effect_upgraded_baits",
+      "sources": [
+        "base"
+      ],
+      "status": "matched",
+      "matched_missing_key_id": "B_920",
+      "en": "Baits make some special enemies spawn throughout all future waves",
+      "zh": "诱饵使一些特殊的敌人在所有未来的浪潮中产生",
+      "source_names": [
+        "fisherman"
+      ],
+      "occurrence_count": 1
+    },
+    {
+      "key": "EFFECT_UPGRADE_RANDOM_WEAPON",
+      "category": "effect",
+      "original_key": "stat_armor",
+      "text_key": "effect_upgrade_random_weapon",
+      "sources": [
+        "base"
+      ],
+      "status": "matched",
+      "matched_missing_key_id": "B_749",
+      "en": "A random weapon is upgraded when entering a shop. If you have no weapon to upgrade, you gain {0} {1} instead.",
+      "zh": "进入商店时，会随机升级一把武器。如果无武器可升级，则可获得{0}{1}。",
+      "source_names": [
+        "anvil"
+      ],
+      "occurrence_count": 1
+    },
+    {
+      "key": "NEXT_LEVEL_XP_NEEDED",
+      "category": "other",
+      "original_key": "next_level_xp_needed",
+      "text_key": "",
+      "sources": [
+        "base",
+        "dlc1"
+      ],
+      "status": "matched",
+      "matched_missing_key_id": "B_326",
+      "en": "{0} XP required to level up",
+      "zh": "升级需要 {0} 经验值",
+      "source_names": [
+        "effects",
+        "mutant"
+      ],
+      "occurrence_count": 4
+    },
+    {
+      "key": "[EMPTY]",
+      "category": "other",
+      "original_key": "boosted_wanted_item_tag",
+      "text_key": "[EMPTY]",
+      "sources": [
+        "base",
+        "dlc1"
+      ],
+      "status": "skipped",
+      "matched_missing_key_id": null,
+      "en": "",
+      "zh": "",
+      "source_names": [
+        "6-Nightmare",
+        "beast_master",
+        "effects",
+        "explorer",
+        "generalist"
+      ],
+      "occurrence_count": 9
+    }
+  ]
+}

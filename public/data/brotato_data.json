@@ -110,8 +110,8 @@
             "bounce_dmg_reduction": 0.5,
             "projectile_speed": 3000
           },
-          "text_en": "Hitting an enemy spawns <span class=\"g\">3</span> projectiles dealing <span class=\"g\">1</span> (<span class=\"g\">60%[Ranged Damage]</span>) damage",
-          "text_zh": "击中敌人时产生<span class=\"g\">3</span>投射物，造成<span class=\"g\">1</span>（<span class=\"g\">60%[远程伤害]</span>）伤害"
+          "text_en": "Hitting an enemy spawns <span class=\"g\">3</span> projectiles dealing <span class=\"g\">1</span> (<span class=\"g\">60%<span class=\"ic\" data-ic=\"ranged_damage\"></span></span>) damage",
+          "text_zh": "击中敌人时产生<span class=\"g\">3</span>投射物，造成<span class=\"g\">1</span>（<span class=\"g\">60%<span class=\"ic\" data-ic=\"ranged_damage\"></span></span>）伤害"
         }
       ],
       "stats": {
@@ -934,8 +934,8 @@
           "custom_key": "temp_stats_while_not_moving",
           "storage_method": 1,
           "effect_sign": 3,
-          "text_en": "<span class=\"r\">-10</span> % Damage while not moving",
-          "text_zh": "静止时 <span class=\"r\">-10</span>%伤害"
+          "text_en": "<span class=\"r\">-10</span> % Damage while standing still",
+          "text_zh": "当站立不动时<span class=\"r\">-10</span>%伤害"
         }
       ],
       "stats": {
@@ -1105,8 +1105,8 @@
             "bounce_dmg_reduction": 0.0,
             "projectile_speed": 3000
           },
-          "text_en": "Hitting an enemy spawns a lightning projectile that bounces <span class=\"g\">1</span> times dealing <span class=\"g\">5</span> (<span class=\"g\">80%[Elemental Damage]</span>) damage",
-          "text_zh": "击中敌人时产生雷电投射物，反弹<span class=\"g\">1</span>次，造成<span class=\"g\">5</span>（<span class=\"g\">80%[元素伤害]</span>）伤害"
+          "text_en": "Hitting an enemy spawns a lightning projectile that bounces <span class=\"g\">1</span> times dealing <span class=\"g\">5</span> (<span class=\"g\">80%<span class=\"ic\" data-ic=\"elemental_damage\"></span></span>) damage",
+          "text_zh": "击中敌人时产生雷电投射物，反弹<span class=\"g\">1</span>次，造成<span class=\"g\">5</span>（<span class=\"g\">80%<span class=\"ic\" data-ic=\"elemental_damage\"></span></span>）伤害"
         }
       ],
       "stats": {
@@ -1797,8 +1797,8 @@
           "extra": {
             "spawn_cooldown": 12
           },
-          "text_en": "Landmines spawn every <span class=\"g\">12</span>s and deal <span class=\"g\">10</span> (<span class=\"g\">100%[Engineering]</span>) damage in an area",
-          "text_zh": "地雷每<span class=\"g\">12</span>秒生成一次，并对一个区域造成<span class=\"g\">10</span>（<span class=\"g\">100%[工程学]</span>）伤害"
+          "text_en": "Landmines spawn every <span class=\"g\">12</span>s and deal <span class=\"g\">10</span> (<span class=\"g\">100%<span class=\"ic\" data-ic=\"engineering\"></span></span>) damage in an area",
+          "text_zh": "地雷每<span class=\"g\">12</span>秒生成一次，并对一个区域造成<span class=\"g\">10</span>（<span class=\"g\">100%<span class=\"ic\" data-ic=\"engineering\"></span></span>）伤害"
         }
       ],
       "stats": {
@@ -2464,8 +2464,8 @@
               ]
             ]
           },
-          "text_en": "Deals <span class=\"g\">3</span>x<span class=\"g\">3</span> (<span class=\"g\">100%[Elemental Damage]</span>) burning damage",
-          "text_zh": "造成<span class=\"g\">3</span>x<span class=\"g\">3</span>（<span class=\"g\">100%[元素伤害]</span>）燃烧伤害"
+          "text_en": "Deals <span class=\"g\">3</span>x<span class=\"g\">3</span> (<span class=\"g\">100%<span class=\"ic\" data-ic=\"elemental_damage\"></span></span>) burning damage",
+          "text_zh": "造成<span class=\"g\">3</span>x<span class=\"g\">3</span>（<span class=\"g\">100%<span class=\"ic\" data-ic=\"elemental_damage\"></span></span>）燃烧伤害"
         }
       ],
       "stats": {
@@ -2533,8 +2533,8 @@
               ]
             ]
           },
-          "text_en": "Deals <span class=\"g\">3</span>x<span class=\"g\">3</span> (<span class=\"g\">100%[Elemental Damage]</span>) burning damage",
-          "text_zh": "造成<span class=\"g\">3</span>x<span class=\"g\">3</span>（<span class=\"g\">100%[元素伤害]</span>）燃烧伤害"
+          "text_en": "Deals <span class=\"g\">3</span>x<span class=\"g\">3</span> (<span class=\"g\">100%<span class=\"ic\" data-ic=\"elemental_damage\"></span></span>) burning damage",
+          "text_zh": "造成<span class=\"g\">3</span>x<span class=\"g\">3</span>（<span class=\"g\">100%<span class=\"ic\" data-ic=\"elemental_damage\"></span></span>）燃烧伤害"
         }
       ],
       "stats": {
@@ -2617,8 +2617,8 @@
           "extra": {
             "spawn_cooldown": -1
           },
-          "text_en": "Summons a turret dealing <span class=\"g\">10</span> (<span class=\"g\">80%[Engineering]</span>) damage",
-          "text_zh": "生成1台炮塔，造成<span class=\"g\">10</span>（<span class=\"g\">80%[工程学]</span>）伤害"
+          "text_en": "Summons a turret dealing <span class=\"g\">10</span> (<span class=\"g\">80%<span class=\"ic\" data-ic=\"engineering\"></span></span>) damage",
+          "text_zh": "生成1台炮塔，造成<span class=\"g\">10</span>（<span class=\"g\">80%<span class=\"ic\" data-ic=\"engineering\"></span></span>）伤害"
         }
       ],
       "stats": {
@@ -2861,8 +2861,8 @@
             "bounce_dmg_reduction": 0.5,
             "projectile_speed": 3000
           },
-          "text_en": "Hitting an enemy spawns <span class=\"g\">4</span> projectiles dealing <span class=\"g\">2</span> (<span class=\"g\">70%[Ranged Damage]</span>) damage",
-          "text_zh": "击中敌人时产生<span class=\"g\">4</span>投射物，造成<span class=\"g\">2</span>（<span class=\"g\">70%[远程伤害]</span>）伤害"
+          "text_en": "Hitting an enemy spawns <span class=\"g\">4</span> projectiles dealing <span class=\"g\">2</span> (<span class=\"g\">70%<span class=\"ic\" data-ic=\"ranged_damage\"></span></span>) damage",
+          "text_zh": "击中敌人时产生<span class=\"g\">4</span>投射物，造成<span class=\"g\">2</span>（<span class=\"g\">70%<span class=\"ic\" data-ic=\"ranged_damage\"></span></span>）伤害"
         }
       ],
       "stats": {
@@ -3196,8 +3196,8 @@
               ]
             ]
           },
-          "text_en": "Deals <span class=\"g\">5</span>x<span class=\"g\">3</span> (<span class=\"g\">100%[Elemental Damage]</span>) burning damage",
-          "text_zh": "造成<span class=\"g\">5</span>x<span class=\"g\">3</span>（<span class=\"g\">100%[元素伤害]</span>）燃烧伤害"
+          "text_en": "Deals <span class=\"g\">5</span>x<span class=\"g\">3</span> (<span class=\"g\">100%<span class=\"ic\" data-ic=\"elemental_damage\"></span></span>) burning damage",
+          "text_zh": "造成<span class=\"g\">5</span>x<span class=\"g\">3</span>（<span class=\"g\">100%<span class=\"ic\" data-ic=\"elemental_damage\"></span></span>）燃烧伤害"
         }
       ],
       "stats": {
@@ -3307,8 +3307,8 @@
               ]
             ]
           },
-          "text_en": "Deals <span class=\"g\">3</span>x<span class=\"g\">1</span> (<span class=\"g\">100%[Elemental Damage]</span>) burning damage",
-          "text_zh": "造成<span class=\"g\">3</span>x<span class=\"g\">1</span>（<span class=\"g\">100%[元素伤害]</span>）燃烧伤害"
+          "text_en": "Deals <span class=\"g\">3</span>x<span class=\"g\">1</span> (<span class=\"g\">100%<span class=\"ic\" data-ic=\"elemental_damage\"></span></span>) burning damage",
+          "text_zh": "造成<span class=\"g\">3</span>x<span class=\"g\">1</span>（<span class=\"g\">100%<span class=\"ic\" data-ic=\"elemental_damage\"></span></span>）燃烧伤害"
         }
       ],
       "stats": {
@@ -3376,8 +3376,8 @@
               ]
             ]
           },
-          "text_en": "Deals <span class=\"g\">5</span>x<span class=\"g\">10</span> (<span class=\"g\">100%[Elemental Damage]</span>) burning damage",
-          "text_zh": "造成<span class=\"g\">5</span>x<span class=\"g\">10</span>（<span class=\"g\">100%[元素伤害]</span>）燃烧伤害"
+          "text_en": "Deals <span class=\"g\">5</span>x<span class=\"g\">10</span> (<span class=\"g\">100%<span class=\"ic\" data-ic=\"elemental_damage\"></span></span>) burning damage",
+          "text_zh": "造成<span class=\"g\">5</span>x<span class=\"g\">10</span>（<span class=\"g\">100%<span class=\"ic\" data-ic=\"elemental_damage\"></span></span>）燃烧伤害"
         }
       ],
       "stats": {
@@ -4126,8 +4126,8 @@
           "custom_key": "temp_stats_while_not_moving",
           "storage_method": 1,
           "effect_sign": 3,
-          "text_en": "<span class=\"r\">-15</span> % Damage while not moving",
-          "text_zh": "静止时 <span class=\"r\">-15</span>%伤害"
+          "text_en": "<span class=\"r\">-15</span> % Damage while standing still",
+          "text_zh": "当站立不动时<span class=\"r\">-15</span>%伤害"
         }
       ],
       "stats": {
@@ -4297,8 +4297,8 @@
             "bounce_dmg_reduction": 0.0,
             "projectile_speed": 3000
           },
-          "text_en": "Hitting an enemy spawns a lightning projectile that bounces <span class=\"g\">2</span> times dealing <span class=\"g\">6</span> (<span class=\"g\">80%[Elemental Damage]</span>) damage",
-          "text_zh": "击中敌人时产生雷电投射物，反弹<span class=\"g\">2</span>次，造成<span class=\"g\">6</span>（<span class=\"g\">80%[元素伤害]</span>）伤害"
+          "text_en": "Hitting an enemy spawns a lightning projectile that bounces <span class=\"g\">2</span> times dealing <span class=\"g\">6</span> (<span class=\"g\">80%<span class=\"ic\" data-ic=\"elemental_damage\"></span></span>) damage",
+          "text_zh": "击中敌人时产生雷电投射物，反弹<span class=\"g\">2</span>次，造成<span class=\"g\">6</span>（<span class=\"g\">80%<span class=\"ic\" data-ic=\"elemental_damage\"></span></span>）伤害"
         }
       ],
       "stats": {
@@ -5170,8 +5170,8 @@
           "extra": {
             "spawn_cooldown": 9
           },
-          "text_en": "Landmines spawn every <span class=\"g\">9</span>s and deal <span class=\"g\">10</span> (<span class=\"g\">100%[Engineering]</span>) damage in an area",
-          "text_zh": "地雷每<span class=\"g\">9</span>秒生成一次，并对一个区域造成<span class=\"g\">10</span>（<span class=\"g\">100%[工程学]</span>）伤害"
+          "text_en": "Landmines spawn every <span class=\"g\">9</span>s and deal <span class=\"g\">10</span> (<span class=\"g\">100%<span class=\"ic\" data-ic=\"engineering\"></span></span>) damage in an area",
+          "text_zh": "地雷每<span class=\"g\">9</span>秒生成一次，并对一个区域造成<span class=\"g\">10</span>（<span class=\"g\">100%<span class=\"ic\" data-ic=\"engineering\"></span></span>）伤害"
         }
       ],
       "stats": {
@@ -5880,8 +5880,8 @@
               ]
             ]
           },
-          "text_en": "Deals <span class=\"g\">5</span>x<span class=\"g\">5</span> (<span class=\"g\">100%[Elemental Damage]</span>) burning damage",
-          "text_zh": "造成<span class=\"g\">5</span>x<span class=\"g\">5</span>（<span class=\"g\">100%[元素伤害]</span>）燃烧伤害"
+          "text_en": "Deals <span class=\"g\">5</span>x<span class=\"g\">5</span> (<span class=\"g\">100%<span class=\"ic\" data-ic=\"elemental_damage\"></span></span>) burning damage",
+          "text_zh": "造成<span class=\"g\">5</span>x<span class=\"g\">5</span>（<span class=\"g\">100%<span class=\"ic\" data-ic=\"elemental_damage\"></span></span>）燃烧伤害"
         }
       ],
       "stats": {
@@ -6064,8 +6064,8 @@
               ]
             ]
           },
-          "text_en": "Deals <span class=\"g\">5</span>x<span class=\"g\">5</span> (<span class=\"g\">100%[Elemental Damage]</span>) burning damage",
-          "text_zh": "造成<span class=\"g\">5</span>x<span class=\"g\">5</span>（<span class=\"g\">100%[元素伤害]</span>）燃烧伤害"
+          "text_en": "Deals <span class=\"g\">5</span>x<span class=\"g\">5</span> (<span class=\"g\">100%<span class=\"ic\" data-ic=\"elemental_damage\"></span></span>) burning damage",
+          "text_zh": "造成<span class=\"g\">5</span>x<span class=\"g\">5</span>（<span class=\"g\">100%<span class=\"ic\" data-ic=\"elemental_damage\"></span></span>）燃烧伤害"
         }
       ],
       "stats": {
@@ -6165,8 +6165,8 @@
           "extra": {
             "spawn_cooldown": -1
           },
-          "text_en": "Summons a burning turret dealing <span class=\"g\">8</span>x<span class=\"g\">5</span> (<span class=\"g\">33%[Engineering]</span>) burning damage",
-          "text_zh": "生成1台燃烧炮塔，造成<span class=\"g\">8</span>x<span class=\"g\">5</span>（<span class=\"g\">33%[工程学]</span>）燃烧伤害"
+          "text_en": "Summons a burning turret dealing <span class=\"g\">8</span>x<span class=\"g\">5</span> (<span class=\"g\">33%<span class=\"ic\" data-ic=\"engineering\"></span></span>) burning damage",
+          "text_zh": "生成1台燃烧炮塔，造成<span class=\"g\">8</span>x<span class=\"g\">5</span>（<span class=\"g\">33%<span class=\"ic\" data-ic=\"engineering\"></span></span>）燃烧伤害"
         }
       ],
       "stats": {
@@ -6409,8 +6409,8 @@
             "bounce_dmg_reduction": 0.5,
             "projectile_speed": 3000
           },
-          "text_en": "Hitting an enemy spawns <span class=\"g\">5</span> projectiles dealing <span class=\"g\">3</span> (<span class=\"g\">80%[Ranged Damage]</span>) damage",
-          "text_zh": "击中敌人时产生<span class=\"g\">5</span>投射物，造成<span class=\"g\">3</span>（<span class=\"g\">80%[远程伤害]</span>）伤害"
+          "text_en": "Hitting an enemy spawns <span class=\"g\">5</span> projectiles dealing <span class=\"g\">3</span> (<span class=\"g\">80%<span class=\"ic\" data-ic=\"ranged_damage\"></span></span>) damage",
+          "text_zh": "击中敌人时产生<span class=\"g\">5</span>投射物，造成<span class=\"g\">3</span>（<span class=\"g\">80%<span class=\"ic\" data-ic=\"ranged_damage\"></span></span>）伤害"
         }
       ],
       "stats": {
@@ -6874,8 +6874,8 @@
               ]
             ]
           },
-          "text_en": "Deals <span class=\"g\">6</span>x<span class=\"g\">4</span> (<span class=\"g\">100%[Elemental Damage]</span>) burning damage",
-          "text_zh": "造成<span class=\"g\">6</span>x<span class=\"g\">4</span>（<span class=\"g\">100%[元素伤害]</span>）燃烧伤害"
+          "text_en": "Deals <span class=\"g\">6</span>x<span class=\"g\">4</span> (<span class=\"g\">100%<span class=\"ic\" data-ic=\"elemental_damage\"></span></span>) burning damage",
+          "text_zh": "造成<span class=\"g\">6</span>x<span class=\"g\">4</span>（<span class=\"g\">100%<span class=\"ic\" data-ic=\"elemental_damage\"></span></span>）燃烧伤害"
         }
       ],
       "stats": {
@@ -6985,8 +6985,8 @@
               ]
             ]
           },
-          "text_en": "Deals <span class=\"g\">5</span>x<span class=\"g\">3</span> (<span class=\"g\">100%[Elemental Damage]</span>) burning damage",
-          "text_zh": "造成<span class=\"g\">5</span>x<span class=\"g\">3</span>（<span class=\"g\">100%[元素伤害]</span>）燃烧伤害"
+          "text_en": "Deals <span class=\"g\">5</span>x<span class=\"g\">3</span> (<span class=\"g\">100%<span class=\"ic\" data-ic=\"elemental_damage\"></span></span>) burning damage",
+          "text_zh": "造成<span class=\"g\">5</span>x<span class=\"g\">3</span>（<span class=\"g\">100%<span class=\"ic\" data-ic=\"elemental_damage\"></span></span>）燃烧伤害"
         }
       ],
       "stats": {
@@ -7054,8 +7054,8 @@
               ]
             ]
           },
-          "text_en": "Deals <span class=\"g\">6</span>x<span class=\"g\">15</span> (<span class=\"g\">100%[Elemental Damage]</span>) burning damage",
-          "text_zh": "造成<span class=\"g\">6</span>x<span class=\"g\">15</span>（<span class=\"g\">100%[元素伤害]</span>）燃烧伤害"
+          "text_en": "Deals <span class=\"g\">6</span>x<span class=\"g\">15</span> (<span class=\"g\">100%<span class=\"ic\" data-ic=\"elemental_damage\"></span></span>) burning damage",
+          "text_zh": "造成<span class=\"g\">6</span>x<span class=\"g\">15</span>（<span class=\"g\">100%<span class=\"ic\" data-ic=\"elemental_damage\"></span></span>）燃烧伤害"
         }
       ],
       "stats": {
@@ -7804,8 +7804,8 @@
           "custom_key": "temp_stats_while_not_moving",
           "storage_method": 1,
           "effect_sign": 3,
-          "text_en": "<span class=\"r\">-20</span> % Damage while not moving",
-          "text_zh": "静止时 <span class=\"r\">-20</span>%伤害"
+          "text_en": "<span class=\"r\">-20</span> % Damage while standing still",
+          "text_zh": "当站立不动时<span class=\"r\">-20</span>%伤害"
         }
       ],
       "stats": {
@@ -7975,8 +7975,8 @@
             "bounce_dmg_reduction": 0.0,
             "projectile_speed": 3000
           },
-          "text_en": "Hitting an enemy spawns a lightning projectile that bounces <span class=\"g\">3</span> times dealing <span class=\"g\">8</span> (<span class=\"g\">80%[Elemental Damage]</span>) damage",
-          "text_zh": "击中敌人时产生雷电投射物，反弹<span class=\"g\">3</span>次，造成<span class=\"g\">8</span>（<span class=\"g\">80%[元素伤害]</span>）伤害"
+          "text_en": "Hitting an enemy spawns a lightning projectile that bounces <span class=\"g\">3</span> times dealing <span class=\"g\">8</span> (<span class=\"g\">80%<span class=\"ic\" data-ic=\"elemental_damage\"></span></span>) damage",
+          "text_zh": "击中敌人时产生雷电投射物，反弹<span class=\"g\">3</span>次，造成<span class=\"g\">8</span>（<span class=\"g\">80%<span class=\"ic\" data-ic=\"elemental_damage\"></span></span>）伤害"
         }
       ],
       "stats": {
@@ -8366,8 +8366,8 @@
               ]
             ]
           },
-          "text_en": "Deals <span class=\"g\">8</span>x<span class=\"g\">8</span> (<span class=\"g\">100%[Elemental Damage]</span>) burning damage",
-          "text_zh": "造成<span class=\"g\">8</span>x<span class=\"g\">8</span>（<span class=\"g\">100%[元素伤害]</span>）燃烧伤害"
+          "text_en": "Deals <span class=\"g\">8</span>x<span class=\"g\">8</span> (<span class=\"g\">100%<span class=\"ic\" data-ic=\"elemental_damage\"></span></span>) burning damage",
+          "text_zh": "造成<span class=\"g\">8</span>x<span class=\"g\">8</span>（<span class=\"g\">100%<span class=\"ic\" data-ic=\"elemental_damage\"></span></span>）燃烧伤害"
         },
         {
           "key": "EFFECT_WEAPON_SLOW_ON_HIT",
@@ -9224,8 +9224,8 @@
           "extra": {
             "spawn_cooldown": 6
           },
-          "text_en": "Landmines spawn every <span class=\"g\">6</span>s and deal <span class=\"g\">10</span> (<span class=\"g\">100%[Engineering]</span>) damage in an area",
-          "text_zh": "地雷每<span class=\"g\">6</span>秒生成一次，并对一个区域造成<span class=\"g\">10</span>（<span class=\"g\">100%[工程学]</span>）伤害"
+          "text_en": "Landmines spawn every <span class=\"g\">6</span>s and deal <span class=\"g\">10</span> (<span class=\"g\">100%<span class=\"ic\" data-ic=\"engineering\"></span></span>) damage in an area",
+          "text_zh": "地雷每<span class=\"g\">6</span>秒生成一次，并对一个区域造成<span class=\"g\">10</span>（<span class=\"g\">100%<span class=\"ic\" data-ic=\"engineering\"></span></span>）伤害"
         }
       ],
       "stats": {
@@ -9596,8 +9596,8 @@
             "bounce_dmg_reduction": 0.5,
             "projectile_speed": 3000
           },
-          "text_en": "Hitting an enemy spawns <span class=\"g\">5</span> projectiles dealing <span class=\"g\">5</span> (<span class=\"g\">10%[Range]</span>) damage",
-          "text_zh": "击中敌人时产生<span class=\"g\">5</span>投射物，造成<span class=\"g\">5</span>（<span class=\"g\">10%[范围]</span>）伤害"
+          "text_en": "Hitting an enemy spawns <span class=\"g\">5</span> projectiles dealing <span class=\"g\">5</span> (<span class=\"g\">10%<span class=\"ic\" data-ic=\"range\"></span></span>) damage",
+          "text_zh": "击中敌人时产生<span class=\"g\">5</span>投射物，造成<span class=\"g\">5</span>（<span class=\"g\">10%<span class=\"ic\" data-ic=\"range\"></span></span>）伤害"
         }
       ],
       "stats": {
@@ -10035,8 +10035,8 @@
             "bounce_dmg_reduction": 0.5,
             "projectile_speed": 2000
           },
-          "text_en": "Hitting an enemy spawns <span class=\"g\">2</span> projectiles dealing <span class=\"g\">1</span> (<span class=\"g\">100%[Elemental Damage]</span>) damage and slowing enemies around them",
-          "text_zh": "击中敌人时产生<span class=\"g\">2</span>投射物，造成<span class=\"g\">1</span>（<span class=\"g\">100%[元素伤害]</span>）伤害并使周围的敌人减速"
+          "text_en": "Hitting an enemy spawns <span class=\"g\">2</span> projectiles dealing <span class=\"g\">1</span> (<span class=\"g\">100%<span class=\"ic\" data-ic=\"elemental_damage\"></span></span>) damage and slowing enemies around them",
+          "text_zh": "击中敌人时产生<span class=\"g\">2</span>投射物，造成<span class=\"g\">1</span>（<span class=\"g\">100%<span class=\"ic\" data-ic=\"elemental_damage\"></span></span>）伤害并使周围的敌人减速"
         }
       ],
       "stats": {
@@ -10105,8 +10105,8 @@
               ]
             ]
           },
-          "text_en": "Deals <span class=\"g\">6</span>x<span class=\"g\">8</span> (<span class=\"g\">100%[Elemental Damage]</span>) burning damage",
-          "text_zh": "造成<span class=\"g\">6</span>x<span class=\"g\">8</span>（<span class=\"g\">100%[元素伤害]</span>）燃烧伤害"
+          "text_en": "Deals <span class=\"g\">6</span>x<span class=\"g\">8</span> (<span class=\"g\">100%<span class=\"ic\" data-ic=\"elemental_damage\"></span></span>) burning damage",
+          "text_zh": "造成<span class=\"g\">6</span>x<span class=\"g\">8</span>（<span class=\"g\">100%<span class=\"ic\" data-ic=\"elemental_damage\"></span></span>）燃烧伤害"
         },
         {
           "key": "burning_spread",
@@ -10115,8 +10115,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">1</span> Burning Spread",
-          "text_zh": "<span class=\"g\">1</span>燃烧蔓延 "
+          "text_en": "Burning spreads to an additional nearby enemy",
+          "text_zh": "燃烧蔓延至附近的另一名敌人"
         }
       ],
       "stats": {
@@ -10299,8 +10299,8 @@
               ]
             ]
           },
-          "text_en": "Deals <span class=\"g\">6</span>x<span class=\"g\">8</span> (<span class=\"g\">100%[Elemental Damage]</span>) burning damage",
-          "text_zh": "造成<span class=\"g\">6</span>x<span class=\"g\">8</span>（<span class=\"g\">100%[元素伤害]</span>）燃烧伤害"
+          "text_en": "Deals <span class=\"g\">6</span>x<span class=\"g\">8</span> (<span class=\"g\">100%<span class=\"ic\" data-ic=\"elemental_damage\"></span></span>) burning damage",
+          "text_zh": "造成<span class=\"g\">6</span>x<span class=\"g\">8</span>（<span class=\"g\">100%<span class=\"ic\" data-ic=\"elemental_damage\"></span></span>）燃烧伤害"
         }
       ],
       "stats": {
@@ -10441,8 +10441,8 @@
           "extra": {
             "spawn_cooldown": -1
           },
-          "text_en": "Summons a turret with piercing projectiles dealing <span class=\"g\">20</span> (<span class=\"g\">125%[Engineering]</span>) damage",
-          "text_zh": "生成1台发射贯通弹的炮塔，造成<span class=\"g\">20</span>（<span class=\"g\">125%[工程学]</span>）伤害"
+          "text_en": "Summons a turret with piercing projectiles dealing <span class=\"g\">20</span> (<span class=\"g\">125%<span class=\"ic\" data-ic=\"engineering\"></span></span>) damage",
+          "text_zh": "生成1台发射贯通弹的炮塔，造成<span class=\"g\">20</span>（<span class=\"g\">125%<span class=\"ic\" data-ic=\"engineering\"></span></span>）伤害"
         }
       ],
       "stats": {
@@ -10685,8 +10685,8 @@
             "bounce_dmg_reduction": 0.5,
             "projectile_speed": 3000
           },
-          "text_en": "Hitting an enemy spawns <span class=\"g\">6</span> projectiles dealing <span class=\"g\">4</span> (<span class=\"g\">100%[Ranged Damage]</span>) damage",
-          "text_zh": "击中敌人时产生<span class=\"g\">6</span>投射物，造成<span class=\"g\">4</span>（<span class=\"g\">100%[远程伤害]</span>）伤害"
+          "text_en": "Hitting an enemy spawns <span class=\"g\">6</span> projectiles dealing <span class=\"g\">4</span> (<span class=\"g\">100%<span class=\"ic\" data-ic=\"ranged_damage\"></span></span>) damage",
+          "text_zh": "击中敌人时产生<span class=\"g\">6</span>投射物，造成<span class=\"g\">4</span>（<span class=\"g\">100%<span class=\"ic\" data-ic=\"ranged_damage\"></span></span>）伤害"
         }
       ],
       "stats": {
@@ -11169,8 +11169,8 @@
             "bounce_dmg_reduction": 0.0,
             "projectile_speed": 3000
           },
-          "text_en": "Hitting an enemy spawns a lightning projectile that bounces <span class=\"g\">5</span> times dealing <span class=\"g\">30</span> (<span class=\"g\">100%[Elemental Damage]</span>) damage",
-          "text_zh": "击中敌人时产生雷电投射物，反弹<span class=\"g\">5</span>次，造成<span class=\"g\">30</span>（<span class=\"g\">100%[元素伤害]</span>）伤害"
+          "text_en": "Hitting an enemy spawns a lightning projectile that bounces <span class=\"g\">5</span> times dealing <span class=\"g\">30</span> (<span class=\"g\">100%<span class=\"ic\" data-ic=\"elemental_damage\"></span></span>) damage",
+          "text_zh": "击中敌人时产生雷电投射物，反弹<span class=\"g\">5</span>次，造成<span class=\"g\">30</span>（<span class=\"g\">100%<span class=\"ic\" data-ic=\"elemental_damage\"></span></span>）伤害"
         }
       ],
       "stats": {
@@ -11430,8 +11430,8 @@
               ]
             ]
           },
-          "text_en": "Deals <span class=\"g\">8</span>x<span class=\"g\">5</span> (<span class=\"g\">100%[Elemental Damage]</span>) burning damage",
-          "text_zh": "造成<span class=\"g\">8</span>x<span class=\"g\">5</span>（<span class=\"g\">100%[元素伤害]</span>）燃烧伤害"
+          "text_en": "Deals <span class=\"g\">8</span>x<span class=\"g\">5</span> (<span class=\"g\">100%<span class=\"ic\" data-ic=\"elemental_damage\"></span></span>) burning damage",
+          "text_zh": "造成<span class=\"g\">8</span>x<span class=\"g\">5</span>（<span class=\"g\">100%<span class=\"ic\" data-ic=\"elemental_damage\"></span></span>）燃烧伤害"
         }
       ],
       "stats": {
@@ -11541,8 +11541,8 @@
               ]
             ]
           },
-          "text_en": "Deals <span class=\"g\">8</span>x<span class=\"g\">5</span> (<span class=\"g\">100%[Elemental Damage]</span>) burning damage",
-          "text_zh": "造成<span class=\"g\">8</span>x<span class=\"g\">5</span>（<span class=\"g\">100%[元素伤害]</span>）燃烧伤害"
+          "text_en": "Deals <span class=\"g\">8</span>x<span class=\"g\">5</span> (<span class=\"g\">100%<span class=\"ic\" data-ic=\"elemental_damage\"></span></span>) burning damage",
+          "text_zh": "造成<span class=\"g\">8</span>x<span class=\"g\">5</span>（<span class=\"g\">100%<span class=\"ic\" data-ic=\"elemental_damage\"></span></span>）燃烧伤害"
         }
       ],
       "stats": {
@@ -11610,8 +11610,8 @@
               ]
             ]
           },
-          "text_en": "Deals <span class=\"g\">7</span>x<span class=\"g\">18</span> (<span class=\"g\">100%[Elemental Damage]</span>) burning damage",
-          "text_zh": "造成<span class=\"g\">7</span>x<span class=\"g\">18</span>（<span class=\"g\">100%[元素伤害]</span>）燃烧伤害"
+          "text_en": "Deals <span class=\"g\">7</span>x<span class=\"g\">18</span> (<span class=\"g\">100%<span class=\"ic\" data-ic=\"elemental_damage\"></span></span>) burning damage",
+          "text_zh": "造成<span class=\"g\">7</span>x<span class=\"g\">18</span>（<span class=\"g\">100%<span class=\"ic\" data-ic=\"elemental_damage\"></span></span>）燃烧伤害"
         }
       ],
       "stats": {
@@ -12406,8 +12406,8 @@
           "custom_key": "temp_stats_while_not_moving",
           "storage_method": 1,
           "effect_sign": 3,
-          "text_en": "<span class=\"r\">-25</span> % Damage while not moving",
-          "text_zh": "静止时 <span class=\"r\">-25</span>%伤害"
+          "text_en": "<span class=\"r\">-25</span> % Damage while standing still",
+          "text_zh": "当站立不动时<span class=\"r\">-25</span>%伤害"
         }
       ],
       "stats": {
@@ -12577,8 +12577,8 @@
             "bounce_dmg_reduction": 0.0,
             "projectile_speed": 3000
           },
-          "text_en": "Hitting an enemy spawns a lightning projectile that bounces <span class=\"g\">4</span> times dealing <span class=\"g\">11</span> (<span class=\"g\">80%[Elemental Damage]</span>) damage",
-          "text_zh": "击中敌人时产生雷电投射物，反弹<span class=\"g\">4</span>次，造成<span class=\"g\">11</span>（<span class=\"g\">80%[元素伤害]</span>）伤害"
+          "text_en": "Hitting an enemy spawns a lightning projectile that bounces <span class=\"g\">4</span> times dealing <span class=\"g\">11</span> (<span class=\"g\">80%<span class=\"ic\" data-ic=\"elemental_damage\"></span></span>) damage",
+          "text_zh": "击中敌人时产生雷电投射物，反弹<span class=\"g\">4</span>次，造成<span class=\"g\">11</span>（<span class=\"g\">80%<span class=\"ic\" data-ic=\"elemental_damage\"></span></span>）伤害"
         }
       ],
       "stats": {
@@ -12968,8 +12968,8 @@
               ]
             ]
           },
-          "text_en": "Deals <span class=\"g\">10</span>x<span class=\"g\">10</span> (<span class=\"g\">100%[Elemental Damage]</span>) burning damage",
-          "text_zh": "造成<span class=\"g\">10</span>x<span class=\"g\">10</span>（<span class=\"g\">100%[元素伤害]</span>）燃烧伤害"
+          "text_en": "Deals <span class=\"g\">10</span>x<span class=\"g\">10</span> (<span class=\"g\">100%<span class=\"ic\" data-ic=\"elemental_damage\"></span></span>) burning damage",
+          "text_zh": "造成<span class=\"g\">10</span>x<span class=\"g\">10</span>（<span class=\"g\">100%<span class=\"ic\" data-ic=\"elemental_damage\"></span></span>）燃烧伤害"
         },
         {
           "key": "EFFECT_WEAPON_SLOW_ON_HIT",
@@ -13826,8 +13826,8 @@
           "extra": {
             "spawn_cooldown": 3
           },
-          "text_en": "Landmines spawn every <span class=\"g\">3</span>s and deal <span class=\"g\">10</span> (<span class=\"g\">100%[Engineering]</span>) damage in an area",
-          "text_zh": "地雷每<span class=\"g\">3</span>秒生成一次，并对一个区域造成<span class=\"g\">10</span>（<span class=\"g\">100%[工程学]</span>）伤害"
+          "text_en": "Landmines spawn every <span class=\"g\">3</span>s and deal <span class=\"g\">10</span> (<span class=\"g\">100%<span class=\"ic\" data-ic=\"engineering\"></span></span>) damage in an area",
+          "text_zh": "地雷每<span class=\"g\">3</span>秒生成一次，并对一个区域造成<span class=\"g\">10</span>（<span class=\"g\">100%<span class=\"ic\" data-ic=\"engineering\"></span></span>）伤害"
         }
       ],
       "stats": {
@@ -14266,8 +14266,8 @@
             "bounce_dmg_reduction": 0.5,
             "projectile_speed": 3000
           },
-          "text_en": "Hitting an enemy spawns <span class=\"g\">8</span> projectiles dealing <span class=\"g\">5</span> (<span class=\"g\">15%[Range]</span>) damage",
-          "text_zh": "击中敌人时产生<span class=\"g\">8</span>投射物，造成<span class=\"g\">5</span>（<span class=\"g\">15%[范围]</span>）伤害"
+          "text_en": "Hitting an enemy spawns <span class=\"g\">8</span> projectiles dealing <span class=\"g\">5</span> (<span class=\"g\">15%<span class=\"ic\" data-ic=\"range\"></span></span>) damage",
+          "text_zh": "击中敌人时产生<span class=\"g\">8</span>投射物，造成<span class=\"g\">5</span>（<span class=\"g\">15%<span class=\"ic\" data-ic=\"range\"></span></span>）伤害"
         }
       ],
       "stats": {
@@ -14705,8 +14705,8 @@
             "bounce_dmg_reduction": 0.5,
             "projectile_speed": 2000
           },
-          "text_en": "Hitting an enemy spawns <span class=\"g\">4</span> projectiles dealing <span class=\"g\">1</span> (<span class=\"g\">100%[Elemental Damage]</span>) damage and slowing enemies around them",
-          "text_zh": "击中敌人时产生<span class=\"g\">4</span>投射物，造成<span class=\"g\">1</span>（<span class=\"g\">100%[元素伤害]</span>）伤害并使周围的敌人减速"
+          "text_en": "Hitting an enemy spawns <span class=\"g\">4</span> projectiles dealing <span class=\"g\">1</span> (<span class=\"g\">100%<span class=\"ic\" data-ic=\"elemental_damage\"></span></span>) damage and slowing enemies around them",
+          "text_zh": "击中敌人时产生<span class=\"g\">4</span>投射物，造成<span class=\"g\">1</span>（<span class=\"g\">100%<span class=\"ic\" data-ic=\"elemental_damage\"></span></span>）伤害并使周围的敌人减速"
         }
       ],
       "stats": {
@@ -14775,8 +14775,8 @@
               ]
             ]
           },
-          "text_en": "Deals <span class=\"g\">9</span>x<span class=\"g\">12</span> (<span class=\"g\">100%[Elemental Damage]</span>) burning damage",
-          "text_zh": "造成<span class=\"g\">9</span>x<span class=\"g\">12</span>（<span class=\"g\">100%[元素伤害]</span>）燃烧伤害"
+          "text_en": "Deals <span class=\"g\">9</span>x<span class=\"g\">12</span> (<span class=\"g\">100%<span class=\"ic\" data-ic=\"elemental_damage\"></span></span>) burning damage",
+          "text_zh": "造成<span class=\"g\">9</span>x<span class=\"g\">12</span>（<span class=\"g\">100%<span class=\"ic\" data-ic=\"elemental_damage\"></span></span>）燃烧伤害"
         },
         {
           "key": "burning_spread",
@@ -14785,8 +14785,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">1</span> Burning Spread",
-          "text_zh": "<span class=\"g\">1</span>燃烧蔓延 "
+          "text_en": "Burning spreads to an additional nearby enemy",
+          "text_zh": "燃烧蔓延至附近的另一名敌人"
         }
       ],
       "stats": {
@@ -14969,8 +14969,8 @@
               ]
             ]
           },
-          "text_en": "Deals <span class=\"g\">9</span>x<span class=\"g\">12</span> (<span class=\"g\">100%[Elemental Damage]</span>) burning damage",
-          "text_zh": "造成<span class=\"g\">9</span>x<span class=\"g\">12</span>（<span class=\"g\">100%[元素伤害]</span>）燃烧伤害"
+          "text_en": "Deals <span class=\"g\">9</span>x<span class=\"g\">12</span> (<span class=\"g\">100%<span class=\"ic\" data-ic=\"elemental_damage\"></span></span>) burning damage",
+          "text_zh": "造成<span class=\"g\">9</span>x<span class=\"g\">12</span>（<span class=\"g\">100%<span class=\"ic\" data-ic=\"elemental_damage\"></span></span>）燃烧伤害"
         }
       ],
       "stats": {
@@ -15127,8 +15127,8 @@
           "extra": {
             "spawn_cooldown": -1
           },
-          "text_en": "Summons a turret with exploding projectiles dealing <span class=\"g\">25</span> (<span class=\"g\">150%[Engineering]</span>) area damage",
-          "text_zh": "生成1台发射爆破弹的炮塔，造成<span class=\"g\">25</span>（<span class=\"g\">150%[工程学]</span>）范围伤害"
+          "text_en": "Summons a turret with exploding projectiles dealing <span class=\"g\">25</span> (<span class=\"g\">150%<span class=\"ic\" data-ic=\"engineering\"></span></span>) area damage",
+          "text_zh": "生成1台发射爆破弹的炮塔，造成<span class=\"g\">25</span>（<span class=\"g\">150%<span class=\"ic\" data-ic=\"engineering\"></span></span>）范围伤害"
         }
       ],
       "stats": {
@@ -15275,8 +15275,8 @@
           "extra": {
             "chance": 25
           },
-          "text_en": "<span class=\"g\">25%</span> chance to deal <span class=\"g\">1</span> (<span class=\"g\">25%[Luck]</span>) damage to a random enemy when you pick up a material",
-          "text_zh": "拾取材料时有<span class=\"g\">25%</span>概率对随机1名敌人造成<span class=\"g\">1</span>（<span class=\"g\">25%[幸运]</span>）伤害"
+          "text_en": "<span class=\"g\">25%</span> chance to deal <span class=\"g\">1</span> (<span class=\"g\">25%<span class=\"ic\" data-ic=\"luck\"></span></span>) damage to a random enemy when you pick up a material",
+          "text_zh": "拾取材料时有<span class=\"g\">25%</span>概率对随机1名敌人造成<span class=\"g\">1</span>（<span class=\"g\">25%<span class=\"ic\" data-ic=\"luck\"></span></span>）伤害"
         }
       ],
       "unlocked_by_default": true,
@@ -15657,8 +15657,8 @@
           "extra": {
             "spawn_cooldown": -1
           },
-          "text_en": "<span class=\"g\">+1</span> Engineering",
-          "text_zh": "<span class=\"g\">+1</span>工程学"
+          "text_en": "This turret's stats are derived from your best ranged weapon's base stats and scale with",
+          "text_zh": "此炮塔的属性基于你最佳远程武器的基础属性，并随着 升级"
         },
         {
           "key": "projectile",
@@ -15667,8 +15667,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">1</span> projectile",
-          "text_zh": "<span class=\"g\">1</span>投射物"
+          "text_en": "projectile",
+          "text_zh": "投射物"
         }
       ],
       "unlocked_by_default": true,
@@ -15953,8 +15953,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 0,
-          "text_en": "<span class=\"g\">-5%</span> Items Price",
-          "text_zh": "<span class=\"g\">-5%</span>道具价格"
+          "text_en": "<span class=\"g\">-5</span>% Items Price",
+          "text_zh": "<span class=\"g\">-5</span>%道具价格"
         }
       ],
       "unlocked_by_default": true,
@@ -15982,8 +15982,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">8%</span> chance to heal 1 HP when picking up a material",
-          "text_zh": "拾取材料时有<span class=\"g\">8%</span>概率恢复1点生命值"
+          "text_en": "<span class=\"g\">8</span> chance to heal 1 HP when picking up a material",
+          "text_zh": "拾取材料时有<span class=\"g\">8</span>概率恢复1点生命"
         },
         {
           "key": "stat_ranged_damage",
@@ -16300,8 +16300,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 2,
-          "text_en": "+5% Enemies",
-          "text_zh": "+5%敌人"
+          "text_en": "+5 Enemies",
+          "text_zh": "+5 敌人"
         }
       ],
       "unlocked_by_default": true,
@@ -16728,8 +16728,8 @@
           "extra": {
             "spawn_cooldown": 12
           },
-          "text_en": "Landmines spawn every <span class=\"g\">12</span>s and deal <span class=\"g\">10</span> (<span class=\"g\">100%[Engineering]</span>) damage in an area",
-          "text_zh": "地雷每<span class=\"g\">12</span>秒生成一次，并对一个区域造成<span class=\"g\">10</span>（<span class=\"g\">100%[工程学]</span>）伤害"
+          "text_en": "Landmines spawn every <span class=\"g\">12</span>s and deal <span class=\"g\">10</span> (<span class=\"g\">100%<span class=\"ic\" data-ic=\"engineering\"></span></span>) damage in an area",
+          "text_zh": "地雷每<span class=\"g\">12</span>秒生成一次，并对一个区域造成<span class=\"g\">10</span>（<span class=\"g\">100%<span class=\"ic\" data-ic=\"engineering\"></span></span>）伤害"
         }
       ],
       "unlocked_by_default": true,
@@ -16898,8 +16898,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "One-shot trees",
-          "text_zh": "一击摧毁树木"
+          "text_en": "Trees die in one hit",
+          "text_zh": "树木能被一击毙命"
         }
       ],
       "unlocked_by_default": true,
@@ -17245,8 +17245,8 @@
             "deal_dmg_on_return": false,
             "alternate_attack_type": false
           },
-          "text_en": "Spawns a Ratzilla pet that deals <span class=\"g\">4</span> (<span class=\"g\">10%[Max HP]</span>) damage",
-          "text_zh": "生成一个鼠斯拉宠物，造成<span class=\"g\">4</span>（<span class=\"g\">10%[最大生命值]</span>）伤害"
+          "text_en": "Spawns a Ratzilla pet that deals <span class=\"g\">4</span> (<span class=\"g\">10%<span class=\"ic\" data-ic=\"max_hp\"></span></span>) damage",
+          "text_zh": "生成一个鼠斯拉宠物，造成<span class=\"g\">4</span>（<span class=\"g\">10%<span class=\"ic\" data-ic=\"max_hp\"></span></span>）伤害"
         }
       ],
       "unlocked_by_default": true,
@@ -17325,8 +17325,8 @@
               ]
             ]
           },
-          "text_en": "Attacks have a <span class=\"g\">25%</span> chance to deal <span class=\"g\">3x1</span> (<span class=\"g\">100%[Elemental Damage]</span>) burning damage",
-          "text_zh": "攻击有<span class=\"g\">25%</span>几率造成<span class=\"g\">3x1</span>（<span class=\"g\">100%[元素伤害]</span>）的燃烧伤害"
+          "text_en": "Attacks have a <span class=\"g\">0</span> chance to deal BURN_CHANCEx burning damage",
+          "text_zh": "攻击有<span class=\"g\">0</span>机率造成BURN_CHANCEx的燃烧伤害"
         }
       ],
       "unlocked_by_default": true,
@@ -17364,8 +17364,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "<span class=\"r\">-20%</span> Piercing Damage. Can't go above base damage",
-          "text_zh": "<span class=\"r\">-20%</span>贯通伤害，不会高于基础伤害"
+          "text_en": "<span class=\"r\">-20%</span> Piercing Damage",
+          "text_zh": "<span class=\"r\">-20%</span>贯通伤害"
         },
         {
           "key": "stat_percent_damage",
@@ -17455,8 +17455,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">1</span> Burning Spread",
-          "text_zh": "<span class=\"g\">1</span>燃烧蔓延 "
+          "text_en": "Burning spreads to an additional nearby enemy",
+          "text_zh": "燃烧蔓延至附近的另一名敌人"
         },
         {
           "key": "stat_max_hp",
@@ -17572,8 +17572,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">1</span> Trees",
-          "text_zh": "<span class=\"g\">1</span>树木"
+          "text_en": "More trees spawn",
+          "text_zh": "生成更多树木"
         }
       ],
       "unlocked_by_default": true,
@@ -17630,8 +17630,8 @@
           "extra": {
             "spawn_cooldown": -1
           },
-          "text_en": "Summons a turret dealing <span class=\"g\">10</span> (<span class=\"g\">80%[Engineering]</span>) damage",
-          "text_zh": "生成1台炮塔，造成<span class=\"g\">10</span>（<span class=\"g\">80%[工程学]</span>）伤害"
+          "text_en": "Summons a turret dealing <span class=\"g\">10</span> (<span class=\"g\">80%<span class=\"ic\" data-ic=\"engineering\"></span></span>) damage",
+          "text_zh": "生成1台炮塔，造成<span class=\"g\">10</span>（<span class=\"g\">80%<span class=\"ic\" data-ic=\"engineering\"></span></span>）伤害"
         }
       ],
       "unlocked_by_default": true,
@@ -17662,8 +17662,8 @@
           "extra": {
             "value2": 20
           },
-          "text_en": "Hitting an enemy reduces their speed by <span class=\"g\">5%</span>, up to a max of <span class=\"g\">20%</span>",
-          "text_zh": "击中敌人时能使其降低<span class=\"g\">5%</span>速度，最高<span class=\"g\">20%</span>"
+          "text_en": "Hitting an enemy removes <span class=\"g\">5</span> of their speed. Max <span class=\"g\">20</span>",
+          "text_zh": "击中敌人时能使其降低<span class=\"g\">5</span>速度，最高<span class=\"g\">20</span>"
         },
         {
           "key": "stat_speed",
@@ -17750,8 +17750,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 1,
-          "text_en": "Start next wave with <span class=\"r\">-100%</span> HP",
-          "text_zh": "下场敌袭以<span class=\"r\">-100%</span>生命值开始"
+          "text_en": "Start the next wave with 1 HP",
+          "text_zh": "下场敌袭以1点生命值开始"
         }
       ],
       "unlocked_by_default": true,
@@ -17777,8 +17777,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">50%</span> chance for Loot Alien",
-          "text_zh": "<span class=\"g\">50%</span>概率出现战利品外星人"
+          "text_en": "<span class=\"g\">50</span> chance for loot aliens to appear",
+          "text_zh": "有<span class=\"g\">50</span>几率出现战利品外星人"
         },
         {
           "key": "loot_alien_speed",
@@ -17787,8 +17787,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 1,
-          "text_en": "Loot Alien movement speed <span class=\"r\">20%</span>",
-          "text_zh": "战利品外星人的移动速度<span class=\"r\">20%</span>"
+          "text_en": "<span class=\"r\">20</span> movement speed for loot aliens",
+          "text_zh": "战利品外星人的移动速度<span class=\"r\">20</span>"
         },
         {
           "key": "",
@@ -17797,7 +17797,7 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "A whistle sound plays when a Loot Alien spawns",
+          "text_en": "Whistles when a loot alien spawns",
           "text_zh": "战利品外星人生成时会有哨响"
         }
       ],
@@ -17901,8 +17901,8 @@
             "bounce_dmg_reduction": 0.5,
             "projectile_speed": 500
           },
-          "text_en": "Shoots <span class=\"g\">6</span> alien eyes around you every <span class=\"g\">1</span> seconds dealing <span class=\"g\">1</span> (<span class=\"g\">50%[Max HP]</span>) damage each",
-          "text_zh": "每<span class=\"g\">1</span>秒向周围发射<span class=\"g\">6</span>颗异形眼球，每颗眼球造成<span class=\"g\">1</span>（<span class=\"g\">50%[最大生命值]</span>）伤害"
+          "text_en": "Shoots <span class=\"g\">6</span> alien eyes around you every <span class=\"g\">1</span> seconds dealing <span class=\"g\">1</span> (<span class=\"g\">50%<span class=\"ic\" data-ic=\"max_hp\"></span></span>) damage each",
+          "text_zh": "每<span class=\"g\">1</span>秒向周围发射<span class=\"g\">6</span>颗异形眼球，每颗眼球造成<span class=\"g\">1</span>（<span class=\"g\">50%<span class=\"ic\" data-ic=\"max_hp\"></span></span>）伤害"
         }
       ],
       "unlocked_by_default": true,
@@ -17980,8 +17980,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">+1%</span> extra enemies next wave",
-          "text_zh": "<span class=\"g\">+1%</span>下波额外敌人"
+          "text_en": "Special enemies appear at the beginning of the next wave",
+          "text_zh": "下场敌袭一开始会出现特殊敌人"
         }
       ],
       "unlocked_by_default": true,
@@ -18155,8 +18155,8 @@
               ]
             ]
           },
-          "text_en": "Spawns a Blazemander pet that deals <span class=\"g\">1</span> (<span class=\"g\">1%[Elemental Damage]</span>) damage. Every <span class=\"g\">0.4</span> seconds, it shoots burning projectiles in all directions, each dealing damage. Enemies hit by any of these attacks take <span class=\"g\">5</span>x<span class=\"g\">3</span> (<span class=\"g\">50%[Elemental Damage]</span>) burning damage",
-          "text_zh": "生成一个焰蜥蜴宠物，造成<span class=\"g\">1</span>（<span class=\"g\">1%[元素伤害]</span>）伤害。每<span class=\"g\">0.4</span>秒钟，向所有方向发射燃烧的投射物，每发造成伤害。被这些攻击命中的敌人会受到<span class=\"g\">5</span>x<span class=\"g\">3</span>（<span class=\"g\">50%[元素伤害]</span>）燃烧伤害"
+          "text_en": "Spawns a Blazemander pet that deals <span class=\"g\">1</span> (<span class=\"g\">1%<span class=\"ic\" data-ic=\"elemental_damage\"></span></span>) damage. Every <span class=\"g\">0.4</span> seconds, it shoots burning projectiles in all directions, each dealing damage. Enemies hit by any of these attacks take <span class=\"g\">5</span>x<span class=\"g\">3</span> (<span class=\"g\">50%<span class=\"ic\" data-ic=\"elemental_damage\"></span></span>) burning damage",
+          "text_zh": "生成一个焰蜥蜴宠物，造成<span class=\"g\">1</span>（<span class=\"g\">1%<span class=\"ic\" data-ic=\"elemental_damage\"></span></span>）伤害。每<span class=\"g\">0.4</span>秒钟，向所有方向发射燃烧的投射物，每发造成伤害。被这些攻击命中的敌人会受到<span class=\"g\">5</span>x<span class=\"g\">3</span>（<span class=\"g\">50%<span class=\"ic\" data-ic=\"elemental_damage\"></span></span>）燃烧伤害"
         }
       ],
       "unlocked_by_default": false,
@@ -18353,8 +18353,8 @@
             "deal_dmg_on_return": false,
             "alternate_attack_type": false
           },
-          "text_en": "Spawns a Bonk Dog pet that deals <span class=\"g\">10</span> (<span class=\"g\">60%[Melee Damage]</span>) damage. Every <span class=\"g\">0.5</span> seconds, it performs a dash attack that deals explosive damage in an area",
-          "text_zh": "生成一只Bonk狗宠物，会造成<span class=\"g\">10</span>（<span class=\"g\">60%[近战伤害]</span>）伤害。它每<span class=\"g\">0.5</span>秒钟会进行一次冲刺攻击，在范围内造成爆炸伤害"
+          "text_en": "Spawns a Bonk Dog pet that deals <span class=\"g\">10</span> (<span class=\"g\">60%<span class=\"ic\" data-ic=\"melee_damage\"></span></span>) damage. Every <span class=\"g\">0.5</span> seconds, it performs a dash attack that deals explosive damage in an area",
+          "text_zh": "生成一只Bonk狗宠物，会造成<span class=\"g\">10</span>（<span class=\"g\">60%<span class=\"ic\" data-ic=\"melee_damage\"></span></span>）伤害。它每<span class=\"g\">0.5</span>秒钟会进行一次冲刺攻击，在范围内造成爆炸伤害"
         }
       ],
       "unlocked_by_default": false,
@@ -18409,8 +18409,8 @@
             "bounce_dmg_reduction": 0.5,
             "projectile_speed": 3000
           },
-          "text_en": "Spawns a Bot-O-Mine structure that shoots bullets dealing <span class=\"g\">10</span> (<span class=\"g\">100%[Engineering]</span>) damage. It also spawns a landmine every <span class=\"g\">0.5</span> seconds dealing damage in an area",
-          "text_zh": "生成一个布雷机器人构筑物，发射子弹造成<span class=\"g\">10</span>（<span class=\"g\">100%[工程学]</span>）伤害。同时每<span class=\"g\">0.5</span>生成一个地雷，在范围内造成伤害"
+          "text_en": "Spawns a Bot-O-Mine structure that shoots bullets dealing <span class=\"g\">10</span> (<span class=\"g\">100%<span class=\"ic\" data-ic=\"engineering\"></span></span>) damage. It also spawns a landmine every <span class=\"g\">0.5</span> seconds dealing damage in an area",
+          "text_zh": "生成一个布雷机器人构筑物，发射子弹造成<span class=\"g\">10</span>（<span class=\"g\">100%<span class=\"ic\" data-ic=\"engineering\"></span></span>）伤害。同时每<span class=\"g\">0.5</span>生成一个地雷，在范围内造成伤害"
         }
       ],
       "unlocked_by_default": false,
@@ -18464,8 +18464,8 @@
           "extra": {
             "spawn_cooldown": -1
           },
-          "text_en": "<span class=\"g\">+1</span> Engineering",
-          "text_zh": "<span class=\"g\">+1</span>工程学"
+          "text_en": "This turret's stats are derived from your best ranged weapon's base stats and scale with",
+          "text_zh": "此炮塔的属性基于你最佳远程武器的基础属性，并随着 升级"
         },
         {
           "key": "projectile",
@@ -18484,8 +18484,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">1</span> projectile",
-          "text_zh": "<span class=\"g\">1</span>投射物"
+          "text_en": "projectile",
+          "text_zh": "投射物"
         }
       ],
       "unlocked_by_default": true,
@@ -18599,8 +18599,8 @@
             "bounce_dmg_reduction": 0.5,
             "projectile_speed": 3000
           },
-          "text_en": "Spawns a Catling Gun pet that shoots bullets dealing <span class=\"g\">10</span> (<span class=\"g\">60%[Ranged Damage]</span>) damage. Its attack speed increases when the player or pets stay close",
-          "text_zh": "生成一只猫特林机枪宠物，发射子弹造成<span class=\"g\">10</span>（<span class=\"g\">60%[远程伤害]</span>）伤害。当与玩家或其他宠物接近时，攻速会上升"
+          "text_en": "Spawns a Catling Gun pet that shoots bullets dealing <span class=\"g\">10</span> (<span class=\"g\">60%<span class=\"ic\" data-ic=\"ranged_damage\"></span></span>) damage. Its attack speed increases when the player or pets stay close",
+          "text_zh": "生成一只猫特林机枪宠物，发射子弹造成<span class=\"g\">10</span>（<span class=\"g\">60%<span class=\"ic\" data-ic=\"ranged_damage\"></span></span>）伤害。当与玩家或其他宠物接近时，攻速会上升"
         }
       ],
       "unlocked_by_default": false,
@@ -18680,8 +18680,8 @@
           "custom_key": "stats_end_of_wave",
           "storage_method": 1,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">+5</span> XP Gain at the end of each wave",
-          "text_zh": "每波结束时获得<span class=\"g\">+5</span>获得%经验"
+          "text_en": "<span class=\"g\">+5</span> XP Gain at the end of a wave",
+          "text_zh": "敌袭结束后<span class=\"g\">+5</span>获得%经验"
         },
         {
           "key": "xp_gain",
@@ -18690,8 +18690,8 @@
           "custom_key": "stats_next_wave",
           "storage_method": 1,
           "effect_sign": 3,
-          "text_en": "Gain <span class=\"g\">+50</span> material and XP for every living enemy at the end of a wave",
-          "text_zh": "在敌人攻击波结束时，每有1个活着的敌人，你获得<span class=\"g\">+50</span>个材料和经验值。"
+          "text_en": "<span class=\"g\">+50</span> XP Gain during the next wave",
+          "text_zh": "下场敌袭期间<span class=\"g\">+50</span> 获得%经验"
         },
         {
           "key": "enemy_health",
@@ -18700,8 +18700,8 @@
           "custom_key": "stats_next_wave",
           "storage_method": 1,
           "effect_sign": 1,
-          "text_en": "Enemy health : <span class=\"r\">100</span>",
-          "text_zh": "敌人生命值 : <span class=\"r\">100</span>"
+          "text_en": "<span class=\"r\">100</span> Enemy health during the next wave",
+          "text_zh": "下场敌袭期间<span class=\"r\">100</span> %敌人生命值"
         }
       ],
       "unlocked_by_default": false,
@@ -18730,8 +18730,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">+10%</span> Structure Attack Speed",
-          "text_zh": "<span class=\"g\">+10%</span>构建物的攻击速度"
+          "text_en": "% Structure attack speed",
+          "text_zh": "%构建物的攻击速度"
         },
         {
           "key": "stat_speed",
@@ -18870,8 +18870,8 @@
           "custom_key": "temp_stats_while_not_moving",
           "storage_method": 1,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">+10</span> HP Regeneration while not moving",
-          "text_zh": "静止时 <span class=\"g\">+10</span>生命再生"
+          "text_en": "<span class=\"g\">+10</span> HP Regeneration while standing still",
+          "text_zh": "当站立不动时<span class=\"g\">+10</span>生命再生"
         },
         {
           "key": "stat_range",
@@ -18912,8 +18912,8 @@
           "extra": {
             "chance": 25
           },
-          "text_en": "<span class=\"g\">25%</span> chance to deal <span class=\"g\">1</span> (<span class=\"g\">25%[Luck]</span>) damage to a random enemy when an enemy dies",
-          "text_zh": "敌人死亡时有<span class=\"g\">25%</span>概率对随机1名敌人造成<span class=\"g\">1</span>（<span class=\"g\">25%[幸运]</span>）伤害"
+          "text_en": "<span class=\"g\">25%</span> chance to deal <span class=\"g\">1</span> (<span class=\"g\">25%<span class=\"ic\" data-ic=\"luck\"></span></span>) damage to a random enemy when an enemy dies",
+          "text_zh": "敌人死亡时有<span class=\"g\">25%</span>概率对随机1名敌人造成<span class=\"g\">1</span>（<span class=\"g\">25%<span class=\"ic\" data-ic=\"luck\"></span></span>）伤害"
         }
       ],
       "unlocked_by_default": true,
@@ -19268,8 +19268,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">1</span> ENEMY_FRUIT_DROPS",
-          "text_zh": "<span class=\"g\">1</span>ENEMY_FRUIT_DROPS"
+          "text_en": "Enemies have a higher chance of dropping fruits",
+          "text_zh": "敌人掉落水果的几率更高"
         },
         {
           "key": "stat_hp_regeneration",
@@ -19527,8 +19527,8 @@
           "extra": {
             "spawn_cooldown": -1
           },
-          "text_en": "Summons a burning turret dealing <span class=\"g\">8</span>x<span class=\"g\">5</span> (<span class=\"g\">33%[Engineering]</span>) burning damage",
-          "text_zh": "生成1台燃烧炮塔，造成<span class=\"g\">8</span>x<span class=\"g\">5</span>（<span class=\"g\">33%[工程学]</span>）燃烧伤害"
+          "text_en": "Summons a burning turret dealing <span class=\"g\">8</span>x<span class=\"g\">5</span> (<span class=\"g\">33%<span class=\"ic\" data-ic=\"engineering\"></span></span>) burning damage",
+          "text_zh": "生成1台燃烧炮塔，造成<span class=\"g\">8</span>x<span class=\"g\">5</span>（<span class=\"g\">33%<span class=\"ic\" data-ic=\"engineering\"></span></span>）燃烧伤害"
         }
       ],
       "unlocked_by_default": true,
@@ -19566,8 +19566,8 @@
           "custom_key": "",
           "storage_method": 2,
           "effect_sign": 3,
-          "text_en": "Consumables heal over <span class=\"g\">4</span> seconds",
-          "text_zh": "消耗品在<span class=\"g\">4</span>秒内持续恢复生命值"
+          "text_en": "Consumables heal you over <span class=\"g\">4</span> seconds instead of instantly",
+          "text_zh": "消耗品会在<span class=\"g\">4</span>秒内持续为你治疗，而非瞬间治疗"
         }
       ],
       "unlocked_by_default": true,
@@ -19755,8 +19755,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">+2</span> extra loot aliens next wave",
-          "text_zh": "<span class=\"g\">+2</span>下波额外拾取外星人"
+          "text_en": "<span class=\"g\">2</span> additional loot aliens appear during the next wave",
+          "text_zh": "在下场敌袭中会出现<span class=\"g\">2</span>个额外的战利品外星人"
         }
       ],
       "unlocked_by_default": false,
@@ -19924,8 +19924,8 @@
           "extra": {
             "spawn_cooldown": -1
           },
-          "text_en": "Spawns a medical turret that shoots bullets healing <span class=\"g\">3</span> (<span class=\"g\">5%[Engineering]</span>) HP",
-          "text_zh": "生成1台医疗炮塔，恢复<span class=\"g\">3</span>（<span class=\"g\">5%[工程学]</span>）生命值"
+          "text_en": "Spawns a medical turret that shoots bullets healing <span class=\"g\">3</span> (<span class=\"g\">5%<span class=\"ic\" data-ic=\"engineering\"></span></span>) HP",
+          "text_zh": "生成1台医疗炮塔，恢复<span class=\"g\">3</span>（<span class=\"g\">5%<span class=\"ic\" data-ic=\"engineering\"></span></span>）生命值"
         }
       ],
       "unlocked_by_default": true,
@@ -20181,8 +20181,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "Gain <span class=\"g\">20%</span> gold at the start of each wave",
-          "text_zh": "每波开始时获得<span class=\"g\">20%</span>现金"
+          "text_en": "<span class=\"g\">20</span> of your materials at the start of waves (stops working at wave GAIN_PCT_GOLD_START_WAVE)",
+          "text_zh": "敌袭开始时<span class=\"g\">20</span>材料（在第GAIN_PCT_GOLD_START_WAVE波敌袭后结束）"
         }
       ],
       "unlocked_by_default": true,
@@ -20211,8 +20211,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">1</span> STRUCTURES_CAN_CRIT",
-          "text_zh": "<span class=\"g\">1</span>STRUCTURES_CAN_CRIT"
+          "text_en": "Your structures can crit",
+          "text_zh": "你的构筑物可以暴击"
         },
         {
           "key": "stat_crit_chance",
@@ -20272,8 +20272,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">1</span> TREE_TURRETS",
-          "text_zh": "<span class=\"g\">1</span>TREE_TURRETS"
+          "text_en": "Killing a tree spawns a turret",
+          "text_zh": "杀死一棵树木会生成炮塔"
         }
       ],
       "unlocked_by_default": true,
@@ -20340,8 +20340,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "Recycling yields <span class=\"g\">35%</span> more materials",
-          "text_zh": "回收获得<span class=\"g\">35%</span>更多材料"
+          "text_en": "Gain <span class=\"g\">35</span> more materials from recycling items",
+          "text_zh": "回收道具时额外获得<span class=\"g\">35</span>个材料"
         }
       ],
       "unlocked_by_default": true,
@@ -20433,8 +20433,8 @@
           "extra": {
             "chance": 100
           },
-          "text_en": "<span class=\"g\">100%</span> chance to deal <span class=\"g\">1</span> (<span class=\"g\">300%[Melee Damage]</span>) damage to an enemy when dodging their attack",
-          "text_zh": "在躲避敌人攻击时有<span class=\"g\">100%</span>概率对随机1名敌人造成<span class=\"g\">1</span>（<span class=\"g\">300%[近战伤害]</span>）伤害"
+          "text_en": "<span class=\"g\">100%</span> chance to deal <span class=\"g\">1</span> (<span class=\"g\">300%<span class=\"ic\" data-ic=\"melee_damage\"></span></span>) damage to an enemy when dodging their attack",
+          "text_zh": "在躲避敌人攻击时有<span class=\"g\">100%</span>概率对随机1名敌人造成<span class=\"g\">1</span>（<span class=\"g\">300%<span class=\"ic\" data-ic=\"melee_damage\"></span></span>）伤害"
         }
       ],
       "unlocked_by_default": true,
@@ -20715,7 +20715,7 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 0,
-          "text_en": "<span class=\"g\">-8</span> % Enemy Speed",
+          "text_en": "<span class=\"g\">-8</span>% Enemy Speed",
           "text_zh": "<span class=\"g\">-8</span>%敌人速度"
         },
         {
@@ -20823,8 +20823,8 @@
             "effect_scale": 1.0,
             "is_healing": false
           },
-          "text_en": "Consumables explode for <span class=\"g\">1</span> damage",
-          "text_zh": "消耗品使用后爆炸造成<span class=\"g\">1</span>伤害"
+          "text_en": "Consumables have a <span class=\"g\">50%</span> chance to explode for EXPLODE_ON_CONSUMABLE (<span class=\"g\">50%</span>) damage when picked up",
+          "text_zh": "当捡起消耗品时有<span class=\"g\">50%</span>概率爆炸，造成EXPLODE_ON_CONSUMABLE（<span class=\"g\">50%</span>）伤害"
         }
       ],
       "unlocked_by_default": false,
@@ -20862,8 +20862,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 0,
-          "text_en": "<span class=\"g\">-25%</span> Reroll Price",
-          "text_zh": "<span class=\"g\">-25%</span>刷新价格"
+          "text_en": "% Reroll Price",
+          "text_zh": "%刷新价格"
         }
       ],
       "unlocked_by_default": true,
@@ -20940,8 +20940,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "Heal <span class=\"g\">20</span> HP on critical kill",
-          "text_zh": "暴击击杀时恢复<span class=\"g\">20</span>生命值"
+          "text_en": "<span class=\"g\">20</span> chance to heal 1 HP when killing an enemy with a critical hit",
+          "text_zh": "暴击杀死敌人时有<span class=\"g\">20</span>概率治疗一点生命值"
         }
       ],
       "unlocked_by_default": false,
@@ -21032,8 +21032,8 @@
           "extra": {
             "spawn_cooldown": -1
           },
-          "text_en": "Spawns a little guy that slowly shoots <span class=\"g\">10</span> piercing lightning projectiles around him for <span class=\"g\">12</span> (<span class=\"g\">90%[Engineering]+90%[Elemental Damage]</span>) damage each",
-          "text_zh": "生成向周围缓慢发射<span class=\"g\">10</span>枚贯通雷电投射物的小伙伴，每枚投射物造成<span class=\"g\">12</span> （<span class=\"g\">90%[工程学]+90%[元素伤害]</span>）伤害"
+          "text_en": "Spawns a little guy that slowly shoots <span class=\"g\">10</span> piercing lightning projectiles around him for <span class=\"g\">12</span> (<span class=\"g\">90%<span class=\"ic\" data-ic=\"engineering\"></span>+90%<span class=\"ic\" data-ic=\"elemental_damage\"></span></span>) damage each",
+          "text_zh": "生成向周围缓慢发射<span class=\"g\">10</span>枚贯通雷电投射物的小伙伴，每枚投射物造成<span class=\"g\">12</span> （<span class=\"g\">90%<span class=\"ic\" data-ic=\"engineering\"></span>+90%<span class=\"ic\" data-ic=\"elemental_damage\"></span></span>）伤害"
         }
       ],
       "unlocked_by_default": true,
@@ -21150,8 +21150,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 2,
-          "text_en": "-5% Enemies",
-          "text_zh": "-5%敌人"
+          "text_en": "-5 Enemies",
+          "text_zh": "-5 敌人"
         }
       ],
       "unlocked_by_default": true,
@@ -21192,8 +21192,8 @@
           "extra": {
             "chance": 50
           },
-          "text_en": "<span class=\"g\">5</span> chance to heal HP when dodging an attack",
-          "text_zh": "在躲避攻击时有<span class=\"g\">5</span>几率恢复点生命值"
+          "text_en": "<span class=\"g\">50%</span> chance to heal HP when dodging an attack",
+          "text_zh": "在躲避攻击时有<span class=\"g\">50%</span>几率恢复点生命值"
         }
       ],
       "unlocked_by_default": true,
@@ -21231,8 +21231,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 1,
-          "text_en": "<span class=\"r\">10</span> % Enemy health",
-          "text_zh": "<span class=\"r\">10</span>%敌人生命值"
+          "text_en": "<span class=\"r\">+10</span>% Enemy health",
+          "text_zh": "<span class=\"r\">+10</span>%敌人生命值"
         }
       ],
       "unlocked_by_default": true,
@@ -21419,8 +21419,8 @@
             "bounce_dmg_reduction": 0.5,
             "projectile_speed": 3000
           },
-          "text_en": "Fire <span class=\"g\">1</span> projectiles on death",
-          "text_zh": "死亡时发射<span class=\"g\">1</span>枚投射物"
+          "text_en": "One bullet dealing <span class=\"g\">1</span> damage is fired from an enemy corpse when they die",
+          "text_zh": "当敌人死亡时，发射一枚能造成<span class=\"g\">1</span>伤害的子弹"
         },
         {
           "key": "stat_range",
@@ -21620,8 +21620,8 @@
           "custom_key": "temp_stats_while_not_moving",
           "storage_method": 1,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">+8</span> Armor while not moving",
-          "text_zh": "静止时 <span class=\"g\">+8</span>护甲"
+          "text_en": "<span class=\"g\">+8</span> Armor while standing still",
+          "text_zh": "当站立不动时<span class=\"g\">+8</span>护甲"
         },
         {
           "key": "stat_speed",
@@ -21709,8 +21709,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 2,
-          "text_en": "+10% Enemies",
-          "text_zh": "+10%敌人"
+          "text_en": "+10 Enemies",
+          "text_zh": "+10 敌人"
         },
         {
           "key": "enemy_health",
@@ -21719,8 +21719,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 1,
-          "text_en": "<span class=\"r\">10</span> % Enemy health",
-          "text_zh": "<span class=\"r\">10</span>%敌人生命值"
+          "text_en": "<span class=\"r\">+10</span>% Enemy health",
+          "text_zh": "<span class=\"r\">+10</span>%敌人生命值"
         },
         {
           "key": "enemy_damage",
@@ -21729,8 +21729,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 1,
-          "text_en": "<span class=\"r\">10</span> % Enemy damage",
-          "text_zh": "<span class=\"r\">10</span>%敌人伤害"
+          "text_en": "<span class=\"r\">+10</span>% Enemy damage",
+          "text_zh": "<span class=\"r\">+10</span>%敌人伤害"
         },
         {
           "key": "stat_curse",
@@ -21865,8 +21865,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "0 ",
-          "text_zh": "0"
+          "text_en": "This mirror duplicated an item",
+          "text_zh": "这面镜子复制了一个道具"
         }
       ],
       "unlocked_by_default": true,
@@ -21920,8 +21920,8 @@
           "extra": {
             "spawn_cooldown": -1
           },
-          "text_en": "<span class=\"g\">+1</span> Engineering",
-          "text_zh": "<span class=\"g\">+1</span>工程学"
+          "text_en": "This turret's stats are derived from your best ranged weapon's base stats and scale with",
+          "text_zh": "此炮塔的属性基于你最佳远程武器的基础属性，并随着 升级"
         },
         {
           "key": "projectiles",
@@ -21940,8 +21940,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">1</span> projectile",
-          "text_zh": "<span class=\"g\">1</span>投射物"
+          "text_en": "projectile",
+          "text_zh": "投射物"
         }
       ],
       "unlocked_by_default": true,
@@ -21991,8 +21991,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 2,
-          "text_en": "-10% Enemies",
-          "text_zh": "-10%敌人"
+          "text_en": "-10 Enemies",
+          "text_zh": "-10 敌人"
         },
         {
           "key": "stat_percent_damage",
@@ -22091,8 +22091,8 @@
           "custom_key": "temp_stats_while_not_moving",
           "storage_method": 1,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">+20</span> % Dodge while not moving",
-          "text_zh": "静止时 <span class=\"g\">+20</span>%闪避"
+          "text_en": "<span class=\"g\">+20</span> % Dodge while standing still",
+          "text_zh": "当站立不动时<span class=\"g\">+20</span>%闪避"
         },
         {
           "key": "stat_percent_damage",
@@ -22271,8 +22271,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">8%</span> harvesting growth",
-          "text_zh": "<span class=\"g\">8%</span>收获成长"
+          "text_en": "Harvesting increases by an additional <span class=\"g\">8</span> at the end of a wave",
+          "text_zh": "敌袭结束时，收获提高<span class=\"g\">8</span>"
         }
       ],
       "unlocked_by_default": true,
@@ -22324,8 +22324,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "0 ",
-          "text_zh": "0"
+          "text_en": "Bonus is lost when taking damage",
+          "text_zh": "受到伤害时会失去奖励"
         },
         {
           "key": "stat_engineering",
@@ -22530,8 +22530,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 1,
-          "text_en": "Burning activates <span class=\"r\">-100</span> faster",
-          "text_zh": "燃烧速度提高<span class=\"r\">-100</span>"
+          "text_en": "Burning activates <span class=\"r\">-100</span> slower",
+          "text_zh": "燃烧速度降低<span class=\"r\">-100</span>"
         }
       ],
       "unlocked_by_default": true,
@@ -22559,8 +22559,8 @@
           "custom_key": "",
           "storage_method": 2,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">+70%</span> Dodge cap",
-          "text_zh": "<span class=\"g\">+70%</span>闪避上限"
+          "text_en": "Dodge is capped at <span class=\"g\">70</span>",
+          "text_zh": "闪避上限为<span class=\"g\">70</span>"
         },
         {
           "key": "stat_dodge",
@@ -22655,8 +22655,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "Heal <span class=\"g\">15</span> HP on kill",
-          "text_zh": "击杀敌人时恢复<span class=\"g\">15</span>生命值"
+          "text_en": "<span class=\"g\">15</span> chance to heal 1 HP when killing an enemy",
+          "text_zh": "杀死敌人时有<span class=\"g\">15</span>的几率恢复1点生命值"
         },
         {
           "key": "stat_hp_regeneration",
@@ -22892,8 +22892,8 @@
           "custom_key": "structures_cooldown_reduction",
           "storage_method": 1,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">+50</span> % Attack Speed",
-          "text_zh": "<span class=\"g\">+50</span>%攻击速度"
+          "text_en": "Increases the attack speed of your structures by <span class=\"g\">+50</span> (% Attack Speed)",
+          "text_zh": "构建物的攻击速度提升<span class=\"g\">+50</span> （%攻击速度）"
         }
       ],
       "unlocked_by_default": false,
@@ -22981,8 +22981,8 @@
           "custom_key": "",
           "storage_method": 2,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">1</span> LOCK_CURRENT_WEAPONS",
-          "text_zh": "<span class=\"g\">1</span>LOCK_CURRENT_WEAPONS"
+          "text_en": "Weapons can no longer be upgraded or recycled",
+          "text_zh": "武器无法再升级或回收"
         }
       ],
       "unlocked_by_default": true,
@@ -23039,8 +23039,8 @@
           "extra": {
             "spawn_cooldown": -1
           },
-          "text_en": "Summons a turret with piercing projectiles dealing <span class=\"g\">20</span> (<span class=\"g\">125%[Engineering]</span>) damage",
-          "text_zh": "生成1台发射贯通弹的炮塔，造成<span class=\"g\">20</span>（<span class=\"g\">125%[工程学]</span>）伤害"
+          "text_en": "Summons a turret with piercing projectiles dealing <span class=\"g\">20</span> (<span class=\"g\">125%<span class=\"ic\" data-ic=\"engineering\"></span></span>) damage",
+          "text_zh": "生成1台发射贯通弹的炮塔，造成<span class=\"g\">20</span>（<span class=\"g\">125%<span class=\"ic\" data-ic=\"engineering\"></span></span>）伤害"
         }
       ],
       "unlocked_by_default": true,
@@ -23170,8 +23170,8 @@
           "custom_key": "duplicate_item",
           "storage_method": 1,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">1</span> Mirror",
-          "text_zh": "<span class=\"g\">1</span>镜子"
+          "text_en": "Duplicates the next item you get from the shop (item limits can't be exceeded)",
+          "text_zh": "复制你从商店获得的下一个道具（不能超过道具限制）"
         }
       ],
       "unlocked_by_default": true,
@@ -23210,8 +23210,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 2,
-          "text_en": "+10% Enemies",
-          "text_zh": "+10%敌人"
+          "text_en": "+10 Enemies",
+          "text_zh": "+10 敌人"
         },
         {
           "key": "stat_harvesting",
@@ -23308,8 +23308,8 @@
           "custom_key": "stats_next_wave",
           "storage_method": 1,
           "effect_sign": 3,
-          "text_en": "Gain <span class=\"g\">+100</span> material and XP for every living enemy at the end of a wave",
-          "text_zh": "在敌人攻击波结束时，每有1个活着的敌人，你获得<span class=\"g\">+100</span>个材料和经验值。"
+          "text_en": "<span class=\"g\">+100</span> XP Gain during the next wave",
+          "text_zh": "下场敌袭期间<span class=\"g\">+100</span> 获得%经验"
         },
         {
           "key": "enemy_damage",
@@ -23318,8 +23318,8 @@
           "custom_key": "stats_next_wave",
           "storage_method": 1,
           "effect_sign": 1,
-          "text_en": "Enemy damage : <span class=\"r\">50</span>",
-          "text_zh": "敌人伤害 : <span class=\"r\">50</span>"
+          "text_en": "<span class=\"r\">50</span> Enemy damage during the next wave",
+          "text_zh": "下场敌袭期间<span class=\"r\">50</span> %敌人伤害"
         }
       ],
       "unlocked_by_default": true,
@@ -23481,8 +23481,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "0 ",
-          "text_zh": "0"
+          "text_en": "This goldfish is resting after a hard day's work",
+          "text_zh": "这条金鱼辛苦工作了一天之后，正在休息"
         }
       ],
       "unlocked_by_default": true,
@@ -23536,8 +23536,8 @@
             "effect_scale": 1.0,
             "is_healing": false
           },
-          "text_en": "Explode on death for <span class=\"g\">1</span> damage",
-          "text_zh": "死亡时爆炸造成<span class=\"g\">1</span>伤害"
+          "text_en": "Enemies have a <span class=\"g\">20%</span> chance to explode for <span class=\"g\">10</span> (<span class=\"g\">20%</span>) damage when they die",
+          "text_zh": "敌人死亡时有<span class=\"g\">20%</span>概率爆炸，造成<span class=\"g\">10</span>（<span class=\"g\">20%</span>）伤害"
         },
         {
           "key": "stat_crit_chance",
@@ -23646,8 +23646,8 @@
           "custom_key": "stats_next_wave",
           "storage_method": 1,
           "effect_sign": 1,
-          "text_en": "Enemy speed : <span class=\"r\">25</span>",
-          "text_zh": "敌人速度 : <span class=\"r\">25</span>"
+          "text_en": "<span class=\"r\">25</span> Enemy Speed during the next wave",
+          "text_zh": "下场敌袭期间<span class=\"r\">25</span> %敌人速度"
         }
       ],
       "unlocked_by_default": false,
@@ -23796,8 +23796,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">25</span> damage against bosses and elites",
-          "text_zh": "对头目和精英怪造成<span class=\"g\">25</span>伤害"
+          "text_en": "<span class=\"g\">+25</span> damage against bosses and elites",
+          "text_zh": "对头目和精英怪造成<span class=\"g\">+25</span>伤害"
         }
       ],
       "unlocked_by_default": true,
@@ -23825,8 +23825,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "Enemies drop <span class=\"g\">20%</span> materials",
-          "text_zh": "敌人掉落材料<span class=\"g\">20%</span>"
+          "text_en": "<span class=\"g\">20</span> materials dropped from enemies",
+          "text_zh": "<span class=\"g\">20</span>敌人掉落的材料"
         },
         {
           "key": "stat_harvesting",
@@ -23845,8 +23845,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 1,
-          "text_en": "<span class=\"r\">15</span> % Enemy damage",
-          "text_zh": "<span class=\"r\">15</span>%敌人伤害"
+          "text_en": "<span class=\"r\">+15</span>% Enemy damage",
+          "text_zh": "<span class=\"r\">+15</span>%敌人伤害"
         }
       ],
       "unlocked_by_default": false,
@@ -23875,8 +23875,8 @@
           "custom_key": "temp_stats_while_not_moving",
           "storage_method": 1,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">+40</span> % Attack Speed while not moving",
-          "text_zh": "静止时 <span class=\"g\">+40</span>%攻击速度"
+          "text_en": "<span class=\"g\">+40</span> % Attack Speed while standing still",
+          "text_zh": "当站立不动时<span class=\"g\">+40</span>%攻击速度"
         },
         {
           "key": "stat_speed",
@@ -24056,8 +24056,8 @@
             "deal_dmg_on_return": false,
             "alternate_attack_type": false
           },
-          "text_en": "Explode when below <span class=\"g\">1%</span> HP",
-          "text_zh": "生命值低于<span class=\"g\">1%</span>时爆炸"
+          "text_en": "Once per wave, you explode for <span class=\"g\">100</span> (<span class=\"g\">100%</span>) damage when you fall below health",
+          "text_zh": "每次敌袭中，当你生命值低于时，你会爆炸并造成<span class=\"g\">100</span>（<span class=\"g\">100%</span>）伤害"
         }
       ],
       "unlocked_by_default": true,
@@ -24083,8 +24083,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">1</span>s invincibility when hit",
-          "text_zh": "每次受到伤害时获得<span class=\"g\">1</span>秒无敌"
+          "text_en": "Nullifies the damage of one hit taken every wave",
+          "text_zh": "在每一波敌袭中会抵消受到的攻击伤害"
         }
       ],
       "unlocked_by_default": true,
@@ -24239,8 +24239,8 @@
           "custom_key": "stats_end_of_wave",
           "storage_method": 1,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">+3</span> % Damage at the end of each wave",
-          "text_zh": "每波结束时获得<span class=\"g\">+3</span>%伤害"
+          "text_en": "<span class=\"g\">+3</span> % Damage at the end of a wave",
+          "text_zh": "敌袭结束后<span class=\"g\">+3</span>%伤害"
         }
       ],
       "unlocked_by_default": true,
@@ -24298,8 +24298,8 @@
           "extra": {
             "spawn_cooldown": -1
           },
-          "text_en": "<span class=\"g\">1</span> WANDERING_BOT",
-          "text_zh": "<span class=\"g\">1</span>WANDERING_BOT"
+          "text_en": "Spawns a little bot that slows down nearby enemies",
+          "text_zh": "生成1个小型机器人，使周围敌人减速"
         }
       ],
       "unlocked_by_default": true,
@@ -24572,8 +24572,8 @@
           "custom_key": "upgrade_random_weapon",
           "storage_method": 1,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">+2</span> Armor. Upgrades a random weapon",
-          "text_zh": "<span class=\"g\">+2</span>护甲。升级一把随机武器"
+          "text_en": "A random weapon is upgraded when entering a shop. If you have no weapon to upgrade, you gain <span class=\"g\">+2</span> Armor instead.",
+          "text_zh": "进入商店时，会随机升级一把武器。如果无武器可升级，则可获得<span class=\"g\">+2</span>护甲。"
         }
       ],
       "unlocked_by_default": false,
@@ -24633,8 +24633,8 @@
           "custom_key": "stats_end_of_wave",
           "storage_method": 1,
           "effect_sign": 3,
-          "text_en": "<span class=\"r\">-1</span> Armor at the end of each wave",
-          "text_zh": "每波结束时获得<span class=\"r\">-1</span>护甲"
+          "text_en": "<span class=\"r\">-1</span> Armor at the end of a wave",
+          "text_zh": "敌袭结束后<span class=\"r\">-1</span>护甲"
         }
       ],
       "unlocked_by_default": true,
@@ -24813,8 +24813,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "0 ",
-          "text_zh": "0"
+          "text_en": "This hourglass broke after resetting the wave counter, also losing all its effects.",
+          "text_zh": "这个沙漏在重置波次之后损坏了，已经失去了所有效果。"
         },
         {
           "key": "hp_start_next_wave",
@@ -24823,8 +24823,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 1,
-          "text_en": "Start next wave with <span class=\"r\">-100%</span> HP",
-          "text_zh": "下场敌袭以<span class=\"r\">-100%</span>生命值开始"
+          "text_en": "Start the next wave with 1 HP",
+          "text_zh": "下场敌袭以1点生命值开始"
         }
       ],
       "unlocked_by_default": true,
@@ -24878,8 +24878,8 @@
           "extra": {
             "spawn_cooldown": -1
           },
-          "text_en": "<span class=\"g\">+1</span> Engineering",
-          "text_zh": "<span class=\"g\">+1</span>工程学"
+          "text_en": "This turret's stats are derived from your best ranged weapon's base stats and scale with",
+          "text_zh": "此炮塔的属性基于你最佳远程武器的基础属性，并随着 升级"
         },
         {
           "key": "projectiles",
@@ -25269,8 +25269,8 @@
           "extra": {
             "spawn_cooldown": -1
           },
-          "text_en": "Summons a turret with exploding projectiles dealing <span class=\"g\">25</span> (<span class=\"g\">150%[Engineering]</span>) area damage",
-          "text_zh": "生成1台发射爆破弹的炮塔，造成<span class=\"g\">25</span>（<span class=\"g\">150%[工程学]</span>）范围伤害"
+          "text_en": "Summons a turret with exploding projectiles dealing <span class=\"g\">25</span> (<span class=\"g\">150%<span class=\"ic\" data-ic=\"engineering\"></span></span>) area damage",
+          "text_zh": "生成1台发射爆破弹的炮塔，造成<span class=\"g\">25</span>（<span class=\"g\">150%<span class=\"ic\" data-ic=\"engineering\"></span></span>）范围伤害"
         }
       ],
       "unlocked_by_default": true,
@@ -25373,8 +25373,8 @@
           "extra": {
             "value2": 1
           },
-          "text_en": "<span class=\"g\">10%</span> giant crit damage",
-          "text_zh": "<span class=\"g\">10%</span>巨型暴击伤害"
+          "text_en": "Critical hits deal <span class=\"g\">10</span> of an enemy’s current health as bonus damage (<span class=\"g\">1</span> for bosses and elites)",
+          "text_zh": "暴击造成敌人当前生命值的<span class=\"g\">10</span>以作为奖励伤害（头目和精英怪的<span class=\"g\">1</span>）"
         }
       ],
       "unlocked_by_default": false,
@@ -25463,8 +25463,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "Enemies drop <span class=\"g\">70%</span> materials",
-          "text_zh": "敌人掉落材料<span class=\"g\">70%</span>"
+          "text_en": "<span class=\"g\">70</span> materials dropped",
+          "text_zh": "掉落<span class=\"g\">70</span>材料"
         },
         {
           "key": "stat_speed",
@@ -25515,8 +25515,8 @@
           "extra": {
             "value2": 1
           },
-          "text_en": "Deal <span class=\"g\">10%</span> max HP damage to burning enemies",
-          "text_zh": "对燃烧的敌人造成<span class=\"g\">10%</span>最大生命值伤害"
+          "text_en": "Burning deals an additional <span class=\"g\">10</span> of current enemy HP as damage (<span class=\"g\">1</span> for bosses and elites)",
+          "text_zh": "燃烧会额外造成相当于当前敌人生命值的<span class=\"g\">10</span>的伤害（对头目和精英怪则为<span class=\"g\">1</span>）"
         },
         {
           "key": "fog_visibility",
@@ -25556,8 +25556,8 @@
           "custom_key": "stats_end_of_wave",
           "storage_method": 1,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">+3</span> Max HP at the end of each wave",
-          "text_zh": "每波结束时获得<span class=\"g\">+3</span>最大生命值"
+          "text_en": "<span class=\"g\">+3</span> Max HP at the end of a wave",
+          "text_zh": "敌袭结束后<span class=\"g\">+3</span>最大生命值"
         },
         {
           "key": "stat_hp_regeneration",
@@ -25566,8 +25566,8 @@
           "custom_key": "stats_end_of_wave",
           "storage_method": 1,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">+1</span> HP Regeneration at the end of each wave",
-          "text_zh": "每波结束时获得<span class=\"g\">+1</span>生命再生"
+          "text_en": "<span class=\"g\">+1</span> HP Regeneration at the end of a wave",
+          "text_zh": "敌袭结束后<span class=\"g\">+1</span>生命再生"
         },
         {
           "key": "stat_lifesteal",
@@ -25576,8 +25576,8 @@
           "custom_key": "stats_end_of_wave",
           "storage_method": 1,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">+1</span> % Life Steal at the end of each wave",
-          "text_zh": "每波结束时获得<span class=\"g\">+1</span>%生命窃取"
+          "text_en": "<span class=\"g\">+1</span> % Life Steal at the end of a wave",
+          "text_zh": "敌袭结束后<span class=\"g\">+1</span>%生命窃取"
         }
       ],
       "unlocked_by_default": true,
@@ -25684,8 +25684,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 1,
-          "text_en": "Start next wave with <span class=\"r\">-100%</span> HP",
-          "text_zh": "下场敌袭以<span class=\"r\">-100%</span>生命值开始"
+          "text_en": "Start the next wave with 1 HP",
+          "text_zh": "下场敌袭以1点生命值开始"
         }
       ],
       "unlocked_by_default": false,
@@ -25803,8 +25803,8 @@
             "deal_dmg_on_return": false,
             "alternate_attack_type": false
           },
-          "text_en": "Projectiles have a <span class=\"g\">1</span> chance to explode on hit",
-          "text_zh": "投射物命中时有<span class=\"g\">1</span>爆炸"
+          "text_en": "You have a <span class=\"g\">50%</span> chance to explode for <span class=\"g\">10</span> (<span class=\"g\">50%</span>) damage when you get hit",
+          "text_zh": "当你被击中时，有<span class=\"g\">50%</span>概率爆炸，造成<span class=\"g\">10</span>（<span class=\"g\">50%</span>）伤害"
         },
         {
           "key": "stat_max_hp",
@@ -26380,8 +26380,8 @@
           "extra": {
             "value2": 50
           },
-          "text_en": "<span class=\"g\">1%</span> HP Regen bonus",
-          "text_zh": "<span class=\"g\">1%</span>生命再生加成"
+          "text_en": "HP Regeneration is doubled when you have less than <span class=\"g\">50</span> health",
+          "text_zh": "当生命值低于<span class=\"g\">50</span>时，生命再生双倍"
         },
         {
           "key": "stat_hp_regeneration",
@@ -26464,8 +26464,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "Bounces up to <span class=\"g\">1</span> times on critical hit",
-          "text_zh": "暴击时最多能反弹<span class=\"g\">1</span>次"
+          "text_en": "Your projectiles gain <span class=\"g\">1</span> bounce",
+          "text_zh": "你的投射物获得<span class=\"g\">1</span>次反弹"
         },
         {
           "key": "stat_percent_damage",
@@ -26504,8 +26504,8 @@
           "custom_key": "stats_end_of_wave",
           "storage_method": 1,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">+3</span> Melee Damage at the end of each wave",
-          "text_zh": "每波结束时获得<span class=\"g\">+3</span>近战伤害"
+          "text_en": "<span class=\"g\">+3</span> Melee Damage at the end of a wave",
+          "text_zh": "敌袭结束后<span class=\"g\">+3</span>近战伤害"
         },
         {
           "key": "stat_engineering",
@@ -26514,8 +26514,8 @@
           "custom_key": "stats_end_of_wave",
           "storage_method": 1,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">+3</span> Engineering at the end of each wave",
-          "text_zh": "每波结束时获得<span class=\"g\">+3</span>工程学"
+          "text_en": "<span class=\"g\">+3</span> Engineering at the end of a wave",
+          "text_zh": "敌袭结束后<span class=\"g\">+3</span>工程学"
         },
         {
           "key": "stat_max_hp",
@@ -26524,8 +26524,8 @@
           "custom_key": "stats_end_of_wave",
           "storage_method": 1,
           "effect_sign": 3,
-          "text_en": "<span class=\"r\">-1</span> Max HP at the end of each wave",
-          "text_zh": "每波结束时获得<span class=\"r\">-1</span>最大生命值"
+          "text_en": "<span class=\"r\">-1</span> Max HP at the end of a wave",
+          "text_zh": "敌袭结束后<span class=\"r\">-1</span>最大生命值"
         }
       ],
       "unlocked_by_default": false,
@@ -26922,8 +26922,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 0,
-          "text_en": "<span class=\"g\">-95%</span> Weapons Price",
-          "text_zh": "<span class=\"g\">-95%</span>武器价格"
+          "text_en": "<span class=\"g\">-95</span> Weapons Price",
+          "text_zh": "<span class=\"g\">-95</span> 武器价格"
         },
         {
           "key": "stat_harvesting",
@@ -26953,8 +26953,8 @@
           "custom_key": "starting_item",
           "storage_method": 1,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">1</span> Dangerous Bunny",
-          "text_zh": "<span class=\"g\">1</span>危险的兔子"
+          "text_en": "You start with <span class=\"g\">1</span> Dangerous Bunny",
+          "text_zh": "初始拥有<span class=\"g\">1</span>危险的兔子"
         },
         {
           "key": "minimum_weapons_in_shop",
@@ -26963,8 +26963,8 @@
           "custom_key": "",
           "storage_method": 2,
           "effect_sign": 3,
-          "text_en": "At least <span class=\"g\">1</span> weapons in the shop",
-          "text_zh": "商店中至少出现<span class=\"g\">1</span>把武器"
+          "text_en": "Shops always sell at least one weapon",
+          "text_zh": "商店通常销售至少一把武器"
         },
         {
           "key": "destroy_weapons",
@@ -26973,8 +26973,8 @@
           "custom_key": "",
           "storage_method": 2,
           "effect_sign": 3,
-          "text_en": "Destroy all weapons",
-          "text_zh": "摧毁所有武器"
+          "text_en": "All of your weapons are destroyed when entering a shop",
+          "text_zh": "进入商店后，所有武器都会遭到破坏"
         }
       ],
       "unlocked_by_default": false,
@@ -27124,8 +27124,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 0,
-          "text_en": "<span class=\"g\">-20%</span> Items Price",
-          "text_zh": "<span class=\"g\">-20%</span>道具价格"
+          "text_en": "<span class=\"g\">-20</span>% Items Price",
+          "text_zh": "<span class=\"g\">-20</span>%道具价格"
         },
         {
           "key": "weapon_slot_upgrades",
@@ -27144,8 +27144,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "<span class=\"r\">-5</span> Weapon Slot",
-          "text_zh": "<span class=\"r\">-5</span>武器栏"
+          "text_en": "You start with one weapon slot",
+          "text_zh": "你开始时拥有一个武器栏"
         },
         {
           "key": "minimum_weapons_in_shop",
@@ -27154,8 +27154,8 @@
           "custom_key": "",
           "storage_method": 2,
           "effect_sign": 3,
-          "text_en": "At least <span class=\"g\">1</span> weapons in the shop",
-          "text_zh": "商店中至少出现<span class=\"g\">1</span>把武器"
+          "text_en": "Shops always sell at least one weapon",
+          "text_zh": "商店通常销售至少一把武器"
         },
         {
           "key": "next_level_xp_needed",
@@ -27164,8 +27164,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 1,
-          "text_en": "<span class=\"r\">+130%</span> XP needed for next level",
-          "text_zh": "<span class=\"r\">+130%</span>升级所需经验"
+          "text_en": "<span class=\"r\">130</span> XP required to level up",
+          "text_zh": "升级需要 <span class=\"r\">130</span> 经验值"
         }
       ],
       "unlocked_by_default": false,
@@ -27200,8 +27200,8 @@
           "custom_key": "starting_item",
           "storage_method": 1,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">1</span> Lootworm",
-          "text_zh": "<span class=\"g\">1</span>搜刮虫虫"
+          "text_en": "You start with <span class=\"g\">1</span> Lootworm",
+          "text_zh": "初始拥有<span class=\"g\">1</span>搜刮虫虫"
         },
         {
           "key": "weapon_slot",
@@ -27210,8 +27210,8 @@
           "custom_key": "",
           "storage_method": 2,
           "effect_sign": 3,
-          "text_en": "You gain a weapon slot when you level up instead of a stat upgrade (max: 0)",
-          "text_zh": "升级时不会提升属性，但会获得一个武器栏（上限：0）"
+          "text_en": "This character can't equip weapons",
+          "text_zh": "这个角色无法装备武器"
         },
         {
           "key": "stat_speed",
@@ -27236,8 +27236,8 @@
           "custom_key": "",
           "storage_method": 2,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">1</span> BEAST_MASTER_EFFECT",
-          "text_zh": "<span class=\"g\">1</span>BEAST_MASTER_EFFECT"
+          "text_en": "Pet damage also scales with Melee Damage, Ranged Damage, Elemental Damage, and Engineering",
+          "text_zh": "宠物伤害同时受到近战伤害、远程伤害、元素伤害和工程学影响"
         },
         {
           "key": "stat_luck",
@@ -27256,8 +27256,8 @@
           "custom_key": "",
           "storage_method": 2,
           "effect_sign": 3,
-          "text_en": "Boosted wanted item tag",
-          "text_zh": "增加偏好标签道具出现概率"
+          "text_en": "<span class=\"g\">1</span> BOOSTED_WANTED_ITEM_TAG",
+          "text_zh": "<span class=\"g\">1</span>BOOSTED_WANTED_ITEM_TAG"
         }
       ],
       "unlocked_by_default": false,
@@ -27416,8 +27416,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "Enemies drop <span class=\"r\">-50%</span> materials",
-          "text_zh": "敌人掉落材料<span class=\"r\">-50%</span>"
+          "text_en": "<span class=\"r\">-50</span> materials dropped from enemies",
+          "text_zh": "<span class=\"r\">-50</span>敌人掉落的材料"
         }
       ],
       "unlocked_by_default": false,
@@ -27465,8 +27465,8 @@
           "custom_key": "starting_item",
           "storage_method": 1,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">1</span> Builder's Turret",
-          "text_zh": "<span class=\"g\">1</span>建造者的炮塔"
+          "text_en": "You start with <span class=\"g\">1</span> Builder's Turret",
+          "text_zh": "初始拥有<span class=\"g\">1</span>建造者的炮塔"
         },
         {
           "key": "max_turret_count",
@@ -27475,8 +27475,8 @@
           "custom_key": "",
           "storage_method": 2,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">+1</span> Max Turret Count",
-          "text_zh": "<span class=\"g\">+1</span>最大炮塔数量"
+          "text_en": "<span class=\"g\">1</span> MAX_TURRET_COUNT",
+          "text_zh": "<span class=\"g\">1</span>MAX_TURRET_COUNT"
         },
         {
           "key": "convert_bonus_gold",
@@ -27534,8 +27534,8 @@
           "custom_key": "remove_shop_items",
           "storage_method": 3,
           "effect_sign": 3,
-          "text_en": "0 Structure Attack Speed while moving",
-          "text_zh": "移动时构建物的攻击速度0"
+          "text_en": "You can't have structures",
+          "text_zh": "你无法建造构筑物"
         },
         {
           "key": "pickup_range",
@@ -27678,8 +27678,8 @@
             "deal_dmg_on_return": false,
             "alternate_attack_type": false
           },
-          "text_en": "Projectiles have a <span class=\"g\">1</span> chance to explode on hit",
-          "text_zh": "投射物命中时有<span class=\"g\">1</span>爆炸"
+          "text_en": "You explode for <span class=\"g\">30</span> (<span class=\"g\">100%</span>) damage when you take damage",
+          "text_zh": "当你受到伤害时会爆炸，造成<span class=\"g\">30</span>（<span class=\"g\">100%</span>）伤害"
         },
         {
           "key": "weapon_slot",
@@ -27688,8 +27688,8 @@
           "custom_key": "",
           "storage_method": 2,
           "effect_sign": 3,
-          "text_en": "You gain a weapon slot when you level up instead of a stat upgrade (max: 0)",
-          "text_zh": "升级时不会提升属性，但会获得一个武器栏（上限：0）"
+          "text_en": "This character can't equip weapons",
+          "text_zh": "这个角色无法装备武器"
         }
       ],
       "unlocked_by_default": false,
@@ -27765,8 +27765,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 1,
-          "text_en": "<span class=\"r\">+200%</span> XP needed for next level",
-          "text_zh": "<span class=\"r\">+200%</span>升级所需经验"
+          "text_en": "<span class=\"r\">200</span> XP required to level up",
+          "text_zh": "升级需要 <span class=\"r\">200</span> 经验值"
         },
         {
           "key": "enemy_health",
@@ -27775,8 +27775,8 @@
           "custom_key": "stats_end_of_wave",
           "storage_method": 1,
           "effect_sign": 1,
-          "text_en": "Enemy health : <span class=\"r\">2</span>",
-          "text_zh": "敌人生命值 : <span class=\"r\">2</span>"
+          "text_en": "<span class=\"r\">2</span> Enemy health at the end of a wave",
+          "text_zh": "敌袭结束后<span class=\"r\">2</span>%敌人生命值"
         },
         {
           "key": "enemy_damage",
@@ -27785,8 +27785,8 @@
           "custom_key": "stats_end_of_wave",
           "storage_method": 1,
           "effect_sign": 1,
-          "text_en": "Enemy damage : <span class=\"r\">2</span>",
-          "text_zh": "敌人伤害 : <span class=\"r\">2</span>"
+          "text_en": "<span class=\"r\">2</span> Enemy damage at the end of a wave",
+          "text_zh": "敌袭结束后<span class=\"r\">2</span>%敌人伤害"
         }
       ],
       "unlocked_by_default": true,
@@ -27841,8 +27841,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">200%</span> bonus non-elemental damage against burning targets",
-          "text_zh": "对燃烧目标造成<span class=\"g\">200%</span>非元素伤害加成"
+          "text_en": "<span class=\"g\">200</span> damage from non elemental sources against burning targets",
+          "text_zh": "对燃烧目标造成非属性来源的<span class=\"g\">200</span>伤害"
         },
         {
           "key": "explode_on_consumable_burning",
@@ -27883,8 +27883,8 @@
             "effect_scale": 1.0,
             "is_healing": false
           },
-          "text_en": "Consumables explode for <span class=\"g\">250%</span>x5x1 (100%[Elemental Damage]) burning damage when picked up",
-          "text_zh": "捡起消耗品时，它会爆炸并造成<span class=\"g\">250%</span>x5x1（100%[元素伤害]）燃烧伤害"
+          "text_en": "Consumables explode for x burning damage when picked up",
+          "text_zh": "捡起消耗品时，它会爆炸并造成x燃烧伤害"
         },
         {
           "key": "item_scared_sausage",
@@ -27893,8 +27893,8 @@
           "custom_key": "starting_item",
           "storage_method": 1,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">1</span> Scared Sausage",
-          "text_zh": "<span class=\"g\">1</span>害怕的香肠"
+          "text_en": "You start with <span class=\"g\">1</span> Scared Sausage",
+          "text_zh": "初始拥有<span class=\"g\">1</span>害怕的香肠"
         },
         {
           "key": "enemy_health",
@@ -27903,8 +27903,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 1,
-          "text_en": "<span class=\"r\">100</span> % Enemy health",
-          "text_zh": "<span class=\"r\">100</span>%敌人生命值"
+          "text_en": "<span class=\"r\">+100</span>% Enemy health",
+          "text_zh": "<span class=\"r\">+100</span>%敌人生命值"
         },
         {
           "key": "effect_reduce_stat_gains",
@@ -28199,8 +28199,8 @@
           "custom_key": "cursed_starting_item",
           "storage_method": 1,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">1</span> Fish Hook",
-          "text_zh": "<span class=\"g\">1</span>鱼钩"
+          "text_en": "You start with <span class=\"g\">1</span> cursed Fish Hook",
+          "text_zh": "初始拥有<span class=\"g\">1</span>被诅咒的鱼钩"
         },
         {
           "key": "stat_curse",
@@ -28219,8 +28219,8 @@
           "custom_key": "stats_end_of_wave",
           "storage_method": 1,
           "effect_sign": 3,
-          "text_en": "<span class=\"r\">-10</span> Range at the end of each wave",
-          "text_zh": "每波结束时获得<span class=\"r\">-10</span>范围"
+          "text_en": "<span class=\"r\">-10</span> Range at the end of a wave",
+          "text_zh": "敌袭结束后<span class=\"r\">-10</span>范围"
         },
         {
           "key": "xp_gain",
@@ -28229,8 +28229,8 @@
           "custom_key": "stats_end_of_wave",
           "storage_method": 1,
           "effect_sign": 3,
-          "text_en": "<span class=\"r\">-5</span> XP Gain at the end of each wave",
-          "text_zh": "每波结束时获得<span class=\"r\">-5</span>获得%经验"
+          "text_en": "<span class=\"r\">-5</span> XP Gain at the end of a wave",
+          "text_zh": "敌袭结束后<span class=\"r\">-5</span>获得%经验"
         }
       ],
       "unlocked_by_default": true,
@@ -28287,8 +28287,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">6</span> Trees",
-          "text_zh": "<span class=\"g\">6</span>树木"
+          "text_en": "More trees spawn",
+          "text_zh": "生成更多树木"
         },
         {
           "key": "cryptid",
@@ -28323,8 +28323,8 @@
           "custom_key": "",
           "storage_method": 2,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">+70%</span> Dodge cap",
-          "text_zh": "<span class=\"g\">+70%</span>闪避上限"
+          "text_en": "Dodge is capped at <span class=\"g\">70</span>",
+          "text_zh": "闪避上限为<span class=\"g\">70</span>"
         },
         {
           "key": "stat_attack_speed",
@@ -28363,8 +28363,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "Enemies drop <span class=\"r\">-50%</span> materials",
-          "text_zh": "敌人掉落材料<span class=\"r\">-50%</span>"
+          "text_en": "<span class=\"r\">-50</span> materials dropped from enemies",
+          "text_zh": "<span class=\"r\">-50</span>敌人掉落的材料"
         }
       ],
       "unlocked_by_default": false,
@@ -28412,8 +28412,8 @@
           "custom_key": "starting_item",
           "storage_method": 1,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">1</span> Spyglass",
-          "text_zh": "<span class=\"g\">1</span>望远镜"
+          "text_en": "You start with <span class=\"g\">1</span> Spyglass",
+          "text_zh": "初始拥有<span class=\"g\">1</span>望远镜"
         },
         {
           "key": "extra_loot_aliens",
@@ -28422,8 +28422,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">+2</span> extra loot aliens",
-          "text_zh": "<span class=\"g\">+2</span>额外拾取外星人"
+          "text_en": "<span class=\"g\">2</span> additional loot aliens appear every wave",
+          "text_zh": "每次敌袭会多出现<span class=\"g\">2</span>个战利品外星人"
         },
         {
           "key": "stronger_loot_aliens_on_kill",
@@ -28432,8 +28432,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "Loot aliens become <span class=\"g\">8%</span> stronger on kill",
-          "text_zh": "击杀后拾取外星人增强<span class=\"g\">8%</span>"
+          "text_en": "All future loot aliens become stronger when you kill a loot alien",
+          "text_zh": "当你击杀一个战利品外星人时，所有未来的战利品外星人都会变得更强"
         },
         {
           "key": "xp_gain",
@@ -28474,8 +28474,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 1,
-          "text_en": "<span class=\"r\">25</span> % Enemy health",
-          "text_zh": "<span class=\"r\">25</span>%敌人生命值"
+          "text_en": "<span class=\"r\">+25</span>% Enemy health",
+          "text_zh": "<span class=\"r\">+25</span>%敌人生命值"
         }
       ],
       "unlocked_by_default": true,
@@ -28624,8 +28624,8 @@
           "custom_key": "convert_stats_end_of_wave",
           "storage_method": 1,
           "effect_sign": 3,
-          "text_en": "You earn <span class=\"g\">13</span> materials and XP at the end of a wave. Increases by Materials every time it activates until wave , then decreases by instead.",
-          "text_zh": "敌袭结束后获得<span class=\"g\">13</span>材料和XP。第波前，该数值每波递增材料；第波后，每波递减。"
+          "text_en": "<span class=\"g\">13</span> of your Materials are converted into at the end of a wave ( Materials = )",
+          "text_zh": "<span class=\"g\">13</span>的材料在敌袭结束后会转换为（材料=）"
         },
         {
           "key": "hp_shop",
@@ -28634,8 +28634,8 @@
           "custom_key": "",
           "storage_method": 2,
           "effect_sign": 3,
-          "text_en": "Can buy HP for <span class=\"g\">1</span> materials",
-          "text_zh": "可以花费<span class=\"g\">1</span>材料购买生命值"
+          "text_en": "You buy items using Max HP instead of materials",
+          "text_zh": "使用最大生命值替代材料购买道具"
         }
       ],
       "unlocked_by_default": false,
@@ -28740,8 +28740,8 @@
             "max_stacks": 1,
             "duration_secs": 3
           },
-          "text_en": "Enemies take <span class=\"g\">300%</span> more Ranged Damage damage",
-          "text_zh": "敌人受到<span class=\"g\">300%</span>更多远程伤害伤害"
+          "text_en": "Enemies take <span class=\"g\">+300</span> more damage for Ranged Damage seconds when hit by <span class=\"g\">3</span>",
+          "text_zh": "敌人在被<span class=\"g\">3</span>命中时，会额外承受<span class=\"g\">+300</span>伤害，持续远程伤害秒"
         },
         {
           "key": "stat_ranged_damage",
@@ -28760,8 +28760,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 1,
-          "text_en": "<span class=\"r\">250</span> % Enemy health",
-          "text_zh": "<span class=\"r\">250</span>%敌人生命值"
+          "text_en": "<span class=\"r\">+250</span>% Enemy health",
+          "text_zh": "<span class=\"r\">+250</span>%敌人生命值"
         }
       ],
       "unlocked_by_default": false,
@@ -28932,8 +28932,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">3</span> ENEMY_FRUIT_DROPS",
-          "text_zh": "<span class=\"g\">3</span>ENEMY_FRUIT_DROPS"
+          "text_en": "Enemies have a higher chance of dropping fruits",
+          "text_zh": "敌人掉落水果的几率更高"
         },
         {
           "key": "stat_luck",
@@ -29054,8 +29054,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 1,
-          "text_en": "Cannot equip ranged weapons",
-          "text_zh": "无法装备远程武器"
+          "text_en": "You can't equip ranged weapons",
+          "text_zh": "无法装备远战武器"
         },
         {
           "key": "stat_dodge",
@@ -29155,8 +29155,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">1</span> GROUP_STRUCTURES",
-          "text_zh": "<span class=\"g\">1</span>GROUP_STRUCTURES"
+          "text_en": "Structures spawn close to each other",
+          "text_zh": "构筑物会生成在彼此附近"
         },
         {
           "key": "effect_reduce_stat_gains",
@@ -29218,8 +29218,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 0,
-          "text_en": "<span class=\"g\">-25%</span> Items Price",
-          "text_zh": "<span class=\"g\">-25%</span>道具价格"
+          "text_en": "<span class=\"g\">-25</span>% Items Price",
+          "text_zh": "<span class=\"g\">-25</span>%道具价格"
         },
         {
           "key": "effect_increase_stat_gains",
@@ -29239,8 +29239,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "Recycling yields <span class=\"g\">25%</span> more materials",
-          "text_zh": "回收获得<span class=\"g\">25%</span>更多材料"
+          "text_en": "Gain <span class=\"g\">25</span> more materials from recycling items",
+          "text_zh": "回收道具时额外获得<span class=\"g\">25</span>个材料"
         },
         {
           "key": "gain_pct_gold_start_wave",
@@ -29249,8 +29249,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "Gain <span class=\"r\">-100%</span> gold at the start of each wave",
-          "text_zh": "每波开始时获得<span class=\"r\">-100%</span>现金"
+          "text_en": "<span class=\"r\">-100</span> of your materials at the start of waves",
+          "text_zh": "敌袭开始时<span class=\"r\">-100</span>材料"
         },
         {
           "key": "EFFECT_REDUCE_STAT_GAINS",
@@ -29312,8 +29312,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">12</span> Trees",
-          "text_zh": "<span class=\"g\">12</span>树木"
+          "text_en": "More trees spawn",
+          "text_zh": "生成更多树木"
         },
         {
           "key": "item_lumberjack_shirt",
@@ -29322,8 +29322,8 @@
           "custom_key": "starting_item",
           "storage_method": 1,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">1</span> Lumberjack Shirt",
-          "text_zh": "<span class=\"g\">1</span>伐木工人衬衫"
+          "text_en": "You start with <span class=\"g\">1</span> Lumberjack Shirt",
+          "text_zh": "初始拥有<span class=\"g\">1</span>伐木工人衬衫"
         },
         {
           "key": "stat_speed",
@@ -29352,8 +29352,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 2,
-          "text_en": "+33% Map Size",
-          "text_zh": "+33%地图尺寸"
+          "text_en": "+33 Map Size",
+          "text_zh": "+33 地图尺寸"
         },
         {
           "key": "number_of_enemies",
@@ -29362,8 +29362,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 2,
-          "text_en": "+25% Enemies",
-          "text_zh": "+25%敌人"
+          "text_en": "+25 Enemies",
+          "text_zh": "+25 敌人"
         },
         {
           "key": "enemy_gold_drops",
@@ -29372,8 +29372,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "Enemies drop <span class=\"r\">-50%</span> materials",
-          "text_zh": "敌人掉落材料<span class=\"r\">-50%</span>"
+          "text_en": "<span class=\"r\">-50</span> materials dropped from enemies",
+          "text_zh": "<span class=\"r\">-50</span>敌人掉落的材料"
         },
         {
           "key": "enemy_speed",
@@ -29382,8 +29382,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 1,
-          "text_en": "<span class=\"r\">10</span> % Enemy Speed",
-          "text_zh": "<span class=\"r\">10</span>%敌人速度"
+          "text_en": "<span class=\"r\">+10</span>% Enemy Speed",
+          "text_zh": "<span class=\"r\">+10</span>%敌人速度"
         },
         {
           "key": "stat_percent_damage",
@@ -29402,8 +29402,8 @@
           "custom_key": "",
           "storage_method": 2,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">1</span> trees spawn at start of wave",
-          "text_zh": "每波开始时生成<span class=\"g\">1</span>棵树"
+          "text_en": "<span class=\"g\">1</span> TREES_START_WAVE",
+          "text_zh": "<span class=\"g\">1</span>TREES_START_WAVE"
         }
       ],
       "unlocked_by_default": false,
@@ -29461,8 +29461,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">3%</span> harvesting growth",
-          "text_zh": "<span class=\"g\">3%</span>收获成长"
+          "text_en": "Harvesting increases by an additional <span class=\"g\">3</span> at the end of a wave",
+          "text_zh": "敌袭结束时，收获提高<span class=\"g\">3</span>"
         },
         {
           "key": "stat_harvesting",
@@ -29481,8 +29481,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "Enemies drop <span class=\"r\">-50%</span> materials",
-          "text_zh": "敌人掉落材料<span class=\"r\">-50%</span>"
+          "text_en": "<span class=\"r\">-50</span> materials dropped",
+          "text_zh": "掉落<span class=\"r\">-50</span>材料"
         }
       ],
       "unlocked_by_default": false,
@@ -29553,8 +29553,8 @@
           "custom_key": "guaranteed_shop_items",
           "storage_method": 1,
           "effect_sign": 0,
-          "text_en": "<span class=\"g\">1</span> Bait",
-          "text_zh": "<span class=\"g\">1</span>诱饵"
+          "text_en": "Shops always sell a <span class=\"g\">1</span>",
+          "text_zh": "商店通常销售一件<span class=\"g\">1</span>"
         },
         {
           "key": "item_bait",
@@ -29589,8 +29589,8 @@
           "custom_key": "",
           "storage_method": 2,
           "effect_sign": 3,
-          "text_en": "Upgraded baits",
-          "text_zh": "升级的诱饵"
+          "text_en": "Baits make some special enemies spawn throughout all future waves",
+          "text_zh": "诱饵使一些特殊的敌人在所有未来的浪潮中产生"
         },
         {
           "key": "enemy_gold_drops",
@@ -29599,8 +29599,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "Enemies drop <span class=\"r\">-50%</span> materials",
-          "text_zh": "敌人掉落材料<span class=\"r\">-50%</span>"
+          "text_en": "<span class=\"r\">-50</span> materials dropped from enemies",
+          "text_zh": "<span class=\"r\">-50</span>敌人掉落的材料"
         }
       ],
       "unlocked_by_default": false,
@@ -29648,8 +29648,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "Item theft spawns random elite",
-          "text_zh": "道具被偷走时随机生成精英敌人"
+          "text_en": "Stealing from the shop can spawn an elite",
+          "text_zh": "从商店偷窃会生成精英怪"
         },
         {
           "key": "stronger_elites_on_kill",
@@ -29658,8 +29658,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "Enemies become <span class=\"g\">15%</span> stronger after killing an elite",
-          "text_zh": "击杀精英后敌人增强<span class=\"g\">15%</span>"
+          "text_en": "All future elites and bosses become stronger when you kill an elite or a boss",
+          "text_zh": "当你击杀一个精英怪或头目时，所有未来的精英怪和头目都会变更强"
         },
         {
           "key": "items_price",
@@ -29668,8 +29668,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 1,
-          "text_en": "<span class=\"r\">+20%</span> Items Price",
-          "text_zh": "<span class=\"r\">+20%</span>道具价格"
+          "text_en": "<span class=\"r\">+20</span>% Items Price",
+          "text_zh": "<span class=\"r\">+20</span>%道具价格"
         },
         {
           "key": "disable_item_locking",
@@ -29678,8 +29678,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">1</span> DISABLE_ITEM_LOCKING",
-          "text_zh": "<span class=\"g\">1</span>DISABLE_ITEM_LOCKING"
+          "text_en": "Can't lock items",
+          "text_zh": "无法锁定道具"
         },
         {
           "key": "lock",
@@ -29783,8 +29783,8 @@
           "custom_key": "",
           "storage_method": 2,
           "effect_sign": 1,
-          "text_en": "Max <span class=\"r\">3</span> ranged weapons",
-          "text_zh": "最多<span class=\"r\">3</span>把远程武器"
+          "text_en": "<span class=\"r\">3</span> MAX_RANGED_WEAPONS",
+          "text_zh": "<span class=\"r\">3</span>MAX_RANGED_WEAPONS"
         }
       ],
       "unlocked_by_default": false,
@@ -29848,8 +29848,8 @@
           "custom_key": "",
           "storage_method": 2,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">+90%</span> Dodge cap",
-          "text_zh": "<span class=\"g\">+90%</span>闪避上限"
+          "text_en": "Dodge is capped at <span class=\"g\">90</span>",
+          "text_zh": "闪避上限为<span class=\"g\">90</span>"
         },
         {
           "key": "stat_armor",
@@ -29931,8 +29931,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 1,
-          "text_en": "Cannot equip ranged weapons",
-          "text_zh": "无法装备远程武器"
+          "text_en": "You can't equip ranged weapons",
+          "text_zh": "无法装备远战武器"
         },
         {
           "key": "stat_attack_speed",
@@ -30040,8 +30040,8 @@
             "effect_scale": 1.0,
             "is_healing": false
           },
-          "text_en": "Consumables explode for <span class=\"g\">1</span> damage",
-          "text_zh": "消耗品使用后爆炸造成<span class=\"g\">1</span>伤害"
+          "text_en": "Consumables have a <span class=\"g\">100%</span> chance to explode for <span class=\"g\">10</span> (<span class=\"g\">100%</span>) damage when picked up",
+          "text_zh": "当捡起消耗品时有<span class=\"g\">100%</span>概率爆炸，造成<span class=\"g\">10</span>（<span class=\"g\">100%</span>）伤害"
         },
         {
           "key": "items_price",
@@ -30050,8 +30050,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 1,
-          "text_en": "<span class=\"r\">+25%</span> Items Price",
-          "text_zh": "<span class=\"r\">+25%</span>道具价格"
+          "text_en": "<span class=\"r\">+25</span>% Items Price",
+          "text_zh": "<span class=\"r\">+25</span>%道具价格"
         },
         {
           "key": "xp_gain",
@@ -30161,8 +30161,8 @@
           "custom_key": "stats_below_half_health",
           "storage_method": 1,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">+40</span> % Attack Speed",
-          "text_zh": "<span class=\"g\">+40</span>%攻击速度"
+          "text_en": "<span class=\"g\">+40</span> % Attack Speed when you have less than 50% health",
+          "text_zh": "当生命值低于50%时有<span class=\"g\">+40</span>%攻击速度"
         },
         {
           "key": "stat_speed",
@@ -30171,8 +30171,8 @@
           "custom_key": "stats_below_half_health",
           "storage_method": 1,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">+20</span> % Speed",
-          "text_zh": "<span class=\"g\">+20</span>%速度"
+          "text_en": "<span class=\"g\">+20</span> % Speed when you have less than 50% health",
+          "text_zh": "当生命值低于50%时有<span class=\"g\">+20</span>%速度"
         },
         {
           "key": "no_heal",
@@ -30181,8 +30181,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 2,
-          "text_en": "Cannot heal by any means",
-          "text_zh": "无法通过任何方式恢复生命值"
+          "text_en": "You can’t heal in any way",
+          "text_zh": "你无法治疗"
         }
       ],
       "unlocked_by_default": false,
@@ -30272,8 +30272,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "Enemies drop <span class=\"r\">-50%</span> materials",
-          "text_zh": "敌人掉落材料<span class=\"r\">-50%</span>"
+          "text_en": "<span class=\"r\">-50</span> materials dropped",
+          "text_zh": "掉落<span class=\"r\">-50</span>材料"
         }
       ],
       "unlocked_by_default": false,
@@ -30420,8 +30420,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">125</span> damage against bosses and elites",
-          "text_zh": "对头目和精英怪造成<span class=\"g\">125</span>伤害"
+          "text_en": "<span class=\"g\">+125</span> damage against bosses and elites",
+          "text_zh": "对头目和精英怪造成<span class=\"g\">+125</span>伤害"
         },
         {
           "key": "gold_drops",
@@ -30430,8 +30430,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "Enemies drop <span class=\"g\">200%</span> materials",
-          "text_zh": "敌人掉落材料<span class=\"g\">200%</span>"
+          "text_en": "<span class=\"g\">200</span> materials dropped",
+          "text_zh": "掉落<span class=\"g\">200</span>材料"
         },
         {
           "key": "number_of_enemies",
@@ -30440,8 +30440,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 2,
-          "text_en": "-70% Enemies",
-          "text_zh": "-70%敌人"
+          "text_en": "-70 Enemies",
+          "text_zh": "-70 敌人"
         },
         {
           "key": "enemy_health",
@@ -30450,8 +30450,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 1,
-          "text_en": "<span class=\"r\">175</span> % Enemy health",
-          "text_zh": "<span class=\"r\">175</span>%敌人生命值"
+          "text_en": "<span class=\"r\">+175</span>% Enemy health",
+          "text_zh": "<span class=\"r\">+175</span>%敌人生命值"
         },
         {
           "key": "enemy_damage",
@@ -30460,8 +30460,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 1,
-          "text_en": "<span class=\"r\">35</span> % Enemy damage",
-          "text_zh": "<span class=\"r\">35</span>%敌人伤害"
+          "text_en": "<span class=\"r\">+35</span>% Enemy damage",
+          "text_zh": "<span class=\"r\">+35</span>%敌人伤害"
         }
       ],
       "unlocked_by_default": false,
@@ -30663,8 +30663,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 1,
-          "text_en": "Cannot equip ranged weapons",
-          "text_zh": "无法装备远程武器"
+          "text_en": "You can't equip ranged weapons",
+          "text_zh": "无法装备远战武器"
         },
         {
           "key": "min_weapon_tier",
@@ -30673,8 +30673,8 @@
           "custom_key": "",
           "storage_method": 2,
           "effect_sign": 1,
-          "text_en": "<span class=\"r\">+1</span> Min Weapon Tier",
-          "text_zh": "<span class=\"r\">+1</span>最低武器等级"
+          "text_en": "You can only equip tier <span class=\"r\">1</span> weapons or above",
+          "text_zh": "你仅能够装备<span class=\"r\">1</span>级别或以上的武器"
         },
         {
           "key": "effect_reduce_stat_gains",
@@ -30773,8 +30773,8 @@
           "extra": {
             "chance": 100
           },
-          "text_en": "<span class=\"g\">100%</span> chance to deal <span class=\"g\">1</span> (<span class=\"g\">100%[Max HP]</span>) damage to a random enemy when you heal",
-          "text_zh": "在治疗时有<span class=\"g\">100%</span>概率对随机1名敌人造成<span class=\"g\">1</span>（<span class=\"g\">100%[最大生命值]</span>）伤害"
+          "text_en": "<span class=\"g\">100%</span> chance to deal <span class=\"g\">1</span> (<span class=\"g\">100%<span class=\"ic\" data-ic=\"max_hp\"></span></span>) damage to a random enemy when you heal",
+          "text_zh": "在治疗时有<span class=\"g\">100%</span>概率对随机1名敌人造成<span class=\"g\">1</span>（<span class=\"g\">100%<span class=\"ic\" data-ic=\"max_hp\"></span></span>）伤害"
         },
         {
           "key": "effect_reduce_stat_gains",
@@ -30852,8 +30852,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 2,
-          "text_en": "+50% Enemies",
-          "text_zh": "+50%敌人"
+          "text_en": "+50 Enemies",
+          "text_zh": "+50 敌人"
         },
         {
           "key": "stat_harvesting",
@@ -30862,8 +30862,8 @@
           "custom_key": "stats_end_of_wave",
           "storage_method": 1,
           "effect_sign": 3,
-          "text_en": "<span class=\"r\">-3</span> Harvesting at the end of each wave",
-          "text_zh": "每波结束时获得<span class=\"r\">-3</span>收获"
+          "text_en": "<span class=\"r\">-3</span> Harvesting at the end of a wave",
+          "text_zh": "敌袭结束后<span class=\"r\">-3</span>收获"
         }
       ],
       "unlocked_by_default": false,
@@ -30934,8 +30934,8 @@
           "extra": {
             "chance": 75
           },
-          "text_en": "<span class=\"g\">75%</span> chance to deal <span class=\"g\">1</span> (<span class=\"g\">15%[Luck]</span>) damage to a random enemy when you pick up a material",
-          "text_zh": "拾取材料时有<span class=\"g\">75%</span>概率对随机1名敌人造成<span class=\"g\">1</span>（<span class=\"g\">15%[幸运]</span>）伤害"
+          "text_en": "<span class=\"g\">75%</span> chance to deal <span class=\"g\">1</span> (<span class=\"g\">15%<span class=\"ic\" data-ic=\"luck\"></span></span>) damage to a random enemy when you pick up a material",
+          "text_zh": "拾取材料时有<span class=\"g\">75%</span>概率对随机1名敌人造成<span class=\"g\">1</span>（<span class=\"g\">15%<span class=\"ic\" data-ic=\"luck\"></span></span>）伤害"
         },
         {
           "key": "stat_attack_speed",
@@ -31014,8 +31014,8 @@
           "custom_key": "starting_item",
           "storage_method": 1,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">1</span> Snake",
-          "text_zh": "<span class=\"g\">1</span>蛇"
+          "text_en": "You start with <span class=\"g\">1</span> Snake",
+          "text_zh": "初始拥有<span class=\"g\">1</span>蛇"
         },
         {
           "key": "item_scared_sausage",
@@ -31024,8 +31024,8 @@
           "custom_key": "starting_item",
           "storage_method": 1,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">1</span> Scared Sausage",
-          "text_zh": "<span class=\"g\">1</span>害怕的香肠"
+          "text_en": "You start with <span class=\"g\">1</span> Scared Sausage",
+          "text_zh": "初始拥有<span class=\"g\">1</span>害怕的香肠"
         },
         {
           "key": "effect_reduce_stat_gains",
@@ -31218,8 +31218,8 @@
           "custom_key": "",
           "storage_method": 2,
           "effect_sign": 3,
-          "text_en": "You gain a weapon slot when you level up instead of a stat upgrade (max: <span class=\"g\">12</span>)",
-          "text_zh": "升级时不会提升属性，但会获得一个武器栏（上限：<span class=\"g\">12</span>）"
+          "text_en": "You can equip up to <span class=\"g\">12</span> weapons at a time",
+          "text_zh": "同时能装备<span class=\"g\">12</span>种武器"
         },
         {
           "key": "stat_percent_damage",
@@ -31277,8 +31277,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 0,
-          "text_en": "<span class=\"g\">-66%</span> XP needed for next level",
-          "text_zh": "<span class=\"g\">-66%</span>升级所需经验"
+          "text_en": "<span class=\"g\">-66</span> XP required to level up",
+          "text_zh": "升级需要 <span class=\"g\">-66</span> 经验值"
         },
         {
           "key": "items_price",
@@ -31287,8 +31287,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 1,
-          "text_en": "<span class=\"r\">+50%</span> Items Price",
-          "text_zh": "<span class=\"r\">+50%</span>道具价格"
+          "text_en": "<span class=\"r\">+50</span>% Items Price",
+          "text_zh": "<span class=\"r\">+50</span>%道具价格"
         }
       ],
       "unlocked_by_default": false,
@@ -31364,8 +31364,8 @@
             "deal_dmg_on_return": false,
             "alternate_attack_type": false
           },
-          "text_en": "Enemies taking double their max health as damage explode for <span class=\"g\">10</span> (<span class=\"g\">50%[Max HP]+-50%[% Attack Speed]</span>) damage",
-          "text_zh": "敌人受到双倍于其最大生命值的伤害时会爆炸，造成<span class=\"g\">10</span>（<span class=\"g\">50%[最大生命值]+-50%[%攻击速度]</span>）伤害"
+          "text_en": "Enemies taking double their max health as damage explode for <span class=\"g\">10</span> (<span class=\"g\">50%<span class=\"ic\" data-ic=\"max_hp\"></span>+-50%<span class=\"ic\" data-ic=\"attack_speed\"></span></span>) damage",
+          "text_zh": "敌人受到双倍于其最大生命值的伤害时会爆炸，造成<span class=\"g\">10</span>（<span class=\"g\">50%<span class=\"ic\" data-ic=\"max_hp\"></span>+-50%<span class=\"ic\" data-ic=\"attack_speed\"></span></span>）伤害"
         },
         {
           "key": "stat_melee_damage",
@@ -31384,8 +31384,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "Cannot equip ranged weapons",
-          "text_zh": "无法装备远程武器"
+          "text_en": "You can't equip ranged weapons",
+          "text_zh": "无法装备远战武器"
         },
         {
           "key": "stat_attack_speed",
@@ -31451,7 +31451,7 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 0,
-          "text_en": "<span class=\"g\">-25</span> % Enemy Speed",
+          "text_en": "<span class=\"g\">-25</span>% Enemy Speed",
           "text_zh": "<span class=\"g\">-25</span>%敌人速度"
         },
         {
@@ -31471,8 +31471,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 2,
-          "text_en": "-33% Map Size",
-          "text_zh": "-33%地图尺寸"
+          "text_en": "-33 Map Size",
+          "text_zh": "-33 地图尺寸"
         },
         {
           "key": "number_of_enemies",
@@ -31481,8 +31481,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 2,
-          "text_en": "-10% Enemies",
-          "text_zh": "-10%敌人"
+          "text_en": "-10 Enemies",
+          "text_zh": "-10 敌人"
         },
         {
           "key": "stat_speed",
@@ -31566,8 +31566,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "<span class=\"r\">-5</span> Weapon Slot",
-          "text_zh": "<span class=\"r\">-5</span>武器栏"
+          "text_en": "You can only equip one weapon at a time",
+          "text_zh": "同时仅能装备1种武器"
         }
       ],
       "unlocked_by_default": false,
@@ -31617,8 +31617,8 @@
           "custom_key": "starting_item",
           "storage_method": 1,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">1</span> Lumberjack Shirt",
-          "text_zh": "<span class=\"g\">1</span>伐木工人衬衫"
+          "text_en": "You start with <span class=\"g\">1</span> Lumberjack Shirt",
+          "text_zh": "初始拥有<span class=\"g\">1</span>伐木工人衬衫"
         },
         {
           "key": "stat_percent_damage",
@@ -31714,7 +31714,7 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 1,
-          "text_en": "Cannot equip melee weapons",
+          "text_en": "You can't equip melee weapons",
           "text_zh": "无法装备近战武器"
         },
         {
@@ -31808,7 +31808,7 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 1,
-          "text_en": "Cannot equip melee weapons",
+          "text_en": "You can't equip melee weapons",
           "text_zh": "无法装备近战武器"
         },
         {
@@ -31944,8 +31944,8 @@
           "custom_key": "stats_end_of_wave",
           "storage_method": 1,
           "effect_sign": 5,
-          "text_en": "<span class=\"p\">+1</span> Curse at the end of each wave",
-          "text_zh": "每波结束时获得<span class=\"p\">+1</span>诅咒"
+          "text_en": "<span class=\"p\">+1</span> Curse at the end of a wave",
+          "text_zh": "敌袭结束后<span class=\"p\">+1</span>诅咒"
         }
       ],
       "unlocked_by_default": false,
@@ -31989,8 +31989,8 @@
           "custom_key": "bonus_weapon_class_damage_against_cursed_enemies",
           "storage_method": 1,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">200</span> Naval",
-          "text_zh": "<span class=\"g\">200</span>海军"
+          "text_en": "<span class=\"g\">200</span> damage with Naval weapons against cursed enemies",
+          "text_zh": "使用海军武器对被诅咒的敌人造成<span class=\"g\">200</span>伤害"
         },
         {
           "key": "stat_curse",
@@ -32019,8 +32019,8 @@
           "custom_key": "",
           "storage_method": 2,
           "effect_sign": 1,
-          "text_en": "<span class=\"r\">+1</span> Min Weapon Tier",
-          "text_zh": "<span class=\"r\">+1</span>最低武器等级"
+          "text_en": "You can only equip tier <span class=\"r\">1</span> weapons or above",
+          "text_zh": "你仅能够装备<span class=\"r\">1</span>级别或以上的武器"
         },
         {
           "key": "dodge_cap",
@@ -32029,8 +32029,8 @@
           "custom_key": "",
           "storage_method": 2,
           "effect_sign": 1,
-          "text_en": "<span class=\"r\">+20%</span> Dodge cap",
-          "text_zh": "<span class=\"r\">+20%</span>闪避上限"
+          "text_en": "Dodge is capped at <span class=\"r\">20</span>",
+          "text_zh": "闪避上限为<span class=\"r\">20</span>"
         },
         {
           "key": "effect_reduce_stat_gains",
@@ -32112,8 +32112,8 @@
           "custom_key": "starting_item",
           "storage_method": 1,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">1</span> Piggy Bank",
-          "text_zh": "<span class=\"g\">1</span>猪猪存钱罐"
+          "text_en": "You start with <span class=\"g\">1</span> Piggy Bank",
+          "text_zh": "初始拥有<span class=\"g\">1</span>猪猪存钱罐"
         },
         {
           "key": "items_price",
@@ -32122,8 +32122,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 1,
-          "text_en": "<span class=\"r\">+50%</span> Items Price",
-          "text_zh": "<span class=\"r\">+50%</span>道具价格"
+          "text_en": "<span class=\"r\">+50</span>% Items Price",
+          "text_zh": "<span class=\"r\">+50</span>%道具价格"
         }
       ],
       "unlocked_by_default": false,
@@ -32300,8 +32300,8 @@
           "custom_key": "",
           "storage_method": 2,
           "effect_sign": 3,
-          "text_en": "Can attack while moving",
-          "text_zh": "可以在移动时攻击"
+          "text_en": "You can’t attack while moving",
+          "text_zh": "移动时无法攻击"
         }
       ],
       "unlocked_by_default": false,
@@ -32372,8 +32372,8 @@
           "custom_key": "temp_stats_while_not_moving",
           "storage_method": 1,
           "effect_sign": 3,
-          "text_en": "<span class=\"r\">-100</span> Armor while not moving",
-          "text_zh": "静止时 <span class=\"r\">-100</span>护甲"
+          "text_en": "<span class=\"r\">-100</span> Armor while standing still",
+          "text_zh": "当站立不动时<span class=\"r\">-100</span>护甲"
         },
         {
           "key": "stat_armor",
@@ -32454,8 +32454,8 @@
           "custom_key": "temp_stats_while_moving",
           "storage_method": 1,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">+40</span> % Damage",
-          "text_zh": "<span class=\"g\">+40</span>%伤害"
+          "text_en": "<span class=\"g\">+40</span> % Damage while moving",
+          "text_zh": "当移动时<span class=\"g\">+40</span>%伤害"
         },
         {
           "key": "stat_attack_speed",
@@ -32464,8 +32464,8 @@
           "custom_key": "temp_stats_while_moving",
           "storage_method": 1,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">+40</span> % Attack Speed",
-          "text_zh": "<span class=\"g\">+40</span>%攻击速度"
+          "text_en": "<span class=\"g\">+40</span> % Attack Speed while moving",
+          "text_zh": "当移动时<span class=\"g\">+40</span>%攻击速度"
         },
         {
           "key": "stat_armor",
@@ -32490,8 +32490,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "Enemies drop <span class=\"r\">-50%</span> materials",
-          "text_zh": "敌人掉落材料<span class=\"r\">-50%</span>"
+          "text_en": "<span class=\"r\">-50</span> materials dropped",
+          "text_zh": "掉落<span class=\"r\">-50</span>材料"
         },
         {
           "key": "stat_percent_damage",
@@ -32574,8 +32574,8 @@
           "custom_key": "starting_item",
           "storage_method": 1,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">2</span> Turret",
-          "text_zh": "<span class=\"g\">2</span>炮塔"
+          "text_en": "You start with <span class=\"g\">2</span> Turret",
+          "text_zh": "初始拥有<span class=\"g\">2</span>炮塔"
         },
         {
           "key": "structure_attack_speed",
@@ -32590,8 +32590,8 @@
           "perm_stats_only": true,
           "stat_scaled": "stat_elemental_damage",
           "nb_stat_scaled": 1,
-          "text_en": "<span class=\"g\">+5%</span> Structure Attack Speed",
-          "text_zh": "<span class=\"g\">+5%</span>构建物的攻击速度"
+          "text_en": "<span class=\"g\">5</span> Structure attack speed for every permanent <span class=\"g\">1</span> you have",
+          "text_zh": "每永久持有<span class=\"g\">1</span>会<span class=\"g\">5</span>%构建物的攻击速度"
         },
         {
           "key": "stat_elemental_damage",
@@ -32616,8 +32616,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 1,
-          "text_en": "<span class=\"r\">+75%</span> XP needed for next level",
-          "text_zh": "<span class=\"r\">+75%</span>升级所需经验"
+          "text_en": "<span class=\"r\">75</span> XP required to level up",
+          "text_zh": "升级需要 <span class=\"r\">75</span> 经验值"
         },
         {
           "key": "effect_reduce_stat_gains",
@@ -32689,8 +32689,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "All weapons count for set bonuses",
-          "text_zh": "所有武器计入套装加成"
+          "text_en": "Equipped weapons always contribute to the class bonuses of other equipped weapons",
+          "text_zh": "装备的武器总是会对其他装备武器提供类别加成"
         },
         {
           "key": "no_duplicate_weapons",
@@ -32699,8 +32699,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "Cannot have duplicate weapons",
-          "text_zh": "无法拥有重复武器"
+          "text_en": "You can't equip two of the same weapon at the same time",
+          "text_zh": "无法同时装备两件相同的武器"
         },
         {
           "key": "stat_armor",
@@ -33012,8 +33012,8 @@
           "custom_key": "",
           "storage_method": 2,
           "effect_sign": 1,
-          "text_en": "<span class=\"r\">+1</span> Max Weapon Tier",
-          "text_zh": "<span class=\"r\">+1</span>最高武器等级"
+          "text_en": "You can’t equip weapons above tier <span class=\"r\">1</span>",
+          "text_zh": "你无法装备<span class=\"r\">1</span>级别以上的武器"
         }
       ],
       "unlocked_by_default": false,
@@ -33118,8 +33118,8 @@
           "custom_key": "DIE_IN_ONE_HIT",
           "storage_method": 2,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">1</span> DIE_IN_ONE_HIT",
-          "text_zh": "<span class=\"g\">1</span>DIE_IN_ONE_HIT"
+          "text_en": "This character dies in One Hit",
+          "text_zh": "这个角色受到一次伤害就会死亡"
         },
         {
           "key": "item_tardigrade",
@@ -33128,8 +33128,8 @@
           "custom_key": "starting_item",
           "storage_method": 1,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">1</span> Tardigrade",
-          "text_zh": "<span class=\"g\">1</span>水熊虫"
+          "text_en": "You start with <span class=\"g\">1</span> Tardigrade",
+          "text_zh": "初始拥有<span class=\"g\">1</span>水熊虫"
         },
         {
           "key": "stat_speed",
@@ -33158,8 +33158,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "0 ",
-          "text_zh": "0"
+          "text_en": "Shop items and crates are cleared of items focusing on Max HP, HP Regeneration, % Life Steal and Armor",
+          "text_zh": "商店物品和箱子中不会出现任何最大生命值、生命再生、生命窃取和护甲物品"
         }
       ],
       "unlocked_by_default": false,
@@ -33455,6 +33455,10 @@
     "ITEM_ALIEN_TONGUE": {
       "en": "Alien Tongue",
       "zh": "异形之舌"
+    },
+    "EFFECT_EXPLODE": {
+      "en": "Projectiles explode on hit",
+      "zh": "投射物命中时爆炸"
     },
     "EFFECT_TIER_IV_WEAPON_BONUS": {
       "en": "{0} {1} for every Tier IV weapon you have [{2}]",
@@ -33932,6 +33936,10 @@
       "en": "Jack",
       "zh": "杰克"
     },
+    "EFFECT_WHISTLE_SOUND": {
+      "en": "Whistles when a loot alien spawns",
+      "zh": "战利品外星人生成时会有哨响"
+    },
     "ITEM_LEMONADE": {
       "en": "Lemonade",
       "zh": "柠檬水"
@@ -34115,6 +34123,10 @@
     "EFFECT_PROJECTILE": {
       "en": "{0} projectile",
       "zh": "{0}投射物"
+    },
+    "EFFECT_ENEMY_PERCENT_DAMAGE_TAKEN": {
+      "en": "Enemies take {0} more damage for {1} seconds when hit by {2}",
+      "zh": "敌人在被{2}命中时，会额外承受{0}伤害，持续{1}秒"
     },
     "EFFECT_GAIN_STAT_FOR_EVERY_STAT": {
       "en": "{0} {1} for every {2} {3} you have [{4}]",
@@ -34672,6 +34684,10 @@
       "en": "{0} chance to deal {1} ({2}) damage to an enemy when dodging their attack",
       "zh": "在躲避敌人攻击时有{0}概率对随机1名敌人造成{1}（{2}）伤害"
     },
+    "EFFECT_PET_SCAPEGOAT_CURSED": {
+      "en": "Spawns a Scapegoat pet that moves around the map and gets targeted by enemies instead of the player. When it dies, the player can revive it by standing next to it. When cursed, it has more health and revives faster",
+      "zh": "生成一个替罪羔羊宠物，绕着地图移动并取代玩家被敌人攻击。当其死亡时，玩家可以站在它身边将其复活。被诅咒时羔羊有更多生命值且复活速度更快"
+    },
     "ITEM_FRESH_MEAT": {
       "en": "Fresh Meat",
       "zh": "鲜肉"
@@ -34951,6 +34967,10 @@
     "ITEM_DOC_MOTH": {
       "en": "Doc Moth",
       "zh": "蛾医生"
+    },
+    "EFFECT_PET_DOC_MOTH_CURSED": {
+      "en": "Spawns a Doc Moth pet that flies around the map. When the player is inside its aura, their HP regeneration and Life Steal are doubled. The aura size is bigger",
+      "zh": "生成一个蛾医生宠物，绕着地图飞行。当玩家处于其光环内时，玩家的生命再生和生命窃取属性翻倍。光环范围变大"
     },
     "CHARACTER_BABY": {
       "en": "Baby",
@@ -35663,6 +35683,354 @@
     "EFFECT_EXTRA_ITEM_IN_CRATE": {
       "en": "{0} chance of finding an extra {1} in a crate",
       "zh": "在箱子中有{0}的几率发现额外的{1}"
+    },
+    "EFFECT_ADDITIONAL_WEAPON_BONUS": {
+      "en": "{0} {1} for every weapon you have [{2}]",
+      "zh": "每持有1件武器{0}{1} [{2}]"
+    },
+    "EFFECT_ALL_WEAPONS_COUNT_FOR_SETS": {
+      "en": "Equipped weapons always contribute to the class bonuses of other equipped weapons",
+      "zh": "装备的武器总是会对其他装备武器提供类别加成"
+    },
+    "EFFECT_BONUS_CURRENT_HEALTH_DAMAGE": {
+      "en": "Deals {0} of an enemy’s current health as bonus damage ({2} for bosses and elites)",
+      "zh": "造成敌人当前生命值的{0}以作为奖励伤害（头目和精英怪的{2}）"
+    },
+    "EFFECT_BONUS_NON_ELEMENTAL_DAMAGE_AGAINST_BURNING_TARGETS": {
+      "en": "{0} damage from non elemental sources against burning targets",
+      "zh": "对燃烧目标造成非属性来源的{0}伤害"
+    },
+    "EFFECT_BONUS_WEAPON_CLASS_DAMAGE_AGAINST_CURSED_ENEMIES": {
+      "en": "{0} damage with {1} weapons against cursed enemies",
+      "zh": "使用{1}武器对被诅咒的敌人造成{0}伤害"
+    },
+    "EFFECT_BOUNCE_ON_CRIT": {
+      "en": "Bounces up to {0} times on critical hit",
+      "zh": "暴击时最多能反弹{0}次"
+    },
+    "EFFECT_BOUNCING": {
+      "en": "Your projectiles gain {0} bounce",
+      "zh": "你的投射物获得{0}次反弹"
+    },
+    "EFFECT_BREAK_ON_HIT": {
+      "en": "Has a {0} chance to break and drop {2} materials on hit",
+      "zh": "命中时武器有{0}几率损坏并掉落{2}材料"
+    },
+    "EFFECT_BUILDER_TURRET_ALT": {
+      "en": "This turret's stats are derived from your best ranged weapon's base stats and scale with {4} ({5})",
+      "zh": "此炮塔的属性基于你最佳远程武器的基础属性，并随着{4}（{5}）升级"
+    },
+    "EFFECT_BURNING_COOLDOWN_INCREASE": {
+      "en": "Burning activates {0} slower",
+      "zh": "燃烧速度降低{0}"
+    },
+    "EFFECT_BURNING_ENEMY_HP_PERCENT_DAMAGE": {
+      "en": "Burning deals an additional {0} of current enemy HP as damage ({2} for bosses and elites)",
+      "zh": "燃烧会额外造成相当于当前敌人生命值的{0}的伤害（对头目和精英怪则为{2}）"
+    },
+    "EFFECT_BURN_CHANCE": {
+      "en": "Attacks have a {0} chance to deal {1}x{2} ({3}) burning damage",
+      "zh": "攻击有{0}机率造成{1}x{2}（{3}）的燃烧伤害"
+    },
+    "EFFECT_CANT_ATTACK_WHILE_MOVING": {
+      "en": "You can’t attack while moving",
+      "zh": "移动时无法攻击"
+    },
+    "EFFECT_CHANCE_EXPLODE_ON_HIT": {
+      "en": "You have a {0} chance to explode for {1} ({2}) damage when you get hit",
+      "zh": "当你被击中时，有{0}概率爆炸，造成{1}（{2}）伤害"
+    },
+    "EFFECT_CONSUMABLE_HEAL_OVER_TIME": {
+      "en": "Consumables heal you over {0} seconds instead of instantly",
+      "zh": "消耗品会在{0}秒内持续为你治疗，而非瞬间治疗"
+    },
+    "EFFECT_CONVERT_STAT_END_OF_WAVE": {
+      "en": "{0} of your {1} are converted into {2} at the end of a wave ({3} {1} = {4} {2})",
+      "zh": "{0}的{1}在敌袭结束后会转换为{2}（{3}{1}={4}{2}）"
+    },
+    "EFFECT_CRIT_ON_HITTING_BURNING_TARGET": {
+      "en": "Always crits when hitting burning targets",
+      "zh": "击中燃烧目标时总是造成暴击"
+    },
+    "EFFECT_CURSED_STARTING_ITEM": {
+      "en": "You start with {0} cursed {1}",
+      "zh": "初始拥有{0}被诅咒的{1}"
+    },
+    "EFFECT_DESTROY_WEAPONS": {
+      "en": "All of your weapons are destroyed when entering a shop",
+      "zh": "进入商店后，所有武器都会遭到破坏"
+    },
+    "EFFECT_DODGE_CAP": {
+      "en": "Dodge is capped at {0}",
+      "zh": "闪避上限为{0}"
+    },
+    "EFFECT_DOUBLE_BOSS": {
+      "en": "Two bosses appear at once",
+      "zh": "同时出现两个头目"
+    },
+    "EFFECT_DOUBLE_LIFESTEAL_BONUS": {
+      "en": "Spawns a Doc Moth pet that flies around the map. When the player is inside its aura, their HP regeneration and Life Steal are doubled",
+      "zh": "生成一个蛾医生宠物，绕着地图飞行。当玩家处于其光环内时，玩家的生命再生和生命窃取属性翻倍。"
+    },
+    "EFFECT_ELITES": {
+      "en": "Elites and hordes appear",
+      "zh": "精英怪和敌群出现"
+    },
+    "EFFECT_ENEMY_GOLD_DROPS": {
+      "en": "{0} materials dropped from enemies",
+      "zh": "{0}敌人掉落的材料"
+    },
+    "EFFECT_EXPLODE_CUSTOM": {
+      "en": "Projectiles have a {0} chance to explode on hit",
+      "zh": "投射物命中时有{0}爆炸"
+    },
+    "EFFECT_EXPLODE_MELEE": {
+      "en": "{0} chance to explode on hit",
+      "zh": "击中时有{0}概率爆炸"
+    },
+    "EFFECT_EXPLODE_ON_CONSUMABLE": {
+      "en": "Consumables have a {0} chance to explode for {1} ({2}) damage when picked up",
+      "zh": "当捡起消耗品时有{0}概率爆炸，造成{1}（{2}）伤害"
+    },
+    "EFFECT_EXPLODE_ON_DEATH": {
+      "en": "Enemies have a {0} chance to explode for {1} ({2}) damage when they die",
+      "zh": "敌人死亡时有{0}概率爆炸，造成{1}（{2}）伤害"
+    },
+    "EFFECT_EXPLODE_ON_HIT": {
+      "en": "You explode for {1} ({2}) damage when you take damage",
+      "zh": "当你受到伤害时会爆炸，造成{1}（{2}）伤害"
+    },
+    "EFFECT_EXPLODE_WHEN_BELOW_HP": {
+      "en": "Once per wave, you explode for {1} ({2}) damage when you fall below {4} health",
+      "zh": "每次敌袭中，当你生命值低于{4}时，你会爆炸并造成{1}（{2}）伤害"
+    },
+    "EFFECT_EXTRA_ENEMIES_NEXT_WAVE": {
+      "en": "Special enemies appear at the beginning of the next wave",
+      "zh": "下场敌袭一开始会出现特殊敌人"
+    },
+    "EFFECT_EXTRA_LOOT_ALIENS": {
+      "en": "{0} additional loot aliens appear every wave",
+      "zh": "每次敌袭会多出现{0}个战利品外星人"
+    },
+    "EFFECT_EXTRA_LOOT_ALIENS_NEXT_WAVE": {
+      "en": "{0} additional loot aliens appear during the next wave",
+      "zh": "在下场敌袭中会出现{0}个额外的战利品外星人"
+    },
+    "EFFECT_GAIN_PCT_GOLD_START_WAVE": {
+      "en": "{0} of your materials at the start of waves",
+      "zh": "敌袭开始时{0}材料"
+    },
+    "EFFECT_GAIN_PCT_GOLD_START_WAVE_LIMITED": {
+      "en": "{0} of your materials at the start of waves (stops working at wave {1})",
+      "zh": "敌袭开始时{0}材料（在第{1}波敌袭后结束）"
+    },
+    "EFFECT_GAIN_STAT_END_OF_WAVE": {
+      "en": "{0} {1} at the end of a wave",
+      "zh": "敌袭结束后{0}{1}"
+    },
+    "EFFECT_GAIN_STAT_EVERY_KILLED_ENEMIES": {
+      "en": "{0} {1} for every {2} enemies you kill during a wave with this weapon",
+      "zh": "使用该武器在敌袭中每击杀{2}名敌人便会{0}{1}"
+    },
+    "EFFECT_GIANT_CRIT_DAMAGE": {
+      "en": "Critical hits deal {0} of an enemy’s current health as bonus damage ({2} for bosses and elites)",
+      "zh": "暴击造成敌人当前生命值的{0}以作为奖励伤害（头目和精英怪的{2}）"
+    },
+    "EFFECT_GOLD_DROPS": {
+      "en": "{0} materials dropped",
+      "zh": "掉落{0}材料"
+    },
+    "EFFECT_GROUP_STRUCTURES": {
+      "en": "Structures spawn close to each other",
+      "zh": "构筑物会生成在彼此附近"
+    },
+    "EFFECT_GUARANTEED_SHOP_ITEM": {
+      "en": "Shops always sell a {0}",
+      "zh": "商店通常销售一件{0}"
+    },
+    "EFFECT_HARVESTING_GROWTH": {
+      "en": "Harvesting increases by an additional {0} at the end of a wave",
+      "zh": "敌袭结束时，收获提高{0}"
+    },
+    "EFFECT_HEAL_ON_CRIT_KILL": {
+      "en": "{0} chance to heal 1 HP when killing an enemy with a critical hit",
+      "zh": "暴击杀死敌人时有{0}概率治疗一点生命值"
+    },
+    "EFFECT_HEAL_ON_KILL": {
+      "en": "{0} chance to heal 1 HP when killing an enemy",
+      "zh": "杀死敌人时有{0}的几率恢复1点生命值"
+    },
+    "EFFECT_HEAL_WHEN_PICKUP_GOLD": {
+      "en": "{0} chance to heal 1 HP when picking up a material",
+      "zh": "拾取材料时有{0}概率恢复1点生命"
+    },
+    "EFFECT_HIT_PROTECTION": {
+      "en": "Nullifies the damage of one hit taken every wave",
+      "zh": "在每一波敌袭中会抵消受到的攻击伤害"
+    },
+    "EFFECT_HP_REGEN_BONUS_DOUBLE": {
+      "en": "HP Regeneration is doubled when you have less than {2} health",
+      "zh": "当生命值低于{2}时，生命再生双倍"
+    },
+    "EFFECT_HP_SHOP": {
+      "en": "You buy items using Max HP instead of materials",
+      "zh": "使用最大生命值替代材料购买道具"
+    },
+    "EFFECT_HP_START_NEXT_WAVE": {
+      "en": "Start the next wave with 1 HP",
+      "zh": "下场敌袭以1点生命值开始"
+    },
+    "EFFECT_INCREASE_STAT_GAINS": {
+      "en": "{0} modifications are increased by {1}",
+      "zh": "{0}的修改增加{1}"
+    },
+    "EFFECT_ITEM_STEALS_SPAWNS_ELITE": {
+      "en": "Stealing from the shop can spawn an elite",
+      "zh": "从商店偷窃会生成精英怪"
+    },
+    "EFFECT_LIGHTNING_ON_HIT": {
+      "en": "Hitting an enemy spawns a lightning projectile that bounces {2} times and deals {1} ({3}) damage",
+      "zh": "击中敌人时产生雷电投射物，反弹{2}次，造成{1}（{3}）伤害"
+    },
+    "EFFECT_LOOT_ALIEN_CHANCE": {
+      "en": "{0} chance for loot aliens to appear",
+      "zh": "有{0}几率出现战利品外星人"
+    },
+    "EFFECT_LOOT_ALIEN_SPEED": {
+      "en": "{0} movement speed for loot aliens",
+      "zh": "战利品外星人的移动速度{0}"
+    },
+    "EFFECT_LOSE_HP_PER_SECOND": {
+      "en": "You take {0} damage per second (does not give invulnerability time)",
+      "zh": "每秒受到{0}伤害（不给予无敌时间）"
+    },
+    "EFFECT_MAX_WEAPONS": {
+      "en": "You can equip up to {0} weapons at a time",
+      "zh": "同时能装备{0}种武器"
+    },
+    "EFFECT_MAX_WEAPON_TIER": {
+      "en": "You can’t equip weapons above tier {0}",
+      "zh": "你无法装备{0}级别以上的武器"
+    },
+    "EFFECT_MINIMUM_WEAPON_IN_SHOP": {
+      "en": "Shops always sell at least one weapon",
+      "zh": "商店通常销售至少一把武器"
+    },
+    "EFFECT_MIN_WEAPON_TIER": {
+      "en": "You can only equip tier {0} weapons or above",
+      "zh": "你仅能够装备{0}级别或以上的武器"
+    },
+    "EFFECT_MORE_ELITES": {
+      "en": "More elites and hordes appear",
+      "zh": "更多的精英怪和敌群出现"
+    },
+    "EFFECT_NO_DUPLICATE_WEAPONS": {
+      "en": "You can't equip two of the same weapon at the same time",
+      "zh": "无法同时装备两件相同的武器"
+    },
+    "EFFECT_NO_HEAL": {
+      "en": "You can’t heal in any way",
+      "zh": "你无法治疗"
+    },
+    "EFFECT_NO_MELEE_WEAPONS": {
+      "en": "You can't equip melee weapons",
+      "zh": "无法装备近战武器"
+    },
+    "EFFECT_NO_RANGED_WEAPONS": {
+      "en": "You can't equip ranged weapons",
+      "zh": "无法装备远战武器"
+    },
+    "EFFECT_NO_STRUCTURES": {
+      "en": "You can't have structures",
+      "zh": "你无法建造构筑物"
+    },
+    "EFFECT_NO_WEAPONS": {
+      "en": "This character can't equip weapons",
+      "zh": "这个角色无法装备武器"
+    },
+    "EFFECT_ONE_SHOT_TREES": {
+      "en": "Trees die in one hit",
+      "zh": "树木能被一击毙命"
+    },
+    "EFFECT_ON_HIT": {
+      "en": "{0} {1} when you take damage until the end of the wave",
+      "zh": "受到攻击时{0}{1}，直至敌袭结束"
+    },
+    "EFFECT_PIERCING_DAMAGE_SHORT": {
+      "en": "{0} Piercing Damage",
+      "zh": "{0}贯通伤害"
+    },
+    "EFFECT_PROJECTILES_ON_DEATH": {
+      "en": "One bullet dealing {1} ({3}) damage is fired from an enemy corpse when they die",
+      "zh": "当敌人死亡时，发射一枚能造成{1}（{3}）伤害的子弹"
+    },
+    "EFFECT_RECYCLING_GAINS": {
+      "en": "Gain {0} more materials from recycling items",
+      "zh": "回收道具时额外获得{0}个材料"
+    },
+    "EFFECT_RELOAD_TURRETS_ON_SHOOT": {
+      "en": "Resets the cooldown of all offensive turrets when attacking",
+      "zh": "攻击时重置所有攻击型炮塔的冷却时间"
+    },
+    "EFFECT_RELOAD_WHEN_PICKUP_GOLD": {
+      "en": "Cooldown is reset when you pick up a material",
+      "zh": "捡起材料后会重置冷却时间"
+    },
+    "EFFECT_REMOVE_SPEED": {
+      "en": "Hitting an enemy removes {0} of their speed. Max {2}",
+      "zh": "击中敌人时能使其降低{0}速度，最高{2}"
+    },
+    "EFFECT_SLOW_IN_ZONE": {
+      "en": "Slows enemies in a radius around the projectile",
+      "zh": "使投射物周围的敌人减速"
+    },
+    "EFFECT_STARTING_ITEM": {
+      "en": "You start with {0} {1}",
+      "zh": "初始拥有{0}{1}"
+    },
+    "EFFECT_STAT_BELOW_HALF_HEALTH": {
+      "en": "{0} {1} when you have less than 50% health",
+      "zh": "当生命值低于50%时有{0}{1}"
+    },
+    "EFFECT_STAT_NEXT_WAVE": {
+      "en": "{0} {1} during the next wave",
+      "zh": "下场敌袭期间{0} {1}"
+    },
+    "EFFECT_STAT_WHILE_MOVING": {
+      "en": "{0} {1} while moving",
+      "zh": "当移动时{0}{1}"
+    },
+    "EFFECT_STAT_WHILE_NOT_MOVING": {
+      "en": "{0} {1} while standing still",
+      "zh": "当站立不动时{0}{1}"
+    },
+    "EFFECT_STRONGER_ELITES_ON_KILL": {
+      "en": "All future elites and bosses become stronger when you kill an elite or a boss",
+      "zh": "当你击杀一个精英怪或头目时，所有未来的精英怪和头目都会变更强"
+    },
+    "EFFECT_STRONGER_LOOT_ALIENS_ON_KILL": {
+      "en": "All future loot aliens become stronger when you kill a loot alien",
+      "zh": "当你击杀一个战利品外星人时，所有未来的战利品外星人都会变得更强"
+    },
+    "EFFECT_STRUCTURES_COOLDOWN_REDUCTION": {
+      "en": "Increases the attack speed of your structures by {0} ({1})",
+      "zh": "构建物的攻击速度提升{0} （{1}）"
+    },
+    "EFFECT_UNIQUE_WEAPON_BONUS": {
+      "en": "{0} {1} for every different weapon you have [{2}]",
+      "zh": "持有每一异种武器{0}{1} [{2}]"
+    },
+    "EFFECT_UPGRADED_BAITS": {
+      "en": "Baits make some special enemies spawn throughout all future waves",
+      "zh": "诱饵使一些特殊的敌人在所有未来的浪潮中产生"
+    },
+    "EFFECT_UPGRADE_RANDOM_WEAPON": {
+      "en": "A random weapon is upgraded when entering a shop. If you have no weapon to upgrade, you gain {0} {1} instead.",
+      "zh": "进入商店时，会随机升级一把武器。如果无武器可升级，则可获得{0}{1}。"
+    },
+    "NEXT_LEVEL_XP_NEEDED": {
+      "en": "{0} XP required to level up",
+      "zh": "升级需要 {0} 经验值"
     }
   },
   "stat_icons": {
