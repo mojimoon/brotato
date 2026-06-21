@@ -221,7 +221,8 @@
             <h3 class="section-title">{{ isZh ? '效果' : 'Effects' }}</h3>
             <div class="effects-list">
               <div v-for="(eff, idx) in activeWeaponData.effects" :key="idx" class="effect-item">
-                <span v-html="renderEffectPreprocessed(eff)"></span>
+                <span class="eff-prefix" v-html="renderEffectPrefix(eff)"></span>
+                <span class="eff-text" v-html="renderEffectText(eff)"></span>
               </div>
             </div>
           </div>
@@ -276,7 +277,8 @@
             <h3 class="section-title">{{ isZh ? '效果' : 'Effects' }}</h3>
             <div class="effects-list">
               <div v-for="(eff, idx) in selectedItem.effects" :key="idx" class="effect-item">
-                <span v-html="renderEffectPreprocessed(eff)"></span>
+                <span class="eff-prefix" v-html="renderEffectPrefix(eff)"></span>
+                <span class="eff-text" v-html="renderEffectText(eff)"></span>
               </div>
             </div>
           </div>
@@ -311,18 +313,19 @@
             <h3 class="section-title">{{ isZh ? '效果' : 'Effects' }}</h3>
             <div class="effects-list">
               <div v-for="(eff, idx) in selectedItem.effects" :key="idx" class="effect-item">
-                <span v-html="renderEffectPreprocessed(eff)"></span>
+                <span class="eff-prefix" v-html="renderEffectPrefix(eff)"></span>
+                <span class="eff-text" v-html="renderEffectText(eff)"></span>
               </div>
             </div>
           </div>
           <div v-if="selectedItem.starting_weapons?.length" class="detail-section">
             <h3 class="section-title">{{ isZh ? '起始武器' : 'Starting Weapons' }}</h3>
             <div class="starting-weapons-grid">
-              <div v-for="wid in selectedItem.starting_weapons" :key="wid" class="starting-weapon-card" @click="navigateToWeapon(wid)">
-                <div class="starting-weapon-icon" :style="{ borderColor: tierColor(getWeaponById(wid)?.tier ?? 0), background: tierBgColor(getWeaponById(wid)?.tier ?? 0) }">
+              <div v-for="wid in selectedItem.starting_weapons" :key="wid" class="grid-item starting-weapon-card" @click="navigateToWeapon(wid)">
+                <div class="item-icon" :style="{ borderColor: tierColor(getWeaponById(wid)?.tier ?? 0), background: tierBgColor(getWeaponById(wid)?.tier ?? 0) }">
                   <img :src="getIconSrc(getWeaponById(wid)?.icon)" />
                 </div>
-                <div class="starting-weapon-name">{{ getWeaponById(wid) ? itemName(getWeaponById(wid)) : wid }}</div>
+                <div class="item-name-text">{{ getWeaponById(wid) ? itemName(getWeaponById(wid)) : wid }}</div>
               </div>
             </div>
           </div>
@@ -379,7 +382,10 @@ const sortBy = ref('default')
 const isDark = ref(true)
 
 // Apply theme class to body
-watch(isDark, (v) => { document.body.classList.toggle('light-theme', !v) }, { immediate: true })
+watch(isDark, (v) => {
+  document.documentElement.classList.toggle('light-theme', !v)
+  document.body.classList.toggle('light-theme', !v)
+}, { immediate: true })
 
 // ---- Tier colors ----
 const TIER_COLORS = ['#aaaaaa', '#5cc4ff', '#b75cff', '#ff3d3d']
@@ -613,63 +619,43 @@ function getSignColor(eff) {
   return ''
 }
 
-function renderEffectPreprocessed(eff) {
-  // Use preprocessed text from JSON
-  const lang = isZh.value ? 'zh' : 'en'
-  let text = eff['text_' + lang] || eff.text_en || ''
-  if (!text) {
-    return `${eff.value} ${statTr(eff.key)}`
-  }
-
-  // Build icon prefix: stat icon for stat_* keys, ・ otherwise
+function renderEffectPrefix(eff) {
   const iconKey = eff.icon
-  let prefix = '・'
-  if (iconKey) {
-    const fullKey = 'stat_' + iconKey
-    const iconPath = (rawData.value.stat_icons || {})[fullKey]
-    if (iconPath) {
-      const iconSrc = `${BASE}icons/${iconPath}`
-      const displayName = statTr(fullKey)
-      prefix = `<img src="${iconSrc}" class="stat-prefix-icon" title="${displayName}" />`
-    } else {
-      // Fallback: try matching without stat_ prefix
-      for (const [key, path] of Object.entries(rawData.value.stat_icons || {})) {
-        if (key.replace('stat_', '') === iconKey) {
-          const iconSrc = `${BASE}icons/${path}`
-          const displayName = statTr(key)
-          prefix = `<img src="${iconSrc}" class="stat-prefix-icon" title="${displayName}" />`
-          break
-        }
-      }
+  if (!iconKey) return '・'
+  const fullKey = 'stat_' + iconKey
+  const iconPath = (rawData.value.stat_icons || {})[fullKey]
+  if (iconPath) {
+    return `<img src="${BASE}icons/${iconPath}" class="stat-prefix-icon" title="${statTr(fullKey)}" />`
+  }
+  for (const [key, path] of Object.entries(rawData.value.stat_icons || {})) {
+    if (key.replace('stat_', '') === iconKey) {
+      return `<img src="${BASE}icons/${path}" class="stat-prefix-icon" title="${statTr(key)}" />`
     }
   }
+  return '・'
+}
 
-  // Step 1: Process color markers from Python preprocessor
+function renderEffectText(eff) {
+  const lang = isZh.value ? 'zh' : 'en'
+  let text = eff['text_' + lang] || eff.text_en || ''
+  if (!text) return `${eff.value} ${statTr(eff.key)}`
+
   text = text.replace(/<span class="g">/g, '<span style="color:#22c55e">')
   text = text.replace(/<span class="r">/g, '<span style="color:#ef4444">')
   text = text.replace(/<span class="p">/g, '<span style="color:#a855f7">')
   text = text.replace(/<\/span>/g, '</span>')
 
-  // Step 2: Replace <icon>ranged_damage</icon> with stat icons
   text = text.replace(/<icon>([^<]+)<\/icon>/g, (match, icKey) => {
     const fullKey = 'stat_' + icKey
     const iconPath = (rawData.value.stat_icons || {})[fullKey]
-    if (iconPath) {
-      const iconSrc = `${BASE}icons/${iconPath}`
-      const displayName = statTr(fullKey)
-      return `<img src="${iconSrc}" class="stat-inline-icon" style="width:16px;height:16px;vertical-align:middle;margin:0 1px" title="${displayName}" />`
-    }
+    if (iconPath) return `<img src="${BASE}icons/${iconPath}" class="stat-inline-icon" title="${statTr(fullKey)}" />`
     for (const [key, path] of Object.entries(rawData.value.stat_icons || {})) {
-      if (key.replace('stat_', '') === icKey) {
-        const iconSrc = `${BASE}icons/${path}`
-        const displayName = statTr(key)
-        return `<img src="${iconSrc}" class="stat-inline-icon" style="width:16px;height:16px;vertical-align:middle;margin:0 1px" title="${displayName}" />`
-      }
+      if (key.replace('stat_', '') === icKey) return `<img src="${BASE}icons/${path}" class="stat-inline-icon" title="${statTr(key)}" />`
     }
     return match
   })
 
-  return `<span class="eff-prefix">${prefix}</span>${text}`
+  return text
 }
 
 // ---- Weapon grouping ----
@@ -923,6 +909,7 @@ onMounted(async () => {
 
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
+html { background: #1a1d28; }
 body { background: #1a1d28; color: #ccc; font-family: 'Segoe UI', system-ui, sans-serif; transition: background .2s, color .2s; }
 
 .app-container { max-width: 1400px; margin: 0 auto; min-height: 100vh; display: flex; flex-direction: column; }
@@ -938,10 +925,10 @@ body { background: #1a1d28; color: #ccc; font-family: 'Segoe UI', system-ui, san
 /* Tabs */
 .main-tabs { background: #151822; padding: 0 24px; }
 .main-tabs :deep(.el-tabs__header) { margin: 0; }
-.main-tabs :deep(.el-tabs__nav-wrap::after) { background: #2a2d3a; }
-.main-tabs :deep(.el-tabs__item) { color: #888 !important; height: 42px; line-height: 42px; font-size: 14px; background: #1e2030; margin-right: 2px; border-radius: 6px 6px 0 0; padding: 0 18px; transition: background .15s, color .15s; }
-.main-tabs :deep(.el-tabs__item:hover) { color: #ccc !important; background: #252836; }
-.main-tabs :deep(.el-tabs__item.is-active) { color: #ff3d3d !important; background: #1a1d28; }
+.main-tabs :deep(.el-tabs__nav-wrap::after) { background: #2a2d3a; height: 1px; }
+.main-tabs :deep(.el-tabs__item) { color: #bbb !important; height: 42px; line-height: 42px; font-size: 14px; background: #252836; margin-right: 2px; border-radius: 6px 6px 0 0; padding: 0 18px; transition: background .15s, color .15s; border: 1px solid #2a2d3a; border-bottom: none; }
+.main-tabs :deep(.el-tabs__item:hover) { color: #eee !important; background: #2e3148; }
+.main-tabs :deep(.el-tabs__item.is-active) { color: #ff3d3d !important; background: #1a1d28; border-color: #3a3d4e; }
 .main-tabs :deep(.el-tabs__active-bar) { background: #ff3d3d; }
 
 /* Filters */
@@ -949,10 +936,8 @@ body { background: #1a1d28; color: #ccc; font-family: 'Segoe UI', system-ui, san
 .search-input { flex: 1; max-width: 280px; }
 .filter-select { width: 130px; }
 .sort-select { width: 120px; }
-.sort-select :deep(.el-input__wrapper) { border: 1px dashed #4a4d5e !important; background-color: #22253a !important; }
+.sort-select :deep(.el-input__wrapper) { border: 1px dashed #4a4d5e !important; }
 .sort-select :deep(.el-input__wrapper:hover) { border-color: #6a6d7e !important; }
-.sort-select :deep(.el-input__inner) { color: #aabbcc !important; }
-.sort-select :deep(.el-input__prefix) { color: #aabbcc !important; }
 
 /* Main */
 .main-content { position: relative; height: calc(100vh - 160px); overflow: hidden; }
@@ -984,7 +969,6 @@ body { background: #1a1d28; color: #ccc; font-family: 'Segoe UI', system-ui, san
   background: #1e2030; border-left: 2px solid #2a2d3a;
 }
 .empty-panel { display: flex; align-items: center; justify-content: center; }
-
 .detail-header { display: flex; gap: 14px; align-items: center; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid #2a2d3a; }
 .detail-icon-wrap {
   width: 68px; height: 68px; border-radius: 10px; display: flex; align-items: center; justify-content: center;
@@ -998,16 +982,12 @@ body { background: #1a1d28; color: #ccc; font-family: 'Segoe UI', system-ui, san
 .type-badge.melee { background: #c0392b; }
 .type-badge.ranged { background: #2980b9; }
 .dlc-badge { font-size: 11px; padding: 3px 8px; border-radius: 3px; background: #a855f7; color: #fff; font-weight: 600; }
-.dlc-tag { --el-tag-bg-color: #a855f7; --el-tag-border-color: #a855f7; --el-tag-text-color: #fff; }
 .set-badge { font-size: 11px; padding: 3px 8px; border-radius: 3px; background: #3a3d4e; color: #ccc; cursor: help; font-weight: 600; }
 .detail-price { font-size: 14px; color: #eae2b0; margin-top: 4px; }
 
 /* Tier Tabs */
 .tier-tabs { display: flex; gap: 4px; margin-bottom: 12px; }
-.tier-tab {
-  flex: 1; padding: 7px 0; border: 2px solid #444; background: #22253a; color: #666;
-  border-radius: 4px; cursor: pointer; font-size: 13px; font-weight: 700; transition: all .15s;
-}
+.tier-tab { flex: 1; padding: 7px 0; border: 2px solid #444; background: #22253a; color: #888; border-radius: 4px; cursor: pointer; font-size: 13px; font-weight: 700; transition: all .15s; }
 .tier-tab:hover:not(.disabled) { color: #fff; }
 .tier-tab.active { color: #fff !important; }
 .tier-tab.disabled { opacity: 0.3; cursor: default; border-color: #2a2d3a !important; background: #22253a !important; color: #444 !important; }
@@ -1020,18 +1000,15 @@ body { background: #1a1d28; color: #ccc; font-family: 'Segoe UI', system-ui, san
 /* Weapon Stat Rows */
 .detail-section { margin-top: 8px; }
 .section-title { font-size: 12px; color: #ff3d3d; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 1px; }
-.weapon-stat-row {
-  display: flex; align-items: center; gap: 8px; padding: 6px 10px;
-  background: #22253a; border-radius: 5px; margin-bottom: 3px;
-}
+.weapon-stat-row { display: flex; align-items: center; gap: 8px; padding: 6px 10px; background: #22253a; border-radius: 5px; margin-bottom: 3px; }
 .ws-label { font-size: 14px; color: #bbb; min-width: 70px; }
 .ws-val { font-size: 15px; color: #eee; font-weight: 600; }
-.crit-dmg { color: #f39c12; font-size: 14px; margin-left: 0; }
+.crit-dmg { color: #f39c12; font-size: 14px; }
 .ws-scaling { font-size: 15px; color: #eae2b0; }
 .ws-scaling-pct { color: #ddd; }
 .ws-attack-type { font-size: 13px; color: #bbb; font-weight: 400; margin-left: 4px; }
 .stat-inline-icon { width: 16px; height: 16px; vertical-align: middle; image-rendering: pixelated; margin: 0 1px; }
-.stat-prefix-icon { width: 13px; height: 13px; vertical-align: middle; image-rendering: pixelated; flex-shrink: 0; }
+.stat-prefix-icon { width: 13px; height: 13px; vertical-align: middle; image-rendering: pixelated; }
 
 /* Price Section */
 .price-section { margin-top: 12px; padding: 12px 14px; background: #22253a; border-radius: 8px; border: 1px solid #2a2d3a; }
@@ -1051,26 +1028,16 @@ body { background: #1a1d28; color: #ccc; font-family: 'Segoe UI', system-ui, san
 
 /* Effects */
 .effects-list { display: flex; flex-direction: column; gap: 3px; }
-.effect-item {
-  padding: 5px 10px; border-radius: 4px; font-size: 13px; background: #22253a; color: #ddd; line-height: 1.5;
-  display: flex; align-items: center; gap: 6px; white-space: nowrap;
-}
-.eff-prefix { flex-shrink: 0; width: 18px; text-align: center; color: #666; display: flex; align-items: center; justify-content: center; }
+.effect-item { padding: 5px 10px; border-radius: 4px; font-size: 13px; background: #22253a; color: #ddd; line-height: 1.5; display: flex; align-items: baseline; gap: 6px; }
+.eff-prefix { flex-shrink: 0; width: 18px; text-align: center; color: #777; display: flex; align-items: center; justify-content: center; line-height: 1; }
+.eff-text { flex: 1; min-width: 0; }
 
-/* Starting Weapons Grid */
-.starting-weapons-grid { display: flex; flex-wrap: wrap; gap: 6px; }
-.starting-weapon-card {
-  display: flex; align-items: center; gap: 6px; padding: 4px 8px 4px 4px;
-  background: #22253a; border-radius: 6px; cursor: pointer; transition: all .15s;
-  border: 1px solid transparent;
+/* Starting Weapons Grid - matches left panel grid-item style */
+.starting-weapons-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+  gap: 5px;
 }
-.starting-weapon-card:hover { background: #2a2d44; border-color: #444; }
-.starting-weapon-icon {
-  width: 32px; height: 32px; border-radius: 4px; display: flex; align-items: center; justify-content: center;
-  background: #1e2030; border: 2px solid #3a3d4e; overflow: hidden; flex-shrink: 0;
-}
-.starting-weapon-icon img { max-width: 26px; max-height: 26px; image-rendering: pixelated; }
-.starting-weapon-name { font-size: 12px; color: #ccc; white-space: nowrap; }
+.starting-weapon-card { cursor: pointer; }
 
 /* Tags */
 .tags-wrap { display: flex; flex-wrap: wrap; gap: 5px; }
@@ -1095,7 +1062,7 @@ body { background: #1a1d28; color: #ccc; font-family: 'Segoe UI', system-ui, san
 .el-input__wrapper:hover { border-color: #5a5d6e !important; }
 .el-input.is-focus .el-input__wrapper { border-color: #ff3d3d !important; box-shadow: 0 0 0 1px #ff3d3d inset !important; }
 .el-input__inner { color: #ccc !important; }
-.el-input__inner::placeholder { color: #666 !important; }
+.el-input__inner::placeholder { color: #777 !important; }
 .el-select .el-select__caret { color: #888 !important; }
 .el-select .el-input .el-input__suffix .el-icon { color: #888 !important; }
 
@@ -1107,11 +1074,9 @@ body { background: #1a1d28; color: #ccc; font-family: 'Segoe UI', system-ui, san
 .dark-dropdown .el-select-dropdown__item:hover { background-color: #2e3148 !important; color: #fff !important; }
 .dark-dropdown .el-select-dropdown__item.is-selected, .dark-dropdown .el-select-dropdown__item.selected { color: #ff3d3d !important; font-weight: 600; }
 .dark-dropdown .el-select-dropdown__item.is-hovering { background-color: #2e3148 !important; }
-.dark-dropdown .el-select-dropdown__empty { color: #666 !important; padding: 10px; }
+.dark-dropdown .el-select-dropdown__empty { color: #777 !important; padding: 10px; }
 .el-popper.is-dark { background: #22253a !important; border: 1px solid #3a3d4e !important; color: #ccc !important; }
 .el-select .el-tag { background-color: #2a2d3a !important; border-color: #444 !important; color: #ccc !important; }
-.el-select .el-tag .el-tag__close { color: #888 !important; }
-.el-select .el-tag .el-tag__close:hover { background-color: #444 !important; color: #fff !important; }
 .is-active-lang { color: #ff3d3d !important; font-weight: 600; }
 
 /* Scrollbar */
@@ -1121,59 +1086,59 @@ body { background: #1a1d28; color: #ccc; font-family: 'Segoe UI', system-ui, san
 ::-webkit-scrollbar-thumb:hover { background: #5a5d6e; }
 
 /* ==================== Light Theme ==================== */
-body.light-theme { background: #f0f2f5; color: #333; }
+html.light-theme { background: #f0f2f5; }
+body.light-theme { background: #f0f2f5; color: #222; }
 body.light-theme .header { background: #fff; border-bottom-color: #ff3d3d; }
 body.light-theme .title { color: #ff3d3d; }
-body.light-theme .header-btn { background: #f0f2f5 !important; border-color: #ccc !important; color: #555 !important; }
-body.light-theme .header-btn:hover { background: #e0e2e5 !important; color: #333 !important; }
+body.light-theme .header-btn { background: #e8eaed !important; border-color: #bbb !important; color: #333 !important; }
+body.light-theme .header-btn:hover { background: #d8dade !important; color: #111 !important; }
 body.light-theme .main-tabs { background: #fff; }
-body.light-theme .main-tabs :deep(.el-tabs__nav-wrap::after) { background: #ddd; }
-body.light-theme .main-tabs :deep(.el-tabs__item) { color: #555 !important; background: #ebedf0; }
-body.light-theme .main-tabs :deep(.el-tabs__item:hover) { color: #333 !important; background: #e0e2e5; }
-body.light-theme .main-tabs :deep(.el-tabs__item.is-active) { color: #ff3d3d !important; background: #f0f2f5; }
-body.light-theme .filters { background: #f5f6f8; border-bottom-color: #ddd; }
-body.light-theme .el-input__wrapper { background-color: #fff !important; border-color: #ccc !important; }
-body.light-theme .el-input__wrapper:hover { border-color: #aaa !important; }
-body.light-theme .el-input__inner { color: #333 !important; }
-body.light-theme .el-input__inner::placeholder { color: #888 !important; }
+body.light-theme .main-tabs :deep(.el-tabs__nav-wrap::after) { background: #ccc; }
+body.light-theme .main-tabs :deep(.el-tabs__item) { color: #444 !important; background: #e2e4e8; border-color: #ccc; }
+body.light-theme .main-tabs :deep(.el-tabs__item:hover) { color: #222 !important; background: #d8dade; }
+body.light-theme .main-tabs :deep(.el-tabs__item.is-active) { color: #ff3d3d !important; background: #f0f2f5; border-color: #bbb; }
+body.light-theme .filters { background: #f0f2f5; border-bottom-color: #ccc; }
+body.light-theme .el-input__wrapper { background-color: #fff !important; border-color: #bbb !important; }
+body.light-theme .el-input__wrapper:hover { border-color: #999 !important; }
+body.light-theme .el-input__inner { color: #222 !important; }
+body.light-theme .el-input__inner::placeholder { color: #666 !important; }
 body.light-theme .grid-panel { background: #f0f2f5; }
 body.light-theme .grid-item { background: #fff; border-color: transparent; }
 body.light-theme .grid-item:hover { box-shadow: 0 4px 12px rgba(0,0,0,.08); }
-body.light-theme .item-icon { background: #f5f6f8; border-color: #ddd; }
-body.light-theme .detail-panel { background: #fff; border-left-color: #ddd; }
-body.light-theme .detail-header { border-bottom-color: #eee; }
-body.light-theme .detail-icon-wrap { background: #f5f6f8; border-color: #ddd; }
-body.light-theme .set-badge { background: #e5e7eb; color: #444; }
-body.light-theme .weapon-stat-row { background: #f5f6f8; }
-body.light-theme .ws-label { color: #555; }
-body.light-theme .ws-val { color: #222; }
-body.light-theme .price-section { background: #f5f6f8; border-color: #ddd; }
-body.light-theme .price-label, body.light-theme .price-wave { color: #555; }
-body.light-theme .price-value { color: #222; }
-body.light-theme .effect-item { background: #f5f6f8; color: #333; }
-body.light-theme .eff-prefix { color: #999; }
-body.light-theme .starting-weapon-card { background: #f5f6f8; }
-body.light-theme .starting-weapon-card:hover { background: #eaecef; border-color: #ccc; }
-body.light-theme .starting-weapon-icon { background: #fff; border-color: #ddd; }
-body.light-theme .starting-weapon-name { color: #333; }
-body.light-theme .tag-badge { background: #e5e7eb; color: #444; }
-body.light-theme .tag-badge.clickable:hover { background: #d1d5db; color: #222; }
-body.light-theme .tier-tab { background: #ebedf0; border-color: #ccc; color: #888; }
-body.light-theme .tier-tab.disabled { border-color: #ddd !important; background: #ebedf0 !important; color: #ccc !important; }
-body.light-theme .sort-select :deep(.el-input__wrapper) { border-color: #ccc !important; background: #fff !important; }
+body.light-theme .item-icon { background: #f5f6f8; border-color: #ccc; }
+body.light-theme .detail-panel { background: #fff; border-left-color: #ccc; }
+body.light-theme .detail-header { border-bottom-color: #ddd; }
+body.light-theme .detail-icon-wrap { background: #f5f6f8; border-color: #ccc; }
+body.light-theme .set-badge { background: #ddd; color: #333; }
+body.light-theme .weapon-stat-row { background: #f0f2f5; }
+body.light-theme .ws-label { color: #444; }
+body.light-theme .ws-val { color: #111; }
+body.light-theme .price-section { background: #f0f2f5; border-color: #ccc; }
+body.light-theme .price-label, body.light-theme .price-wave { color: #444; }
+body.light-theme .price-value { color: #111; }
+body.light-theme .effect-item { background: #f0f2f5; color: #222; }
+body.light-theme .eff-prefix { color: #777; }
+body.light-theme .starting-weapon-card { background: #fff; }
+body.light-theme .starting-weapon-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,.08); }
+body.light-theme .item-name-text { color: #222; }
+body.light-theme .tag-badge { background: #ddd; color: #333; }
+body.light-theme .tag-badge.clickable:hover { background: #ccc; color: #111; }
+body.light-theme .tier-tab { background: #e2e4e8; border-color: #bbb; color: #666; }
+body.light-theme .tier-tab.disabled { border-color: #ccc !important; background: #e2e4e8 !important; color: #bbb !important; }
+body.light-theme .sort-select :deep(.el-input__wrapper) { border-color: #bbb !important; }
 body.light-theme .section-title { color: #ff3d3d; }
-body.light-theme .el-select .el-select__caret { color: #888 !important; }
+body.light-theme .el-select .el-select__caret { color: #666 !important; }
 body.light-theme ::-webkit-scrollbar-track { background: #f0f2f5; }
-body.light-theme ::-webkit-scrollbar-thumb { background: #ccc; }
-body.light-theme ::-webkit-scrollbar-thumb:hover { background: #aaa; }
-body.light-theme .el-select-dropdown__item { color: #333 !important; }
+body.light-theme ::-webkit-scrollbar-thumb { background: #bbb; }
+body.light-theme ::-webkit-scrollbar-thumb:hover { background: #999; }
+body.light-theme .tag-tooltip-line { color: #555; }
 /* Light theme dropdown */
-body.light-theme .dark-dropdown, body.light-theme .dark-dropdown.el-popper { background-color: #fff !important; border-color: #ddd !important; box-shadow: 0 2px 8px rgba(0,0,0,.1) !important; }
+body.light-theme .dark-dropdown, body.light-theme .dark-dropdown.el-popper { background-color: #fff !important; border-color: #ccc !important; box-shadow: 0 2px 8px rgba(0,0,0,.08) !important; }
 body.light-theme .dark-dropdown .el-select-dropdown, body.light-theme .dark-dropdown .el-scrollbar, body.light-theme .dark-dropdown .el-scrollbar__wrap, body.light-theme .dark-dropdown .el-scrollbar__view, body.light-theme .dark-dropdown .el-select-dropdown__list { background-color: #fff !important; }
-body.light-theme .dark-dropdown .el-popper__arrow::before { background: #fff !important; border-color: #ddd !important; }
-body.light-theme .dark-dropdown .el-select-dropdown__item { color: #333 !important; }
+body.light-theme .dark-dropdown .el-popper__arrow::before { background: #fff !important; border-color: #ccc !important; }
+body.light-theme .dark-dropdown .el-select-dropdown__item { color: #222 !important; }
 body.light-theme .dark-dropdown .el-select-dropdown__item:hover { background-color: #f0f2f5 !important; color: #111 !important; }
 body.light-theme .dark-dropdown .el-select-dropdown__item.is-selected { color: #ff3d3d !important; }
 body.light-theme .dark-dropdown .el-select-dropdown__item.is-hovering { background-color: #f0f2f5 !important; }
-body.light-theme .el-popper.is-dark { background: #fff !important; border-color: #ddd !important; color: #333 !important; }
+body.light-theme .el-popper.is-dark { background: #fff !important; border-color: #ccc !important; color: #222 !important; }
 </style>
