@@ -868,8 +868,8 @@
               "effect_sign": 3
             }
           ],
-          "text_en": "Every 5th projectile has",
-          "text_zh": "每次第5个投射物有"
+          "text_en": "Every 5th projectile has +100 % Crit Chance",
+          "text_zh": "每次第5个投射物有+100%暴击率"
         }
       ],
       "stats": {
@@ -1105,8 +1105,8 @@
             "bounce_dmg_reduction": 0.0,
             "projectile_speed": 3000
           },
-          "text_en": "Hitting an enemy spawns a lightning projectile that bounces <span class=\"g\">80%<span class=\"ic\" data-ic=\"elemental_damage\"></span></span> times and deals <span class=\"g\">5</span> damage",
-          "text_zh": "击中敌人时产生雷电投射物，反弹<span class=\"g\">80%<span class=\"ic\" data-ic=\"elemental_damage\"></span></span>次，造成<span class=\"g\">5</span>伤害"
+          "text_en": "Hitting an enemy spawns a lightning projectile that bounces <span class=\"g\">1</span> times and deals <span class=\"g\">5</span> (<span class=\"g\">80%<span class=\"ic\" data-ic=\"elemental_damage\"></span></span>) damage",
+          "text_zh": "击中敌人时产生雷电投射物，反弹<span class=\"g\">1</span>次，造成<span class=\"g\">5</span>（<span class=\"g\">80%<span class=\"ic\" data-ic=\"elemental_damage\"></span></span>）伤害"
         }
       ],
       "stats": {
@@ -2288,8 +2288,8 @@
           "weapon_stacked_id": "weapon_stick",
           "stat_displayed_name": "stat_damage",
           "stat_name": "damage",
-          "text_en": "Deals <span class=\"g\">+4</span> <span class=\"g\">Damage</span> for every additional <span class=\"g\">Stick</span> you have [<span class=\"g\">+4</span>]",
-          "text_zh": "每额外持有1个<span class=\"g\">树枝</span>便会<span class=\"g\">+4</span><span class=\"g\">伤害</span> [<span class=\"g\">+4</span>]"
+          "text_en": "Deals <span class=\"g\">+4</span> <span class=\"g\">Damage</span> for every additional <span class=\"g\">Stick</span> you have",
+          "text_zh": "每额外持有1个<span class=\"g\">树枝</span>便会<span class=\"g\">+4</span><span class=\"g\">伤害</span>"
         }
       ],
       "stats": {
@@ -4060,8 +4060,8 @@
               "effect_sign": 3
             }
           ],
-          "text_en": "Every 4th projectile has",
-          "text_zh": "每次第4个投射物有"
+          "text_en": "Every 4th projectile has +100 % Crit Chance",
+          "text_zh": "每次第4个投射物有+100%暴击率"
         }
       ],
       "stats": {
@@ -4297,8 +4297,8 @@
             "bounce_dmg_reduction": 0.0,
             "projectile_speed": 3000
           },
-          "text_en": "Hitting an enemy spawns a lightning projectile that bounces <span class=\"g\">80%<span class=\"ic\" data-ic=\"elemental_damage\"></span></span> times and deals <span class=\"g\">6</span> damage",
-          "text_zh": "击中敌人时产生雷电投射物，反弹<span class=\"g\">80%<span class=\"ic\" data-ic=\"elemental_damage\"></span></span>次，造成<span class=\"g\">6</span>伤害"
+          "text_en": "Hitting an enemy spawns a lightning projectile that bounces <span class=\"g\">2</span> times and deals <span class=\"g\">6</span> (<span class=\"g\">80%<span class=\"ic\" data-ic=\"elemental_damage\"></span></span>) damage",
+          "text_zh": "击中敌人时产生雷电投射物，反弹<span class=\"g\">2</span>次，造成<span class=\"g\">6</span>（<span class=\"g\">80%<span class=\"ic\" data-ic=\"elemental_damage\"></span></span>）伤害"
         }
       ],
       "stats": {
@@ -5661,8 +5661,8 @@
           "weapon_stacked_id": "weapon_stick",
           "stat_displayed_name": "stat_damage",
           "stat_name": "damage",
-          "text_en": "Deals <span class=\"g\">+6</span> <span class=\"g\">Damage</span> for every additional <span class=\"g\">Stick</span> you have [<span class=\"g\">+6</span>]",
-          "text_zh": "每额外持有1个<span class=\"g\">树枝</span>便会<span class=\"g\">+6</span><span class=\"g\">伤害</span> [<span class=\"g\">+6</span>]"
+          "text_en": "Deals <span class=\"g\">+6</span> <span class=\"g\">Damage</span> for every additional <span class=\"g\">Stick</span> you have",
+          "text_zh": "每额外持有1个<span class=\"g\">树枝</span>便会<span class=\"g\">+6</span><span class=\"g\">伤害</span>"
         }
       ],
       "stats": {
@@ -6470,8 +6470,8 @@
           "stat_scaled": "free_weapon_slots",
           "nb_stat_scaled": 1,
           "increased_stat_name": "damage",
-          "text_en": "Deals <span class=\"g\">+25</span> <span class=\"g\">Damage</span> for every free weapon slot you have [<span class=\"g\">+1</span>]",
-          "text_zh": "每有一个空闲的武器栏，将造成<span class=\"g\">+25</span><span class=\"g\">伤害</span>[<span class=\"g\">+1</span>]"
+          "text_en": "Deals <span class=\"g\">+25</span> <span class=\"g\">Damage</span> for every free weapon slot you have",
+          "text_zh": "每有一个空闲的武器栏，将造成<span class=\"g\">+25</span><span class=\"g\">伤害</span>"
         }
       ],
       "stats": {
@@ -7738,8 +7738,8 @@
               "effect_sign": 3
             }
           ],
-          "text_en": "Every 3rd projectile has",
-          "text_zh": "每次第3个投射物有"
+          "text_en": "Every 3rd projectile has +100 % Crit Chance",
+          "text_zh": "每次第3个投射物有+100%暴击率"
         }
       ],
       "stats": {
@@ -7975,8 +7975,8 @@
             "bounce_dmg_reduction": 0.0,
             "projectile_speed": 3000
           },
-          "text_en": "Hitting an enemy spawns a lightning projectile that bounces <span class=\"g\">80%<span class=\"ic\" data-ic=\"elemental_damage\"></span></span> times and deals <span class=\"g\">8</span> damage",
-          "text_zh": "击中敌人时产生雷电投射物，反弹<span class=\"g\">80%<span class=\"ic\" data-ic=\"elemental_damage\"></span></span>次，造成<span class=\"g\">8</span>伤害"
+          "text_en": "Hitting an enemy spawns a lightning projectile that bounces <span class=\"g\">3</span> times and deals <span class=\"g\">8</span> (<span class=\"g\">80%<span class=\"ic\" data-ic=\"elemental_damage\"></span></span>) damage",
+          "text_zh": "击中敌人时产生雷电投射物，反弹<span class=\"g\">3</span>次，造成<span class=\"g\">8</span>（<span class=\"g\">80%<span class=\"ic\" data-ic=\"elemental_damage\"></span></span>）伤害"
         }
       ],
       "stats": {
@@ -8376,8 +8376,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "Slows enemies by <span class=\"g\">1%</span> on hit for every <span class=\"g\">1</span> <span class=\"g\">Engineering</span> you have [<span class=\"g\">1%</span>]",
-          "text_zh": "每拥有<span class=\"g\">1</span><span class=\"g\">工程学</span>，攻击命中时会使敌人减速<span class=\"g\">1%</span>[<span class=\"g\">1%</span>]"
+          "text_en": "Slows enemies by <span class=\"g\">1%</span> on hit for every <span class=\"g\">1</span> <span class=\"g\">Engineering</span> you have",
+          "text_zh": "每拥有<span class=\"g\">1</span><span class=\"g\">工程学</span>，攻击命中时会使敌人减速<span class=\"g\">1%</span>"
         }
       ],
       "stats": {
@@ -9802,8 +9802,8 @@
           "weapon_stacked_id": "weapon_stick",
           "stat_displayed_name": "stat_damage",
           "stat_name": "damage",
-          "text_en": "Deals <span class=\"g\">+8</span> <span class=\"g\">Damage</span> for every additional <span class=\"g\">Stick</span> you have [<span class=\"g\">+8</span>]",
-          "text_zh": "每额外持有1个<span class=\"g\">树枝</span>便会<span class=\"g\">+8</span><span class=\"g\">伤害</span> [<span class=\"g\">+8</span>]"
+          "text_en": "Deals <span class=\"g\">+8</span> <span class=\"g\">Damage</span> for every additional <span class=\"g\">Stick</span> you have",
+          "text_zh": "每额外持有1个<span class=\"g\">树枝</span>便会<span class=\"g\">+8</span><span class=\"g\">伤害</span>"
         }
       ],
       "stats": {
@@ -10035,8 +10035,8 @@
             "bounce_dmg_reduction": 0.5,
             "projectile_speed": 2000
           },
-          "text_en": "Hitting an enemy spawns <span class=\"g\">2</span> projectiles that deal <span class=\"g\">1</span> damage and slow enemies around them",
-          "text_zh": "击中敌人时产生<span class=\"g\">2</span>投射物，造成<span class=\"g\">1</span>伤害并使周围的敌人减速"
+          "text_en": "Hitting an enemy spawns <span class=\"g\">2</span> projectiles that deal <span class=\"g\">1</span> (<span class=\"g\">100%<span class=\"ic\" data-ic=\"elemental_damage\"></span></span>) damage and slow enemies around them",
+          "text_zh": "击中敌人时产生<span class=\"g\">2</span>投射物，造成<span class=\"g\">1</span>（<span class=\"g\">100%<span class=\"ic\" data-ic=\"elemental_damage\"></span></span>）伤害并使周围的敌人减速"
         }
       ],
       "stats": {
@@ -10746,8 +10746,8 @@
           "stat_scaled": "free_weapon_slots",
           "nb_stat_scaled": 1,
           "increased_stat_name": "damage",
-          "text_en": "Deals <span class=\"g\">+50</span> <span class=\"g\">Damage</span> for every free weapon slot you have [<span class=\"g\">+1</span>]",
-          "text_zh": "每有一个空闲的武器栏，将造成<span class=\"g\">+50</span><span class=\"g\">伤害</span>[<span class=\"g\">+1</span>]"
+          "text_en": "Deals <span class=\"g\">+50</span> <span class=\"g\">Damage</span> for every free weapon slot you have",
+          "text_zh": "每有一个空闲的武器栏，将造成<span class=\"g\">+50</span><span class=\"g\">伤害</span>"
         }
       ],
       "stats": {
@@ -11169,8 +11169,8 @@
             "bounce_dmg_reduction": 0.0,
             "projectile_speed": 3000
           },
-          "text_en": "Hitting an enemy spawns a lightning projectile that bounces <span class=\"g\">100%<span class=\"ic\" data-ic=\"elemental_damage\"></span></span> times and deals <span class=\"g\">30</span> damage",
-          "text_zh": "击中敌人时产生雷电投射物，反弹<span class=\"g\">100%<span class=\"ic\" data-ic=\"elemental_damage\"></span></span>次，造成<span class=\"g\">30</span>伤害"
+          "text_en": "Hitting an enemy spawns a lightning projectile that bounces <span class=\"g\">5</span> times and deals <span class=\"g\">30</span> (<span class=\"g\">100%<span class=\"ic\" data-ic=\"elemental_damage\"></span></span>) damage",
+          "text_zh": "击中敌人时产生雷电投射物，反弹<span class=\"g\">5</span>次，造成<span class=\"g\">30</span>（<span class=\"g\">100%<span class=\"ic\" data-ic=\"elemental_damage\"></span></span>）伤害"
         }
       ],
       "stats": {
@@ -12340,8 +12340,8 @@
               "effect_sign": 3
             }
           ],
-          "text_en": "Every 2nd projectile has",
-          "text_zh": "每次第2个投射物有"
+          "text_en": "Every 2nd projectile has +100 % Crit Chance",
+          "text_zh": "每次第2个投射物有+100%暴击率"
         }
       ],
       "stats": {
@@ -12577,8 +12577,8 @@
             "bounce_dmg_reduction": 0.0,
             "projectile_speed": 3000
           },
-          "text_en": "Hitting an enemy spawns a lightning projectile that bounces <span class=\"g\">80%<span class=\"ic\" data-ic=\"elemental_damage\"></span></span> times and deals <span class=\"g\">11</span> damage",
-          "text_zh": "击中敌人时产生雷电投射物，反弹<span class=\"g\">80%<span class=\"ic\" data-ic=\"elemental_damage\"></span></span>次，造成<span class=\"g\">11</span>伤害"
+          "text_en": "Hitting an enemy spawns a lightning projectile that bounces <span class=\"g\">4</span> times and deals <span class=\"g\">11</span> (<span class=\"g\">80%<span class=\"ic\" data-ic=\"elemental_damage\"></span></span>) damage",
+          "text_zh": "击中敌人时产生雷电投射物，反弹<span class=\"g\">4</span>次，造成<span class=\"g\">11</span>（<span class=\"g\">80%<span class=\"ic\" data-ic=\"elemental_damage\"></span></span>）伤害"
         }
       ],
       "stats": {
@@ -12978,8 +12978,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "Slows enemies by <span class=\"g\">2%</span> on hit for every <span class=\"g\">1</span> <span class=\"g\">Engineering</span> you have [<span class=\"g\">2%</span>]",
-          "text_zh": "每拥有<span class=\"g\">1</span><span class=\"g\">工程学</span>，攻击命中时会使敌人减速<span class=\"g\">2%</span>[<span class=\"g\">2%</span>]"
+          "text_en": "Slows enemies by <span class=\"g\">2%</span> on hit for every <span class=\"g\">1</span> <span class=\"g\">Engineering</span> you have",
+          "text_zh": "每拥有<span class=\"g\">1</span><span class=\"g\">工程学</span>，攻击命中时会使敌人减速<span class=\"g\">2%</span>"
         }
       ],
       "stats": {
@@ -14472,8 +14472,8 @@
           "weapon_stacked_id": "weapon_stick",
           "stat_displayed_name": "stat_damage",
           "stat_name": "damage",
-          "text_en": "Deals <span class=\"g\">+10</span> <span class=\"g\">Damage</span> for every additional <span class=\"g\">Stick</span> you have [<span class=\"g\">+10</span>]",
-          "text_zh": "每额外持有1个<span class=\"g\">树枝</span>便会<span class=\"g\">+10</span><span class=\"g\">伤害</span> [<span class=\"g\">+10</span>]"
+          "text_en": "Deals <span class=\"g\">+10</span> <span class=\"g\">Damage</span> for every additional <span class=\"g\">Stick</span> you have",
+          "text_zh": "每额外持有1个<span class=\"g\">树枝</span>便会<span class=\"g\">+10</span><span class=\"g\">伤害</span>"
         }
       ],
       "stats": {
@@ -14705,8 +14705,8 @@
             "bounce_dmg_reduction": 0.5,
             "projectile_speed": 2000
           },
-          "text_en": "Hitting an enemy spawns <span class=\"g\">4</span> projectiles that deal <span class=\"g\">1</span> damage and slow enemies around them",
-          "text_zh": "击中敌人时产生<span class=\"g\">4</span>投射物，造成<span class=\"g\">1</span>伤害并使周围的敌人减速"
+          "text_en": "Hitting an enemy spawns <span class=\"g\">4</span> projectiles that deal <span class=\"g\">1</span> (<span class=\"g\">100%<span class=\"ic\" data-ic=\"elemental_damage\"></span></span>) damage and slow enemies around them",
+          "text_zh": "击中敌人时产生<span class=\"g\">4</span>投射物，造成<span class=\"g\">1</span>（<span class=\"g\">100%<span class=\"ic\" data-ic=\"elemental_damage\"></span></span>）伤害并使周围的敌人减速"
         }
       ],
       "stats": {
@@ -15953,8 +15953,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 0,
-          "text_en": "% Items Price",
-          "text_zh": "%道具价格"
+          "text_en": "<span class=\"g\">-5</span>% Items Price",
+          "text_zh": "<span class=\"g\">-5</span>%道具价格"
         }
       ],
       "unlocked_by_default": true,
@@ -16300,8 +16300,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 2,
-          "text_en": "Enemies",
-          "text_zh": "敌人"
+          "text_en": "+5% Enemies",
+          "text_zh": "+5% 敌人"
         }
       ],
       "unlocked_by_default": true,
@@ -17325,8 +17325,8 @@
               ]
             ]
           },
-          "text_en": "Attacks have a <span class=\"g\">0%</span> chance to deal 3x<span class=\"g\">1</span> (<span class=\"g\">100%<span class=\"ic\" data-ic=\"elemental_damage\"></span></span>) burning damage",
-          "text_zh": "攻击有<span class=\"g\">0%</span>机率造成3x<span class=\"g\">1</span>（<span class=\"g\">100%<span class=\"ic\" data-ic=\"elemental_damage\"></span></span>）的燃烧伤害"
+          "text_en": "Attacks have a <span class=\"g\">25%</span> chance to deal 3x<span class=\"g\">1</span> (<span class=\"g\">100%<span class=\"ic\" data-ic=\"elemental_damage\"></span></span>) burning damage",
+          "text_zh": "攻击有<span class=\"g\">25%</span>机率造成3x<span class=\"g\">1</span>（<span class=\"g\">100%<span class=\"ic\" data-ic=\"elemental_damage\"></span></span>）的燃烧伤害"
         }
       ],
       "unlocked_by_default": true,
@@ -18155,8 +18155,8 @@
               ]
             ]
           },
-          "text_en": "Spawns a Blazemander pet that deals <span class=\"g\">1</span> (<span class=\"g\">1%<span class=\"ic\" data-ic=\"elemental_damage\"></span></span>) damage. Every <span class=\"g\">0</span> seconds, it shoots burning projectiles in all directions, each dealing damage. Enemies hit by any of these attacks take <span class=\"g\">5</span>x<span class=\"g\">3</span> (<span class=\"g\">50%<span class=\"ic\" data-ic=\"elemental_damage\"></span></span>) burning damage",
-          "text_zh": "生成一个焰蜥蜴宠物，造成<span class=\"g\">1</span>（<span class=\"g\">1%<span class=\"ic\" data-ic=\"elemental_damage\"></span></span>）伤害。每<span class=\"g\">0</span>秒钟，向所有方向发射燃烧的投射物，每发造成伤害。被这些攻击命中的敌人会受到<span class=\"g\">5</span>x<span class=\"g\">3</span>（<span class=\"g\">50%<span class=\"ic\" data-ic=\"elemental_damage\"></span></span>）燃烧伤害"
+          "text_en": "Spawns a Blazemander pet that deals <span class=\"g\">1</span> (<span class=\"g\">1%<span class=\"ic\" data-ic=\"elemental_damage\"></span></span>) damage. Every <span class=\"g\">0.4</span> seconds, it shoots burning projectiles in all directions, each dealing damage. Enemies hit by any of these attacks take <span class=\"g\">5</span>x<span class=\"g\">3</span> (<span class=\"g\">50%<span class=\"ic\" data-ic=\"elemental_damage\"></span></span>) burning damage",
+          "text_zh": "生成一个焰蜥蜴宠物，造成<span class=\"g\">1</span>（<span class=\"g\">1%<span class=\"ic\" data-ic=\"elemental_damage\"></span></span>）伤害。每<span class=\"g\">0.4</span>秒钟，向所有方向发射燃烧的投射物，每发造成伤害。被这些攻击命中的敌人会受到<span class=\"g\">5</span>x<span class=\"g\">3</span>（<span class=\"g\">50%<span class=\"ic\" data-ic=\"elemental_damage\"></span></span>）燃烧伤害"
         }
       ],
       "unlocked_by_default": false,
@@ -18353,8 +18353,8 @@
             "deal_dmg_on_return": false,
             "alternate_attack_type": false
           },
-          "text_en": "Spawns a Bonk Dog pet that deals <span class=\"g\">10</span> (<span class=\"g\">60%<span class=\"ic\" data-ic=\"melee_damage\"></span></span>) damage. Every <span class=\"g\">0</span> seconds, it performs a dash attack that deals explosive damage in an area",
-          "text_zh": "生成一只Bonk狗宠物，会造成<span class=\"g\">10</span>（<span class=\"g\">60%<span class=\"ic\" data-ic=\"melee_damage\"></span></span>）伤害。它每<span class=\"g\">0</span>秒钟会进行一次冲刺攻击，在范围内造成爆炸伤害"
+          "text_en": "Spawns a Bonk Dog pet that deals <span class=\"g\">10</span> (<span class=\"g\">60%<span class=\"ic\" data-ic=\"melee_damage\"></span></span>) damage. Every <span class=\"g\">0.5</span> seconds, it performs a dash attack that deals explosive damage in an area",
+          "text_zh": "生成一只Bonk狗宠物，会造成<span class=\"g\">10</span>（<span class=\"g\">60%<span class=\"ic\" data-ic=\"melee_damage\"></span></span>）伤害。它每<span class=\"g\">0.5</span>秒钟会进行一次冲刺攻击，在范围内造成爆炸伤害"
         }
       ],
       "unlocked_by_default": false,
@@ -18409,8 +18409,8 @@
             "bounce_dmg_reduction": 0.5,
             "projectile_speed": 3000
           },
-          "text_en": "Spawns a Bot-O-Mine structure that shoots bullets dealing <span class=\"g\">10</span> (<span class=\"g\">100%<span class=\"ic\" data-ic=\"engineering\"></span></span>) damage. It also spawns a landmine every <span class=\"g\">0</span> seconds dealing damage in an area",
-          "text_zh": "生成一个布雷机器人构筑物，发射子弹造成<span class=\"g\">10</span>（<span class=\"g\">100%<span class=\"ic\" data-ic=\"engineering\"></span></span>）伤害。同时每<span class=\"g\">0</span>生成一个地雷，在范围内造成伤害"
+          "text_en": "Spawns a Bot-O-Mine structure that shoots bullets dealing <span class=\"g\">10</span> (<span class=\"g\">100%<span class=\"ic\" data-ic=\"engineering\"></span></span>) damage. It also spawns a landmine every <span class=\"g\">0.5</span> seconds dealing damage in an area",
+          "text_zh": "生成一个布雷机器人构筑物，发射子弹造成<span class=\"g\">10</span>（<span class=\"g\">100%<span class=\"ic\" data-ic=\"engineering\"></span></span>）伤害。同时每<span class=\"g\">0.5</span>生成一个地雷，在范围内造成伤害"
         }
       ],
       "unlocked_by_default": false,
@@ -18730,8 +18730,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "% Structure attack speed",
-          "text_zh": "%构建物的攻击速度"
+          "text_en": "<span class=\"g\">+10</span>% Structure attack speed",
+          "text_zh": "<span class=\"g\">+10</span>%构建物的攻击速度"
         },
         {
           "key": "stat_speed",
@@ -20715,8 +20715,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 0,
-          "text_en": "% Enemy Speed",
-          "text_zh": "%敌人速度"
+          "text_en": "<span class=\"g\">-8</span>% Enemy Speed",
+          "text_zh": "<span class=\"g\">-8</span>%敌人速度"
         },
         {
           "key": "stat_speed",
@@ -20823,8 +20823,8 @@
             "effect_scale": 1.0,
             "is_healing": false
           },
-          "text_en": "Consumables have a <span class=\"g\">50%</span> chance to explode for <span class=\"g\">EXPLODE_ON_CONSUMABLE</span> (<span class=\"g\">100%<span class=\"ic\" data-ic=\"max_hp\"></span></span>) damage when picked up",
-          "text_zh": "当捡起消耗品时有<span class=\"g\">50%</span>概率爆炸，造成<span class=\"g\">EXPLODE_ON_CONSUMABLE</span>（<span class=\"g\">100%<span class=\"ic\" data-ic=\"max_hp\"></span></span>）伤害"
+          "text_en": "Consumables have a <span class=\"g\">50%</span> chance to explode for <span class=\"g\">0</span> (<span class=\"g\">100%<span class=\"ic\" data-ic=\"max_hp\"></span></span>) damage when picked up",
+          "text_zh": "当捡起消耗品时有<span class=\"g\">50%</span>概率爆炸，造成<span class=\"g\">0</span>（<span class=\"g\">100%<span class=\"ic\" data-ic=\"max_hp\"></span></span>）伤害"
         }
       ],
       "unlocked_by_default": false,
@@ -20862,8 +20862,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 0,
-          "text_en": "% Reroll Price",
-          "text_zh": "%刷新价格"
+          "text_en": "<span class=\"g\">-25</span>% Reroll Price",
+          "text_zh": "<span class=\"g\">-25</span>%刷新价格"
         }
       ],
       "unlocked_by_default": true,
@@ -21150,8 +21150,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 2,
-          "text_en": "Enemies",
-          "text_zh": "敌人"
+          "text_en": "-5% Enemies",
+          "text_zh": "-5% 敌人"
         }
       ],
       "unlocked_by_default": true,
@@ -21192,8 +21192,8 @@
           "extra": {
             "chance": 50
           },
-          "text_en": "<span class=\"g\">5000%</span> chance to heal HP when dodging an attack",
-          "text_zh": "在躲避攻击时有<span class=\"g\">5000%</span>几率恢复点生命值"
+          "text_en": "<span class=\"g\">50%</span> chance to heal HP when dodging an attack",
+          "text_zh": "在躲避攻击时有<span class=\"g\">50%</span>几率恢复点生命值"
         }
       ],
       "unlocked_by_default": true,
@@ -21231,8 +21231,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 1,
-          "text_en": "% Enemy health",
-          "text_zh": "%敌人生命值"
+          "text_en": "<span class=\"r\">+10</span>% Enemy health",
+          "text_zh": "<span class=\"r\">+10</span>%敌人生命值"
         }
       ],
       "unlocked_by_default": true,
@@ -21419,8 +21419,8 @@
             "bounce_dmg_reduction": 0.5,
             "projectile_speed": 3000
           },
-          "text_en": "One bullet dealing <span class=\"g\">1</span> damage is fired from an enemy corpse when they die",
-          "text_zh": "当敌人死亡时，发射一枚能造成<span class=\"g\">1</span>伤害的子弹"
+          "text_en": "One bullet dealing <span class=\"g\">1</span> (<span class=\"g\">100%<span class=\"ic\" data-ic=\"ranged_damage\"></span></span>) damage is fired from an enemy corpse when they die",
+          "text_zh": "当敌人死亡时，发射一枚能造成<span class=\"g\">1</span>（<span class=\"g\">100%<span class=\"ic\" data-ic=\"ranged_damage\"></span></span>）伤害的子弹"
         },
         {
           "key": "stat_range",
@@ -21500,8 +21500,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 1,
-          "text_en": "Weapons have a minimum cooldown of <span class=\"r\">45</span> seconds between attacks",
-          "text_zh": "武器的攻击间隔最小为 <span class=\"r\">45</span> 秒"
+          "text_en": "Weapons have a minimum cooldown of <span class=\"r\">0.75</span> seconds between attacks",
+          "text_zh": "武器的攻击间隔最小为 <span class=\"r\">0.75</span> 秒"
         }
       ],
       "unlocked_by_default": true,
@@ -21709,8 +21709,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 2,
-          "text_en": "Enemies",
-          "text_zh": "敌人"
+          "text_en": "+10% Enemies",
+          "text_zh": "+10% 敌人"
         },
         {
           "key": "enemy_health",
@@ -21719,8 +21719,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 1,
-          "text_en": "% Enemy health",
-          "text_zh": "%敌人生命值"
+          "text_en": "<span class=\"r\">+10</span>% Enemy health",
+          "text_zh": "<span class=\"r\">+10</span>%敌人生命值"
         },
         {
           "key": "enemy_damage",
@@ -21729,8 +21729,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 1,
-          "text_en": "% Enemy damage",
-          "text_zh": "%敌人伤害"
+          "text_en": "<span class=\"r\">+10</span>% Enemy damage",
+          "text_zh": "<span class=\"r\">+10</span>%敌人伤害"
         },
         {
           "key": "stat_curse",
@@ -21991,8 +21991,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 2,
-          "text_en": "Enemies",
-          "text_zh": "敌人"
+          "text_en": "-10% Enemies",
+          "text_zh": "-10% 敌人"
         },
         {
           "key": "stat_percent_damage",
@@ -22753,8 +22753,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 0,
-          "text_en": "Your Max HP is capped at its current value [<span class=\"g\">0</span>]",
-          "text_zh": "你的最大生命值现在以[<span class=\"g\">0</span>]为上限"
+          "text_en": "Your Max HP is capped at its current value",
+          "text_zh": "你的最大生命值现在以为上限"
         }
       ],
       "unlocked_by_default": true,
@@ -23210,8 +23210,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 2,
-          "text_en": "Enemies",
-          "text_zh": "敌人"
+          "text_en": "+10% Enemies",
+          "text_zh": "+10% 敌人"
         },
         {
           "key": "stat_harvesting",
@@ -23845,8 +23845,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 1,
-          "text_en": "% Enemy damage",
-          "text_zh": "%敌人伤害"
+          "text_en": "<span class=\"r\">+15</span>% Enemy damage",
+          "text_zh": "<span class=\"r\">+15</span>%敌人伤害"
         }
       ],
       "unlocked_by_default": false,
@@ -25302,8 +25302,8 @@
           "extra": {
             "value2": 8
           },
-          "text_en": "<span class=\"g\">+1</span> <span class=\"g\">Max HP</span> when picking up a consumable while at maximum health (max <span class=\"g\">+3</span> per wave)",
-          "text_zh": "当在最大生命值下捡起一个消耗品时<span class=\"g\">+1</span><span class=\"g\">最大生命值</span>。每波最大值：<span class=\"g\">+3</span>"
+          "text_en": "<span class=\"g\">+1</span> <span class=\"g\">Max HP</span> when picking up a consumable while at maximum health (max <span class=\"g\">+8</span> per wave)",
+          "text_zh": "当在最大生命值下捡起一个消耗品时<span class=\"g\">+1</span><span class=\"g\">最大生命值</span>。每波最大值：<span class=\"g\">+8</span>"
         }
       ],
       "unlocked_by_default": true,
@@ -26592,8 +26592,8 @@
               "effect_sign": 3
             }
           ],
-          "text_en": "Every ranged weapon's 5th projectile has",
-          "text_zh": "每把远战武器的第5个投射物有"
+          "text_en": "Every ranged weapon's 5th projectile has +3 projectiles",
+          "text_zh": "每把远战武器的第5个投射物有+3投射物"
         },
         {
           "key": "stat_percent_damage",
@@ -26922,8 +26922,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 0,
-          "text_en": "Weapons Price",
-          "text_zh": "武器价格"
+          "text_en": "<span class=\"g\">-95%</span> Weapons Price",
+          "text_zh": "<span class=\"g\">-95%</span> 武器价格"
         },
         {
           "key": "stat_harvesting",
@@ -27124,8 +27124,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 0,
-          "text_en": "% Items Price",
-          "text_zh": "%道具价格"
+          "text_en": "<span class=\"g\">-20</span>% Items Price",
+          "text_zh": "<span class=\"g\">-20</span>%道具价格"
         },
         {
           "key": "weapon_slot_upgrades",
@@ -27503,8 +27503,8 @@
               "effect_sign": 3
             }
           ],
-          "text_en": "Every <span class=\"g\">5</span> uncollected materials are converted into and at the end of a wave",
-          "text_zh": "每<span class=\"g\">5</span>未收集的材料在敌袭结束后会转换为和"
+          "text_en": "Every <span class=\"g\">5</span> uncollected materials are converted into <span class=\"g\">1</span> <span class=\"g\">% Structure attack speed</span> and <span class=\"g\">1</span> <span class=\"g\">Structure Range</span> at the end of a wave",
+          "text_zh": "每<span class=\"g\">5</span>未收集的材料在敌袭结束后会转换为<span class=\"g\">1</span><span class=\"g\">%构建物的攻击速度</span>和<span class=\"g\">1</span><span class=\"g\">构筑物范围</span>"
         },
         {
           "key": "effect_increase_stat_gains",
@@ -27745,8 +27745,8 @@
           "perm_stats_only": false,
           "stat_scaled": "free_weapon_slots",
           "nb_stat_scaled": 1,
-          "text_en": "<span class=\"g\">+60</span> <span class=\"g\">XP Gain</span> for every free weapon slot you have [<span class=\"g\">+1</span>]",
-          "text_zh": "每有一个空闲的武器栏，将获得<span class=\"g\">+60</span><span class=\"g\">获得%经验</span>[<span class=\"g\">+1</span>]"
+          "text_en": "<span class=\"g\">+60</span> <span class=\"g\">XP Gain</span> for every free weapon slot you have",
+          "text_zh": "每有一个空闲的武器栏，将获得<span class=\"g\">+60</span><span class=\"g\">获得%经验</span>"
         },
         {
           "key": "level_upgrades_modifications",
@@ -27903,8 +27903,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 1,
-          "text_en": "% Enemy health",
-          "text_zh": "%敌人生命值"
+          "text_en": "<span class=\"r\">+100</span>% Enemy health",
+          "text_zh": "<span class=\"r\">+100</span>%敌人生命值"
         },
         {
           "key": "effect_reduce_stat_gains",
@@ -28474,8 +28474,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 1,
-          "text_en": "% Enemy health",
-          "text_zh": "%敌人生命值"
+          "text_en": "<span class=\"r\">+25</span>% Enemy health",
+          "text_zh": "<span class=\"r\">+25</span>%敌人生命值"
         }
       ],
       "unlocked_by_default": true,
@@ -28760,8 +28760,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 1,
-          "text_en": "% Enemy health",
-          "text_zh": "%敌人生命值"
+          "text_en": "<span class=\"r\">+250</span>% Enemy health",
+          "text_zh": "<span class=\"r\">+250</span>%敌人生命值"
         }
       ],
       "unlocked_by_default": false,
@@ -29218,8 +29218,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 0,
-          "text_en": "% Items Price",
-          "text_zh": "%道具价格"
+          "text_en": "<span class=\"g\">-25</span>% Items Price",
+          "text_zh": "<span class=\"g\">-25</span>%道具价格"
         },
         {
           "key": "effect_increase_stat_gains",
@@ -29352,8 +29352,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 2,
-          "text_en": "Map Size",
-          "text_zh": "地图尺寸"
+          "text_en": "+33% Map Size",
+          "text_zh": "+33% 地图尺寸"
         },
         {
           "key": "number_of_enemies",
@@ -29362,8 +29362,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 2,
-          "text_en": "Enemies",
-          "text_zh": "敌人"
+          "text_en": "+25% Enemies",
+          "text_zh": "+25% 敌人"
         },
         {
           "key": "enemy_gold_drops",
@@ -29382,8 +29382,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 1,
-          "text_en": "% Enemy Speed",
-          "text_zh": "%敌人速度"
+          "text_en": "<span class=\"r\">+10</span>% Enemy Speed",
+          "text_zh": "<span class=\"r\">+10</span>%敌人速度"
         },
         {
           "key": "stat_percent_damage",
@@ -29668,8 +29668,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 1,
-          "text_en": "% Items Price",
-          "text_zh": "%道具价格"
+          "text_en": "<span class=\"r\">+20</span>% Items Price",
+          "text_zh": "<span class=\"r\">+20</span>%道具价格"
         },
         {
           "key": "disable_item_locking",
@@ -30050,8 +30050,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 1,
-          "text_en": "% Items Price",
-          "text_zh": "%道具价格"
+          "text_en": "<span class=\"r\">+25</span>% Items Price",
+          "text_zh": "<span class=\"r\">+25</span>%道具价格"
         },
         {
           "key": "xp_gain",
@@ -30440,8 +30440,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 2,
-          "text_en": "Enemies",
-          "text_zh": "敌人"
+          "text_en": "-70% Enemies",
+          "text_zh": "-70% 敌人"
         },
         {
           "key": "enemy_health",
@@ -30450,8 +30450,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 1,
-          "text_en": "% Enemy health",
-          "text_zh": "%敌人生命值"
+          "text_en": "<span class=\"r\">+175</span>% Enemy health",
+          "text_zh": "<span class=\"r\">+175</span>%敌人生命值"
         },
         {
           "key": "enemy_damage",
@@ -30460,8 +30460,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 1,
-          "text_en": "% Enemy damage",
-          "text_zh": "%敌人伤害"
+          "text_en": "<span class=\"r\">+35</span>% Enemy damage",
+          "text_zh": "<span class=\"r\">+35</span>%敌人伤害"
         }
       ],
       "unlocked_by_default": false,
@@ -30852,8 +30852,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 2,
-          "text_en": "Enemies",
-          "text_zh": "敌人"
+          "text_en": "+50% Enemies",
+          "text_zh": "+50% 敌人"
         },
         {
           "key": "stat_harvesting",
@@ -31287,8 +31287,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 1,
-          "text_en": "% Items Price",
-          "text_zh": "%道具价格"
+          "text_en": "<span class=\"r\">+50</span>% Items Price",
+          "text_zh": "<span class=\"r\">+50</span>%道具价格"
         }
       ],
       "unlocked_by_default": false,
@@ -31451,8 +31451,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 0,
-          "text_en": "% Enemy Speed",
-          "text_zh": "%敌人速度"
+          "text_en": "<span class=\"g\">-25</span>% Enemy Speed",
+          "text_zh": "<span class=\"g\">-25</span>%敌人速度"
         },
         {
           "key": "stat_harvesting",
@@ -31471,8 +31471,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 2,
-          "text_en": "Map Size",
-          "text_zh": "地图尺寸"
+          "text_en": "-33% Map Size",
+          "text_zh": "-33% 地图尺寸"
         },
         {
           "key": "number_of_enemies",
@@ -31481,8 +31481,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 2,
-          "text_en": "Enemies",
-          "text_zh": "敌人"
+          "text_en": "-10% Enemies",
+          "text_zh": "-10% 敌人"
         },
         {
           "key": "stat_speed",
@@ -32122,8 +32122,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 1,
-          "text_en": "% Items Price",
-          "text_zh": "%道具价格"
+          "text_en": "<span class=\"r\">+50</span>% Items Price",
+          "text_zh": "<span class=\"r\">+50</span>%道具价格"
         }
       ],
       "unlocked_by_default": false,

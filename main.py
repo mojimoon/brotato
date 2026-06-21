@@ -1116,10 +1116,13 @@ def _build_effect_args_and_signs(eff, lang):
             'effect_turret_laser', 'effect_turret_rocket', 'effect_landmines', 'effect_garden'):
         struct_stats = eff.get('structure_stats', {})
         spawn_cd = extra.get('spawn_cooldown', 0)
-        # Use structure_stats.cooldown if spawn_cooldown is invalid
-        if spawn_cd <= 0:
-            spawn_cd = struct_stats.get('cooldown', 0)
-        cd_sec = spawn_cd / 60.0 if spawn_cd > 0 else 12
+        # spawn_cooldown is already in seconds; structure_stats.cooldown is in frames
+        if spawn_cd > 0:
+            cd_sec = spawn_cd
+        elif struct_stats.get('cooldown', 0) > 0:
+            cd_sec = struct_stats['cooldown'] / 60.0
+        else:
+            cd_sec = 12
         if cd_sec == int(cd_sec):
             cd_sec = int(cd_sec)
         dmg = struct_stats.get('damage', value)
@@ -1127,11 +1130,17 @@ def _build_effect_args_and_signs(eff, lang):
         scaling_text = build_scaling_text(scaling, lang)
         nb_proj = struct_stats.get('nb_projectiles', 1)
         bounce = struct_stats.get('bounce', 0)
-        # TurretEffect.get_args() for non-burning: [damage, scaling, nb_projectiles, bounce, key_name]
-        # TurretEffect.get_args() for burning: [burn_dur, burn_dmg, burn_scaling, key_name]
-        # StructureEffect.get_args(): [value, spawn_cd, damage, scaling]
+        # Check burning_data: top-level or in structure_effects
         bd = eff.get('burning_data')
-        if bd:
+        if not bd:
+            for se in eff.get('structure_effects', []):
+                if se.get('burning_data'):
+                    bd = se['burning_data']
+                    break
+        # TurretEffect.get_args() for burning: [burn_dur, burn_dmg, burn_scaling, key_name]
+        # TurretEffect.get_args() for non-burning: [damage, scaling, nb_projectiles, bounce, key_name]
+        # StructureEffect.get_args(): [value, spawn_cd, damage, scaling]
+        if bd and text_key in ('effect_turret_flame',):
             args = [str(bd.get('duration', 0)), str(bd.get('damage', 0)),
                     build_scaling_text(bd.get('scaling_stats', []), lang),
                     tr(key.upper(), lang) if key else '']
@@ -1510,9 +1519,8 @@ def _text_render(fmt_key, fmt, args, arg_signs, lang):
     # Cleanup leftover placeholders and empty brackets
     result = re.sub(r'\s*\{\d+\}\s*', ' ', result)
     result = re.sub(r'[（(]\s*[）)]', '', result)
-    result = re.sub(r'\[\s*\]', '', result)
-    # Remove runtime-value brackets: [X], [+X], [-X] where X is a number
-    result = re.sub(r'\s*\[[\s]*[+-]?\d+[\s]*\]', '', result)
+    # Remove runtime-value brackets: [anything] — game uses these for live computed values
+    result = re.sub(r'\s*\[.*?\]', '', result)
     result = re.sub(r'\s+', ' ', result).strip()
     return result
 
@@ -1593,10 +1601,31 @@ def render_effect_text(eff, lang):
         args_built = True
 
     # --- ProjectilesOnHitEffect ---
-    elif key in ('effect_projectiles_on_hit', 'EFFECT_PROJECTILES_ON_HIT'):
+    elif key in ('effect_projectiles_on_hit', 'EFFECT_PROJECTILES_ON_HIT',
+                 'EFFECT_SLOW_PROJECTILES_ON_HIT', 'effect_slow_projectiles_on_hit'):
         ws = eff.get('weapon_stats')
         if ws:
             args[0] = str(abs(value) if value else ws.get('nb_projectiles', 3))
+            args[1] = str(ws.get('damage', 0))
+            args[2] = str(ws.get('bounce', 0) + 1)
+            args[3] = build_scaling_text(ws.get('scaling_stats', []), lang)
+        args_built = True
+
+    # --- LightningOnHitEffect ---
+    elif key == 'effect_lightning_on_hit' or tk_upper == 'EFFECT_LIGHTNING_ON_HIT':
+        ws = eff.get('weapon_stats')
+        if ws:
+            args[0] = str(value)
+            args[1] = str(ws.get('damage', 0))
+            args[2] = str(ws.get('bounce', 0) + 1)
+            args[3] = build_scaling_text(ws.get('scaling_stats', []), lang)
+        args_built = True
+
+    # --- ProjectilesOnDeathEffect ---
+    elif key == 'projectiles_on_death' or text_key == 'effect_projectiles_on_death':
+        ws = eff.get('weapon_stats')
+        if ws:
+            args[0] = str(value)
             args[1] = str(ws.get('damage', 0))
             args[2] = str(ws.get('bounce', 0) + 1)
             args[3] = build_scaling_text(ws.get('scaling_stats', []), lang)
@@ -1658,14 +1687,17 @@ def render_effect_text(eff, lang):
         if ws:
             args[0] = str(ws.get('damage', 0) or value)
             args[1] = build_scaling_text(ws.get('scaling_stats', []), lang)
+            # Cooldown: prefer structure_effects cooldown, fallback to weapon_stats
             cd = ws.get('cooldown', 0)
-            args[2] = str(int(cd / 60)) if cd else '0'
             for se in eff.get('structure_effects', []):
                 se_ws = se.get('weapon_stats') or se.get('structure_stats', {})
-                if se_ws:
+                if se_ws and se_ws.get('cooldown'):
+                    cd = se_ws['cooldown']
                     args[3] = str(se_ws.get('damage', 0))
                     args[4] = build_scaling_text(se_ws.get('scaling_stats', []), lang)
                     break
+            cd_sec = cd / 60.0 if cd else 0
+            args[2] = str(round(cd_sec, 1)) if cd_sec != int(cd_sec) else str(int(cd_sec))
         args_built = True
 
     elif tk_upper == 'EFFECT_PET_BLAZEMANDER':
@@ -1678,14 +1710,17 @@ def render_effect_text(eff, lang):
                 args[2] = str(bd.get('duration', 0))
                 args[3] = str(bd.get('damage', 0))
                 args[4] = build_scaling_text(bd.get('scaling_stats', []), lang)
+            # Cooldown: prefer structure_effects cooldown, fallback to weapon_stats
             cd = ws.get('cooldown', 0)
-            args[5] = str(int(cd / 60)) if cd else '0'
             for se in eff.get('structure_effects', []):
                 se_ws = se.get('weapon_stats') or se.get('structure_stats', {})
-                if se_ws:
+                if se_ws and se_ws.get('cooldown'):
+                    cd = se_ws['cooldown']
                     args[6] = str(se_ws.get('damage', 0))
                     args[7] = build_scaling_text(se_ws.get('scaling_stats', []), lang)
                     break
+            cd_sec = cd / 60.0 if cd else 0
+            args[5] = str(round(cd_sec, 1)) if cd_sec != int(cd_sec) else str(int(cd_sec))
         args_built = True
 
     elif tk_upper == 'EFFECT_PET_LOOTWORM':
@@ -1701,14 +1736,18 @@ def render_effect_text(eff, lang):
         if ws:
             args[0] = str(ws.get('damage', 0) or value)
             args[1] = build_scaling_text(ws.get('scaling_stats', []), lang)
+            # Cooldown: prefer structure_effects cooldown, fallback to weapon_stats
             cd = ws.get('cooldown', 0)
-            args[2] = str(int(cd / 60)) if cd else '0'
             for se in eff.get('structure_effects', []):
                 se_ws = se.get('structure_stats') or se.get('weapon_stats', {})
-                if se_ws:
+                if se_ws and se_ws.get('cooldown'):
+                    cd = se_ws['cooldown']
                     args[3] = str(se_ws.get('damage', 0))
                     args[4] = build_scaling_text(se_ws.get('scaling_stats', []), lang)
                     break
+            cd_sec = cd / 60.0 if cd else 0
+            args[2] = str(round(cd_sec, 1)) if cd_sec != int(cd_sec) else str(int(cd_sec))
+        args_built = True
         args_built = True
 
     elif tk_upper in ('EFFECT_PET_DOC_MOTH', 'EFFECT_PET_SCAPEGOAT', 'EFFECT_PET_JELLYSHIELD',
@@ -1731,7 +1770,8 @@ def render_effect_text(eff, lang):
             args[1] = str(ws.get('damage', 0))
             args[3] = build_scaling_text(ws.get('scaling_stats', []), lang)
             cd = ws.get('cooldown', 0)
-            args[4] = str(int(cd / 60)) if cd else '0'
+            cd_sec = cd / 60.0 if cd else 0
+            args[4] = str(round(cd_sec, 1)) if cd_sec != int(cd_sec) else str(int(cd_sec))
         args_built = True
 
     elif tk_upper == 'EFFECT_EXPLODE_AND_BURN_ON_CONSUMABLE':
@@ -1742,6 +1782,16 @@ def render_effect_text(eff, lang):
             bd_dmg = bd.get('damage', 0)
             bd_st = build_scaling_text(bd.get('scaling_stats', []), lang)
             args[1] = f'{bd_dur}x{bd_dmg} ({bd_st})' if bd_st else f'{bd_dur}x{bd_dmg}'
+        args_built = True
+
+    # --- ExplodeOnConsumable ---
+    elif key == 'explode_on_consumable' or tk_upper == 'EFFECT_EXPLODE_ON_CONSUMABLE':
+        ws = eff.get('weapon_stats') or eff.get('structure_stats', {})
+        chance_val = extra.get('chance', 0.5)
+        args[0] = f'{int(chance_val * 100)}%' if chance_val <= 1 else f'{int(chance_val)}%'
+        if ws:
+            args[1] = str(ws.get('damage', 0))
+            args[2] = build_scaling_text(ws.get('scaling_stats', []), lang)
         args_built = True
 
     # --- ItemExplodingEffect ---
@@ -1829,6 +1879,12 @@ def render_effect_text(eff, lang):
         args[1] = str(abs(value))
         args_built = True
 
+    # --- MinimumWeaponCooldownEffect ---
+    elif key == 'minimum_weapon_cooldowns' or tk_upper == 'EFFECT_MINIMUM_WEAPON_COOLDOWN':
+        # value is in frames (60fps), convert to seconds
+        args[0] = str(round(value / 60.0, 2))
+        args_built = True
+
     # --- ChanceStatDamageEffect (damage triggers) ---
     elif tk_upper in ('EFFECT_DEAL_DMG_WHEN_PICKUP_GOLD', 'EFFECT_DEAL_DMG_WHEN_DEATH',
                        'EFFECT_DEAL_DMG_WHEN_DODGE', 'EFFECT_DEAL_DMG_WHEN_HEAL'):
@@ -1842,7 +1898,9 @@ def render_effect_text(eff, lang):
     # --- BurnChanceEffect ---
     elif tk_upper == 'EFFECT_BURN_CHANCE':
         bd = eff.get('burning_data', {})
-        args[0] = f'{int(extra.get("chance", 0) * 100)}%'
+        # chance is in burning_data.chance (0.25 = 25%), not extra.chance
+        chance_val = bd.get('chance', extra.get('chance', 0))
+        args[0] = f'{int(chance_val * 100)}%'
         args[1] = str(bd.get('duration', 0))
         arg_signs[1] = ''
         args[2] = str(bd.get('damage', 0))
@@ -1871,7 +1929,7 @@ def render_effect_text(eff, lang):
                 'EFFECT_DECAYING_STAT_ON_CONSUMABLE': extra.get('value2', extra.get('duration_secs', 2)),
                 'EFFECT_DECAYING_STAT_ON_HIT': extra.get('value2', extra.get('duration_secs', 0)),
                 'EFFECT_GAIN_STAT_WHEN_ATTACK_KILLED_ENEMIES': extra.get('stat_nb', extra.get('nb_stat_scaled', 2)),
-                'EFFECT_CONSUMABLE_STAT_WHILE_MAX_LIMITED': extra.get('max_stacks', 3),
+                'EFFECT_CONSUMABLE_STAT_WHILE_MAX_LIMITED': extra.get('value2', extra.get('max_stacks', 3)),
             }
             v = val_map.get(tk_upper, 0)
             args[2] = str(int(v)) if v else ''
@@ -1924,6 +1982,12 @@ def render_effect_text(eff, lang):
         args[1] = stat_display_name(key, lang)
         args_built = True
 
+    # --- Keys in KEYS_NEEDING_OPERATOR that have translations (reroll_price, structure_attack_speed, etc.) ---
+    elif key and key.lower() in KEYS_NEEDING_OPERATOR and fmt:
+        args[0] = str(value)
+        args[1] = tr(key.upper(), lang) if key else ''
+        args_built = True
+
     # --- Starting weapon effects ---
     elif custom_key == 'starting_weapon':
         args[0] = str(value)
@@ -1938,6 +2002,21 @@ def render_effect_text(eff, lang):
         args[1] = stat_display_name(key, lang)
         args_built = True
 
+    # --- EffectWithSubEffects (modify_every_x_projectile, etc.) ---
+    elif eff.get('sub_effects') and fmt and '{' in fmt:
+        # Parent args: [value, tr(key)]
+        args[0] = str(value)
+        args[1] = tr(key.upper(), lang) if key else ''
+        # Sub-effect args appended
+        idx = 2
+        for se in eff.get('sub_effects', []):
+            se_val = se.get('value', 0)
+            se_key = se.get('key', '')
+            args[idx] = str(se_val)
+            args[idx + 1] = tr(se_key.upper(), lang) if se_key else ''
+            idx += 2
+        args_built = True
+
     # --- Generic with format string ---
     elif fmt and '{' in fmt:
         args[0] = str(value)
@@ -1948,7 +2027,9 @@ def render_effect_text(eff, lang):
             if ws_dmg:
                 args[1] = str(ws_dmg)
         if 'chance' in extra and extra['chance']:
-            args[0] = f'{int(extra["chance"] * 100)}%'
+            ch = extra['chance']
+            # chance <= 1 is a decimal (0.25 = 25%), > 1 is already a percentage (50 = 50%)
+            args[0] = f'{int(ch * 100)}%' if ch <= 1 else f'{int(ch)}%'
         if ws:
             ws_scaling = build_scaling_text(ws.get('scaling_stats', []), lang)
             if ws_scaling:
