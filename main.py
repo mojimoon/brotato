@@ -1645,9 +1645,13 @@ def render_effect_text(eff, lang):
     )} or key in ('effect_spawn_garden', 'effect_spawn_landmine'):
         struct_stats = eff.get('structure_stats', {})
         spawn_cd = extra.get('spawn_cooldown', extra.get('interval', 0))
-        if spawn_cd <= 0 and struct_stats:
-            spawn_cd = struct_stats.get('cooldown', spawn_cd)
-        cd_sec = spawn_cd / 60.0 if spawn_cd > 0 else 12
+        # spawn_cooldown is already in seconds; structure_stats.cooldown is in frames
+        if spawn_cd > 0:
+            cd_sec = spawn_cd
+        elif struct_stats.get('cooldown', 0) > 0:
+            cd_sec = struct_stats['cooldown'] / 60.0
+        else:
+            cd_sec = 12
         if cd_sec == int(cd_sec):
             cd_sec = int(cd_sec)
         dmg = struct_stats.get('damage', value) if struct_stats else value
@@ -1656,7 +1660,12 @@ def render_effect_text(eff, lang):
         nb_proj = struct_stats.get('nb_projectiles', 1) if struct_stats else 1
         bounce = struct_stats.get('bounce', 0) if struct_stats else 0
         bd = eff.get('burning_data')
-        if bd:
+        if not bd:
+            for se in eff.get('structure_effects', []):
+                if se.get('burning_data'):
+                    bd = se['burning_data']
+                    break
+        if bd and tk_upper in ('EFFECT_TURRET_FLAME',):
             args[0] = str(bd.get('duration', 0))
             args[1] = str(bd.get('damage', 0))
             args[2] = build_scaling_text(bd.get('scaling_stats', []), lang)
@@ -1687,17 +1696,14 @@ def render_effect_text(eff, lang):
         if ws:
             args[0] = str(ws.get('damage', 0) or value)
             args[1] = build_scaling_text(ws.get('scaling_stats', []), lang)
-            # Cooldown: prefer structure_effects cooldown, fallback to weapon_stats
-            cd = ws.get('cooldown', 0)
+            # Hardcoded: dash cooldown is 5 seconds (not in static data)
+            args[2] = '5'
             for se in eff.get('structure_effects', []):
                 se_ws = se.get('weapon_stats') or se.get('structure_stats', {})
-                if se_ws and se_ws.get('cooldown'):
-                    cd = se_ws['cooldown']
+                if se_ws:
                     args[3] = str(se_ws.get('damage', 0))
                     args[4] = build_scaling_text(se_ws.get('scaling_stats', []), lang)
                     break
-            cd_sec = cd / 60.0 if cd else 0
-            args[2] = str(round(cd_sec, 1)) if cd_sec != int(cd_sec) else str(int(cd_sec))
         args_built = True
 
     elif tk_upper == 'EFFECT_PET_BLAZEMANDER':
@@ -1710,17 +1716,15 @@ def render_effect_text(eff, lang):
                 args[2] = str(bd.get('duration', 0))
                 args[3] = str(bd.get('damage', 0))
                 args[4] = build_scaling_text(bd.get('scaling_stats', []), lang)
-            # Cooldown: prefer structure_effects cooldown, fallback to weapon_stats
-            cd = ws.get('cooldown', 0)
+            # Hardcoded: projectile cooldown is 4 seconds (not in static data)
+            args[5] = '4'
             for se in eff.get('structure_effects', []):
                 se_ws = se.get('weapon_stats') or se.get('structure_stats', {})
-                if se_ws and se_ws.get('cooldown'):
-                    cd = se_ws['cooldown']
+                if se_ws:
                     args[6] = str(se_ws.get('damage', 0))
                     args[7] = build_scaling_text(se_ws.get('scaling_stats', []), lang)
                     break
-            cd_sec = cd / 60.0 if cd else 0
-            args[5] = str(round(cd_sec, 1)) if cd_sec != int(cd_sec) else str(int(cd_sec))
+        args_built = True
         args_built = True
 
     elif tk_upper == 'EFFECT_PET_LOOTWORM':
@@ -1736,18 +1740,14 @@ def render_effect_text(eff, lang):
         if ws:
             args[0] = str(ws.get('damage', 0) or value)
             args[1] = build_scaling_text(ws.get('scaling_stats', []), lang)
-            # Cooldown: prefer structure_effects cooldown, fallback to weapon_stats
-            cd = ws.get('cooldown', 0)
+            # Hardcoded: landmine cooldown is 5 seconds (not in static data)
+            args[2] = '5'
             for se in eff.get('structure_effects', []):
                 se_ws = se.get('structure_stats') or se.get('weapon_stats', {})
-                if se_ws and se_ws.get('cooldown'):
-                    cd = se_ws['cooldown']
+                if se_ws:
                     args[3] = str(se_ws.get('damage', 0))
                     args[4] = build_scaling_text(se_ws.get('scaling_stats', []), lang)
                     break
-            cd_sec = cd / 60.0 if cd else 0
-            args[2] = str(round(cd_sec, 1)) if cd_sec != int(cd_sec) else str(int(cd_sec))
-        args_built = True
         args_built = True
 
     elif tk_upper in ('EFFECT_PET_DOC_MOTH', 'EFFECT_PET_SCAPEGOAT', 'EFFECT_PET_JELLYSHIELD',
@@ -1885,6 +1885,15 @@ def render_effect_text(eff, lang):
         args[0] = str(round(value / 60.0, 2))
         args_built = True
 
+    # --- Heal when dodge (Adrenaline) ---
+    elif tk_upper == 'EFFECT_HEAL_WHEN_DODGE':
+        # Translation: "{0} chance to heal {1} HP when dodging an attack"
+        # extra.chance is already a percentage (50 = 50%)
+        chance_val = extra.get('chance', 100)
+        args[0] = f'{int(chance_val)}%' if chance_val > 1 else f'{int(chance_val * 100)}%'
+        args[1] = str(value)  # HP to heal
+        args_built = True
+
     # --- ChanceStatDamageEffect (damage triggers) ---
     elif tk_upper in ('EFFECT_DEAL_DMG_WHEN_PICKUP_GOLD', 'EFFECT_DEAL_DMG_WHEN_DEATH',
                        'EFFECT_DEAL_DMG_WHEN_DODGE', 'EFFECT_DEAL_DMG_WHEN_HEAL'):
@@ -1956,6 +1965,50 @@ def render_effect_text(eff, lang):
             if scaled_s:
                 args[3] = stat_display_name(scaled_s, lang)
 
+        # --- Convert stat effects ---
+        elif tk_upper in ('EFFECT_CONVERT_STAT_TEMP_HALF_WAVE', 'EFFECT_CONVERT_STAT_END_OF_WAVE'):
+            # Hardcoded values for known characters
+            CONVERT_MAP = {
+                'stat_ranged_damage': {'pct': 100, 'from': 'stat_ranged_damage', 'to': 'stat_engineering', 'from_r': 1, 'to_r': 2},
+                'materials': {'pct': 50, 'from': 'materials', 'to': 'stat_max_hp', 'from_r': 13, 'to_r': 1},
+            }
+            cv = CONVERT_MAP.get(key, {'pct': value, 'from': key, 'to': '???', 'from_r': 1, 'to_r': 1})
+            args[0] = f'{cv["pct"]}%'
+            args[1] = stat_display_name(cv['from'], lang) if cv['from'] else ''
+            args[2] = stat_display_name(cv['to'], lang) if cv['to'] else ''
+            args[3] = str(cv['from_r'])
+            args[4] = str(cv['to_r'])
+
+        # --- Charm below HP ---
+        elif tk_upper in ('EFFECT_CHARM_BELOW_HP', 'EFFECT_CHARM_BELOW_HP_NO_SCALING'):
+            val2 = extra.get('value2', 25)
+            args[0] = str(int(val2))
+            args[1] = str(int(value))
+            args[2] = str(int(val2))
+            args[3] = '8'  # CHARM_DURATION
+
+        # --- Enemy percent damage taken ---
+        elif tk_upper == 'EFFECT_ENEMY_PERCENT_DAMAGE_TAKEN':
+            args[0] = f'{value}%'
+            args[1] = str(int(extra.get('duration_secs', 3)))
+            args[2] = stat_display_name(key, lang)
+
+        # --- Melee weapon bonus ---
+        elif tk_upper == 'EFFECT_MELEE_WEAPON_BONUS':
+            args[0] = fmt_val(value, add_op=True, add_pct=needs_percent(key))
+            args[1] = stat_display_name(key, lang)
+
+        # --- Gain stat for every different stat ---
+        elif tk_upper == 'EFFECT_GAIN_STAT_FOR_EVERY_DIFFERENT_STAT':
+            args[3] = tr('ITEM', lang) if lang == 'zh' else 'item'
+            args[4] = '0'
+
+        # --- Weapon class bonus ---
+        elif tk_upper == 'EFFECT_WEAPON_CLASS_BONUS':
+            args[0] = fmt_val(value, add_op=True, add_pct=needs_percent(key))
+            args[1] = stat_display_name(key, lang)
+            args[2] = '???'  # Set name not available in static data
+
         else:
             # Generic: fill extra fields into format slots > 1
             fmt_slots = sorted([int(m.group(1))
@@ -1988,6 +2041,117 @@ def render_effect_text(eff, lang):
         args[1] = tr(key.upper(), lang) if key else ''
         args_built = True
 
+    # --- Tier effects (max_weapon_tier, min_weapon_tier) ---
+    elif key in ('max_weapon_tier', 'min_weapon_tier') or tk_upper in ('EFFECT_MAX_WEAPON_TIER', 'EFFECT_MIN_WEAPON_TIER'):
+        # Convert 0-indexed tier to Roman numerals: 0→Ⅰ, 1→Ⅱ, 2→Ⅲ, 3→Ⅳ
+        ROMAN = ['Ⅰ', 'Ⅱ', 'Ⅲ', 'Ⅳ']
+        tier_idx = int(value) if value < len(ROMAN) else value
+        args[0] = ROMAN[tier_idx] if tier_idx < len(ROMAN) else str(value)
+        args_built = True
+
+    # --- Weapon class bonus ---
+    elif key == 'EFFECT_WEAPON_CLASS_BONUS' or tk_upper == 'EFFECT_WEAPON_CLASS_BONUS':
+        # Translation: "使用{2}类武器时{0}{1}"
+        # Need: {0}=value with operator, {1}=stat_name, {2}=set_name
+        # The set name is not in the data, so we need to infer it from the character
+        # For now, use the stat key from the effect
+        stat_key = eff.get('stat_displayed_name', eff.get('stat', ''))
+        args[0] = fmt_val(value, add_op=True, add_pct=needs_percent(stat_key))
+        args[1] = stat_display_name(stat_key, lang) if stat_key else ''
+        # Set name is not available in static data, use placeholder
+        args[2] = '???'
+        args_built = True
+
+    # --- Convert stat effects ---
+    elif tk_upper in ('EFFECT_CONVERT_STAT_TEMP_HALF_WAVE', 'EFFECT_CONVERT_STAT_END_OF_WAVE'):
+        # Translation: "{0}的{1}在敌袭中途后会暂时转换为{2}（{3}{1}={4}{2}）"
+        # Need: {0}=pct, {1}=from_stat, {2}=to_stat, {3}=from_ratio, {4}=to_ratio
+        # The data only has key (from_stat) and value (pct or ratio)
+        # Hardcoded values for known characters:
+        CONVERT_MAP = {
+            'character_cyborg': {'pct': 100, 'from': 'stat_ranged_damage', 'to': 'stat_engineering', 'from_r': 1, 'to_r': 2},
+            'character_demon': {'pct': 50, 'from': 'materials', 'to': 'stat_max_hp', 'from_r': 13, 'to_r': 1},
+        }
+        # Find which character this effect belongs to (not available in effect data)
+        # Use key to infer: stat_ranged_damage → cyborg, materials → demon
+        if key == 'stat_ranged_damage':
+            cv = CONVERT_MAP['character_cyborg']
+        elif key == 'materials':
+            cv = CONVERT_MAP['character_demon']
+        else:
+            cv = {'pct': value, 'from': key, 'to': '???', 'from_r': 1, 'to_r': 1}
+        args[0] = f'{cv["pct"]}%'
+        args[1] = stat_display_name(cv['from'], lang) if cv['from'] else ''
+        args[2] = stat_display_name(cv['to'], lang) if cv['to'] else ''
+        args[3] = str(cv['from_r'])
+        args[4] = str(cv['to_r'])
+        args_built = True
+
+    # --- Guaranteed shop item ---
+    elif tk_upper == 'EFFECT_GUARANTEED_SHOP_ITEM':
+        # Translation: "商店通常销售一件{0}"
+        # {0} = item name from key (e.g., "item_bait" → "诱饵")
+        item_name = tr(key.upper(), lang) if key else ''
+        args[0] = item_name
+        args_built = True
+
+    # --- Gain stat for every different stat ---
+    elif tk_upper == 'EFFECT_GAIN_STAT_FOR_EVERY_DIFFERENT_STAT':
+        # Translation: "每持有一异种{3}有{0}{1}[{4}]"
+        args[0] = fmt_val(value, add_op=True, add_pct=needs_percent(key))
+        args[1] = stat_display_name(key, lang)
+        args[2] = str(extra.get('nb_stat_scaled', 1))
+        args[3] = tr('ITEM', lang) if lang == 'zh' else 'item'
+        args[4] = '0'  # Runtime value
+        args_built = True
+
+    # --- Gain stat for every stat ---
+    elif tk_upper == 'EFFECT_GAIN_STAT_FOR_EVERY_STAT':
+        # Translation: "{0} {1} for every {2} {3} you have [{4}]"
+        args[0] = fmt_val(value, add_op=True, add_pct=needs_percent(key))
+        args[1] = stat_display_name(key, lang)
+        args[2] = str(extra.get('nb_stat_scaled', 1))
+        args[3] = tr(key.upper(), lang) if key else ''
+        args[4] = '0'  # Runtime value
+        args_built = True
+
+    # --- Gain stat for duplicate items ---
+    elif tk_upper == 'EFFECT_GAIN_STAT_FOR_DUPLICATE_ITEMS':
+        # Translation: similar to EFFECT_GAIN_STAT_FOR_EVERY_STAT
+        args[0] = fmt_val(value, add_op=True, add_pct=needs_percent(key))
+        args[1] = stat_display_name(key, lang)
+        args[2] = str(extra.get('nb_stat_scaled', 1))
+        args[3] = tr('ITEM', lang) if lang == 'zh' else 'item'
+        args[4] = '0'
+        args_built = True
+
+    # --- Charm below HP ---
+    elif tk_upper in ('EFFECT_CHARM_BELOW_HP', 'EFFECT_CHARM_BELOW_HP_NO_SCALING'):
+        # Translation: "击中生命值低于{0}%的敌人时，有{1}%（{2}%最大生命值）的几率使其在{3}秒内受到魅惑"
+        val2 = extra.get('value2', 25)
+        args[0] = str(int(val2))
+        args[1] = str(int(value))
+        args[2] = str(int(val2))
+        args[3] = '8'  # CHARM_DURATION
+        args_built = True
+
+    # --- Enemy percent damage taken ---
+    elif tk_upper == 'EFFECT_ENEMY_PERCENT_DAMAGE_TAKEN':
+        # Translation: "敌人在被{2}命中时，会额外承受{0}伤害，持续{1}秒"
+        args[0] = f'{value}%'
+        args[1] = str(int(extra.get('duration_secs', 3)))
+        args[2] = stat_display_name(key, lang)
+        args_built = True
+
+    # --- Melee weapon bonus ---
+    elif tk_upper == 'EFFECT_MELEE_WEAPON_BONUS':
+        # Translation: "使用近战武器时有{0}"
+        # The value includes the stat bonus
+        stat_key = eff.get('stat', eff.get('stat_displayed_name', 'stat_range'))
+        args[0] = fmt_val(value, add_op=True, add_pct=needs_percent(stat_key))
+        args[1] = stat_display_name(stat_key, lang) if stat_key else ''
+        args_built = True
+
     # --- Starting weapon effects ---
     elif custom_key == 'starting_weapon':
         args[0] = str(value)
@@ -2015,6 +2179,14 @@ def render_effect_text(eff, lang):
             args[idx] = str(se_val)
             args[idx + 1] = tr(se_key.upper(), lang) if se_key else ''
             idx += 2
+        args_built = True
+
+    # --- Piggy bank (runtime wave number) ---
+    elif tk_upper == 'EFFECT_GAIN_PCT_GOLD_START_WAVE_LIMITED':
+        # Translation: "{0} of your materials at the start of waves (stops working at wave {1})"
+        # {1} is a runtime value (RunData.nb_of_waves), hardcode as 20
+        args[0] = f'{value}%'
+        args[1] = '20'  # Default number of waves
         args_built = True
 
     # --- Generic with format string ---

@@ -1797,8 +1797,8 @@
           "extra": {
             "spawn_cooldown": 12
           },
-          "text_en": "A landmine spawns every <span class=\"g\">0.2</span> seconds dealing <span class=\"g\">10</span> (<span class=\"g\">100%<span class=\"ic\" data-ic=\"engineering\"></span></span>) damage in an area",
-          "text_zh": "地雷每<span class=\"g\">0.2</span>秒生成一次，并对一个区域造成<span class=\"g\">10</span>（<span class=\"g\">100%<span class=\"ic\" data-ic=\"engineering\"></span></span>）伤害"
+          "text_en": "A landmine spawns every <span class=\"g\">12</span> seconds dealing <span class=\"g\">10</span> (<span class=\"g\">100%<span class=\"ic\" data-ic=\"engineering\"></span></span>) damage in an area",
+          "text_zh": "地雷每<span class=\"g\">12</span>秒生成一次，并对一个区域造成<span class=\"g\">10</span>（<span class=\"g\">100%<span class=\"ic\" data-ic=\"engineering\"></span></span>）伤害"
         }
       ],
       "stats": {
@@ -5170,8 +5170,8 @@
           "extra": {
             "spawn_cooldown": 9
           },
-          "text_en": "A landmine spawns every <span class=\"g\">0.15</span> seconds dealing <span class=\"g\">10</span> (<span class=\"g\">100%<span class=\"ic\" data-ic=\"engineering\"></span></span>) damage in an area",
-          "text_zh": "地雷每<span class=\"g\">0.15</span>秒生成一次，并对一个区域造成<span class=\"g\">10</span>（<span class=\"g\">100%<span class=\"ic\" data-ic=\"engineering\"></span></span>）伤害"
+          "text_en": "A landmine spawns every <span class=\"g\">9</span> seconds dealing <span class=\"g\">10</span> (<span class=\"g\">100%<span class=\"ic\" data-ic=\"engineering\"></span></span>) damage in an area",
+          "text_zh": "地雷每<span class=\"g\">9</span>秒生成一次，并对一个区域造成<span class=\"g\">10</span>（<span class=\"g\">100%<span class=\"ic\" data-ic=\"engineering\"></span></span>）伤害"
         }
       ],
       "stats": {
@@ -6165,8 +6165,8 @@
           "extra": {
             "spawn_cooldown": -1
           },
-          "text_en": "Spawns a turret that shoots flames dealing <span class=\"g\">1</span>x (<span class=\"g\">1</span>) burning damage",
-          "text_zh": "生成1台燃烧炮塔，造成<span class=\"g\">1</span>x（<span class=\"g\">1</span>）燃烧伤害"
+          "text_en": "Spawns a turret that shoots flames dealing <span class=\"g\">8</span>x<span class=\"g\">5</span> (<span class=\"g\">33%<span class=\"ic\" data-ic=\"engineering\"></span></span>) burning damage",
+          "text_zh": "生成1台燃烧炮塔，造成<span class=\"g\">8</span>x<span class=\"g\">5</span>（<span class=\"g\">33%<span class=\"ic\" data-ic=\"engineering\"></span></span>）燃烧伤害"
         }
       ],
       "stats": {
@@ -9224,8 +9224,8 @@
           "extra": {
             "spawn_cooldown": 6
           },
-          "text_en": "A landmine spawns every <span class=\"g\">0.1</span> seconds dealing <span class=\"g\">10</span> (<span class=\"g\">100%<span class=\"ic\" data-ic=\"engineering\"></span></span>) damage in an area",
-          "text_zh": "地雷每<span class=\"g\">0.1</span>秒生成一次，并对一个区域造成<span class=\"g\">10</span>（<span class=\"g\">100%<span class=\"ic\" data-ic=\"engineering\"></span></span>）伤害"
+          "text_en": "A landmine spawns every <span class=\"g\">6</span> seconds dealing <span class=\"g\">10</span> (<span class=\"g\">100%<span class=\"ic\" data-ic=\"engineering\"></span></span>) damage in an area",
+          "text_zh": "地雷每<span class=\"g\">6</span>秒生成一次，并对一个区域造成<span class=\"g\">10</span>（<span class=\"g\">100%<span class=\"ic\" data-ic=\"engineering\"></span></span>）伤害"
         }
       ],
       "stats": {
@@ -13826,8 +13826,8 @@
           "extra": {
             "spawn_cooldown": 3
           },
-          "text_en": "A landmine spawns every <span class=\"g\">0.05</span> seconds dealing <span class=\"g\">10</span> (<span class=\"g\">100%<span class=\"ic\" data-ic=\"engineering\"></span></span>) damage in an area",
-          "text_zh": "地雷每<span class=\"g\">0.05</span>秒生成一次，并对一个区域造成<span class=\"g\">10</span>（<span class=\"g\">100%<span class=\"ic\" data-ic=\"engineering\"></span></span>）伤害"
+          "text_en": "A landmine spawns every <span class=\"g\">3</span> seconds dealing <span class=\"g\">10</span> (<span class=\"g\">100%<span class=\"ic\" data-ic=\"engineering\"></span></span>) damage in an area",
+          "text_zh": "地雷每<span class=\"g\">3</span>秒生成一次，并对一个区域造成<span class=\"g\">10</span>（<span class=\"g\">100%<span class=\"ic\" data-ic=\"engineering\"></span></span>）伤害"
         }
       ],
       "stats": {
@@ -16728,8 +16728,8 @@
           "extra": {
             "spawn_cooldown": 12
           },
-          "text_en": "A landmine spawns every <span class=\"g\">0.2</span> seconds dealing <span class=\"g\">10</span> (<span class=\"g\">100%<span class=\"ic\" data-ic=\"engineering\"></span></span>) damage in an area",
-          "text_zh": "地雷每<span class=\"g\">0.2</span>秒生成一次，并对一个区域造成<span class=\"g\">10</span>（<span class=\"g\">100%<span class=\"ic\" data-ic=\"engineering\"></span></span>）伤害"
+          "text_en": "A landmine spawns every <span class=\"g\">12</span> seconds dealing <span class=\"g\">10</span> (<span class=\"g\">100%<span class=\"ic\" data-ic=\"engineering\"></span></span>) damage in an area",
+          "text_zh": "地雷每<span class=\"g\">12</span>秒生成一次，并对一个区域造成<span class=\"g\">10</span>（<span class=\"g\">100%<span class=\"ic\" data-ic=\"engineering\"></span></span>）伤害"
         }
       ],
       "unlocked_by_default": true,
@@ -18155,8 +18155,8 @@
               ]
             ]
           },
-          "text_en": "Spawns a Blazemander pet that deals <span class=\"g\">1</span> (<span class=\"g\">1%<span class=\"ic\" data-ic=\"elemental_damage\"></span></span>) damage. Every <span class=\"g\">0.4</span> seconds, it shoots burning projectiles in all directions, each dealing damage. Enemies hit by any of these attacks take <span class=\"g\">5</span>x<span class=\"g\">3</span> (<span class=\"g\">50%<span class=\"ic\" data-ic=\"elemental_damage\"></span></span>) burning damage",
-          "text_zh": "生成一个焰蜥蜴宠物，造成<span class=\"g\">1</span>（<span class=\"g\">1%<span class=\"ic\" data-ic=\"elemental_damage\"></span></span>）伤害。每<span class=\"g\">0.4</span>秒钟，向所有方向发射燃烧的投射物，每发造成伤害。被这些攻击命中的敌人会受到<span class=\"g\">5</span>x<span class=\"g\">3</span>（<span class=\"g\">50%<span class=\"ic\" data-ic=\"elemental_damage\"></span></span>）燃烧伤害"
+          "text_en": "Spawns a Blazemander pet that deals <span class=\"g\">1</span> (<span class=\"g\">1%<span class=\"ic\" data-ic=\"elemental_damage\"></span></span>) damage. Every <span class=\"g\">4</span> seconds, it shoots burning projectiles in all directions, each dealing damage. Enemies hit by any of these attacks take <span class=\"g\">5</span>x<span class=\"g\">3</span> (<span class=\"g\">50%<span class=\"ic\" data-ic=\"elemental_damage\"></span></span>) burning damage",
+          "text_zh": "生成一个焰蜥蜴宠物，造成<span class=\"g\">1</span>（<span class=\"g\">1%<span class=\"ic\" data-ic=\"elemental_damage\"></span></span>）伤害。每<span class=\"g\">4</span>秒钟，向所有方向发射燃烧的投射物，每发造成伤害。被这些攻击命中的敌人会受到<span class=\"g\">5</span>x<span class=\"g\">3</span>（<span class=\"g\">50%<span class=\"ic\" data-ic=\"elemental_damage\"></span></span>）燃烧伤害"
         }
       ],
       "unlocked_by_default": false,
@@ -18353,8 +18353,8 @@
             "deal_dmg_on_return": false,
             "alternate_attack_type": false
           },
-          "text_en": "Spawns a Bonk Dog pet that deals <span class=\"g\">10</span> (<span class=\"g\">60%<span class=\"ic\" data-ic=\"melee_damage\"></span></span>) damage. Every <span class=\"g\">0.5</span> seconds, it performs a dash attack that deals explosive damage in an area",
-          "text_zh": "生成一只Bonk狗宠物，会造成<span class=\"g\">10</span>（<span class=\"g\">60%<span class=\"ic\" data-ic=\"melee_damage\"></span></span>）伤害。它每<span class=\"g\">0.5</span>秒钟会进行一次冲刺攻击，在范围内造成爆炸伤害"
+          "text_en": "Spawns a Bonk Dog pet that deals <span class=\"g\">10</span> (<span class=\"g\">60%<span class=\"ic\" data-ic=\"melee_damage\"></span></span>) damage. Every <span class=\"g\">5</span> seconds, it performs a dash attack that deals explosive damage in an area",
+          "text_zh": "生成一只Bonk狗宠物，会造成<span class=\"g\">10</span>（<span class=\"g\">60%<span class=\"ic\" data-ic=\"melee_damage\"></span></span>）伤害。它每<span class=\"g\">5</span>秒钟会进行一次冲刺攻击，在范围内造成爆炸伤害"
         }
       ],
       "unlocked_by_default": false,
@@ -18409,8 +18409,8 @@
             "bounce_dmg_reduction": 0.5,
             "projectile_speed": 3000
           },
-          "text_en": "Spawns a Bot-O-Mine structure that shoots bullets dealing <span class=\"g\">10</span> (<span class=\"g\">100%<span class=\"ic\" data-ic=\"engineering\"></span></span>) damage. It also spawns a landmine every <span class=\"g\">0.5</span> seconds dealing damage in an area",
-          "text_zh": "生成一个布雷机器人构筑物，发射子弹造成<span class=\"g\">10</span>（<span class=\"g\">100%<span class=\"ic\" data-ic=\"engineering\"></span></span>）伤害。同时每<span class=\"g\">0.5</span>生成一个地雷，在范围内造成伤害"
+          "text_en": "Spawns a Bot-O-Mine structure that shoots bullets dealing <span class=\"g\">10</span> (<span class=\"g\">100%<span class=\"ic\" data-ic=\"engineering\"></span></span>) damage. It also spawns a landmine every <span class=\"g\">5</span> seconds dealing damage in an area",
+          "text_zh": "生成一个布雷机器人构筑物，发射子弹造成<span class=\"g\">10</span>（<span class=\"g\">100%<span class=\"ic\" data-ic=\"engineering\"></span></span>）伤害。同时每<span class=\"g\">5</span>生成一个地雷，在范围内造成伤害"
         }
       ],
       "unlocked_by_default": false,
@@ -19527,8 +19527,8 @@
           "extra": {
             "spawn_cooldown": -1
           },
-          "text_en": "Spawns a turret that shoots flames dealing <span class=\"g\">1</span>x (<span class=\"g\">1</span>) burning damage",
-          "text_zh": "生成1台燃烧炮塔，造成<span class=\"g\">1</span>x（<span class=\"g\">1</span>）燃烧伤害"
+          "text_en": "Spawns a turret that shoots flames dealing <span class=\"g\">8</span>x<span class=\"g\">5</span> (<span class=\"g\">33%<span class=\"ic\" data-ic=\"engineering\"></span></span>) burning damage",
+          "text_zh": "生成1台燃烧炮塔，造成<span class=\"g\">8</span>x<span class=\"g\">5</span>（<span class=\"g\">33%<span class=\"ic\" data-ic=\"engineering\"></span></span>）燃烧伤害"
         }
       ],
       "unlocked_by_default": true,
@@ -20181,8 +20181,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">+20%</span> of your materials at the start of waves (stops working at wave <span class=\"g\">GAIN_PCT_GOLD_START_WAVE</span>)",
-          "text_zh": "敌袭开始时<span class=\"g\">+20%</span>材料（在第<span class=\"g\">GAIN_PCT_GOLD_START_WAVE</span>波敌袭后结束）"
+          "text_en": "<span class=\"g\">+20%</span> of your materials at the start of waves (stops working at wave <span class=\"g\">20</span>)",
+          "text_zh": "敌袭开始时<span class=\"g\">+20%</span>材料（在第<span class=\"g\">20</span>波敌袭后结束）"
         }
       ],
       "unlocked_by_default": true,
@@ -21192,8 +21192,8 @@
           "extra": {
             "chance": 50
           },
-          "text_en": "<span class=\"g\">50%</span> chance to heal HP when dodging an attack",
-          "text_zh": "在躲避攻击时有<span class=\"g\">50%</span>几率恢复点生命值"
+          "text_en": "<span class=\"g\">50%</span> chance to heal <span class=\"g\">5</span> HP when dodging an attack",
+          "text_zh": "在躲避攻击时有<span class=\"g\">50%</span>几率恢复<span class=\"g\">5</span>点生命值"
         }
       ],
       "unlocked_by_default": true,
@@ -28547,8 +28547,8 @@
           "custom_key": "convert_stats_half_wave",
           "storage_method": 1,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">1%</span> of your <span class=\"g\">Ranged Damage</span> are temporarily converted into halfway through a wave ( <span class=\"g\">Ranged Damage</span> = )",
-          "text_zh": "<span class=\"g\">1%</span>的<span class=\"g\">远程伤害</span>在敌袭中途后会暂时转换为（<span class=\"g\">远程伤害</span>=）"
+          "text_en": "<span class=\"g\">100%</span> of your <span class=\"g\">Ranged Damage</span> are temporarily converted into <span class=\"g\">Engineering</span> halfway through a wave (<span class=\"g\">1</span> <span class=\"g\">Ranged Damage</span> = <span class=\"g\">2</span> <span class=\"g\">Engineering</span>)",
+          "text_zh": "<span class=\"g\">100%</span>的<span class=\"g\">远程伤害</span>在敌袭中途后会暂时转换为<span class=\"g\">工程学</span>（<span class=\"g\">1</span><span class=\"g\">远程伤害</span>=<span class=\"g\">2</span><span class=\"g\">工程学</span>）"
         },
         {
           "key": "effect_reduce_stat_gains",
@@ -28624,8 +28624,8 @@
           "custom_key": "convert_stats_end_of_wave",
           "storage_method": 1,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">13%</span> of your <span class=\"g\">Materials</span> are converted into at the end of a wave ( <span class=\"g\">Materials</span> = )",
-          "text_zh": "<span class=\"g\">13%</span>的<span class=\"g\">材料</span>在敌袭结束后会转换为（<span class=\"g\">材料</span>=）"
+          "text_en": "<span class=\"g\">50%</span> of your <span class=\"g\">Materials</span> are converted into <span class=\"g\">Max HP</span> at the end of a wave (<span class=\"g\">13</span> <span class=\"g\">Materials</span> = <span class=\"g\">1</span> <span class=\"g\">Max HP</span>)",
+          "text_zh": "<span class=\"g\">50%</span>的<span class=\"g\">材料</span>在敌袭结束后会转换为<span class=\"g\">最大生命值</span>（<span class=\"g\">13</span><span class=\"g\">材料</span>=<span class=\"g\">1</span><span class=\"g\">最大生命值</span>）"
         },
         {
           "key": "hp_shop",
@@ -28740,8 +28740,8 @@
             "max_stacks": 1,
             "duration_secs": 3
           },
-          "text_en": "Enemies take <span class=\"g\">300%</span> more damage for <span class=\"g\">Ranged Damage</span> seconds when hit by <span class=\"g\">3</span>",
-          "text_zh": "敌人在被<span class=\"g\">3</span>命中时，会额外承受<span class=\"g\">300%</span>伤害，持续<span class=\"g\">远程伤害</span>秒"
+          "text_en": "Enemies take <span class=\"g\">300%</span> more damage for <span class=\"g\">3</span> seconds when hit by <span class=\"g\">Ranged Damage</span>",
+          "text_zh": "敌人在被<span class=\"g\">远程伤害</span>命中时，会额外承受<span class=\"g\">300%</span>伤害，持续<span class=\"g\">3</span>秒"
         },
         {
           "key": "stat_ranged_damage",
@@ -29553,8 +29553,8 @@
           "custom_key": "guaranteed_shop_items",
           "storage_method": 1,
           "effect_sign": 0,
-          "text_en": "Shops always sell a <span class=\"g\">1</span>",
-          "text_zh": "商店通常销售一件<span class=\"g\">1</span>"
+          "text_en": "Shops always sell a <span class=\"g\">Bait</span>",
+          "text_zh": "商店通常销售一件<span class=\"g\">诱饵</span>"
         },
         {
           "key": "item_bait",
@@ -30673,8 +30673,8 @@
           "custom_key": "",
           "storage_method": 2,
           "effect_sign": 1,
-          "text_en": "You can only equip tier <span class=\"r\">1</span> weapons or above",
-          "text_zh": "你仅能够装备<span class=\"r\">1</span>级别或以上的武器"
+          "text_en": "You can only equip tier <span class=\"r\">Ⅱ</span> weapons or above",
+          "text_zh": "你仅能够装备<span class=\"r\">Ⅱ</span>级别或以上的武器"
         },
         {
           "key": "effect_reduce_stat_gains",
@@ -31890,8 +31890,8 @@
           "extra": {
             "value2": 25
           },
-          "text_en": "Hitting an enemy that has less than <span class=\"g\">50%</span> health has a <span class=\"g\">Max HP%</span> (<span class=\"g\">25</span>) chance to charm it for seconds",
-          "text_zh": "击中生命值低于<span class=\"g\">50%</span>的敌人时，有<span class=\"g\">最大生命值%</span>（<span class=\"g\">25</span>）的几率使其在秒内受到魅惑"
+          "text_en": "Hitting an enemy that has less than <span class=\"g\">25%</span> health has a <span class=\"g\">50%</span> (<span class=\"g\">25</span>) chance to charm it for <span class=\"g\">8</span> seconds",
+          "text_zh": "击中生命值低于<span class=\"g\">25%</span>的敌人时，有<span class=\"g\">50%</span>（<span class=\"g\">25</span>）的几率使其在<span class=\"g\">8</span>秒内受到魅惑"
         },
         {
           "key": "",
@@ -31902,8 +31902,8 @@
           "effect_sign": 3,
           "stat_displayed_name": "stat_range",
           "stat_name": "max_range",
-          "text_en": "<span class=\"g\">+50</span> with melee weapons",
-          "text_zh": "使用近战武器时有<span class=\"g\">+50</span>"
+          "text_en": "<span class=\"g\">+50</span> <span class=\"g\">Range</span> with melee weapons",
+          "text_zh": "使用近战武器时有<span class=\"g\">+50</span><span class=\"g\">范围</span>"
         },
         {
           "key": "stat_percent_damage",
@@ -32019,8 +32019,8 @@
           "custom_key": "",
           "storage_method": 2,
           "effect_sign": 1,
-          "text_en": "You can only equip tier <span class=\"r\">1</span> weapons or above",
-          "text_zh": "你仅能够装备<span class=\"r\">1</span>级别或以上的武器"
+          "text_en": "You can only equip tier <span class=\"r\">Ⅱ</span> weapons or above",
+          "text_zh": "你仅能够装备<span class=\"r\">Ⅱ</span>级别或以上的武器"
         },
         {
           "key": "dodge_cap",
@@ -33012,8 +33012,8 @@
           "custom_key": "",
           "storage_method": 2,
           "effect_sign": 1,
-          "text_en": "You can’t equip weapons above tier <span class=\"r\">1</span>",
-          "text_zh": "你无法装备<span class=\"r\">1</span>级别以上的武器"
+          "text_en": "You can’t equip weapons above tier <span class=\"r\">Ⅱ</span>",
+          "text_zh": "你无法装备<span class=\"r\">Ⅱ</span>级别以上的武器"
         }
       ],
       "unlocked_by_default": false,
