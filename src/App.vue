@@ -3,14 +3,25 @@
     <!-- Header -->
     <header class="header">
       <h1 class="title">Brotato Codex</h1>
-      <el-switch v-model="isZh" active-text="中文" inactive-text="EN" size="large" />
+      <div class="header-actions">
+        <el-dropdown @command="(cmd) => { isZh = cmd === 'zh' }" trigger="click">
+          <el-button class="header-btn lang-btn" circle>{{ isZh ? '中' : 'EN' }}</el-button>
+          <template #dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item :command="'zh'" :class="{ 'is-active-lang': isZh }">中文</el-dropdown-item>
+              <el-dropdown-item :command="'en'" :class="{ 'is-active-lang': !isZh }">English</el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
+        <el-button class="header-btn" :icon="isDark ? Moon : Sunny" circle @click="isDark = !isDark" />
+      </div>
     </header>
 
     <!-- Tabs -->
     <el-tabs v-model="activeTab" class="main-tabs" @tab-change="onTabChange">
-      <el-tab-pane name="weapons"><template #label>{{ isZh ? '武器' : 'Weapons' }}</template></el-tab-pane>
-      <el-tab-pane name="items"><template #label>{{ isZh ? '道具' : 'Items' }}</template></el-tab-pane>
-      <el-tab-pane name="characters"><template #label>{{ isZh ? '角色' : 'Characters' }}</template></el-tab-pane>
+      <el-tab-pane name="weapons"><template #label><el-icon style="vertical-align:middle;margin-right:4px"><Aim /></el-icon>{{ isZh ? '武器' : 'Weapons' }}</template></el-tab-pane>
+      <el-tab-pane name="items"><template #label><el-icon style="vertical-align:middle;margin-right:4px"><Box /></el-icon>{{ isZh ? '道具' : 'Items' }}</template></el-tab-pane>
+      <el-tab-pane name="characters"><template #label><el-icon style="vertical-align:middle;margin-right:4px"><User /></el-icon>{{ isZh ? '角色' : 'Characters' }}</template></el-tab-pane>
     </el-tabs>
 
     <!-- Filters -->
@@ -306,8 +317,13 @@
           </div>
           <div v-if="selectedItem.starting_weapons?.length" class="detail-section">
             <h3 class="section-title">{{ isZh ? '起始武器' : 'Starting Weapons' }}</h3>
-            <div class="tags-wrap">
-              <span v-for="wid in selectedItem.starting_weapons" :key="wid" class="tag-badge clickable weapon-link" @click="navigateToWeapon(wid)">{{ resolveWeaponName(wid) }}</span>
+            <div class="starting-weapons-grid">
+              <div v-for="wid in selectedItem.starting_weapons" :key="wid" class="starting-weapon-card" @click="navigateToWeapon(wid)">
+                <div class="starting-weapon-icon" :style="{ borderColor: tierColor(getWeaponById(wid)?.tier ?? 0), background: tierBgColor(getWeaponById(wid)?.tier ?? 0) }">
+                  <img :src="getIconSrc(getWeaponById(wid)?.icon)" />
+                </div>
+                <div class="starting-weapon-name">{{ getWeaponById(wid) ? itemName(getWeaponById(wid)) : wid }}</div>
+              </div>
             </div>
           </div>
           <div v-if="(selectedItem.wanted_tags || []).length" class="detail-section">
@@ -339,8 +355,8 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, nextTick } from 'vue'
-import { Search, Sort } from '@element-plus/icons-vue'
+import { ref, computed, onMounted, nextTick, watch } from 'vue'
+import { Search, Sort, User, Sunny, Moon, Box, Aim } from '@element-plus/icons-vue'
 
 const BASE = import.meta.env.BASE_URL
 
@@ -360,6 +376,10 @@ const waveSlider = ref(0)
 const stickyTierIndex = ref(0) // remembered tier across selections
 const filterTag = ref(null)
 const sortBy = ref('default')
+const isDark = ref(true)
+
+// Apply theme class to body
+watch(isDark, (v) => { document.body.classList.toggle('light-theme', !v) }, { immediate: true })
 
 // ---- Tier colors ----
 const TIER_COLORS = ['#aaaaaa', '#5cc4ff', '#b75cff', '#ff3d3d']
@@ -441,6 +461,10 @@ function getStatIcon(statKey) {
 function resolveWeaponName(wid) {
   const w = rawData.value.weapons.find(x => x.id === wid)
   return w ? itemName(w) : wid
+}
+
+function getWeaponById(wid) {
+  return rawData.value.weapons.find(x => x.id === wid) || null
 }
 
 // ---- Tag translations ----
@@ -597,17 +621,37 @@ function renderEffectPreprocessed(eff) {
     return `${eff.value} ${statTr(eff.key)}`
   }
 
+  // Build icon prefix: stat icon for stat_* keys, ・ otherwise
+  const iconKey = eff.icon
+  let prefix = '・'
+  if (iconKey) {
+    const fullKey = 'stat_' + iconKey
+    const iconPath = (rawData.value.stat_icons || {})[fullKey]
+    if (iconPath) {
+      const iconSrc = `${BASE}icons/${iconPath}`
+      const displayName = statTr(fullKey)
+      prefix = `<img src="${iconSrc}" class="stat-prefix-icon" title="${displayName}" />`
+    } else {
+      // Fallback: try matching without stat_ prefix
+      for (const [key, path] of Object.entries(rawData.value.stat_icons || {})) {
+        if (key.replace('stat_', '') === iconKey) {
+          const iconSrc = `${BASE}icons/${path}`
+          const displayName = statTr(key)
+          prefix = `<img src="${iconSrc}" class="stat-prefix-icon" title="${displayName}" />`
+          break
+        }
+      }
+    }
+  }
+
   // Step 1: Process color markers from Python preprocessor
-  // <span class="g"> → green, <span class="r"> → red, <span class="p"> → purple
   text = text.replace(/<span class="g">/g, '<span style="color:#22c55e">')
   text = text.replace(/<span class="r">/g, '<span style="color:#ef4444">')
   text = text.replace(/<span class="p">/g, '<span style="color:#a855f7">')
-  // All closing tags are the same
   text = text.replace(/<\/span>/g, '</span>')
 
-  // Step 2: Replace <span class="ic" data-ic="ranged_damage"></span> with stat icons
-  text = text.replace(/<span class="ic" data-ic="([^"]+)"><\/span>/g, (match, icKey) => {
-    // icKey is like "ranged_damage", look up "stat_ranged_damage" in stat_icons
+  // Step 2: Replace <icon>ranged_damage</icon> with stat icons
+  text = text.replace(/<icon>([^<]+)<\/icon>/g, (match, icKey) => {
     const fullKey = 'stat_' + icKey
     const iconPath = (rawData.value.stat_icons || {})[fullKey]
     if (iconPath) {
@@ -615,7 +659,6 @@ function renderEffectPreprocessed(eff) {
       const displayName = statTr(fullKey)
       return `<img src="${iconSrc}" class="stat-inline-icon" style="width:16px;height:16px;vertical-align:middle;margin:0 1px" title="${displayName}" />`
     }
-    // Fallback: try matching without stat_ prefix
     for (const [key, path] of Object.entries(rawData.value.stat_icons || {})) {
       if (key.replace('stat_', '') === icKey) {
         const iconSrc = `${BASE}icons/${path}`
@@ -626,19 +669,7 @@ function renderEffectPreprocessed(eff) {
     return match
   })
 
-  // Step 3: Also handle legacy [stat名] format for backward compatibility
-  text = text.replace(/\[([^\]]+)\]/g, (match, statName) => {
-    for (const [key, iconPath] of Object.entries(rawData.value.stat_icons || {})) {
-      const displayName = statTr(key)
-      if (displayName === statName) {
-        const iconSrc = `${BASE}icons/${iconPath}`
-        return `<img src="${iconSrc}" class="stat-inline-icon" style="width:16px;height:16px;vertical-align:middle;margin:0 1px" title="${statName}" />`
-      }
-    }
-    return match
-  })
-
-  return text
+  return `<span class="eff-prefix">${prefix}</span>${text}`
 }
 
 // ---- Weapon grouping ----
@@ -892,76 +923,72 @@ onMounted(async () => {
 
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
-body { background: #121520; color: #ccc; font-family: 'Segoe UI', system-ui, sans-serif; }
+body { background: #1a1d28; color: #ccc; font-family: 'Segoe UI', system-ui, sans-serif; transition: background .2s, color .2s; }
 
 .app-container { max-width: 1400px; margin: 0 auto; min-height: 100vh; display: flex; flex-direction: column; }
 
 /* Header */
-.header { display: flex; align-items: center; justify-content: space-between; padding: 10px 24px; background: #0d1117; border-bottom: 2px solid #ff3d3d; }
+.header { display: flex; align-items: center; justify-content: space-between; padding: 10px 24px; background: #151822; border-bottom: 2px solid #ff3d3d; }
 .title { font-size: 22px; font-weight: 800; color: #ff3d3d; letter-spacing: 2px; }
+.header-actions { display: flex; gap: 8px; align-items: center; }
+.header-btn { background: #252836 !important; border: 1px solid #3a3d4e !important; color: #ccc !important; font-size: 13px; }
+.header-btn:hover { background: #333648 !important; color: #fff !important; }
+.lang-btn { font-weight: 700; font-size: 14px; min-width: 36px; }
 
 /* Tabs */
-.main-tabs { background: #0d1117; padding: 0 24px; }
+.main-tabs { background: #151822; padding: 0 24px; }
 .main-tabs :deep(.el-tabs__header) { margin: 0; }
-.main-tabs :deep(.el-tabs__item) { color: #bbb !important; height: 40px; line-height: 40px; font-size: 14px; }
-.main-tabs :deep(.el-tabs__item.is-active) { color: #ff3d3d !important; }
+.main-tabs :deep(.el-tabs__nav-wrap::after) { background: #2a2d3a; }
+.main-tabs :deep(.el-tabs__item) { color: #888 !important; height: 42px; line-height: 42px; font-size: 14px; background: #1e2030; margin-right: 2px; border-radius: 6px 6px 0 0; padding: 0 18px; transition: background .15s, color .15s; }
+.main-tabs :deep(.el-tabs__item:hover) { color: #ccc !important; background: #252836; }
+.main-tabs :deep(.el-tabs__item.is-active) { color: #ff3d3d !important; background: #1a1d28; }
 .main-tabs :deep(.el-tabs__active-bar) { background: #ff3d3d; }
 
 /* Filters */
-.filters { display: flex; gap: 10px; padding: 8px 24px; background: #121520; border-bottom: 1px solid #222; flex-wrap: wrap; align-items: center; }
+.filters { display: flex; gap: 10px; padding: 8px 24px; background: #1a1d28; border-bottom: 1px solid #2a2d3a; flex-wrap: wrap; align-items: center; }
 .search-input { flex: 1; max-width: 280px; }
 .filter-select { width: 130px; }
 .sort-select { width: 120px; }
-/* Sort select visual distinction */
-.sort-select :deep(.el-input__wrapper) {
-  border: 1px dashed #555 !important;
-  background-color: #1e2130 !important;
-}
-.sort-select :deep(.el-input__wrapper:hover) {
-  border-color: #888 !important;
-}
-.sort-select :deep(.el-input__inner) {
-  color: #aabbcc !important;
-}
-.sort-select :deep(.el-input__prefix) {
-  color: #aabbcc !important;
-}
+.sort-select :deep(.el-input__wrapper) { border: 1px dashed #4a4d5e !important; background-color: #22253a !important; }
+.sort-select :deep(.el-input__wrapper:hover) { border-color: #6a6d7e !important; }
+.sort-select :deep(.el-input__inner) { color: #aabbcc !important; }
+.sort-select :deep(.el-input__prefix) { color: #aabbcc !important; }
 
 /* Main */
-.main-content { position: relative; height: calc(100vh - 158px); overflow: hidden; }
+.main-content { position: relative; height: calc(100vh - 160px); overflow: hidden; }
 
-/* Grid - left panel, independent scroll */
+/* Grid */
 .grid-panel {
   position: absolute; left: 0; top: 0; bottom: 0; width: 50%; overflow-y: auto; padding: 10px;
   display: grid; grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
-  gap: 5px; align-content: start; background: #121520;
+  gap: 5px; align-content: start; background: #1a1d28;
 }
 .grid-item {
-  background: #1a1d28; border-radius: 6px; padding: 8px 4px; cursor: pointer;
+  background: #22253a; border-radius: 6px; padding: 8px 4px; cursor: pointer;
   transition: all .15s; display: flex; flex-direction: column; align-items: center; gap: 3px; position: relative;
   border: 2px solid transparent;
 }
-.grid-item:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(255,255,255,.12); }
-.grid-item.selected { box-shadow: 0 0 12px rgba(255,255,255,0.12); }
+.grid-item:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,.3); }
+.grid-item.selected { box-shadow: 0 0 12px rgba(255,255,255,0.1); }
 .item-icon {
   width: 52px; height: 52px; display: flex; align-items: center; justify-content: center;
-  background: #14171f; border-radius: 6px; overflow: hidden; border: 2px solid #333;
+  background: #1e2030; border-radius: 6px; overflow: hidden; border: 2px solid #3a3d4e;
 }
 .item-icon img { max-width: 44px; max-height: 44px; image-rendering: pixelated; }
 .item-name-text { font-size: 12px; font-weight: 600; text-align: center; max-width: 80px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .item-dlc-badge { position: absolute; top: 3px; right: 3px; font-size: 8px; padding: 1px 3px; border-radius: 3px; background: #a855f7; color: #fff; font-weight: bold; }
 
-/* Detail Panel - right panel, independent scroll */
+/* Detail Panel */
 .detail-panel {
   position: absolute; right: 0; top: 0; bottom: 0; left: 50%; overflow-y: auto; padding: 20px;
-  background: #0f131a; border-left: 2px solid #222;
+  background: #1e2030; border-left: 2px solid #2a2d3a;
 }
 .empty-panel { display: flex; align-items: center; justify-content: center; }
 
-.detail-header { display: flex; gap: 14px; align-items: center; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid #222; }
+.detail-header { display: flex; gap: 14px; align-items: center; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid #2a2d3a; }
 .detail-icon-wrap {
   width: 68px; height: 68px; border-radius: 10px; display: flex; align-items: center; justify-content: center;
-  background: #14171f; border: 2px solid #333; overflow: hidden; flex-shrink: 0;
+  background: #1e2030; border: 2px solid #3a3d4e; overflow: hidden; flex-shrink: 0;
 }
 .detail-icon-wrap img { max-width: 56px; max-height: 56px; image-rendering: pixelated; }
 .detail-title-wrap { flex: 1; min-width: 0; }
@@ -972,18 +999,18 @@ body { background: #121520; color: #ccc; font-family: 'Segoe UI', system-ui, san
 .type-badge.ranged { background: #2980b9; }
 .dlc-badge { font-size: 11px; padding: 3px 8px; border-radius: 3px; background: #a855f7; color: #fff; font-weight: 600; }
 .dlc-tag { --el-tag-bg-color: #a855f7; --el-tag-border-color: #a855f7; --el-tag-text-color: #fff; }
-.set-badge { font-size: 11px; padding: 3px 8px; border-radius: 3px; background: #3a3a50; color: #ccc; cursor: help; font-weight: 600; }
+.set-badge { font-size: 11px; padding: 3px 8px; border-radius: 3px; background: #3a3d4e; color: #ccc; cursor: help; font-weight: 600; }
 .detail-price { font-size: 14px; color: #eae2b0; margin-top: 4px; }
 
 /* Tier Tabs */
 .tier-tabs { display: flex; gap: 4px; margin-bottom: 12px; }
 .tier-tab {
-  flex: 1; padding: 7px 0; border: 2px solid #444; background: #1a1d28; color: #666;
+  flex: 1; padding: 7px 0; border: 2px solid #444; background: #22253a; color: #666;
   border-radius: 4px; cursor: pointer; font-size: 13px; font-weight: 700; transition: all .15s;
 }
 .tier-tab:hover:not(.disabled) { color: #fff; }
 .tier-tab.active { color: #fff !important; }
-.tier-tab.disabled { opacity: 0.3; cursor: default; border-color: #2a2a3a !important; background: #1a1d28 !important; color: #444 !important; }
+.tier-tab.disabled { opacity: 0.3; cursor: default; border-color: #2a2d3a !important; background: #22253a !important; color: #444 !important; }
 
 /* Set tooltip */
 .set-tooltip-content { font-size: 12px; line-height: 1.6; }
@@ -995,7 +1022,7 @@ body { background: #121520; color: #ccc; font-family: 'Segoe UI', system-ui, san
 .section-title { font-size: 12px; color: #ff3d3d; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 1px; }
 .weapon-stat-row {
   display: flex; align-items: center; gap: 8px; padding: 6px 10px;
-  background: #14171f; border-radius: 5px; margin-bottom: 3px;
+  background: #22253a; border-radius: 5px; margin-bottom: 3px;
 }
 .ws-label { font-size: 14px; color: #bbb; min-width: 70px; }
 .ws-val { font-size: 15px; color: #eee; font-weight: 600; }
@@ -1004,155 +1031,149 @@ body { background: #121520; color: #ccc; font-family: 'Segoe UI', system-ui, san
 .ws-scaling-pct { color: #ddd; }
 .ws-attack-type { font-size: 13px; color: #bbb; font-weight: 400; margin-left: 4px; }
 .stat-inline-icon { width: 16px; height: 16px; vertical-align: middle; image-rendering: pixelated; margin: 0 1px; }
+.stat-prefix-icon { width: 13px; height: 13px; vertical-align: middle; image-rendering: pixelated; flex-shrink: 0; }
 
 /* Price Section */
-.price-section {
-  margin-top: 12px;
-  padding: 12px 14px;
-  background: #1a1d28;
-  border-radius: 8px;
-  border: 1px solid #2a2a3a;
-}
-.price-header {
-  display: flex; align-items: center; gap: 10px; margin-bottom: 8px;
-}
+.price-section { margin-top: 12px; padding: 12px 14px; background: #22253a; border-radius: 8px; border: 1px solid #2a2d3a; }
+.price-header { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
 .price-label { font-size: 13px; color: #bbb; }
-.price-value {
-  font-size: 16px; font-weight: 800; color: #fff;
-  /* text-shadow: 0 0 8px rgba(255,255,255,0.15); */
-}
+.price-value { font-size: 16px; font-weight: 800; color: #fff; }
 .price-icon { width: 24px; height: 24px; image-rendering: pixelated; }
-.price-waves {
-  display: flex; gap: 8px; margin-bottom: 8px; flex-wrap: wrap;
-}
+.price-waves { display: flex; gap: 8px; margin-bottom: 8px; flex-wrap: wrap; }
 .price-wave { font-size: 14px; color: #bbb; }
-.price-slider-row {
-  display: flex; align-items: center; gap: 10px;
-}
+.price-slider-row { display: flex; align-items: center; gap: 10px; }
 .price-slider-label { font-size: 13px; color: #bbb; min-width: 36px; }
 .price-slider { flex: 1; }
 .price-slider :deep(.el-slider__input) { width: 48px; }
-.price-slider :deep(.el-slider__runway) { background: #2a2a3a; }
+.price-slider :deep(.el-slider__runway) { background: #2a2d3a; }
 .price-slider :deep(.el-slider__bar) { background: #ff3d3d; }
 .price-slider :deep(.el-slider__button) { border-color: #ff3d3d; }
 
 /* Effects */
 .effects-list { display: flex; flex-direction: column; gap: 3px; }
 .effect-item {
-  padding: 5px 10px; border-radius: 4px; font-size: 13px; background: #14171f; color: #ddd; line-height: 1.5;
+  padding: 5px 10px; border-radius: 4px; font-size: 13px; background: #22253a; color: #ddd; line-height: 1.5;
+  display: flex; align-items: center; gap: 6px; white-space: nowrap;
 }
+.eff-prefix { flex-shrink: 0; width: 18px; text-align: center; color: #666; display: flex; align-items: center; justify-content: center; }
+
+/* Starting Weapons Grid */
+.starting-weapons-grid { display: flex; flex-wrap: wrap; gap: 6px; }
+.starting-weapon-card {
+  display: flex; align-items: center; gap: 6px; padding: 4px 8px 4px 4px;
+  background: #22253a; border-radius: 6px; cursor: pointer; transition: all .15s;
+  border: 1px solid transparent;
+}
+.starting-weapon-card:hover { background: #2a2d44; border-color: #444; }
+.starting-weapon-icon {
+  width: 32px; height: 32px; border-radius: 4px; display: flex; align-items: center; justify-content: center;
+  background: #1e2030; border: 2px solid #3a3d4e; overflow: hidden; flex-shrink: 0;
+}
+.starting-weapon-icon img { max-width: 26px; max-height: 26px; image-rendering: pixelated; }
+.starting-weapon-name { font-size: 12px; color: #ccc; white-space: nowrap; }
 
 /* Tags */
 .tags-wrap { display: flex; flex-wrap: wrap; gap: 5px; }
-.tag-badge {
-  font-size: 11px; padding: 3px 8px; border-radius: 3px; background: #2a2a40; color: #bbb;
-  font-weight: 600; line-height: 1.4; display: inline-block;
-}
+.tag-badge { font-size: 11px; padding: 3px 8px; border-radius: 3px; background: #2a2d44; color: #bbb; font-weight: 600; line-height: 1.4; display: inline-block; }
 .tag-badge.clickable { cursor: pointer; transition: all .15s; }
-.tag-badge.clickable:hover { background: #3a3a55; color: #fff; }
+.tag-badge.clickable:hover { background: #3a3d58; color: #fff; }
 .weapon-link { background: #2d2d1f; color: #eae2b0; }
 .weapon-link:hover { background: #4a4a2f; color: #fff; }
-
-/* Limited / Unique badge */
-.limit-badge {
-  font-size: 11px; padding: 3px 8px; border-radius: 3px; color: #fff; font-weight: 600; line-height: 1.4;
-}
+.limit-badge { font-size: 11px; padding: 3px 8px; border-radius: 3px; color: #fff; font-weight: 600; line-height: 1.4; }
 .limit-badge.unique { background: #c0392b; }
 .limit-badge.limited { background: #d35400; }
-
-/* Special tag backgrounds */
 .tag-pet { background: #2d4a2d; color: #7dff7d; }
 .tag-pet:hover { background: #3d6a3d !important; color: #a0ffa0 !important; }
 .tag-structure { background: #4a3520; color: #ffb74d; }
 .tag-structure:hover { background: #6a4a30 !important; color: #ffcc80 !important; }
-
-/* Tag tooltip */
 .tag-tooltip-content { font-size: 12px; line-height: 1.6; max-width: 320px; }
 .tag-tooltip-name { font-weight: bold; margin-bottom: 2px; color: #fff; }
 .tag-tooltip-line { color: #aaa; word-break: break-all; }
 
-/* Element Plus Dark Mode Overrides */
-
-/* ---- Input fields (search, select trigger) ---- */
-.el-input__wrapper {
-  background-color: #1a1d28 !important;
-  border-color: #333 !important;
-  box-shadow: none !important;
-}
-.el-input__wrapper:hover { border-color: #555 !important; }
-.el-input.is-focus .el-input__wrapper {
-  border-color: #ff3d3d !important;
-  box-shadow: 0 0 0 1px #ff3d3d inset !important;
-}
+/* ---- Element Plus Dark Overrides ---- */
+.el-input__wrapper { background-color: #22253a !important; border-color: #3a3d4e !important; box-shadow: none !important; }
+.el-input__wrapper:hover { border-color: #5a5d6e !important; }
+.el-input.is-focus .el-input__wrapper { border-color: #ff3d3d !important; box-shadow: 0 0 0 1px #ff3d3d inset !important; }
 .el-input__inner { color: #ccc !important; }
 .el-input__inner::placeholder { color: #666 !important; }
-
-/* ---- Select caret / suffix ---- */
 .el-select .el-select__caret { color: #888 !important; }
 .el-select .el-input .el-input__suffix .el-icon { color: #888 !important; }
 
-/* ---- Dropdown panel (teleported to body, targeted via popper-class="dark-dropdown") ---- */
-.dark-dropdown,
-.dark-dropdown.el-popper {
-  background-color: #1a1d28 !important;
-  border: 1px solid #333 !important;
-  border-radius: 6px !important;
-  box-shadow: 0 6px 16px rgba(0,0,0,.6) !important;
-}
-.dark-dropdown .el-select-dropdown,
-.dark-dropdown .el-scrollbar,
-.dark-dropdown .el-scrollbar__wrap,
-.dark-dropdown .el-scrollbar__view,
-.dark-dropdown .el-select-dropdown__list {
-  background-color: #1a1d28 !important;
-}
-.dark-dropdown .el-popper__arrow::before {
-  background: #1a1d28 !important;
-  border-color: #333 !important;
-}
-.dark-dropdown .el-select-dropdown__item {
-  color: #bbb !important;
-  padding: 8px 14px !important;
-  font-size: 13px;
-  transition: background .12s, color .12s;
-  display: flex;
-  align-items: center;
-  min-height: 32px;
-  line-height: 1.2;
-}
-.dark-dropdown .el-select-dropdown__item:hover {
-  background-color: #2a2d3a !important;
-  color: #fff !important;
-}
-.dark-dropdown .el-select-dropdown__item.is-selected,
-.dark-dropdown .el-select-dropdown__item.selected {
-  color: #ff3d3d !important;
-  font-weight: 600;
-}
-.dark-dropdown .el-select-dropdown__item.is-hovering {
-  background-color: #2a2d3a !important;
-}
-/* Empty state inside dropdown */
-.dark-dropdown .el-select-dropdown__empty {
-  color: #666 !important;
-  padding: 10px;
-}
-
-/* ---- Tooltip / Popper (global, Element Plus renders tooltips to body) ---- */
-.el-popper.is-dark {
-  background: #1a1d28 !important;
-  border: 1px solid #333 !important;
-  color: #ccc !important;
-}
-
-/* ---- Select tags (not used here but kept for safety) ---- */
+/* Dropdown */
+.dark-dropdown, .dark-dropdown.el-popper { background-color: #22253a !important; border: 1px solid #3a3d4e !important; border-radius: 6px !important; box-shadow: 0 4px 12px rgba(0,0,0,.4) !important; }
+.dark-dropdown .el-select-dropdown, .dark-dropdown .el-scrollbar, .dark-dropdown .el-scrollbar__wrap, .dark-dropdown .el-scrollbar__view, .dark-dropdown .el-select-dropdown__list { background-color: #22253a !important; }
+.dark-dropdown .el-popper__arrow::before { background: #22253a !important; border-color: #3a3d4e !important; }
+.dark-dropdown .el-select-dropdown__item { color: #bbb !important; padding: 8px 14px !important; font-size: 13px; transition: background .12s, color .12s; display: flex; align-items: center; min-height: 32px; line-height: 1.2; }
+.dark-dropdown .el-select-dropdown__item:hover { background-color: #2e3148 !important; color: #fff !important; }
+.dark-dropdown .el-select-dropdown__item.is-selected, .dark-dropdown .el-select-dropdown__item.selected { color: #ff3d3d !important; font-weight: 600; }
+.dark-dropdown .el-select-dropdown__item.is-hovering { background-color: #2e3148 !important; }
+.dark-dropdown .el-select-dropdown__empty { color: #666 !important; padding: 10px; }
+.el-popper.is-dark { background: #22253a !important; border: 1px solid #3a3d4e !important; color: #ccc !important; }
 .el-select .el-tag { background-color: #2a2d3a !important; border-color: #444 !important; color: #ccc !important; }
 .el-select .el-tag .el-tag__close { color: #888 !important; }
 .el-select .el-tag .el-tag__close:hover { background-color: #444 !important; color: #fff !important; }
+.is-active-lang { color: #ff3d3d !important; font-weight: 600; }
 
 /* Scrollbar */
 ::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: #121520; }
-::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: #555; }
+::-webkit-scrollbar-track { background: #1a1d28; }
+::-webkit-scrollbar-thumb { background: #3a3d4e; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #5a5d6e; }
+
+/* ==================== Light Theme ==================== */
+body.light-theme { background: #f0f2f5; color: #333; }
+body.light-theme .header { background: #fff; border-bottom-color: #ff3d3d; }
+body.light-theme .title { color: #ff3d3d; }
+body.light-theme .header-btn { background: #f0f2f5 !important; border-color: #ccc !important; color: #555 !important; }
+body.light-theme .header-btn:hover { background: #e0e2e5 !important; color: #333 !important; }
+body.light-theme .main-tabs { background: #fff; }
+body.light-theme .main-tabs :deep(.el-tabs__nav-wrap::after) { background: #ddd; }
+body.light-theme .main-tabs :deep(.el-tabs__item) { color: #555 !important; background: #ebedf0; }
+body.light-theme .main-tabs :deep(.el-tabs__item:hover) { color: #333 !important; background: #e0e2e5; }
+body.light-theme .main-tabs :deep(.el-tabs__item.is-active) { color: #ff3d3d !important; background: #f0f2f5; }
+body.light-theme .filters { background: #f5f6f8; border-bottom-color: #ddd; }
+body.light-theme .el-input__wrapper { background-color: #fff !important; border-color: #ccc !important; }
+body.light-theme .el-input__wrapper:hover { border-color: #aaa !important; }
+body.light-theme .el-input__inner { color: #333 !important; }
+body.light-theme .el-input__inner::placeholder { color: #888 !important; }
+body.light-theme .grid-panel { background: #f0f2f5; }
+body.light-theme .grid-item { background: #fff; border-color: transparent; }
+body.light-theme .grid-item:hover { box-shadow: 0 4px 12px rgba(0,0,0,.08); }
+body.light-theme .item-icon { background: #f5f6f8; border-color: #ddd; }
+body.light-theme .detail-panel { background: #fff; border-left-color: #ddd; }
+body.light-theme .detail-header { border-bottom-color: #eee; }
+body.light-theme .detail-icon-wrap { background: #f5f6f8; border-color: #ddd; }
+body.light-theme .set-badge { background: #e5e7eb; color: #444; }
+body.light-theme .weapon-stat-row { background: #f5f6f8; }
+body.light-theme .ws-label { color: #555; }
+body.light-theme .ws-val { color: #222; }
+body.light-theme .price-section { background: #f5f6f8; border-color: #ddd; }
+body.light-theme .price-label, body.light-theme .price-wave { color: #555; }
+body.light-theme .price-value { color: #222; }
+body.light-theme .effect-item { background: #f5f6f8; color: #333; }
+body.light-theme .eff-prefix { color: #999; }
+body.light-theme .starting-weapon-card { background: #f5f6f8; }
+body.light-theme .starting-weapon-card:hover { background: #eaecef; border-color: #ccc; }
+body.light-theme .starting-weapon-icon { background: #fff; border-color: #ddd; }
+body.light-theme .starting-weapon-name { color: #333; }
+body.light-theme .tag-badge { background: #e5e7eb; color: #444; }
+body.light-theme .tag-badge.clickable:hover { background: #d1d5db; color: #222; }
+body.light-theme .tier-tab { background: #ebedf0; border-color: #ccc; color: #888; }
+body.light-theme .tier-tab.disabled { border-color: #ddd !important; background: #ebedf0 !important; color: #ccc !important; }
+body.light-theme .sort-select :deep(.el-input__wrapper) { border-color: #ccc !important; background: #fff !important; }
+body.light-theme .section-title { color: #ff3d3d; }
+body.light-theme .el-select .el-select__caret { color: #888 !important; }
+body.light-theme ::-webkit-scrollbar-track { background: #f0f2f5; }
+body.light-theme ::-webkit-scrollbar-thumb { background: #ccc; }
+body.light-theme ::-webkit-scrollbar-thumb:hover { background: #aaa; }
+body.light-theme .el-select-dropdown__item { color: #333 !important; }
+/* Light theme dropdown */
+body.light-theme .dark-dropdown, body.light-theme .dark-dropdown.el-popper { background-color: #fff !important; border-color: #ddd !important; box-shadow: 0 2px 8px rgba(0,0,0,.1) !important; }
+body.light-theme .dark-dropdown .el-select-dropdown, body.light-theme .dark-dropdown .el-scrollbar, body.light-theme .dark-dropdown .el-scrollbar__wrap, body.light-theme .dark-dropdown .el-scrollbar__view, body.light-theme .dark-dropdown .el-select-dropdown__list { background-color: #fff !important; }
+body.light-theme .dark-dropdown .el-popper__arrow::before { background: #fff !important; border-color: #ddd !important; }
+body.light-theme .dark-dropdown .el-select-dropdown__item { color: #333 !important; }
+body.light-theme .dark-dropdown .el-select-dropdown__item:hover { background-color: #f0f2f5 !important; color: #111 !important; }
+body.light-theme .dark-dropdown .el-select-dropdown__item.is-selected { color: #ff3d3d !important; }
+body.light-theme .dark-dropdown .el-select-dropdown__item.is-hovering { background-color: #f0f2f5 !important; }
+body.light-theme .el-popper.is-dark { background: #fff !important; border-color: #ddd !important; color: #333 !important; }
 </style>

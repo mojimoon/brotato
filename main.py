@@ -679,15 +679,15 @@ def _fmt_extra_val(val):
     return str(val)
 
 def build_scaling_text(scaling_stats, lang='zh'):
-    """Build scaling stat icon text like '100%<span class="ic" data-ic="ranged_damage"></span>'"""
+    """Build scaling stat icon text like '100%<icon>ranged_damage</icon>'"""
     parts = []
     for ss in scaling_stats:
         if isinstance(ss, list) and len(ss) >= 2:
             pct = int(ss[1] * 100)
             stat_key = ss[0]  # e.g. "stat_ranged_damage"
-            # Extract short key for data-ic: "stat_ranged_damage" -> "ranged_damage"
+            # Extract short key for icon: "stat_ranged_damage" -> "ranged_damage"
             ic_key = stat_key.replace('stat_', '', 1) if stat_key.startswith('stat_') else stat_key
-            parts.append(f"{pct}%<span class=\"ic\" data-ic=\"{ic_key}\"></span>")
+            parts.append(f"{pct}%<icon>{ic_key}</icon>")
     return '+'.join(parts) if parts else ''
 
 
@@ -1102,7 +1102,11 @@ def _build_effect_args_and_signs(eff, lang):
     elif 'stat_scaled' in eff and key:
         nb = extra.get('nb_stat_scaled', eff.get('nb_stat_scaled', 0))
         stat_scaled = eff.get('stat_scaled', '')
-        stat_scaled_text = tr(stat_scaled.upper(), lang) if stat_scaled else ''
+        # Replicate Godot: "different_item" → tr("ITEM") (道具)
+        if stat_scaled == "different_item":
+            stat_scaled_text = tr("ITEM", lang)
+        else:
+            stat_scaled_text = tr(stat_scaled.upper(), lang) if stat_scaled else ''
         args = [str(value), tr(key.upper(), lang), str(nb), stat_scaled_text, '0']
         signs = [default_sign(value), SIGN_NEUTRAL, SIGN_NEUTRAL, SIGN_NEUTRAL, SIGN_NEUTRAL]
     
@@ -1846,7 +1850,11 @@ def render_effect_text(eff, lang):
         nb = extra.get('nb_stat_scaled', eff.get('stat_nb', 0))
         args[2] = str(int(nb)) if nb else ''
         scaled_s = eff.get('stat_scaled', eff.get('stat', key))
-        args[3] = stat_display_name(scaled_s, lang) if scaled_s else ''
+        # Replicate Godot: "different_item" → tr("ITEM") (道具)
+        if scaled_s == "different_item":
+            args[3] = tr("ITEM", lang)
+        else:
+            args[3] = stat_display_name(scaled_s, lang) if scaled_s else ''
         args_built = True
 
     # --- PercentDamageEffect ---
@@ -2021,11 +2029,6 @@ def render_effect_text(eff, lang):
             args[0] = fmt_val(value, add_op=True, add_pct=needs_percent(key))
             args[1] = stat_display_name(key, lang)
 
-        # --- Gain stat for every different stat ---
-        elif tk_upper == 'EFFECT_GAIN_STAT_FOR_EVERY_DIFFERENT_STAT':
-            args[3] = '道具' if lang == 'zh' else 'item'
-            args[4] = '0'
-
         # --- Weapon class bonus ---
         elif tk_upper == 'EFFECT_WEAPON_CLASS_BONUS':
             args[0] = fmt_val(value, add_op=True, add_pct=needs_percent(key))
@@ -2139,16 +2142,6 @@ def render_effect_text(eff, lang):
         # {0} = item name from key (e.g., "item_bait" → "诱饵")
         item_name = tr(key.upper(), lang) if key else ''
         args[0] = item_name
-        args_built = True
-
-    # --- Gain stat for every different stat ---
-    elif tk_upper == 'EFFECT_GAIN_STAT_FOR_EVERY_DIFFERENT_STAT':
-        # Translation: "每持有一异种{3}有{0}{1}[{4}]"
-        args[0] = fmt_val(value, add_op=True, add_pct=needs_percent(key))
-        args[1] = stat_display_name(key, lang)
-        args[2] = str(extra.get('nb_stat_scaled', 1))
-        args[3] = '道具' if lang == 'zh' else 'item'
-        args[4] = '0'  # Runtime value
         args_built = True
 
     # --- Gain stat for every stat ---
@@ -2604,8 +2597,18 @@ def build_sets_data():
                 for tier_effects in bonuses:
                     rendered_tier = []
                     for eff_data in tier_effects:
-                        eff_data['text_en'] = render_effect_text_en(eff_data)
-                        eff_data['text_zh'] = render_effect_text_zh(eff_data)
+                        text_en = render_effect_text_en(eff_data)
+                        text_zh = render_effect_text_zh(eff_data)
+                        # Skip [EMPTY] effects entirely
+                        if not text_en and not text_zh:
+                            continue
+                        eff_data['text_en'] = text_en
+                        eff_data['text_zh'] = text_zh
+                        # Add stat icon prefix
+                        eff_key = eff_data.get('key', '')
+                        if eff_key.startswith('stat_') or eff_key in ('xp_gain', 'explosion_size', 'explosion_damage'):
+                            ic_key = eff_key.replace('stat_', '', 1) if eff_key.startswith('stat_') else eff_key
+                            eff_data['icon'] = ic_key
                         rendered_tier.append(eff_data)
                     rendered_bonuses.append(rendered_tier)
                 sets_data[name_key] = rendered_bonuses
@@ -2640,8 +2643,18 @@ def get_effects(parsed):
                     eff_data = parse_effect_file(eff_path)
                     if eff_data:
                         # Pre-render effect text
-                        eff_data['text_en'] = render_effect_text_en(eff_data)
-                        eff_data['text_zh'] = render_effect_text_zh(eff_data)
+                        text_en = render_effect_text_en(eff_data)
+                        text_zh = render_effect_text_zh(eff_data)
+                        # Skip [EMPTY] effects entirely
+                        if not text_en and not text_zh:
+                            continue
+                        eff_data['text_en'] = text_en
+                        eff_data['text_zh'] = text_zh
+                        # Add stat icon prefix
+                        eff_key = eff_data.get('key', '')
+                        if eff_key.startswith('stat_') or eff_key in ('xp_gain', 'explosion_size', 'explosion_damage'):
+                            ic_key = eff_key.replace('stat_', '', 1) if eff_key.startswith('stat_') else eff_key
+                            eff_data['icon'] = ic_key
                         effects.append(eff_data)
     return effects
 
@@ -3110,7 +3123,7 @@ def main():
     
     print(f"\n=== Writing JSON ===")
     with open(OUTPUT_JSON, 'w', encoding='utf-8') as f:
-        json.dump(data, f, ensure_ascii=False, indent=2)
+        json.dump(data, f, ensure_ascii=False, separators=(',', ':'))
     print(f"  Written to {OUTPUT_JSON}")
     
     print(f"\n=== Copying Icons ===")
