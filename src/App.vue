@@ -110,6 +110,10 @@
           </el-dropdown-menu>
         </template>
       </el-dropdown>
+
+      <el-button v-if="activeTab === 'weapons' || activeTab === 'items'" class="filter-btn price-toggle-btn" :class="{ 'has-value': showPriceEnabled }" @click="showPriceEnabled = !showPriceEnabled">
+        {{ S.showPrice }}: {{ showPriceEnabled ? S.on : S.off }}
+      </el-button>
     </div>
 
     <!-- Main Content -->
@@ -125,6 +129,7 @@
           :style="selectedItem?.id === item.id ? { background: tierSelectedBg(item.tier), borderColor: tierColor(item.tier) } : {}"
           @click="selectItem(item)"
         >
+          <div v-if="shouldShowCardPrice(item)" class="item-price-badge">{{ getListPrice(item) }}</div>
           <div class="item-icon" :style="{ borderColor: tierColor(item.tier), background: tierBgColor(item.tier) }">
             <img :src="getIconSrc(item.icon)" />
           </div>
@@ -309,20 +314,22 @@
         </template>
 
         <!-- Shared: Price Section (weapons & items) -->
-        <div v-if="showPrice" class="detail-section price-section">
+        <div v-if="showPriceSection" class="detail-section price-section">
           <div class="price-formula">
             <span class="price-label">{{ S.basePrice }}</span>
             <span class="price-base">{{ getBasePrice() }}</span>
-            <span class="price-op">(+</span>
-            <span class="price-incr">{{ getWaveIncrement().toFixed(1) }}</span>
-            <template v-if="waveSlider > 0">
-              <span class="price-op"> × {{ waveSlider }}) =</span>
-              <span class="price-final">{{ computedPrice }}</span>
-            </template>
-            <span v-else class="price-op">)</span>
+            <!-- <template v-if="showPriceEnabled"> -->
+              <span class="price-op">(+</span>
+              <span class="price-incr">{{ getWaveIncrement().toFixed(1) }}</span>
+              <template v-if="waveSlider > 0">
+                <span class="price-op"> × {{ waveSlider }}) =</span>
+                <span class="price-final">{{ computedPrice }}</span>
+              </template>
+              <span v-else class="price-op">)</span>
+            <!-- </template> -->
             <img :src="BASE + 'icons/items/materials/harvesting_icon.png'" class="price-icon" />
           </div>
-          <table class="price-table">
+          <table v-if="showPriceEnabled" class="price-table">
             <thead>
               <tr><th>{{ S.wave }}</th><th>1</th><th>4</th><th>8</th><th>14</th><th>19</th></tr>
             </thead>
@@ -336,7 +343,7 @@
               </tr>
             </tbody>
           </table>
-          <div class="price-slider-row">
+          <div v-if="showPriceEnabled" class="price-slider-row">
             <span class="price-label">{{ S.wave }}</span>
             <el-slider v-model="waveSlider" :min="0" :max="20" :step="1" :marks="waveSliderMarks" class="price-slider" placement="bottom" />
           </div>
@@ -374,7 +381,7 @@ const S = computed(() => isZh.value ? {
   search: '搜索...', all: '全部', tier: '稀有度', type: '类型',
   melee: '近战', ranged: '远战', set: '武器类别', source: '来源',
   base: '本体', baseGame: '本体', tag: '道具标签', sort: '排序',
-  default: '默认', price: '价格',
+  default: '默认', price: '价格', showPrice: '显示价格', on: '开', off: '关',
   damage: '伤害', crit: '暴击', cooldown: '冷却', knockback: '击退',
   range: '范围', accuracy: '命中率', lifesteal: '生命窃取', piercing: '贯通',
   bounce: '反弹', projectiles: '投射物', dmg: '伤害',
@@ -387,7 +394,7 @@ const S = computed(() => isZh.value ? {
   search: 'Search...', all: 'All', tier: 'Rarity', type: 'Type',
   melee: 'Melee', ranged: 'Ranged', set: 'Set', source: 'Source',
   base: 'Base', baseGame: 'Base Game', tag: 'Tag', sort: 'Sort',
-  default: 'Default', price: 'Price',
+  default: 'Default', price: 'Price', showPrice: 'Show Price', on: 'On', off: 'Off',
   damage: 'Damage', crit: 'Crit', cooldown: 'Cooldown', knockback: 'Knockback',
   range: 'Range', accuracy: 'Accuracy', lifesteal: 'Lifesteal', piercing: 'Piercing',
   bounce: 'Bounce', projectiles: 'Projectiles', dmg: 'dmg',
@@ -414,6 +421,7 @@ const waveSlider = ref(0)
 const stickyTierIndex = ref(0)
 const filterTag = ref(null)
 const sortBy = ref('default')
+const showPriceEnabled = ref(true)
 const isDark = ref(true)
 
 watch(isDark, (v) => {
@@ -735,13 +743,23 @@ function getBasePrice() {
   return 0
 }
 
+function getListPrice(item) {
+  return item?.value || 0
+}
+
+function shouldShowCardPrice(item) {
+  if (!showPriceEnabled.value) return false
+  if (activeTab.value !== 'weapons' && activeTab.value !== 'items') return false
+  return getListPrice(item) > 1
+}
+
 function priceAtWave(wave) {
   const bp = getBasePrice()
   return Math.floor(bp + wave + (bp * wave * 0.1))
 }
 
 const computedPrice = computed(() => priceAtWave(waveSlider.value))
-const showPrice = computed(() => (activeTab.value === 'weapons' || activeTab.value === 'items') && getBasePrice() > 1)
+const showPriceSection = computed(() => (activeTab.value === 'weapons' || activeTab.value === 'items') && getBasePrice() > 1)
 
 function getWaveIncrement() { return getBasePrice() * 0.1 + 1 }
 
@@ -868,6 +886,7 @@ body { background: #1a1d28; color: #ccc; font-family: 'Segoe UI', system-ui, san
 .filter-btn.has-value { color: #eae2b0 !important; }
 .sort-btn { border-style: dashed !important; min-width: 100px; }
 .sort-btn:hover { border-color: #6a6d7e !important; }
+.price-toggle-btn { min-width: 120px; }
 
 /* Main */
 .main-content { position: relative; height: calc(100vh - 160px); overflow: hidden; }
@@ -892,6 +911,12 @@ body { background: #1a1d28; color: #ccc; font-family: 'Segoe UI', system-ui, san
 }
 .item-icon img { max-width: 44px; max-height: 44px; image-rendering: pixelated; }
 .item-name-text { font-size: 12px; font-weight: 600; text-align: center; max-width: 80px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.item-price-badge {
+  position: absolute; top: 3px; left: 3px; font-size: 9px; line-height: 1;
+  padding: 2px 5px; border-radius: 4px; font-weight: 500; z-index: 1;
+  background: #2980b9; color: #fff;
+  box-shadow: 0 1px 3px rgba(0,0,0,.35); pointer-events: none;
+}
 .item-dlc-badge { position: absolute; top: 3px; right: 3px; font-size: 8px; padding: 1px 3px; border-radius: 3px; background: #a855f7; color: #fff; font-weight: bold; }
 
 /* Detail Panel */
@@ -945,7 +970,7 @@ body { background: #1a1d28; color: #ccc; font-family: 'Segoe UI', system-ui, san
 /* Price Section */
 .price-section { margin-top: 12px; padding: 14px 16px; background: #22253a; border-radius: 8px; border: 1px solid #2a2d3a; display: flex; flex-wrap: wrap; gap: 10px 14px; align-items: flex-start; }
 .price-formula { display: flex; align-items: baseline; gap: 4px; flex-wrap: wrap; flex: 1 1 320px; min-width: 0; margin-bottom: 0; }
-.price-label { font-size: 13px; color: #bbb; }
+.price-label { font-size: 13px; margin-right: 8px; color: #bbb; }
 .price-base { font-size: 16px; font-weight: 700; color: #fff; }
 .price-final { font-size: 16px; font-weight: 700; color: #eae2b0; }
 .price-incr { font-size: 13px; color: #ccc; }
@@ -1047,6 +1072,7 @@ body.light-theme .filters { background: #f0f2f5; border-bottom-color: #ccc; }
 body.light-theme .filter-btn { background: #fff !important; border-color: #bbb !important; color: #444 !important; }
 body.light-theme .filter-btn:hover { background: #f0f2f5 !important; border-color: #999 !important; color: #222 !important; }
 body.light-theme .filter-btn.has-value { color: #111 !important; }
+body.light-theme .item-price-badge { box-shadow: 0 1px 3px rgba(0,0,0,.15); }
 body.light-theme .el-input__wrapper { background-color: #fff !important; border-color: #bbb !important; }
 body.light-theme .el-input__wrapper:hover { border-color: #999 !important; }
 body.light-theme .el-input__inner { color: #222 !important; }
