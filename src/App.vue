@@ -313,27 +313,32 @@
           <div class="price-formula">
             <span class="price-label">{{ S.basePrice }}</span>
             <span class="price-base">{{ getBasePrice() }}</span>
-            <span class="price-op">({{ S.perWave }}+</span>
+            <span class="price-op">(+</span>
             <span class="price-incr">{{ getWaveIncrement().toFixed(1) }}</span>
             <template v-if="waveSlider > 0">
-              <span class="price-op"> × {{ waveSlider }} =</span>
+              <span class="price-op"> × {{ waveSlider }}) =</span>
               <span class="price-final">{{ computedPrice }}</span>
             </template>
             <span v-else class="price-op">)</span>
             <img :src="BASE + 'icons/items/materials/harvesting_icon.png'" class="price-icon" />
           </div>
           <table class="price-table">
-            <tr><th>{{ S.wave }}</th><th>1</th><th>4</th><th>8</th><th>14</th><th>19</th></tr>
-            <tr><td>{{ S.price }}</td>
-              <td>{{ showPriceCell(1) ? priceAtWave(1) : '—' }}</td>
-              <td>{{ showPriceCell(4) ? priceAtWave(4) : '—' }}</td>
-              <td>{{ priceAtWave(8) }}</td>
-              <td>{{ priceAtWave(14) }}</td>
-              <td>{{ priceAtWave(19) }}</td>
-            </tr>
+            <thead>
+              <tr><th>{{ S.wave }}</th><th>1</th><th>4</th><th>8</th><th>14</th><th>19</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>{{ S.price }}</td>
+                <td>{{ showPriceCell(1) ? priceAtWave(1) : '—' }}</td>
+                <td>{{ showPriceCell(4) ? priceAtWave(4) : '—' }}</td>
+                <td>{{ priceAtWave(8) }}</td>
+                <td>{{ priceAtWave(14) }}</td>
+                <td>{{ priceAtWave(19) }}</td>
+              </tr>
+            </tbody>
           </table>
           <div class="price-slider-row">
-            <el-slider v-model="waveSlider" :min="0" :max="20" :step="1" :marks="waveSliderMarks" class="price-slider" />
+            <span class="price-label">{{ S.wave }}</span>
+            <el-slider v-model="waveSlider" :min="0" :max="20" :step="1" :marks="waveSliderMarks" class="price-slider" placement="bottom" />
           </div>
         </div>
 
@@ -748,8 +753,8 @@ function getCurrentTier() {
 
 function showPriceCell(wave) {
   const tier = getCurrentTier()
-  if (tier >= 4 && wave <= 4) return false
-  if (tier >= 3 && wave === 1) return false
+  if (tier >= 3 && wave < 8) return false
+  if (tier >= 2 && wave < 4) return false
   return true
 }
 
@@ -938,8 +943,8 @@ body { background: #1a1d28; color: #ccc; font-family: 'Segoe UI', system-ui, san
 .stat-prefix-icon { width: 13px; height: 13px; vertical-align: middle; image-rendering: pixelated; }
 
 /* Price Section */
-.price-section { margin-top: 12px; padding: 14px 16px; background: #22253a; border-radius: 8px; border: 1px solid #2a2d3a; }
-.price-formula { display: flex; align-items: baseline; gap: 4px; flex-wrap: wrap; margin-bottom: 10px; }
+.price-section { margin-top: 12px; padding: 14px 16px; background: #22253a; border-radius: 8px; border: 1px solid #2a2d3a; display: flex; flex-wrap: wrap; gap: 10px 14px; align-items: flex-start; }
+.price-formula { display: flex; align-items: baseline; gap: 4px; flex-wrap: wrap; flex: 1 1 320px; min-width: 0; margin-bottom: 0; }
 .price-label { font-size: 13px; color: #bbb; }
 .price-base { font-size: 16px; font-weight: 700; color: #fff; }
 .price-final { font-size: 16px; font-weight: 700; color: #eae2b0; }
@@ -947,13 +952,14 @@ body { background: #1a1d28; color: #ccc; font-family: 'Segoe UI', system-ui, san
 .price-op { font-size: 13px; color: #888; }
 .price-icon { width: 18px; height: 18px; image-rendering: pixelated; vertical-align: middle; }
 
-.price-table { width: 100%; border-collapse: collapse; margin-bottom: 8px; font-size: 13px; }
+.price-table { width: 100%; max-width: 50%; flex: 1 1 280px; border-collapse: collapse; margin-bottom: 0; font-size: 13px; }
 .price-table th, .price-table td { padding: 5px 8px; text-align: center; border: 1px solid #2a2d3a; }
 .price-table th { color: #888; font-weight: 600; }
 .price-table td { color: #ddd; }
 
-.price-slider-row { padding: 0 8px; }
-.price-slider { --el-slider-height: 4px; }
+.price-slider-row { display: flex; align-items: center; gap: 12px; width: 100%; }
+.price-label { flex-shrink: 0; white-space: nowrap; }
+.price-slider { --el-slider-height: 4px; flex: 1; min-width: 0; }
 .price-slider :deep(.el-slider__runway) { background: #2a2d3a; margin: 0; }
 .price-slider :deep(.el-slider__bar) { background: #ff3d3d; }
 .price-slider :deep(.el-slider__button) { width: 14px; height: 14px; border-color: #ff3d3d; }
