@@ -11,6 +11,9 @@
         <a href="https://github.com/mojimoon/brotato" target="_blank" rel="noopener noreferrer">
           <img src="https://img.shields.io/github/stars/mojimoon/brotato?style=social" alt="GitHub stars" style="height: 20px;" />
         </a>
+        <a href="https://brotato.wiki.spellsandguns.com/" target="_blank" rel="noopener noreferrer">
+          <el-button class="header-btn" circle>Wiki</el-button>
+        </a>
         <el-dropdown @command="(cmd) => { isZh = cmd === 'zh' }" trigger="click">
           <el-button class="header-btn lang-btn" circle>{{ isZh ? '中' : 'EN' }}</el-button>
           <template #dropdown>
@@ -119,7 +122,8 @@
       </el-dropdown>
 
       <el-button v-if="activeTab === 'weapons' || activeTab === 'items'" class="filter-btn price-toggle-btn" :class="{ 'has-value': showPriceEnabled }" @click="showPriceEnabled = !showPriceEnabled">
-        {{ S.showPrice }}: {{ showPriceEnabled ? S.on : S.off }}
+        <el-icon style="margin-right:4px"><View v-if="showPriceEnabled" /><Hide v-else /></el-icon>
+        {{ S.price }}
       </el-button>
     </div>
 
@@ -378,7 +382,7 @@
 
 <script setup>
 import { ref, computed, onMounted, nextTick, watch } from 'vue'
-import { Search, Sort, User, Sunny, Moon, Box, Aim, ArrowDown } from '@element-plus/icons-vue'
+import { Search, Sort, User, Sunny, Moon, Box, Aim, ArrowDown, View, Hide } from '@element-plus/icons-vue'
 
 const BASE = import.meta.env.BASE_URL
 
@@ -887,14 +891,54 @@ body { background: #1a1d28; color: #ccc; font-family: 'Segoe UI', system-ui, san
 .filter-btn {
   background: #22253a !important; border: 1px solid #3a3d4e !important; color: #bbb !important;
   font-size: 13px !important; height: 32px !important; padding: 0 10px !important;
-  min-width: 110px; justify-content: space-between; border-radius: 6px !important;
+  min-width: 110px; justify-content: center; gap: 6px;
+  border-radius: 6px !important;
   transition: all .15s !important;
 }
 .filter-btn:hover { background: #2a2d3a !important; border-color: #5a5d6e !important; color: #fff !important; }
 .filter-btn.has-value { color: #eae2b0 !important; }
-.sort-btn { border-style: dashed !important; min-width: 100px; }
-.sort-btn:hover { border-color: #6a6d7e !important; }
-.price-toggle-btn { min-width: 120px; }
+.sort-btn {
+  gap: 8px;
+  min-width: 122px;
+  border-style: solid !important;
+  border-color: #4a4f63 !important;
+  background: linear-gradient(180deg, #2d3247 0%, #22253a 100%) !important;
+  color: #f5f1d8 !important;
+  font-weight: 700;
+  box-shadow: 0 0 0 1px rgba(255, 220, 120, 0.08), 0 6px 14px rgba(0, 0, 0, 0.18);
+}
+.sort-btn:hover { border-color: #7a8099 !important; background: linear-gradient(180deg, #373d55 0%, #2a2d3f 100%) !important; }
+.sort-btn.has-value { color: #fff4bf !important; }
+.sort-btn :deep(.el-icon) { color: inherit; }
+.price-toggle-btn {
+  gap: 8px;
+  min-width: 124px;
+  border-style: solid !important;
+  border-color: #4a4f63 !important;
+  font-weight: 700;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.04), 0 6px 14px rgba(0, 0, 0, 0.18);
+}
+.price-toggle-btn.has-value {
+  background: linear-gradient(180deg, #3b4e2f 0%, #273522 100%) !important;
+  color: #e8ffd1 !important;
+  border-color: #5d8a4b !important;
+  box-shadow: 0 0 0 1px rgba(110, 255, 130, 0.12), 0 0 18px rgba(110, 255, 130, 0.18), 0 6px 14px rgba(0, 0, 0, 0.18);
+}
+.price-toggle-btn:not(.has-value) {
+  background: linear-gradient(180deg, #1c1e28 0%, #161821 100%) !important;
+  color: #9197aa !important;
+  border-color: #2f3445 !important;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.02), 0 4px 10px rgba(0, 0, 0, 0.14);
+}
+.price-toggle-btn:hover { border-color: #7a8099 !important; }
+.price-toggle-btn.has-value:hover {
+  background: linear-gradient(180deg, #466038 0%, #314128 100%) !important;
+  color: #f5ffd8 !important;
+}
+.price-toggle-btn:not(.has-value):hover {
+  background: linear-gradient(180deg, #242838 0%, #1b1e2b 100%) !important;
+  color: #c1c7d8 !important;
+}
 
 /* Main */
 .main-content { position: relative; height: calc(100vh - 160px); overflow: hidden; }
@@ -1080,6 +1124,14 @@ body.light-theme .filters { background: #f0f2f5; border-bottom-color: #ccc; }
 body.light-theme .filter-btn { background: #fff !important; border-color: #bbb !important; color: #444 !important; }
 body.light-theme .filter-btn:hover { background: #f0f2f5 !important; border-color: #999 !important; color: #222 !important; }
 body.light-theme .filter-btn.has-value { color: #111 !important; }
+body.light-theme .sort-btn { background: linear-gradient(180deg, #fff5d7 0%, #ece2be 100%) !important; border-color: #c8b67a !important; color: #6b5200 !important; box-shadow: 0 0 0 1px rgba(196, 158, 53, 0.08), 0 6px 14px rgba(0, 0, 0, 0.08); }
+body.light-theme .sort-btn:hover { background: linear-gradient(180deg, #fff0c0 0%, #e3d1a0 100%) !important; border-color: #b79d52 !important; color: #4f3b00 !important; }
+body.light-theme .sort-btn.has-value { color: #4d3900 !important; }
+body.light-theme .price-toggle-btn { border-color: #b5b9c7 !important; }
+body.light-theme .price-toggle-btn.has-value { background: linear-gradient(180deg, #d6f2c8 0%, #bfe5ab 100%) !important; border-color: #7aa95d !important; color: #214010 !important; box-shadow: 0 0 0 1px rgba(93, 168, 75, 0.12), 0 0 18px rgba(93, 168, 75, 0.12), 0 6px 14px rgba(0, 0, 0, 0.08); }
+body.light-theme .price-toggle-btn:not(.has-value) { background: linear-gradient(180deg, #eef1f5 0%, #dde2ea 100%) !important; border-color: #b4bac5 !important; color: #6b7280 !important; }
+body.light-theme .price-toggle-btn.has-value:hover { background: linear-gradient(180deg, #cbe9b8 0%, #b0d99d 100%) !important; color: #17330a !important; }
+body.light-theme .price-toggle-btn:not(.has-value):hover { background: linear-gradient(180deg, #e6ebf1 0%, #d8dfe8 100%) !important; color: #4f5664 !important; }
 body.light-theme .item-price-badge { box-shadow: 0 1px 3px rgba(0,0,0,.15); background: #ddd; color: #000; }
 body.light-theme .el-input__wrapper { background-color: #fff !important; border-color: #bbb !important; }
 body.light-theme .el-input__wrapper:hover { border-color: #999 !important; }
