@@ -207,7 +207,7 @@
 
           <!-- Effects (pre-rendered from JSON) -->
           <div v-if="activeWeaponData.effects?.length" class="detail-section">
-            <h3 class="section-title">{{ isZh ? '特效' : 'Effects' }}</h3>
+            <h3 class="section-title">{{ isZh ? '效果' : 'Effects' }}</h3>
             <div class="effects-list">
               <div v-for="(eff, idx) in activeWeaponData.effects" :key="idx" class="effect-item">
                 <span v-html="renderEffectPreprocessed(eff)"></span>
@@ -297,7 +297,7 @@
             </div>
           </div>
           <div v-if="selectedItem.effects?.length" class="detail-section">
-            <h3 class="section-title">{{ isZh ? '特性' : 'Traits' }}</h3>
+            <h3 class="section-title">{{ isZh ? '效果' : 'Effects' }}</h3>
             <div class="effects-list">
               <div v-for="(eff, idx) in selectedItem.effects" :key="idx" class="effect-item">
                 <span v-html="renderEffectPreprocessed(eff)"></span>
