@@ -357,7 +357,7 @@ def parse_effect_file(filepath):
             result['custom_args'] = custom_args
     
     # Parse boolean fields
-    for bool_field in ['auto_target_enemy', 'reset_on_hit', 'perm_stats_only']:
+    for bool_field in ['auto_target_enemy', 'reset_on_hit', 'perm_stats_only', 'is_spawning']:
         if bool_field in data:
             result[bool_field] = data[bool_field]
     
@@ -1127,6 +1127,7 @@ def _build_effect_args_and_signs(eff, lang):
     elif 'structure_stats' in eff and text_key in ('effect_turret', 'effect_turret_flame',
             'effect_turret_laser', 'effect_turret_rocket', 'effect_landmines', 'effect_garden'):
         struct_stats = eff.get('structure_stats', {})
+        is_spawning = eff.get('is_spawning', False)
         spawn_cd = extra.get('spawn_cooldown', 0)
         # spawn_cooldown is already in seconds; structure_stats.cooldown is in frames
         if spawn_cd > 0:
@@ -1142,17 +1143,20 @@ def _build_effect_args_and_signs(eff, lang):
         scaling_text = build_scaling_text(scaling, lang)
         nb_proj = struct_stats.get('nb_projectiles', 1)
         bounce = struct_stats.get('bounce', 0)
-        # Check burning_data: top-level or in structure_effects
         bd = eff.get('burning_data')
         if not bd:
             for se in eff.get('structure_effects', []):
                 if se.get('burning_data'):
                     bd = se['burning_data']
                     break
-        # TurretEffect.get_args() for burning: [burn_dur, burn_dmg, burn_scaling, key_name]
-        # TurretEffect.get_args() for non-burning: [damage, scaling, nb_projectiles, bounce, key_name]
+        # TurretEffect.get_args() when is_spawning: [spawn_cd]
+        # TurretEffect.get_args() when burning: [burn_dur, burn_dmg, burn_scaling, key_name]
+        # TurretEffect.get_args() otherwise: [damage, scaling, nb_projectiles, bounce, key_name]
         # StructureEffect.get_args(): [value, spawn_cd, damage, scaling]
-        if bd and text_key in ('effect_turret_flame',):
+        if is_spawning:
+            args = [str(cd_sec)]
+            signs = [SIGN_NEUTRAL]
+        elif bd and text_key in ('effect_turret_flame',):
             args = [str(bd.get('duration', 0)), str(bd.get('damage', 0)),
                     build_scaling_text(bd.get('scaling_stats', []), lang),
                     tr(key.upper(), lang) if key else '']
@@ -1656,6 +1660,7 @@ def render_effect_text(eff, lang):
         'effect_turret_laser', 'effect_turret_rocket', 'effect_garden',
     )} or key in ('effect_spawn_garden', 'effect_spawn_landmine'):
         struct_stats = eff.get('structure_stats', {})
+        is_spawning = eff.get('is_spawning', False)
         spawn_cd = extra.get('spawn_cooldown', extra.get('interval', 0))
         # spawn_cooldown is already in seconds; structure_stats.cooldown is in frames
         if spawn_cd > 0:
@@ -1677,7 +1682,9 @@ def render_effect_text(eff, lang):
                 if se.get('burning_data'):
                     bd = se['burning_data']
                     break
-        if bd and tk_upper in ('EFFECT_TURRET_FLAME',):
+        if is_spawning:
+            args[0] = str(cd_sec)
+        elif bd and tk_upper in ('EFFECT_TURRET_FLAME',):
             args[0] = str(bd.get('duration', 0))
             args[1] = str(bd.get('damage', 0))
             args[2] = build_scaling_text(bd.get('scaling_stats', []), lang)
