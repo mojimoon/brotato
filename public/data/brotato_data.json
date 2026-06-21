@@ -26,8 +26,8 @@
           "extra": {
             "value2": 10.0
           },
-          "text_en": "Has a <span class=\"g\">1</span> chance to break and drop <span class=\"g\">10</span> materials on hit",
-          "text_zh": "命中时武器有<span class=\"g\">1</span>几率损坏并掉落<span class=\"g\">10</span>材料"
+          "text_en": "Has a <span class=\"g\">1%</span> chance to break and drop <span class=\"g\">10</span> materials on hit",
+          "text_zh": "命中时武器有<span class=\"g\">1%</span>几率损坏并掉落<span class=\"g\">10</span>材料"
         }
       ],
       "stats": {
@@ -418,8 +418,8 @@
           "extra": {
             "value2": 60
           },
-          "text_en": "Hitting an enemy that has less than <span class=\"g\">60</span> health has a <span class=\"g\">10</span> chance to charm it for <span class=\"g\">8</span> seconds",
-          "text_zh": "击中生命值低于<span class=\"g\">60</span>的敌人时，有<span class=\"g\">10</span>的几率使其在<span class=\"g\">8</span>秒内受到魅惑"
+          "text_en": "Hitting an enemy that has less than <span class=\"g\">60%</span> health has a <span class=\"g\">10%</span> chance to charm it for <span class=\"g\">8</span> seconds",
+          "text_zh": "击中生命值低于<span class=\"g\">60%</span>的敌人时，有<span class=\"g\">10%</span>的几率使其在<span class=\"g\">8</span>秒内受到魅惑"
         }
       ],
       "stats": {
@@ -755,8 +755,8 @@
           "extra": {
             "value2": 70.0
           },
-          "text_en": "<span class=\"g\">1</span> <span class=\"g\">Range</span> for every <span class=\"g\">70</span> steps you take during a wave",
-          "text_zh": "每在一波袭击中前进<span class=\"g\">70</span>步，可获得<span class=\"g\">1</span><span class=\"g\">范围</span>"
+          "text_en": "<span class=\"g\">+1</span> <span class=\"g\">Range</span> for every <span class=\"g\">70</span> steps you take during a wave",
+          "text_zh": "每在一波袭击中前进<span class=\"g\">70</span>步，可获得<span class=\"g\">+1</span><span class=\"g\">范围</span>"
         }
       ],
       "stats": {
@@ -1163,8 +1163,8 @@
             "max_stacks": 3,
             "duration_secs": 3
           },
-          "text_en": "Enemies hit take <span class=\"g\">10</span> more damage for <span class=\"g\">3</span> seconds (max: <span class=\"g\">30</span>)",
-          "text_zh": "敌人会额外承受<span class=\"g\">10</span>伤害，持续<span class=\"g\">3</span>秒（上限：<span class=\"g\">30</span>）"
+          "text_en": "Enemies hit take <span class=\"g\">10%</span> more damage for <span class=\"g\">3</span> seconds (max: <span class=\"g\">30%</span>)",
+          "text_zh": "敌人会额外承受<span class=\"g\">10%</span>伤害，持续<span class=\"g\">3</span>秒（上限：<span class=\"g\">30%</span>）"
         }
       ],
       "stats": {
@@ -1797,8 +1797,8 @@
           "extra": {
             "spawn_cooldown": 12
           },
-          "text_en": "A landmine spawns every <span class=\"g\">12</span> seconds dealing <span class=\"g\">10</span> (<span class=\"g\">100%<span class=\"ic\" data-ic=\"engineering\"></span></span>) damage in an area",
-          "text_zh": "地雷每<span class=\"g\">12</span>秒生成一次，并对一个区域造成<span class=\"g\">10</span>（<span class=\"g\">100%<span class=\"ic\" data-ic=\"engineering\"></span></span>）伤害"
+          "text_en": "A landmine spawns every <span class=\"g\">0.2</span> seconds dealing <span class=\"g\">10</span> (<span class=\"g\">100%<span class=\"ic\" data-ic=\"engineering\"></span></span>) damage in an area",
+          "text_zh": "地雷每<span class=\"g\">0.2</span>秒生成一次，并对一个区域造成<span class=\"g\">10</span>（<span class=\"g\">100%<span class=\"ic\" data-ic=\"engineering\"></span></span>）伤害"
         }
       ],
       "stats": {
@@ -2040,8 +2040,8 @@
           "extra": {
             "value2": 30
           },
-          "text_en": "<span class=\"g\">20</span> damage against targets below <span class=\"g\">30</span> health",
-          "text_zh": "对生命值低于<span class=\"g\">30</span>的目标造成<span class=\"g\">20</span>伤害"
+          "text_en": "<span class=\"g\">+20%</span> damage against targets below <span class=\"g\">30%</span> health",
+          "text_zh": "对生命值低于<span class=\"g\">30%</span>的目标造成<span class=\"g\">+20%</span>伤害"
         }
       ],
       "stats": {
@@ -2617,8 +2617,8 @@
           "extra": {
             "spawn_cooldown": -1
           },
-          "text_en": "Spawns a turret that shoots bullets dealing <span class=\"g\">1</span> (<span class=\"g\">0.5333333333333333</span>) damage",
-          "text_zh": "生成1台炮塔，造成<span class=\"g\">1</span>（<span class=\"g\">0.5333333333333333</span>）伤害"
+          "text_en": "Spawns a turret that shoots bullets dealing <span class=\"g\">10</span> (<span class=\"g\">80%<span class=\"ic\" data-ic=\"engineering\"></span></span>) damage",
+          "text_zh": "生成1台炮塔，造成<span class=\"g\">10</span>（<span class=\"g\">80%<span class=\"ic\" data-ic=\"engineering\"></span></span>）伤害"
         }
       ],
       "stats": {
@@ -2777,8 +2777,8 @@
           "extra": {
             "value2": 30.0
           },
-          "text_en": "Has a <span class=\"g\">1</span> chance to break and drop <span class=\"g\">30</span> materials on hit",
-          "text_zh": "命中时武器有<span class=\"g\">1</span>几率损坏并掉落<span class=\"g\">30</span>材料"
+          "text_en": "Has a <span class=\"g\">1%</span> chance to break and drop <span class=\"g\">30</span> materials on hit",
+          "text_zh": "命中时武器有<span class=\"g\">1%</span>几率损坏并掉落<span class=\"g\">30</span>材料"
         }
       ],
       "stats": {
@@ -3432,8 +3432,8 @@
           "extra": {
             "value2": 65
           },
-          "text_en": "Hitting an enemy that has less than <span class=\"g\">65</span> health has a <span class=\"g\">15</span> chance to charm it for <span class=\"g\">8</span> seconds",
-          "text_zh": "击中生命值低于<span class=\"g\">65</span>的敌人时，有<span class=\"g\">15</span>的几率使其在<span class=\"g\">8</span>秒内受到魅惑"
+          "text_en": "Hitting an enemy that has less than <span class=\"g\">65%</span> health has a <span class=\"g\">15%</span> chance to charm it for <span class=\"g\">8</span> seconds",
+          "text_zh": "击中生命值低于<span class=\"g\">65%</span>的敌人时，有<span class=\"g\">15%</span>的几率使其在<span class=\"g\">8</span>秒内受到魅惑"
         }
       ],
       "stats": {
@@ -3947,8 +3947,8 @@
           "extra": {
             "value2": 60.0
           },
-          "text_en": "<span class=\"g\">1</span> <span class=\"g\">Range</span> for every <span class=\"g\">60</span> steps you take during a wave",
-          "text_zh": "每在一波袭击中前进<span class=\"g\">60</span>步，可获得<span class=\"g\">1</span><span class=\"g\">范围</span>"
+          "text_en": "<span class=\"g\">+1</span> <span class=\"g\">Range</span> for every <span class=\"g\">60</span> steps you take during a wave",
+          "text_zh": "每在一波袭击中前进<span class=\"g\">60</span>步，可获得<span class=\"g\">+1</span><span class=\"g\">范围</span>"
         }
       ],
       "stats": {
@@ -4355,8 +4355,8 @@
             "max_stacks": 5,
             "duration_secs": 3
           },
-          "text_en": "Enemies hit take <span class=\"g\">10</span> more damage for <span class=\"g\">3</span> seconds (max: <span class=\"g\">50</span>)",
-          "text_zh": "敌人会额外承受<span class=\"g\">10</span>伤害，持续<span class=\"g\">3</span>秒（上限：<span class=\"g\">50</span>）"
+          "text_en": "Enemies hit take <span class=\"g\">10%</span> more damage for <span class=\"g\">3</span> seconds (max: <span class=\"g\">50%</span>)",
+          "text_zh": "敌人会额外承受<span class=\"g\">10%</span>伤害，持续<span class=\"g\">3</span>秒（上限：<span class=\"g\">50%</span>）"
         }
       ],
       "stats": {
@@ -5170,8 +5170,8 @@
           "extra": {
             "spawn_cooldown": 9
           },
-          "text_en": "A landmine spawns every <span class=\"g\">9</span> seconds dealing <span class=\"g\">10</span> (<span class=\"g\">100%<span class=\"ic\" data-ic=\"engineering\"></span></span>) damage in an area",
-          "text_zh": "地雷每<span class=\"g\">9</span>秒生成一次，并对一个区域造成<span class=\"g\">10</span>（<span class=\"g\">100%<span class=\"ic\" data-ic=\"engineering\"></span></span>）伤害"
+          "text_en": "A landmine spawns every <span class=\"g\">0.15</span> seconds dealing <span class=\"g\">10</span> (<span class=\"g\">100%<span class=\"ic\" data-ic=\"engineering\"></span></span>) damage in an area",
+          "text_zh": "地雷每<span class=\"g\">0.15</span>秒生成一次，并对一个区域造成<span class=\"g\">10</span>（<span class=\"g\">100%<span class=\"ic\" data-ic=\"engineering\"></span></span>）伤害"
         }
       ],
       "stats": {
@@ -5413,8 +5413,8 @@
           "extra": {
             "value2": 30
           },
-          "text_en": "<span class=\"g\">30</span> damage against targets below <span class=\"g\">30</span> health",
-          "text_zh": "对生命值低于<span class=\"g\">30</span>的目标造成<span class=\"g\">30</span>伤害"
+          "text_en": "<span class=\"g\">+30%</span> damage against targets below <span class=\"g\">30%</span> health",
+          "text_zh": "对生命值低于<span class=\"g\">30%</span>的目标造成<span class=\"g\">+30%</span>伤害"
         }
       ],
       "stats": {
@@ -5941,8 +5941,8 @@
           "extra": {
             "value2": 80
           },
-          "text_en": "<span class=\"g\">30</span> damage against targets above <span class=\"g\">80</span> health",
-          "text_zh": "对生命值超过<span class=\"g\">80</span>的目标造成<span class=\"g\">30</span>伤害"
+          "text_en": "<span class=\"g\">+30%</span> damage against targets above <span class=\"g\">80%</span> health",
+          "text_zh": "对生命值超过<span class=\"g\">80%</span>的目标造成<span class=\"g\">+30%</span>伤害"
         }
       ],
       "stats": {
@@ -6165,8 +6165,8 @@
           "extra": {
             "spawn_cooldown": -1
           },
-          "text_en": "Spawns a turret that shoots flames dealing <span class=\"g\">1</span>x<span class=\"g\">0.25</span> (<span class=\"g\">1</span>) burning damage",
-          "text_zh": "生成1台燃烧炮塔，造成<span class=\"g\">1</span>x<span class=\"g\">0.25</span>（<span class=\"g\">1</span>）燃烧伤害"
+          "text_en": "Spawns a turret that shoots flames dealing <span class=\"g\">1</span>x (<span class=\"g\">1</span>) burning damage",
+          "text_zh": "生成1台燃烧炮塔，造成<span class=\"g\">1</span>x（<span class=\"g\">1</span>）燃烧伤害"
         }
       ],
       "stats": {
@@ -6325,8 +6325,8 @@
           "extra": {
             "value2": 75.0
           },
-          "text_en": "Has a <span class=\"g\">1</span> chance to break and drop <span class=\"g\">75</span> materials on hit",
-          "text_zh": "命中时武器有<span class=\"g\">1</span>几率损坏并掉落<span class=\"g\">75</span>材料"
+          "text_en": "Has a <span class=\"g\">1%</span> chance to break and drop <span class=\"g\">75</span> materials on hit",
+          "text_zh": "命中时武器有<span class=\"g\">1%</span>几率损坏并掉落<span class=\"g\">75</span>材料"
         }
       ],
       "stats": {
@@ -6470,8 +6470,8 @@
           "stat_scaled": "free_weapon_slots",
           "nb_stat_scaled": 1,
           "increased_stat_name": "damage",
-          "text_en": "Deals <span class=\"g\">25</span> <span class=\"g\">Damage</span> for every free weapon slot you have [<span class=\"g\">1</span>]",
-          "text_zh": "每有一个空闲的武器栏，将造成<span class=\"g\">25</span><span class=\"g\">伤害</span>[<span class=\"g\">1</span>]"
+          "text_en": "Deals <span class=\"g\">+25</span> <span class=\"g\">Damage</span> for every free weapon slot you have [<span class=\"g\">+1</span>]",
+          "text_zh": "每有一个空闲的武器栏，将造成<span class=\"g\">+25</span><span class=\"g\">伤害</span>[<span class=\"g\">+1</span>]"
         }
       ],
       "stats": {
@@ -6531,8 +6531,8 @@
           "extra": {
             "value2": 1.0
           },
-          "text_en": "Deals <span class=\"g\">10</span> of an enemy’s current health as bonus damage (<span class=\"g\">1</span> for bosses and elites)",
-          "text_zh": "造成敌人当前生命值的<span class=\"g\">10</span>以作为奖励伤害（头目和精英怪的<span class=\"g\">1</span>）"
+          "text_en": "Deals <span class=\"g\">10%</span> of an enemy’s current health as bonus damage (<span class=\"g\">1%</span> for bosses and elites)",
+          "text_zh": "造成敌人当前生命值的<span class=\"g\">10%</span>以作为奖励伤害（头目和精英怪的<span class=\"g\">1%</span>）"
         }
       ],
       "stats": {
@@ -7110,8 +7110,8 @@
           "extra": {
             "value2": 70
           },
-          "text_en": "Hitting an enemy that has less than <span class=\"g\">70</span> health has a <span class=\"g\">20</span> chance to charm it for <span class=\"g\">8</span> seconds",
-          "text_zh": "击中生命值低于<span class=\"g\">70</span>的敌人时，有<span class=\"g\">20</span>的几率使其在<span class=\"g\">8</span>秒内受到魅惑"
+          "text_en": "Hitting an enemy that has less than <span class=\"g\">70%</span> health has a <span class=\"g\">20%</span> chance to charm it for <span class=\"g\">8</span> seconds",
+          "text_zh": "击中生命值低于<span class=\"g\">70%</span>的敌人时，有<span class=\"g\">20%</span>的几率使其在<span class=\"g\">8</span>秒内受到魅惑"
         }
       ],
       "stats": {
@@ -7625,8 +7625,8 @@
           "extra": {
             "value2": 50.0
           },
-          "text_en": "<span class=\"g\">1</span> <span class=\"g\">Range</span> for every <span class=\"g\">50</span> steps you take during a wave",
-          "text_zh": "每在一波袭击中前进<span class=\"g\">50</span>步，可获得<span class=\"g\">1</span><span class=\"g\">范围</span>"
+          "text_en": "<span class=\"g\">+1</span> <span class=\"g\">Range</span> for every <span class=\"g\">50</span> steps you take during a wave",
+          "text_zh": "每在一波袭击中前进<span class=\"g\">50</span>步，可获得<span class=\"g\">+1</span><span class=\"g\">范围</span>"
         }
       ],
       "stats": {
@@ -8033,8 +8033,8 @@
             "max_stacks": 7,
             "duration_secs": 3
           },
-          "text_en": "Enemies hit take <span class=\"g\">10</span> more damage for <span class=\"g\">3</span> seconds (max: <span class=\"g\">70</span>)",
-          "text_zh": "敌人会额外承受<span class=\"g\">10</span>伤害，持续<span class=\"g\">3</span>秒（上限：<span class=\"g\">70</span>）"
+          "text_en": "Enemies hit take <span class=\"g\">10%</span> more damage for <span class=\"g\">3</span> seconds (max: <span class=\"g\">70%</span>)",
+          "text_zh": "敌人会额外承受<span class=\"g\">10%</span>伤害，持续<span class=\"g\">3</span>秒（上限：<span class=\"g\">70%</span>）"
         }
       ],
       "stats": {
@@ -9224,8 +9224,8 @@
           "extra": {
             "spawn_cooldown": 6
           },
-          "text_en": "A landmine spawns every <span class=\"g\">6</span> seconds dealing <span class=\"g\">10</span> (<span class=\"g\">100%<span class=\"ic\" data-ic=\"engineering\"></span></span>) damage in an area",
-          "text_zh": "地雷每<span class=\"g\">6</span>秒生成一次，并对一个区域造成<span class=\"g\">10</span>（<span class=\"g\">100%<span class=\"ic\" data-ic=\"engineering\"></span></span>）伤害"
+          "text_en": "A landmine spawns every <span class=\"g\">0.1</span> seconds dealing <span class=\"g\">10</span> (<span class=\"g\">100%<span class=\"ic\" data-ic=\"engineering\"></span></span>) damage in an area",
+          "text_zh": "地雷每<span class=\"g\">0.1</span>秒生成一次，并对一个区域造成<span class=\"g\">10</span>（<span class=\"g\">100%<span class=\"ic\" data-ic=\"engineering\"></span></span>）伤害"
         }
       ],
       "stats": {
@@ -9467,8 +9467,8 @@
           "extra": {
             "value2": 30
           },
-          "text_en": "<span class=\"g\">40</span> damage against targets below <span class=\"g\">30</span> health",
-          "text_zh": "对生命值低于<span class=\"g\">30</span>的目标造成<span class=\"g\">40</span>伤害"
+          "text_en": "<span class=\"g\">+40%</span> damage against targets below <span class=\"g\">30%</span> health",
+          "text_zh": "对生命值低于<span class=\"g\">30%</span>的目标造成<span class=\"g\">+40%</span>伤害"
         }
       ],
       "stats": {
@@ -10176,8 +10176,8 @@
           "extra": {
             "value2": 80
           },
-          "text_en": "<span class=\"g\">40</span> damage against targets above <span class=\"g\">80</span> health",
-          "text_zh": "对生命值超过<span class=\"g\">80</span>的目标造成<span class=\"g\">40</span>伤害"
+          "text_en": "<span class=\"g\">+40%</span> damage against targets above <span class=\"g\">80%</span> health",
+          "text_zh": "对生命值超过<span class=\"g\">80%</span>的目标造成<span class=\"g\">+40%</span>伤害"
         }
       ],
       "stats": {
@@ -10441,8 +10441,8 @@
           "extra": {
             "spawn_cooldown": -1
           },
-          "text_en": "Spawns a turret that shoots piercing bullets dealing <span class=\"g\">1</span> (<span class=\"g\">0.6666666666666666</span>) damage",
-          "text_zh": "生成1台发射贯通弹的炮塔，造成<span class=\"g\">1</span>（<span class=\"g\">0.6666666666666666</span>）伤害"
+          "text_en": "Spawns a turret that shoots piercing bullets dealing <span class=\"g\">20</span> (<span class=\"g\">125%<span class=\"ic\" data-ic=\"engineering\"></span></span>) damage",
+          "text_zh": "生成1台发射贯通弹的炮塔，造成<span class=\"g\">20</span>（<span class=\"g\">125%<span class=\"ic\" data-ic=\"engineering\"></span></span>）伤害"
         }
       ],
       "stats": {
@@ -10601,8 +10601,8 @@
           "extra": {
             "value2": 200.0
           },
-          "text_en": "Has a <span class=\"g\">1</span> chance to break and drop <span class=\"g\">200</span> materials on hit",
-          "text_zh": "命中时武器有<span class=\"g\">1</span>几率损坏并掉落<span class=\"g\">200</span>材料"
+          "text_en": "Has a <span class=\"g\">1%</span> chance to break and drop <span class=\"g\">200</span> materials on hit",
+          "text_zh": "命中时武器有<span class=\"g\">1%</span>几率损坏并掉落<span class=\"g\">200</span>材料"
         }
       ],
       "stats": {
@@ -10746,8 +10746,8 @@
           "stat_scaled": "free_weapon_slots",
           "nb_stat_scaled": 1,
           "increased_stat_name": "damage",
-          "text_en": "Deals <span class=\"g\">50</span> <span class=\"g\">Damage</span> for every free weapon slot you have [<span class=\"g\">1</span>]",
-          "text_zh": "每有一个空闲的武器栏，将造成<span class=\"g\">50</span><span class=\"g\">伤害</span>[<span class=\"g\">1</span>]"
+          "text_en": "Deals <span class=\"g\">+50</span> <span class=\"g\">Damage</span> for every free weapon slot you have [<span class=\"g\">+1</span>]",
+          "text_zh": "每有一个空闲的武器栏，将造成<span class=\"g\">+50</span><span class=\"g\">伤害</span>[<span class=\"g\">+1</span>]"
         }
       ],
       "stats": {
@@ -10857,8 +10857,8 @@
           "extra": {
             "value2": 2.0
           },
-          "text_en": "Deals <span class=\"g\">20</span> of an enemy’s current health as bonus damage (<span class=\"g\">2</span> for bosses and elites)",
-          "text_zh": "造成敌人当前生命值的<span class=\"g\">20</span>以作为奖励伤害（头目和精英怪的<span class=\"g\">2</span>）"
+          "text_en": "Deals <span class=\"g\">20%</span> of an enemy’s current health as bonus damage (<span class=\"g\">2%</span> for bosses and elites)",
+          "text_zh": "造成敌人当前生命值的<span class=\"g\">20%</span>以作为奖励伤害（头目和精英怪的<span class=\"g\">2%</span>）"
         }
       ],
       "stats": {
@@ -11666,8 +11666,8 @@
           "extra": {
             "value2": 75
           },
-          "text_en": "Hitting an enemy that has less than <span class=\"g\">75</span> health has a <span class=\"g\">25</span> chance to charm it for <span class=\"g\">8</span> seconds",
-          "text_zh": "击中生命值低于<span class=\"g\">75</span>的敌人时，有<span class=\"g\">25</span>的几率使其在<span class=\"g\">8</span>秒内受到魅惑"
+          "text_en": "Hitting an enemy that has less than <span class=\"g\">75%</span> health has a <span class=\"g\">25%</span> chance to charm it for <span class=\"g\">8</span> seconds",
+          "text_zh": "击中生命值低于<span class=\"g\">75%</span>的敌人时，有<span class=\"g\">25%</span>的几率使其在<span class=\"g\">8</span>秒内受到魅惑"
         }
       ],
       "stats": {
@@ -12227,8 +12227,8 @@
           "extra": {
             "value2": 40.0
           },
-          "text_en": "<span class=\"g\">1</span> <span class=\"g\">Range</span> for every <span class=\"g\">40</span> steps you take during a wave",
-          "text_zh": "每在一波袭击中前进<span class=\"g\">40</span>步，可获得<span class=\"g\">1</span><span class=\"g\">范围</span>"
+          "text_en": "<span class=\"g\">+1</span> <span class=\"g\">Range</span> for every <span class=\"g\">40</span> steps you take during a wave",
+          "text_zh": "每在一波袭击中前进<span class=\"g\">40</span>步，可获得<span class=\"g\">+1</span><span class=\"g\">范围</span>"
         }
       ],
       "stats": {
@@ -12635,8 +12635,8 @@
             "max_stacks": 10,
             "duration_secs": 3
           },
-          "text_en": "Enemies hit take <span class=\"g\">10</span> more damage for <span class=\"g\">3</span> seconds (max: <span class=\"g\">100</span>)",
-          "text_zh": "敌人会额外承受<span class=\"g\">10</span>伤害，持续<span class=\"g\">3</span>秒（上限：<span class=\"g\">100</span>）"
+          "text_en": "Enemies hit take <span class=\"g\">10%</span> more damage for <span class=\"g\">3</span> seconds (max: <span class=\"g\">100%</span>)",
+          "text_zh": "敌人会额外承受<span class=\"g\">10%</span>伤害，持续<span class=\"g\">3</span>秒（上限：<span class=\"g\">100%</span>）"
         }
       ],
       "stats": {
@@ -13826,8 +13826,8 @@
           "extra": {
             "spawn_cooldown": 3
           },
-          "text_en": "A landmine spawns every <span class=\"g\">3</span> seconds dealing <span class=\"g\">10</span> (<span class=\"g\">100%<span class=\"ic\" data-ic=\"engineering\"></span></span>) damage in an area",
-          "text_zh": "地雷每<span class=\"g\">3</span>秒生成一次，并对一个区域造成<span class=\"g\">10</span>（<span class=\"g\">100%<span class=\"ic\" data-ic=\"engineering\"></span></span>）伤害"
+          "text_en": "A landmine spawns every <span class=\"g\">0.05</span> seconds dealing <span class=\"g\">10</span> (<span class=\"g\">100%<span class=\"ic\" data-ic=\"engineering\"></span></span>) damage in an area",
+          "text_zh": "地雷每<span class=\"g\">0.05</span>秒生成一次，并对一个区域造成<span class=\"g\">10</span>（<span class=\"g\">100%<span class=\"ic\" data-ic=\"engineering\"></span></span>）伤害"
         }
       ],
       "stats": {
@@ -14137,8 +14137,8 @@
           "extra": {
             "value2": 30
           },
-          "text_en": "<span class=\"g\">50</span> damage against targets below <span class=\"g\">30</span> health",
-          "text_zh": "对生命值低于<span class=\"g\">30</span>的目标造成<span class=\"g\">50</span>伤害"
+          "text_en": "<span class=\"g\">+50%</span> damage against targets below <span class=\"g\">30%</span> health",
+          "text_zh": "对生命值低于<span class=\"g\">30%</span>的目标造成<span class=\"g\">+50%</span>伤害"
         }
       ],
       "stats": {
@@ -14846,8 +14846,8 @@
           "extra": {
             "value2": 80
           },
-          "text_en": "<span class=\"g\">50</span> damage against targets above <span class=\"g\">80</span> health",
-          "text_zh": "对生命值超过<span class=\"g\">80</span>的目标造成<span class=\"g\">50</span>伤害"
+          "text_en": "<span class=\"g\">+50%</span> damage against targets above <span class=\"g\">80%</span> health",
+          "text_zh": "对生命值超过<span class=\"g\">80%</span>的目标造成<span class=\"g\">+50%</span>伤害"
         }
       ],
       "stats": {
@@ -15127,8 +15127,8 @@
           "extra": {
             "spawn_cooldown": -1
           },
-          "text_en": "Spawns a turret that shoots explosive bullets dealing <span class=\"g\">1</span> (<span class=\"g\">0.6666666666666666</span>) damage in an area",
-          "text_zh": "生成1台发射爆破弹的炮塔，造成<span class=\"g\">1</span>（<span class=\"g\">0.6666666666666666</span>）范围伤害"
+          "text_en": "Spawns a turret that shoots explosive bullets dealing <span class=\"g\">25</span> (<span class=\"g\">150%<span class=\"ic\" data-ic=\"engineering\"></span></span>) damage in an area",
+          "text_zh": "生成1台发射爆破弹的炮塔，造成<span class=\"g\">25</span>（<span class=\"g\">150%<span class=\"ic\" data-ic=\"engineering\"></span></span>）范围伤害"
         }
       ],
       "stats": {
@@ -15924,8 +15924,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 5,
-          "text_en": "Curse",
-          "text_zh": "诅咒"
+          "text_en": "<span class=\"p\">+1</span> Curse",
+          "text_zh": "<span class=\"p\">+1</span> 诅咒"
         }
       ],
       "unlocked_by_default": true,
@@ -16728,8 +16728,8 @@
           "extra": {
             "spawn_cooldown": 12
           },
-          "text_en": "A landmine spawns every <span class=\"g\">12</span> seconds dealing <span class=\"g\">10</span> (<span class=\"g\">100%<span class=\"ic\" data-ic=\"engineering\"></span></span>) damage in an area",
-          "text_zh": "地雷每<span class=\"g\">12</span>秒生成一次，并对一个区域造成<span class=\"g\">10</span>（<span class=\"g\">100%<span class=\"ic\" data-ic=\"engineering\"></span></span>）伤害"
+          "text_en": "A landmine spawns every <span class=\"g\">0.2</span> seconds dealing <span class=\"g\">10</span> (<span class=\"g\">100%<span class=\"ic\" data-ic=\"engineering\"></span></span>) damage in an area",
+          "text_zh": "地雷每<span class=\"g\">0.2</span>秒生成一次，并对一个区域造成<span class=\"g\">10</span>（<span class=\"g\">100%<span class=\"ic\" data-ic=\"engineering\"></span></span>）伤害"
         }
       ],
       "unlocked_by_default": true,
@@ -17115,8 +17115,8 @@
           "custom_key": "temp_consumable_stats_while_max",
           "storage_method": 1,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">1</span> <span class=\"g\">HP Regeneration</span> until the end of the wave when picking up a consumable while at maximum health",
-          "text_zh": "当在最大生命值下捡起一个消耗品时，可获得<span class=\"g\">1</span><span class=\"g\">生命再生</span>，直至敌袭结束"
+          "text_en": "<span class=\"g\">+1</span> <span class=\"g\">HP Regeneration</span> until the end of the wave when picking up a consumable while at maximum health",
+          "text_zh": "当在最大生命值下捡起一个消耗品时，可获得<span class=\"g\">+1</span><span class=\"g\">生命再生</span>，直至敌袭结束"
         }
       ],
       "unlocked_by_default": true,
@@ -17416,8 +17416,8 @@
           "extra": {
             "value2": 75
           },
-          "text_en": "<span class=\"g\">10</span> damage against targets above <span class=\"g\">75</span> health",
-          "text_zh": "对生命值超过<span class=\"g\">75</span>的目标造成<span class=\"g\">10</span>伤害"
+          "text_en": "<span class=\"g\">+10%</span> damage against targets above <span class=\"g\">75%</span> health",
+          "text_zh": "对生命值超过<span class=\"g\">75%</span>的目标造成<span class=\"g\">+10%</span>伤害"
         },
         {
           "key": "stat_attack_speed",
@@ -17630,8 +17630,8 @@
           "extra": {
             "spawn_cooldown": -1
           },
-          "text_en": "Spawns a turret that shoots bullets dealing <span class=\"g\">1</span> (<span class=\"g\">0.5333333333333333</span>) damage",
-          "text_zh": "生成1台炮塔，造成<span class=\"g\">1</span>（<span class=\"g\">0.5333333333333333</span>）伤害"
+          "text_en": "Spawns a turret that shoots bullets dealing <span class=\"g\">10</span> (<span class=\"g\">80%<span class=\"ic\" data-ic=\"engineering\"></span></span>) damage",
+          "text_zh": "生成1台炮塔，造成<span class=\"g\">10</span>（<span class=\"g\">80%<span class=\"ic\" data-ic=\"engineering\"></span></span>）伤害"
         }
       ],
       "unlocked_by_default": true,
@@ -17777,8 +17777,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">50</span> chance for loot aliens to appear",
-          "text_zh": "有<span class=\"g\">50</span>几率出现战利品外星人"
+          "text_en": "<span class=\"g\">+50%</span> chance for loot aliens to appear",
+          "text_zh": "有<span class=\"g\">+50%</span>几率出现战利品外星人"
         },
         {
           "key": "loot_alien_speed",
@@ -17787,8 +17787,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 1,
-          "text_en": "<span class=\"r\">20</span> movement speed for loot aliens",
-          "text_zh": "战利品外星人的移动速度<span class=\"r\">20</span>"
+          "text_en": "<span class=\"r\">+20%</span> movement speed for loot aliens",
+          "text_zh": "战利品外星人的移动速度<span class=\"r\">+20%</span>"
         },
         {
           "key": "",
@@ -18287,8 +18287,8 @@
           "extra": {
             "value2": 50
           },
-          "text_en": "<span class=\"g\">50%</span> chance to get <span class=\"g\">1</span> <span class=\"g\">% Damage</span> when rerolling in the shop",
-          "text_zh": "刷新时有<span class=\"g\">50%</span>的概率在商店获得<span class=\"g\">1</span><span class=\"g\">%伤害</span>"
+          "text_en": "<span class=\"g\">+50%</span> chance to get <span class=\"g\">+1</span> <span class=\"g\">% Damage</span> when rerolling in the shop",
+          "text_zh": "刷新时有<span class=\"g\">+50%</span>的概率在商店获得<span class=\"g\">+1</span><span class=\"g\">%伤害</span>"
         },
         {
           "key": "stat_max_hp",
@@ -18300,8 +18300,8 @@
           "extra": {
             "value2": 10
           },
-          "text_en": "<span class=\"r\">10%</span> chance to get <span class=\"r\">-1</span> <span class=\"r\">Max HP</span> when rerolling in the shop",
-          "text_zh": "刷新时有<span class=\"r\">10%</span>的概率在商店获得<span class=\"r\">-1</span><span class=\"r\">最大生命值</span>"
+          "text_en": "<span class=\"r\">+10%</span> chance to get <span class=\"r\">-1</span> <span class=\"r\">Max HP</span> when rerolling in the shop",
+          "text_zh": "刷新时有<span class=\"r\">+10%</span>的概率在商店获得<span class=\"r\">-1</span><span class=\"r\">最大生命值</span>"
         }
       ],
       "unlocked_by_default": true,
@@ -18641,8 +18641,8 @@
           "extra": {
             "value2": 2
           },
-          "text_en": "<span class=\"g\">20</span> <span class=\"g\">% Damage</span> for <span class=\"g\">2</span> seconds after picking up a consumable",
-          "text_zh": "捡起消耗品后，<span class=\"g\">20</span><span class=\"g\">%伤害</span>持续<span class=\"g\">2</span>秒"
+          "text_en": "<span class=\"g\">+20</span> <span class=\"g\">% Damage</span> for <span class=\"g\">2</span> seconds after picking up a consumable",
+          "text_zh": "捡起消耗品后，<span class=\"g\">+20</span><span class=\"g\">%伤害</span>持续<span class=\"g\">2</span>秒"
         },
         {
           "key": "stat_hp_regeneration",
@@ -19130,8 +19130,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "Projectiles get <span class=\"g\">1</span> piercing on critical hit",
-          "text_zh": "投射物在暴击时会获得<span class=\"g\">1</span>贯通效果"
+          "text_en": "Projectiles get <span class=\"g\">+1</span> piercing on critical hit",
+          "text_zh": "投射物在暴击时会获得<span class=\"g\">+1</span>贯通效果"
         },
         {
           "key": "stat_crit_chance",
@@ -19229,8 +19229,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "Locked items and weapons have a <span class=\"g\">20</span> chance to become cursed when leaving the shop",
-          "text_zh": "离开商店时，锁定的道具和武器有<span class=\"g\">20</span>的几率受到诅咒"
+          "text_en": "Locked items and weapons have a <span class=\"g\">20%</span> chance to become cursed when leaving the shop",
+          "text_zh": "离开商店时，锁定的道具和武器有<span class=\"g\">20%</span>的几率受到诅咒"
         },
         {
           "key": "stat_curse",
@@ -19239,8 +19239,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 5,
-          "text_en": "Curse",
-          "text_zh": "诅咒"
+          "text_en": "<span class=\"p\">+1</span> Curse",
+          "text_zh": "<span class=\"p\">+1</span> 诅咒"
         }
       ],
       "unlocked_by_default": true,
@@ -19527,8 +19527,8 @@
           "extra": {
             "spawn_cooldown": -1
           },
-          "text_en": "Spawns a turret that shoots flames dealing <span class=\"g\">1</span>x<span class=\"g\">0.25</span> (<span class=\"g\">1</span>) burning damage",
-          "text_zh": "生成1台燃烧炮塔，造成<span class=\"g\">1</span>x<span class=\"g\">0.25</span>（<span class=\"g\">1</span>）燃烧伤害"
+          "text_en": "Spawns a turret that shoots flames dealing <span class=\"g\">1</span>x (<span class=\"g\">1</span>) burning damage",
+          "text_zh": "生成1台燃烧炮塔，造成<span class=\"g\">1</span>x（<span class=\"g\">1</span>）燃烧伤害"
         }
       ],
       "unlocked_by_default": true,
@@ -20154,8 +20154,8 @@
           "custom_key": "extra_item_in_crate",
           "storage_method": 1,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">3</span> chance of finding an extra <span class=\"g\">Pearl</span> in a crate",
-          "text_zh": "在箱子中有<span class=\"g\">3</span>的几率发现额外的<span class=\"g\">珍珠</span>"
+          "text_en": "<span class=\"g\">+3%</span> chance of finding an extra <span class=\"g\">Pearl</span> in a crate",
+          "text_zh": "在箱子中有<span class=\"g\">+3%</span>的几率发现额外的<span class=\"g\">珍珠</span>"
         }
       ],
       "unlocked_by_default": false,
@@ -20537,8 +20537,8 @@
           "extra": {
             "value2": 3
           },
-          "text_en": "<span class=\"g\">10</span> <span class=\"g\">% Speed</span> for <span class=\"g\">3</span> seconds when you take damage",
-          "text_zh": "受到伤害后，<span class=\"g\">10</span><span class=\"g\">%速度</span>持续<span class=\"g\">3</span>秒"
+          "text_en": "<span class=\"g\">+10</span> <span class=\"g\">% Speed</span> for <span class=\"g\">3</span> seconds when you take damage",
+          "text_zh": "受到伤害后，<span class=\"g\">+10</span><span class=\"g\">%速度</span>持续<span class=\"g\">3</span>秒"
         },
         {
           "key": "stat_elemental_damage",
@@ -20969,8 +20969,8 @@
           "custom_key": "extra_item_in_crate",
           "storage_method": 1,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">20</span> chance of finding an extra item in a crate",
-          "text_zh": "在箱子中有<span class=\"g\">20</span>的几率发现额外的道具"
+          "text_en": "<span class=\"g\">+20%</span> chance of finding an extra item in a crate",
+          "text_zh": "在箱子中有<span class=\"g\">+20%</span>的几率发现额外的道具"
         }
       ],
       "unlocked_by_default": false,
@@ -21569,8 +21569,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">35</span> stats gained from level upgrades",
-          "text_zh": "从等级提升中获得<span class=\"g\">35</span>属性"
+          "text_en": "<span class=\"g\">+35%</span> stats gained from level upgrades",
+          "text_zh": "从等级提升中获得<span class=\"g\">+35%</span>属性"
         },
         {
           "key": "stat_curse",
@@ -21699,8 +21699,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">1</span> material when you kill a cursed enemy",
-          "text_zh": "击杀被诅咒的敌人时获得<span class=\"g\">1</span>材料"
+          "text_en": "<span class=\"g\">+1</span> material when you kill a cursed enemy",
+          "text_zh": "击杀被诅咒的敌人时获得<span class=\"g\">+1</span>材料"
         },
         {
           "key": "number_of_enemies",
@@ -21739,8 +21739,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 5,
-          "text_en": "Curse",
-          "text_zh": "诅咒"
+          "text_en": "<span class=\"p\">+5</span> Curse",
+          "text_zh": "<span class=\"p\">+5</span> 诅咒"
         }
       ],
       "unlocked_by_default": true,
@@ -22655,8 +22655,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">15</span> chance to heal 1 HP when killing an enemy",
-          "text_zh": "杀死敌人时有<span class=\"g\">15</span>的几率恢复1点生命值"
+          "text_en": "<span class=\"g\">+15%</span> chance to heal 1 HP when killing an enemy",
+          "text_zh": "杀死敌人时有<span class=\"g\">+15%</span>的几率恢复1点生命值"
         },
         {
           "key": "stat_hp_regeneration",
@@ -23039,8 +23039,8 @@
           "extra": {
             "spawn_cooldown": -1
           },
-          "text_en": "Spawns a turret that shoots piercing bullets dealing <span class=\"g\">1</span> (<span class=\"g\">0.6666666666666666</span>) damage",
-          "text_zh": "生成1台发射贯通弹的炮塔，造成<span class=\"g\">1</span>（<span class=\"g\">0.6666666666666666</span>）伤害"
+          "text_en": "Spawns a turret that shoots piercing bullets dealing <span class=\"g\">20</span> (<span class=\"g\">125%<span class=\"ic\" data-ic=\"engineering\"></span></span>) damage",
+          "text_zh": "生成1台发射贯通弹的炮塔，造成<span class=\"g\">20</span>（<span class=\"g\">125%<span class=\"ic\" data-ic=\"engineering\"></span></span>）伤害"
         }
       ],
       "unlocked_by_default": true,
@@ -23707,8 +23707,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "Your Speed is capped at its current value [0]",
-          "text_zh": "你的速度现在以[0]为上限"
+          "text_en": "Your Speed is capped at its current value",
+          "text_zh": "你的速度现在以为上限"
         }
       ],
       "unlocked_by_default": true,
@@ -25269,8 +25269,8 @@
           "extra": {
             "spawn_cooldown": -1
           },
-          "text_en": "Spawns a turret that shoots explosive bullets dealing <span class=\"g\">1</span> (<span class=\"g\">0.6666666666666666</span>) damage in an area",
-          "text_zh": "生成1台发射爆破弹的炮塔，造成<span class=\"g\">1</span>（<span class=\"g\">0.6666666666666666</span>）范围伤害"
+          "text_en": "Spawns a turret that shoots explosive bullets dealing <span class=\"g\">25</span> (<span class=\"g\">150%<span class=\"ic\" data-ic=\"engineering\"></span></span>) damage in an area",
+          "text_zh": "生成1台发射爆破弹的炮塔，造成<span class=\"g\">25</span>（<span class=\"g\">150%<span class=\"ic\" data-ic=\"engineering\"></span></span>）范围伤害"
         }
       ],
       "unlocked_by_default": true,
@@ -25823,8 +25823,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 5,
-          "text_en": "Curse",
-          "text_zh": "诅咒"
+          "text_en": "<span class=\"p\">+15</span> Curse",
+          "text_zh": "<span class=\"p\">+15</span> 诅咒"
         }
       ],
       "unlocked_by_default": true,
@@ -27386,8 +27386,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "Picked up materials have <span class=\"g\">100</span> value",
-          "text_zh": "捡起的材料有<span class=\"g\">100</span>价值"
+          "text_en": "Picked up materials have <span class=\"g\">+100%</span> value",
+          "text_zh": "捡起的材料有<span class=\"g\">+100%</span>价值"
         },
         {
           "key": "reload_when_pickup_gold",
@@ -27745,8 +27745,8 @@
           "perm_stats_only": false,
           "stat_scaled": "free_weapon_slots",
           "nb_stat_scaled": 1,
-          "text_en": "<span class=\"g\">60</span> <span class=\"g\">XP Gain</span> for every free weapon slot you have [<span class=\"g\">1</span>]",
-          "text_zh": "每有一个空闲的武器栏，将获得<span class=\"g\">60</span><span class=\"g\">获得%经验</span>[<span class=\"g\">1</span>]"
+          "text_en": "<span class=\"g\">+60</span> <span class=\"g\">XP Gain</span> for every free weapon slot you have [<span class=\"g\">+1</span>]",
+          "text_zh": "每有一个空闲的武器栏，将获得<span class=\"g\">+60</span><span class=\"g\">获得%经验</span>[<span class=\"g\">+1</span>]"
         },
         {
           "key": "level_upgrades_modifications",
@@ -27755,8 +27755,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">100</span> stats gained from level upgrades",
-          "text_zh": "从等级提升中获得<span class=\"g\">100</span>属性"
+          "text_en": "<span class=\"g\">+100%</span> stats gained from level upgrades",
+          "text_zh": "从等级提升中获得<span class=\"g\">+100%</span>属性"
         },
         {
           "key": "next_level_xp_needed",
@@ -27841,8 +27841,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">200</span> damage from non elemental sources against burning targets",
-          "text_zh": "对燃烧目标造成非属性来源的<span class=\"g\">200</span>伤害"
+          "text_en": "<span class=\"g\">+200%</span> damage from non elemental sources against burning targets",
+          "text_zh": "对燃烧目标造成非属性来源的<span class=\"g\">+200%</span>伤害"
         },
         {
           "key": "explode_on_consumable_burning",
@@ -28945,8 +28945,8 @@
           "extra": {
             "value2": 33
           },
-          "text_en": "<span class=\"g\">33%</span> chance to get <span class=\"g\">1</span> <span class=\"g\">Luck</span> when you pick up a fruit",
-          "text_zh": "捡起水果时有<span class=\"g\">33%</span>的概率获得<span class=\"g\">1</span><span class=\"g\">幸运</span>"
+          "text_en": "<span class=\"g\">33%</span> chance to get <span class=\"g\">+1</span> <span class=\"g\">Luck</span> when you pick up a fruit",
+          "text_zh": "捡起水果时有<span class=\"g\">33%</span>的概率获得<span class=\"g\">+1</span><span class=\"g\">幸运</span>"
         },
         {
           "key": "poisoned_fruit",
@@ -28955,8 +28955,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 1,
-          "text_en": "<span class=\"r\">33</span> of fruits are poisoned and hurt you (ignores Dodge and Armor)",
-          "text_zh": "<span class=\"r\">33</span>的水果被下毒并会伤害你（无视闪避和护甲）"
+          "text_en": "<span class=\"r\">33%</span> of fruits are poisoned and hurt you (ignores Dodge and Armor)",
+          "text_zh": "<span class=\"r\">33%</span>的水果被下毒并会伤害你（无视闪避和护甲）"
         },
         {
           "key": "stat_hp_regeneration",
@@ -29028,8 +29028,8 @@
           "extra": {
             "value2": 6
           },
-          "text_en": "<span class=\"g\">1</span> <span class=\"g\">Engineering</span> when killing at least <span class=\"g\">2</span> enemies with a direct weapon hit",
-          "text_zh": "使用直接武器杀死至少<span class=\"g\">2</span>名敌人时，可获得<span class=\"g\">1</span><span class=\"g\">工程学</span>"
+          "text_en": "<span class=\"g\">+1</span> <span class=\"g\">Engineering</span> when killing at least <span class=\"g\">2</span> enemies with a direct weapon hit",
+          "text_zh": "使用直接武器杀死至少<span class=\"g\">2</span>名敌人时，可获得<span class=\"g\">+1</span><span class=\"g\">工程学</span>"
         },
         {
           "key": "stat_melee_damage",
@@ -30241,8 +30241,8 @@
           "extra": {
             "value2": 80
           },
-          "text_en": "<span class=\"g\">1</span> <span class=\"g\">Max HP</span> for every <span class=\"g\">80</span> steps you take during a wave",
-          "text_zh": "每在一波袭击中前进<span class=\"g\">80</span>步，可获得<span class=\"g\">1</span><span class=\"g\">最大生命值</span>"
+          "text_en": "<span class=\"g\">+1</span> <span class=\"g\">Max HP</span> for every <span class=\"g\">80</span> steps you take during a wave",
+          "text_zh": "每在一波袭击中前进<span class=\"g\">80</span>步，可获得<span class=\"g\">+1</span><span class=\"g\">最大生命值</span>"
         },
         {
           "key": "effect_increase_stat_gains",
@@ -31890,8 +31890,8 @@
           "extra": {
             "value2": 25
           },
-          "text_en": "Hitting an enemy that has less than <span class=\"g\">50</span> health has a <span class=\"g\">Max HP</span> (<span class=\"g\">25</span>) chance to charm it for seconds",
-          "text_zh": "击中生命值低于<span class=\"g\">50</span>的敌人时，有<span class=\"g\">最大生命值</span>（<span class=\"g\">25</span>）的几率使其在秒内受到魅惑"
+          "text_en": "Hitting an enemy that has less than <span class=\"g\">50%</span> health has a <span class=\"g\">Max HP%</span> (<span class=\"g\">25</span>) chance to charm it for seconds",
+          "text_zh": "击中生命值低于<span class=\"g\">50%</span>的敌人时，有<span class=\"g\">最大生命值%</span>（<span class=\"g\">25</span>）的几率使其在秒内受到魅惑"
         },
         {
           "key": "",
@@ -31902,8 +31902,8 @@
           "effect_sign": 3,
           "stat_displayed_name": "stat_range",
           "stat_name": "max_range",
-          "text_en": "<span class=\"g\">50</span> with melee weapons",
-          "text_zh": "使用近战武器时有<span class=\"g\">50</span>"
+          "text_en": "<span class=\"g\">+50</span> with melee weapons",
+          "text_zh": "使用近战武器时有<span class=\"g\">+50</span>"
         },
         {
           "key": "stat_percent_damage",
@@ -31989,8 +31989,8 @@
           "custom_key": "bonus_weapon_class_damage_against_cursed_enemies",
           "storage_method": 1,
           "effect_sign": 3,
-          "text_en": "<span class=\"g\">200</span> damage with <span class=\"g\">Naval</span> weapons against cursed enemies",
-          "text_zh": "使用<span class=\"g\">海军</span>武器对被诅咒的敌人造成<span class=\"g\">200</span>伤害"
+          "text_en": "<span class=\"g\">+200%</span> damage with <span class=\"g\">Naval</span> weapons against cursed enemies",
+          "text_zh": "使用<span class=\"g\">海军</span>武器对被诅咒的敌人造成<span class=\"g\">+200%</span>伤害"
         },
         {
           "key": "stat_curse",
@@ -31999,8 +31999,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 5,
-          "text_en": "Curse",
-          "text_zh": "诅咒"
+          "text_en": "<span class=\"p\">+25</span> Curse",
+          "text_zh": "<span class=\"p\">+25</span> 诅咒"
         },
         {
           "key": "stat_percent_damage",
@@ -37291,8 +37291,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 5,
-          "text_en": "Curse",
-          "text_zh": "诅咒"
+          "text_en": "<span class=\"p\">+1</span> Curse",
+          "text_zh": "<span class=\"p\">+1</span> 诅咒"
         }
       ],
       [
@@ -37303,8 +37303,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 5,
-          "text_en": "Curse",
-          "text_zh": "诅咒"
+          "text_en": "<span class=\"p\">+2</span> Curse",
+          "text_zh": "<span class=\"p\">+2</span> 诅咒"
         }
       ],
       [
@@ -37315,8 +37315,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 5,
-          "text_en": "Curse",
-          "text_zh": "诅咒"
+          "text_en": "<span class=\"p\">+3</span> Curse",
+          "text_zh": "<span class=\"p\">+3</span> 诅咒"
         }
       ],
       [
@@ -37327,8 +37327,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 5,
-          "text_en": "Curse",
-          "text_zh": "诅咒"
+          "text_en": "<span class=\"p\">+4</span> Curse",
+          "text_zh": "<span class=\"p\">+4</span> 诅咒"
         }
       ],
       [
@@ -37339,8 +37339,8 @@
           "custom_key": "",
           "storage_method": 0,
           "effect_sign": 5,
-          "text_en": "Curse",
-          "text_zh": "诅咒"
+          "text_en": "<span class=\"p\">+5</span> Curse",
+          "text_zh": "<span class=\"p\">+5</span> 诅咒"
         }
       ]
     ],

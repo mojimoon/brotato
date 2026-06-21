@@ -745,6 +745,48 @@ KEYS_NEEDING_OPERATOR = {
     'effect_bouncing': [0], 'effect_bouncing_plural': [0],
     'effect_gain_stat_for_killed_enemies_while_burning': [2, 3],
     'effect_no_hit_boost': [0],
+    # DLC1 keys (from dlc_data.tres)
+    'effect_bonus_damage_against_targets_above_hp': [0],
+    'effect_bonus_damage_against_targets_below_hp': [0],
+    'effect_bonus_non_elemental_damage_against_burning_targets': [0],
+    'effect_bonus_weapon_class_damage_against_cursed_enemies': [0],
+    'effect_builder_turret_upgrade': [0],
+    'effect_crate_chance': [0],
+    'effect_decaying_stat_on_consumable': [0],
+    'effect_decaying_stat_on_hit': [0],
+    'effect_extra_item_in_crate': [0],
+    'effect_extra_random_item_in_crate': [0],
+    'effect_gain_stat_for_duplicate_items': [4],
+    'effect_gain_stat_for_free_weapon_slots': [0, 4],
+    'effect_gain_stat_when_attack_killed_enemies': [0],
+    'effect_gain_stats_on_reroll': [0, 2],
+    'effect_gold_on_cursed_enemy_kill': [0],
+    'effect_gold_on_cursed_enemy_kill_plural': [0],
+    'effect_heal_on_kill': [0],
+    'effect_increase_material_value': [0],
+    'effect_level_upgrades_modifications': [0],
+    'effect_loot_alien_chance': [0],
+    'effect_loot_alien_speed': [0],
+    'effect_melee_weapon_bonus': [0],
+    'effect_modify_every_x_projectile': [2],
+    'effect_modify_every_x_projectile_first': [2],
+    'effect_modify_every_x_projectile_second': [2],
+    'effect_modify_every_x_projectile_third': [2],
+    'effect_pierce_on_crit_item': [0],
+    'effect_scale_materials_with_distance': [0, 1],
+    'effect_stat_on_every_step': [0],
+    'effect_stat_on_fruit': [0],
+    'effect_temp_consumable_stat_while_max': [0],
+    'effect_temp_stat_on_consumable': [0],
+    'effect_weapon_damage_for_free_weapon_slots': [0, 4],
+    'effect_weapon_modify_every_x_projectile': [2],
+    'effect_weapon_modify_every_x_projectile_first': [2],
+    'effect_weapon_modify_every_x_projectile_second': [2],
+    'effect_weapon_modify_every_x_projectile_third': [2],
+    'reroll_price': [0],
+    'stat_curse': [0],
+    'structure_percent_damage': [0],
+    'structure_range': [0],
 }
 
 KEYS_NEEDING_PERCENT = {
@@ -807,6 +849,33 @@ KEYS_NEEDING_PERCENT = {
     'effect_extra_elite_next_wave_chance': [0],
     'effect_one_shot_on_hit_effect': [0],
     'effect_pet_lootworm': [0], 'fog_visibility': [0],
+    # DLC1 keys (from dlc_data.tres)
+    'effect_bonus_current_health_damage': [0, 2],
+    'effect_bonus_damage_against_targets_above_hp': [0, 2],
+    'effect_bonus_damage_against_targets_below_hp': [0, 2],
+    'effect_bonus_non_elemental_damage_against_burning_targets': [0],
+    'effect_bonus_weapon_class_damage_against_cursed_enemies': [0],
+    'effect_break_on_hit': [0],
+    'effect_chance_explode_on_hit': [0],
+    'effect_charm_below_hp': [0, 1],
+    'effect_charm_below_hp_no_scaling': [0, 1],
+    'effect_charm_on_hit': [0],
+    'effect_crate_chance': [0],
+    'effect_curse_locked_items': [0],
+    'effect_explode_when_below_hp': [4],
+    'effect_extra_item_in_crate': [0],
+    'effect_extra_random_item_in_crate': [0],
+    'effect_gain_stats_on_reroll': [2],
+    'effect_heal_on_kill': [0],
+    'effect_increase_damage_received': [0, 3],
+    'effect_increase_material_value': [0],
+    'effect_level_upgrades_modifications': [0],
+    'effect_loot_alien_chance': [0],
+    'effect_loot_alien_speed': [0],
+    'effect_poisoned_fruit': [0],
+    'effect_scale_materials_with_distance': [0, 1],
+    'effect_stat_on_fruit': [2],
+    'info_pos_stat_curse': [0, 1],
 }
 
 # Sign constants (from Effect.Sign enum)
@@ -872,65 +941,18 @@ def _get_formatted_value(value_str, arg_format, base_arg_value):
     return value_str
 
 
-def _text_render(lookup_key, fmt_text, args, arg_signs, lang):
-    """Replicate Text.text() from text.gd.
-    
-    lookup_key: the key used to look up keys_needing_operator/percent
-    fmt_text: the translated format string
-    args: list of string args
-    arg_signs: list of sign constants per arg
-    """
-    if not fmt_text:
-        return ''
-    
-    text = fmt_text
-    lookup_lower = lookup_key.lower()
-    
-    args_needing_op = KEYS_NEEDING_OPERATOR.get(lookup_lower, [])
-    args_needing_pct = KEYS_NEEDING_PERCENT.get(lookup_lower, [])
-    
-    # Auto-prepend {0} if key needs operator on arg 0 and {0} not in template
-    if 0 in args_needing_op and '{0}' not in text:
-        text = '{0} ' + text
-    
-    # Determine sign_for_all_args: if more args than signs, use first sign for all
-    sign_for_all = SIGN_NEUTRAL
-    if len(args) > len(arg_signs) and len(arg_signs) > 0:
-        sign_for_all = arg_signs[0]
-    
-    for i in range(len(args)):
-        # Determine this arg's sign
-        if i < len(arg_signs):
-            checked_sign = arg_signs[i]
-        else:
-            checked_sign = sign_for_all
-        
-        # Build color wrapper
-        color = _sign_to_color(checked_sign)
-        before = f'<span class="{color}">' if color else ''
-        after = '</span>' if color else ''
-        
-        # Get value with operator/percent
-        val = str(args[i])
-        if i in args_needing_op:
-            try:
-                if int(float(val)) >= 0:
-                    val = '+' + val
-            except (ValueError, TypeError):
-                val = '+' + val
-        if i in args_needing_pct:
-            val = val + '%'
-        
-        # Replace placeholder
-        text = text.replace('{' + str(i) + '}', before + val + after)
-    
-    # Cleanup unreplaced placeholders
-    text = re.sub(r'\s*\{\d+\}\s*', ' ', text)
-    text = re.sub(r'[（(]\s*[）)]', '', text)
-    text = re.sub(r'\[\s*\]', '', text)
-    text = re.sub(r'\s+', ' ', text).strip()
-    
-    return text
+def _sign_to_color(sign):
+    """Map sign constant to CSS color class."""
+    if sign == 'g':
+        return 'g'
+    elif sign == 'r':
+        return 'r'
+    elif sign == 'p':
+        return 'p'
+    return ''
+
+SIGN_NEUTRAL = ''
+
 
 
 def _build_effect_args_and_signs(eff, lang):
@@ -1089,19 +1111,39 @@ def _build_effect_args_and_signs(eff, lang):
         args = [str(value), tr(key.upper(), lang), str(val2), str(val3)]
         signs = [default_sign(value), SIGN_NEUTRAL, SIGN_NEUTRAL, SIGN_NEUTRAL]
     
-    # --- StructureEffect ---
-    elif 'spawn_cooldown' in extra and 'structure_stats' in eff:
-        spawn_cd = extra.get('spawn_cooldown', 0)
+    # --- StructureEffect (turrets, landmines, garden) ---
+    elif 'structure_stats' in eff and text_key in ('effect_turret', 'effect_turret_flame',
+            'effect_turret_laser', 'effect_turret_rocket', 'effect_landmines', 'effect_garden'):
         struct_stats = eff.get('structure_stats', {})
-        dmg = struct_stats.get('damage', value)
-        scaling = struct_stats.get('scaling_stats', [])
-        scaling_text = build_scaling_text(scaling, lang)
-        # Convert frames to seconds
+        spawn_cd = extra.get('spawn_cooldown', 0)
+        # Use structure_stats.cooldown if spawn_cooldown is invalid
+        if spawn_cd <= 0:
+            spawn_cd = struct_stats.get('cooldown', 0)
         cd_sec = spawn_cd / 60.0 if spawn_cd > 0 else 12
         if cd_sec == int(cd_sec):
             cd_sec = int(cd_sec)
-        args = [str(value), str(cd_sec), str(dmg), scaling_text]
-        signs = [SIGN_NEUTRAL, SIGN_NEUTRAL, default_sign(dmg), default_sign(dmg)]
+        dmg = struct_stats.get('damage', value)
+        scaling = struct_stats.get('scaling_stats', [])
+        scaling_text = build_scaling_text(scaling, lang)
+        nb_proj = struct_stats.get('nb_projectiles', 1)
+        bounce = struct_stats.get('bounce', 0)
+        # TurretEffect.get_args() for non-burning: [damage, scaling, nb_projectiles, bounce, key_name]
+        # TurretEffect.get_args() for burning: [burn_dur, burn_dmg, burn_scaling, key_name]
+        # StructureEffect.get_args(): [value, spawn_cd, damage, scaling]
+        bd = eff.get('burning_data')
+        if bd:
+            args = [str(bd.get('duration', 0)), str(bd.get('damage', 0)),
+                    build_scaling_text(bd.get('scaling_stats', []), lang),
+                    tr(key.upper(), lang) if key else '']
+            signs = [SIGN_NEUTRAL, default_sign(bd.get('damage', 0)),
+                     default_sign(bd.get('damage', 0)), SIGN_NEUTRAL]
+        elif text_key in ('effect_turret', 'effect_turret_flame', 'effect_turret_laser', 'effect_turret_rocket'):
+            args = [str(dmg), scaling_text, str(nb_proj), str(bounce),
+                    tr(key.upper(), lang) if key else '']
+            signs = [default_sign(dmg), default_sign(dmg), SIGN_NEUTRAL, SIGN_NEUTRAL, SIGN_NEUTRAL]
+        else:
+            args = [str(value), str(cd_sec), str(dmg), scaling_text]
+            signs = [SIGN_NEUTRAL, SIGN_NEUTRAL, default_sign(dmg), default_sign(dmg)]
     
     # --- TurretEffect (spawning: is_spawning=true) ---
     elif custom_key == 'spawn_garden' or (key == 'effect_spawn_garden'):
@@ -1368,104 +1410,6 @@ def _apply_custom_args(args, signs, custom_args, eff, value, effect_sign, lang):
 
 UNRENDERABLE_EFFECTS = []
 
-# text.gd: keys_needing_operator - maps key -> list of arg indices needing '+' prefix
-KEYS_NEEDING_OPERATOR = {
-    'stat_max_hp': [0], 'stat_damage': [0], 'stat_armor': [0],
-    'stat_crit_chance': [0], 'stat_luck': [0], 'stat_attack_speed': [0],
-    'stat_elemental_damage': [0], 'stat_hp_regeneration': [0], 'stat_lifesteal': [0],
-    'stat_melee_damage': [0], 'stat_percent_damage': [0], 'stat_dodge': [0],
-    'stat_engineering': [0], 'stat_range': [0], 'stat_ranged_damage': [0],
-    'stat_speed': [0], 'stat_harvesting': [0], 'xp_gain': [0],
-    'weapon_slot': [0], 'items_price': [0], 'weapons_price': [0],
-    'number_of_enemies': [0], 'map_size': [0], 'enemy_speed': [0],
-    'enemy_health': [0], 'enemy_damage': [0], 'enemy_damage_hp_increase': [0],
-    'inflation_modifier': [0], 'effect_enemy_health': [0], 'effect_enemy_speed': [0],
-    'effect_temp_stats_per_interval': [0], 'effect_temp_stats_per_interval_singular': [0],
-    'effect_piercing_damage': [0], 'effect_weapon_specific_bonus': [0],
-    'effect_weapon_class_bonus': [0], 'effect_weapon_stack': [0, 3],
-    'effect_unique_weapon_bonus': [0, 2], 'effect_tier_iv_weapon_bonus': [0, 2],
-    'effect_tier_i_weapon_bonus': [0, 2], 'effect_consumable_heal': [0],
-    'effect_pickup_range': [0], 'effect_on_hit': [0],
-    'effect_chance_double_gold': [0], 'effect_heal_when_pickup_gold': [0],
-    'effect_item_box_gold': [0], 'effect_stat_while_not_moving': [0],
-    'effect_knockback': [0], 'effect_gain_stat_end_of_wave': [0],
-    'effect_gain_stat_for_every_stat': [0, 4], 'effect_gain_stat_for_every_perm_stat': [0, 4],
-    'effect_gain_stat_for_every_different_stat': [0, 4], 'effect_gain_stat_for_every_enemy': [0, 4],
-    'effect_gain_stat_for_every_burning_enemy': [0, 4], 'effect_gain_stat_for_every_tree': [0, 4],
-    'effect_gain_stat_every_killed_enemies': [0], 'effect_gold_drops': [0],
-    'effect_neutral_gold_drops': [0], 'effect_enemy_gold_drops': [0],
-    'effect_gain_pct_gold_start_wave': [0], 'effect_gain_pct_gold_start_wave_limited': [0],
-    'effect_free_shop_reroll': [0], 'effect_free_shop_reroll_plural': [0],
-    'effect_instant_gold_attracting': [0], 'explosion_size': [0], 'explosion_damage': [0],
-    'structure_attack_speed': [0], 'chal_stat_desc': [0],
-    'effect_additional_weapon_bonus': [0, 2], 'effect_upgrade_random_weapon': [0],
-    'effect_gold_while_moving': [0], 'effect_gold_while_not_moving': [0, 2],
-    'effect_stat_while_moving': [0], 'effect_stat_next_wave': [0],
-    'effect_damage_against_bosses': [0], 'effect_consumable_stat_while_max': [0],
-    'effect_consumable_stat_while_max_limited': [0, 2], 'effect_heal_on_crit_kill': [0],
-    'effect_pct_start_wave_stat': [0], 'effect_pct_stack_stat': [0],
-    'effect_piercing_damage_short': [0], 'effect_stat_on_level_up': [0],
-    'effect_stat_below_half_health': [0], 'effect_temp_stat_on_dodge': [0],
-    'effect_projectile': [0], 'effect_projectiles': [0],
-    'effect_player_missing_health_damage_bonus': [0, 3],
-    'effect_gain_stat_for_equipped_item_with_stat': [0, 2],
-    'effect_temp_stat_on_structure_crit': [0],
-    'effect_gain_stat_for_every_percent_player_missing_health': [0, 4],
-    'effect_structure_attack_speed_while_moving': [0], 'next_level_xp_needed': [0],
-    'effect_bouncing': [0], 'effect_bouncing_plural': [0],
-    'effect_gain_stat_for_killed_enemies_while_burning': [2, 3],
-    'effect_no_hit_boost': [0],
-}
-
-# text.gd: keys_needing_percent - maps key -> list of arg indices needing '%' suffix
-KEYS_NEEDING_PERCENT = {
-    'effect_increase_stat_gains': [1], 'effect_reduce_stat_gains': [1],
-    'next_level_xp_needed': [0], 'weapons_price': [0], 'number_of_enemies': [0],
-    'effect_burn_chance': [0], 'effect_start_wave_less_hp': [0],
-    'effect_deal_dmg_when_pickup_gold': [0], 'effect_deal_dmg_when_death': [0],
-    'effect_deal_dmg_when_heal': [0], 'effect_piercing_damage': [0],
-    'effect_piercing_damage_short': [0], 'effect_remove_speed': [0, 2],
-    'info_pos_stat_crit_chance': [0], 'info_neg_stat_crit_chance': [0],
-    'info_pos_stat_lifesteal': [0], 'info_neg_stat_lifesteal': [0],
-    'info_pos_stat_percent_damage': [0], 'info_neg_stat_percent_damage': [0],
-    'info_pos_stat_dodge': [0], 'info_neg_stat_dodge': [0],
-    'info_pos_stat_speed': [0], 'info_neg_stat_speed': [0],
-    'info_pos_stat_attack_speed': [0], 'info_neg_stat_attack_speed': [0],
-    'info_pos_stat_luck': [0], 'info_neg_stat_luck': [0],
-    'info_pos_stat_armor': [0], 'info_neg_stat_armor': [0],
-    'damage_scaling': [0], 'effect_pickup_range': [0],
-    'effect_chance_double_gold': [0], 'effect_gain_pct_gold_start_wave': [0],
-    'effect_gain_pct_gold_start_wave_limited': [0], 'effect_heal_when_pickup_gold': [0],
-    'effect_enemy_speed': [0], 'enemy_damage_hp_increase': [0],
-    'inflation_modifier': [0], 'effect_enemy_health': [0],
-    'effect_recycling_gains': [0], 'map_size': [0],
-    'effect_dodge_cap': [0], 'effect_crit_chance_cap': [0],
-    'effect_gold_on_crit_kill': [0], 'effect_heal_on_crit_kill': [0],
-    'effect_explode_custom': [0], 'effect_convert_stat_end_of_wave': [0],
-    'effect_convert_stat_temp_half_wave': [0], 'effect_gold_drops': [0],
-    'effect_neutral_gold_drops': [0], 'effect_enemy_gold_drops': [0],
-    'effect_harvesting_growth': [0], 'effect_instant_gold_attracting': [0],
-    'effect_explode_on_death': [0], 'effect_explode_on_consumable': [0],
-    'info_pos_stat_harvesting': [1], 'info_pos_stat_harvesting_limited': [1, 3],
-    'effect_burning_cooldown_reduction': [0], 'effect_burning_cooldown_increase': [0],
-    'effect_explode_melee': [0], 'effect_gold_while_moving': [0],
-    'effect_gold_while_not_moving': [0], 'effect_deal_dmg_when_dodge': [0],
-    'effect_heal_when_dodge': [0], 'effect_damage_against_bosses': [0],
-    'effect_giant_crit_damage': [0, 2], 'effect_structures_cooldown_reduction': [0],
-    'effect_pct_start_wave_stat': [0], 'effect_pct_stack_stat': [0],
-    'effect_specific_item_price': [0], 'effect_accuracy': [0],
-    'effect_player_missing_health_damage_bonus': [2],
-    'effect_weapon_slow_on_hit': [0, 3], 'effect_burning_enemy_hp_percent_damage': [0, 2],
-    'effect_burning_enemy_speed_neg': [0], 'effect_weapon_scaling_stats': [0],
-    'effect_item_slow_on_hit': [0], 'effect_enemy_percent_damage_taken': [0],
-    'effect_enemy_percent_damage_taken_once': [0], 'effect_spawn_landmine_on_death': [0],
-    'effect_gain_stat_for_every_percent_player_missing_health': [2],
-    'effect_structure_attack_speed_while_moving': [0],
-    'effect_hp_regen_bonus_double': [2], 'effect_hp_regen_bonus_triple': [2],
-    'effect_extra_elite_next_wave_chance': [0], 'effect_one_shot_on_hit_effect': [0],
-    'effect_pet_lootworm': [0], 'fog_visibility': [0],
-}
-
 
 def _find_tr_key(eff):
     """Find the translation key for an effect following Godot's key resolution.
@@ -1514,6 +1458,7 @@ def _text_render(fmt_key, fmt, args, arg_signs, lang):
     1. Auto-prepend {0} if key needs operator but format lacks {0}
     2. For each arg: add operator(+), add percent(%), wrap color
     3. Replace {i} placeholders
+    4. Remove runtime-value brackets like [X], [+X], [-X]
     """
     if not fmt:
         return ''
@@ -1536,15 +1481,15 @@ def _text_render(fmt_key, fmt, args, arg_signs, lang):
         raw = str(args[i]) if i < len(args) and args[i] else ''
         sign = arg_signs[i] if i < len(arg_signs) else ''
 
-        # Add operator (+)
+        # Add operator (+) — game uses >= 0
         if key_lower in KEYS_NEEDING_OPERATOR and i in KEYS_NEEDING_OPERATOR[key_lower]:
             if raw and not raw.startswith('+') and not raw.startswith('-'):
                 try:
                     v = float(raw.lstrip('+').rstrip('%'))
-                    if v > 0:
+                    if v >= 0:
                         raw = '+' + raw
                 except (ValueError, TypeError):
-                    pass
+                    raw = '+' + raw
 
         # Add percent (%)
         if key_lower in KEYS_NEEDING_PERCENT and i in KEYS_NEEDING_PERCENT[key_lower]:
@@ -1566,6 +1511,8 @@ def _text_render(fmt_key, fmt, args, arg_signs, lang):
     result = re.sub(r'\s*\{\d+\}\s*', ' ', result)
     result = re.sub(r'[（(]\s*[）)]', '', result)
     result = re.sub(r'\[\s*\]', '', result)
+    # Remove runtime-value brackets: [X], [+X], [-X] where X is a number
+    result = re.sub(r'\s*\[[\s]*[+-]?\d+[\s]*\]', '', result)
     result = re.sub(r'\s+', ' ', result).strip()
     return result
 
@@ -1671,33 +1618,31 @@ def render_effect_text(eff, lang):
         spawn_cd = extra.get('spawn_cooldown', extra.get('interval', 0))
         if spawn_cd <= 0 and struct_stats:
             spawn_cd = struct_stats.get('cooldown', spawn_cd)
-            spawn_cd = spawn_cd / 60.0
-            if spawn_cd == int(spawn_cd):
-                spawn_cd = int(spawn_cd)
-        if spawn_cd <= 0:
-            spawn_cd = 12
-        args[0] = str(value)
-        args[1] = str(spawn_cd)
-        args[2] = str(struct_stats.get('damage', value) if struct_stats else value)
-        args[3] = build_scaling_text(
-            struct_stats.get('scaling_stats', []) if struct_stats else [], lang)
-        args_built = True
-
-    # --- TurretEffect ---
-    elif tk_upper == 'EFFECT_TURRET' and eff.get('structure_stats'):
-        ws = eff.get('structure_stats')
+        cd_sec = spawn_cd / 60.0 if spawn_cd > 0 else 12
+        if cd_sec == int(cd_sec):
+            cd_sec = int(cd_sec)
+        dmg = struct_stats.get('damage', value) if struct_stats else value
+        scaling = struct_stats.get('scaling_stats', []) if struct_stats else []
+        scaling_text = build_scaling_text(scaling, lang)
+        nb_proj = struct_stats.get('nb_projectiles', 1) if struct_stats else 1
+        bounce = struct_stats.get('bounce', 0) if struct_stats else 0
         bd = eff.get('burning_data')
         if bd:
             args[0] = str(bd.get('duration', 0))
             args[1] = str(bd.get('damage', 0))
             args[2] = build_scaling_text(bd.get('scaling_stats', []), lang)
-            args[3] = tr(key.upper(), lang)
+            args[3] = tr(key.upper(), lang) if key else ''
+        elif tk_upper in ('EFFECT_TURRET', 'EFFECT_TURRET_FLAME', 'EFFECT_TURRET_LASER', 'EFFECT_TURRET_ROCKET'):
+            args[0] = str(dmg)
+            args[1] = scaling_text
+            args[2] = str(nb_proj)
+            args[3] = str(bounce)
+            args[4] = tr(key.upper(), lang) if key else ''
         else:
-            args[0] = str(ws.get('damage', 0))
-            args[1] = build_scaling_text(ws.get('scaling_stats', []), lang)
-            args[2] = str(ws.get('nb_projectiles', 1))
-            args[3] = str(ws.get('bounce', 0))
-            args[4] = tr(key.upper(), lang)
+            args[0] = str(value)
+            args[1] = str(cd_sec)
+            args[2] = str(dmg)
+            args[3] = scaling_text
         args_built = True
 
     # --- Pet effects ---
