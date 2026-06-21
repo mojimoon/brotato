@@ -245,8 +245,8 @@
                     <template #content>
                       <div class="tag-tooltip-content">
                         <div class="tag-tooltip-name">{{ tagTr(tag) }}</div>
-                        <div v-if="tagItems(tag).length" class="tag-tooltip-line">{{ isZh ? '道具' : 'Items' }}：{{ tagItems(tag).join('、') }}</div>
-                        <div v-if="tagCharacters(tag).length" class="tag-tooltip-line">{{ isZh ? '角色' : 'Characters' }}：{{ tagCharacters(tag).join('、') }}</div>
+                        <div v-if="tagItems(tag).length" class="tag-tooltip-line">{{ isZh ? '道具' : 'Items' }}：{{ tagItems(tag).join(', ') }}</div>
+                        <div v-if="tagCharacters(tag).length" class="tag-tooltip-line">{{ isZh ? '角色' : 'Characters' }}：{{ tagCharacters(tag).join(', ') }}</div>
                       </div>
                     </template>
                     {{ tagTr(tag) }}
@@ -299,8 +299,8 @@
                     <template #content>
                       <div class="tag-tooltip-content">
                         <div class="tag-tooltip-name">{{ tagTr(tag) }}</div>
-                        <div v-if="tagItems(tag).length" class="tag-tooltip-line">{{ isZh ? '道具' : 'Items' }}：{{ tagItems(tag).join('、') }}</div>
-                        <div v-if="tagCharacters(tag).length" class="tag-tooltip-line">{{ isZh ? '角色' : 'Characters' }}：{{ tagCharacters(tag).join('、') }}</div>
+                        <div v-if="tagItems(tag).length" class="tag-tooltip-line">{{ isZh ? '道具' : 'Items' }}：{{ tagItems(tag).join(', ') }}</div>
+                        <div v-if="tagCharacters(tag).length" class="tag-tooltip-line">{{ isZh ? '角色' : 'Characters' }}：{{ tagCharacters(tag).join(', ') }}</div>
                       </div>
                     </template>
                     {{ tagTr(tag) }}
@@ -337,8 +337,8 @@
                   <template #content>
                     <div class="tag-tooltip-content">
                       <div class="tag-tooltip-name">{{ tagTr(tag) }}</div>
-                      <div v-if="tagItems(tag).length" class="tag-tooltip-line">{{ isZh ? '道具' : 'Items' }}：{{ tagItems(tag).join('、') }}</div>
-                      <div v-if="tagCharacters(tag).length" class="tag-tooltip-line">{{ isZh ? '角色' : 'Characters' }}：{{ tagCharacters(tag).join('、') }}</div>
+                      <div v-if="tagItems(tag).length" class="tag-tooltip-line">{{ isZh ? '道具' : 'Items' }}：{{ tagItems(tag).join(', ') }}</div>
+                      <div v-if="tagCharacters(tag).length" class="tag-tooltip-line">{{ isZh ? '角色' : 'Characters' }}：{{ tagCharacters(tag).join(', ') }}</div>
                     </div>
                   </template>
                   {{ tagTr(tag) }}
@@ -1029,12 +1029,12 @@ body { background: #1a1d28; color: #ccc; font-family: 'Segoe UI', system-ui, san
 /* Effects */
 .effects-list { display: flex; flex-direction: column; gap: 3px; }
 .effect-item { padding: 5px 10px; border-radius: 4px; font-size: 13px; background: #22253a; color: #ddd; line-height: 1.5; display: flex; align-items: baseline; gap: 6px; }
-.eff-prefix { flex-shrink: 0; width: 18px; text-align: center; color: #777; display: flex; align-items: center; justify-content: center; line-height: 1; }
+.eff-prefix { flex-shrink: 0; width: 8px; text-align: center; color: #777; display: flex; align-items: center; justify-content: center; line-height: 1; }
 .eff-text { flex: 1; min-width: 0; }
 
 /* Starting Weapons Grid - matches left panel grid-item style */
 .starting-weapons-grid {
-  display: grid; grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
   gap: 5px;
 }
 .starting-weapon-card { cursor: pointer; }
