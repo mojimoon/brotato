@@ -259,22 +259,31 @@
             </div>
           </div>
 
-          <!-- Price Section -->
+          <!-- Price Section (weapons) -->
           <div v-if="getBasePrice() > 1" class="detail-section price-section">
-            <div class="price-header">
-              <span class="price-label">{{ waveSlider === 0 ? (isZh ? '基础价格' : 'Base Price') : (isZh ? '第' + waveSlider + '波价格' : 'Wave ' + waveSlider + ' Price') }}</span>
-              <span class="price-value">{{ computedPrice }}</span>
+            <div class="price-formula">
+              <span class="price-label">{{ isZh ? '基础价格' : 'Base Price' }}</span>
+              <span class="price-base">{{ getBasePrice() }}</span>
+              <span class="price-op"> (+ {{ getWaveIncrement().toFixed(1) }}</span>
+              <template v-if="waveSlider > 0">
+                <span class="price-op"> × {{ waveSlider }}) =</span>
+                <span class="price-final">{{ computedPrice }}</span>
+              </template>
+              <span v-else class="price-op">)</span>
               <img :src="BASE + 'icons/items/materials/harvesting_icon.png'" class="price-icon" />
             </div>
-            <div class="price-waves">
-              <!-- <span class="price-wave">{{ isZh ? '第1波' : 'Wave 1' }}:</span><span class="ws-val">{{ priceAtWave(1) }}</span>
-              <span class="price-wave">{{ isZh ? '第4波' : 'Wave 4' }}:</span><span class="ws-val">{{ priceAtWave(4) }}</span>
-              <span class="price-wave">{{ isZh ? '第8波' : 'Wave 8' }}:</span><span class="ws-val">{{ priceAtWave(8) }}</span>
-              <span class="price-wave">{{ isZh ? '第19波' : 'Wave 19' }}:</span><span class="ws-val">{{ priceAtWave(19) }}</span> -->
-            </div>
+            <table class="price-table">
+              <tr><th>{{ isZh ? '波次' : 'Wave' }}</th><th>1</th><th>4</th><th>8</th><th>14</th><th>19</th></tr>
+              <tr><td>{{ isZh ? '价格' : 'Price' }}</td>
+                <td>{{ showPriceCell(1) ? priceAtWave(1) : '—' }}</td>
+                <td>{{ showPriceCell(4) ? priceAtWave(4) : '—' }}</td>
+                <td>{{ priceAtWave(8) }}</td>
+                <td>{{ priceAtWave(14) }}</td>
+                <td>{{ priceAtWave(19) }}</td>
+              </tr>
+            </table>
             <div class="price-slider-row">
-              <span class="price-slider-label">{{ isZh ? '波次' : 'Wave' }}</span>
-              <el-slider v-model="waveSlider" :min="0" :max="19" :step="1" show-input class="price-slider" />
+              <el-slider v-model="waveSlider" :min="0" :max="19" :step="1" :marks="waveSliderMarks" class="price-slider" />
             </div>
           </div>
 
@@ -317,22 +326,31 @@
               </div>
             </div>
           </div>
-          <!-- Item Price Section -->
+          <!-- Price Section (items) -->
           <div v-if="(selectedItem.value || 0) > 1" class="detail-section price-section">
-            <div class="price-header">
-              <span class="price-label">{{ waveSlider === 0 ? (isZh ? '基础价格' : 'Base Price') : (isZh ? '第' + waveSlider + '波价格' : 'Wave ' + waveSlider + ' Price') }}</span>
-              <span class="price-value">{{ computedPrice }}</span>
+            <div class="price-formula">
+              <span class="price-label">{{ isZh ? '基础价格' : 'Base Price' }}</span>
+              <span class="price-base">{{ getBasePrice() }}</span>
+              <span class="price-op"> (+ {{ getWaveIncrement() }}</span>
+              <template v-if="waveSlider > 0">
+                <span class="price-op"> × {{ waveSlider }}) =</span>
+                <span class="price-final">{{ computedPrice }}</span>
+              </template>
+              <span v-else class="price-op">)</span>
               <img :src="BASE + 'icons/items/materials/harvesting_icon.png'" class="price-icon" />
             </div>
-            <div class="price-waves">
-              <span class="price-wave">{{ isZh ? '第1波' : 'Wave 1' }}：{{ priceAtWave(1) }}</span>
-              <span class="price-wave">{{ isZh ? '第4波' : 'Wave 4' }}：{{ priceAtWave(4) }}</span>
-              <span class="price-wave">{{ isZh ? '第8波' : 'Wave 8' }}：{{ priceAtWave(8) }}</span>
-              <span class="price-wave">{{ isZh ? '第19波' : 'Wave 19' }}：{{ priceAtWave(19) }}</span>
-            </div>
+            <table class="price-table">
+              <tr><th>{{ isZh ? '波次' : 'Wave' }}</th><th>1</th><th>4</th><th>8</th><th>14</th><th>19</th></tr>
+              <tr><td>{{ isZh ? '价格' : 'Price' }}</td>
+                <td>{{ showPriceCell(1) ? priceAtWave(1) : '—' }}</td>
+                <td>{{ showPriceCell(4) ? priceAtWave(4) : '—' }}</td>
+                <td>{{ priceAtWave(8) }}</td>
+                <td>{{ priceAtWave(14) }}</td>
+                <td>{{ priceAtWave(19) }}</td>
+              </tr>
+            </table>
             <div class="price-slider-row">
-              <span class="price-slider-label">{{ isZh ? '波次' : 'Wave' }}</span>
-              <el-slider v-model="waveSlider" :min="0" :max="19" :step="1" show-input class="price-slider" />
+              <el-slider v-model="waveSlider" :min="0" :max="19" :step="1" :marks="waveSliderMarks" class="price-slider" />
             </div>
           </div>
           <div v-if="selectedItem.effects?.length" class="detail-section">
@@ -886,6 +904,29 @@ function priceAtWave(wave) {
 
 const computedPrice = computed(() => priceAtWave(waveSlider.value))
 
+function getWaveIncrement() { return getBasePrice() * 0.1 + 1 }
+
+function getCurrentTier() {
+  if (activeTab.value === 'weapons') return activeWeaponData.value?.tier ?? 0
+  if (activeTab.value === 'items') return selectedItem.value?.tier ?? 0
+  return 0
+}
+
+function showPriceCell(wave) {
+  const tier = getCurrentTier()
+  if (tier >= 3 && wave < 8) return false
+  if (tier >= 2 && wave < 4) return false
+  return true
+}
+
+const waveSliderMarks = computed(() => ({
+  1: '1',
+  4: '4',
+  8: '8',
+  14: '14',
+  19: '19',
+}))
+
 // ---- Selection ----
 function selectItem(item) {
   selectedItem.value = item
@@ -997,6 +1038,7 @@ body { background: #1a1d28; color: #ccc; font-family: 'Segoe UI', system-ui, san
   margin-right: 2px; border-radius: 8px 8px 0 0; padding: 0 18px;
   transition: background .15s, color .15s, border-color .15s;
 }
+.el-tabs--card > .el-tabs__header .el-tabs__item:first-child { border-left: 1px solid #3a3d4e !important; }
 .el-tabs--card > .el-tabs__header .el-tabs__item:hover { color: #eee !important; background: #393d58; border-color: #4a4d5e; }
 .el-tabs--card > .el-tabs__header .el-tabs__item.is-active { color: #ff3d3d !important; background: #1a1d28; border-color: #5a5d6e; }
 .el-tabs--card > .el-tabs__header .el-tabs__active-bar { background: #ff3d3d; }
@@ -1095,19 +1137,29 @@ body { background: #1a1d28; color: #ccc; font-family: 'Segoe UI', system-ui, san
 
 /* Price Section */
 .price-section { margin-top: 12px; padding: 14px 16px; background: #22253a; border-radius: 8px; border: 1px solid #2a2d3a; }
-.price-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.price-formula { display: flex; align-items: baseline; gap: 4px; flex-wrap: wrap; margin-bottom: 10px; }
 .price-label { font-size: 13px; color: #bbb; }
-.price-value { font-size: 18px; font-weight: 800; color: #fff; }
-.price-icon { width: 24px; height: 24px; image-rendering: pixelated; }
-.price-waves { display: flex; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
-.price-wave { font-size: 14px; color: #bbb; }
-.price-slider-row { display: flex; align-items: center; gap: 10px; }
-.price-slider-label { font-size: 13px; color: #bbb; min-width: 36px; }
-.price-slider { flex: 1; }
-.price-slider :deep(.el-slider__input) { width: 48px; }
-.price-slider :deep(.el-slider__runway) { background: #2a2d3a; }
+.price-base { font-size: 16px; font-weight: 700; color: #fff; }
+.price-final { font-size: 16px; font-weight: 700; color: #eae2b0; }
+.price-incr { font-size: 13px; color: #ccc; }
+.price-op { font-size: 13px; color: #888; }
+.price-icon { width: 18px; height: 18px; image-rendering: pixelated; vertical-align: middle; }
+
+/* Price table */
+.price-table { width: 100%; border-collapse: collapse; margin-bottom: 8px; font-size: 13px; }
+.price-table th, .price-table td { padding: 5px 8px; text-align: center; border: 1px solid #2a2d3a; }
+.price-table th { color: #888; font-weight: 600; }
+.price-table td { color: #ddd; }
+
+/* Slider */
+.price-slider-row { padding: 0 8px; }
+.price-slider { --el-slider-height: 4px; }
+.price-slider :deep(.el-slider__runway) { background: #2a2d3a; margin: 0; }
 .price-slider :deep(.el-slider__bar) { background: #ff3d3d; }
-.price-slider :deep(.el-slider__button) { border-color: #ff3d3d; }
+.price-slider :deep(.el-slider__button) { width: 14px; height: 14px; border-color: #ff3d3d; }
+.price-slider :deep(.el-slider__marks-text) { font-size: 10px; color: #888; margin-top: 6px; }
+.price-slider :deep(.el-slider__input) { display: none; }
+.price-slider :deep(.el-slider__stop) { width: 6px; height: 6px; border-radius: 50%; background: #5a5d6e; }
 
 /* Effects */
 .effects-list { display: flex; flex-direction: column; gap: 4px; }
@@ -1190,6 +1242,7 @@ body.light-theme .header-btn:hover { background: #d8dade !important; color: #111
 body.light-theme .main-tabs { background: #fff; }
 body.light-theme .el-tabs--card > .el-tabs__header { border-bottom-color: #ccc; background: #fff; }
 body.light-theme .el-tabs--card > .el-tabs__header .el-tabs__item { color: #444 !important; background: #e8eaed; border-color: #ccc; }
+body.light-theme .el-tabs--card > .el-tabs__header .el-tabs__item:first-child { border-left: 1px solid #ccc !important; }
 body.light-theme .el-tabs--card > .el-tabs__header .el-tabs__item:hover { color: #222 !important; background: #d5d8de; border-color: #aaa; }
 body.light-theme .el-tabs--card > .el-tabs__header .el-tabs__item.is-active { color: #ff3d3d !important; background: #f0f2f5; border-color: #bbb; }
 body.light-theme .filters { background: #f0f2f5; border-bottom-color: #ccc; }
@@ -1219,8 +1272,17 @@ body.light-theme .weapon-stat-row:hover { background: #e8eaed; }
 body.light-theme .ws-label { color: #444; }
 body.light-theme .ws-val { color: #111; }
 body.light-theme .price-section { background: #f0f2f5; border-color: #ccc; }
-body.light-theme .price-label, body.light-theme .price-wave { color: #444; }
-body.light-theme .price-value { color: #111; }
+body.light-theme .price-label { color: #444; }
+body.light-theme .price-base { color: #111; }
+body.light-theme .price-final { color: #b45309; }
+body.light-theme .price-incr { color: #444; }
+body.light-theme .price-op { color: #777; }
+body.light-theme .price-table th, body.light-theme .price-table td { border-color: #ccc; }
+body.light-theme .price-table th { color: #777; }
+body.light-theme .price-table td { color: #222; }
+body.light-theme .price-slider :deep(.el-slider__runway) { background: #ccc; }
+body.light-theme .price-slider :deep(.el-slider__marks-text) { color: #888; }
+body.light-theme .price-slider :deep(.el-slider__stop) { background: #aaa; }
 body.light-theme .effect-item { background: #f0f2f5; color: #222; }
 body.light-theme .effect-item:hover { background: #e8eaed; }
 body.light-theme .eff-prefix { color: #777; }
@@ -1244,8 +1306,8 @@ body.light-theme .tier-tab { background: #e2e4e8; border-color: #bbb; color: #66
 body.light-theme .tier-tab:not(.disabled):hover { background: #d5d8de; color: #333; }
 body.light-theme .tier-tab.disabled { border-color: #ccc !important; background: #eee !important; color: #ccc !important; }
 body.light-theme .tier-tab.active { color: #fff !important; }
-body.light-theme .tag-pet { background: #e8f5e9; color: #2e7d32; }
-body.light-theme .tag-pet:hover { background: #c8e6c9 !important; color: #1b5e20 !important; }
+body.light-theme .tag-pet { background: #c8e6c9; color: #1b5e20; }
+body.light-theme .tag-pet:hover { background: #a5d6a7 !important; color: #0d3b0d !important; }
 body.light-theme .tag-structure { background: #fff3e0; color: #e65100; }
 body.light-theme .tag-structure:hover { background: #ffe0b2 !important; color: #bf360c !important; }
 body.light-theme .el-input.is-focus .el-input__wrapper { border-color: #ff3d3d !important; box-shadow: 0 0 0 1px #ff3d3d inset !important; }
