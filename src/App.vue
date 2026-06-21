@@ -928,14 +928,13 @@ body { background: #121520; color: #ccc; font-family: 'Segoe UI', system-ui, san
 }
 
 /* Main */
-.main-content { flex: 1; display: flex; overflow: hidden; height: calc(100vh - 158px); }
+.main-content { position: relative; height: calc(100vh - 158px); overflow: hidden; }
 
-/* Grid - max 50% width, independent scroll */
+/* Grid - left panel, independent scroll */
 .grid-panel {
-  flex: 0 1 50%; max-width: 50%; overflow-y: auto; padding: 10px;
+  position: absolute; left: 0; top: 0; bottom: 0; width: 50%; overflow-y: auto; padding: 10px;
   display: grid; grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
   gap: 5px; align-content: start; background: #121520;
-  position: relative;
 }
 .grid-item {
   background: #1a1d28; border-radius: 6px; padding: 8px 4px; cursor: pointer;
@@ -952,12 +951,10 @@ body { background: #121520; color: #ccc; font-family: 'Segoe UI', system-ui, san
 .item-name-text { font-size: 12px; font-weight: 600; text-align: center; max-width: 80px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .item-dlc-badge { position: absolute; top: 3px; right: 3px; font-size: 8px; padding: 1px 3px; border-radius: 3px; background: #a855f7; color: #fff; font-weight: bold; }
 
-/* Detail Panel - sticky position, independent scroll */
+/* Detail Panel - right panel, independent scroll */
 .detail-panel {
-  flex: 1; min-width: 0; background: #0f131a; border-left: 2px solid #222;
-  overflow-y: auto; padding: 20px;
-  position: sticky; top: 0; align-self: flex-start;
-  height: 100%;
+  position: absolute; right: 0; top: 0; bottom: 0; left: 50%; overflow-y: auto; padding: 20px;
+  background: #0f131a; border-left: 2px solid #222;
 }
 .empty-panel { display: flex; align-items: center; justify-content: center; }
 
