@@ -2,8 +2,15 @@
   <div class="app-container">
     <!-- Header -->
     <header class="header">
-      <h1 class="title">Brotato Codex</h1>
+      <h1>
+        <span class="title">Brotato Codex</span>
+         <a href="https://github.com/mojimoon/" target="_blank" rel="noopener noreferrer" class="author-link">@mojimoon</a>
+      </h1>
       <div class="header-actions">
+        <!-- [![](https://img.shields.io/github/stars/mojimoon/brotato)](https://github.com/mojimoon/brotato) -->
+        <a href="https://github.com/mojimoon/brotato" target="_blank" rel="noopener noreferrer">
+          <img src="https://img.shields.io/github/stars/mojimoon/brotato?style=social" alt="GitHub stars" style="height: 20px;" />
+        </a>
         <el-dropdown @command="(cmd) => { isZh = cmd === 'zh' }" trigger="click">
           <el-button class="header-btn lang-btn" circle>{{ isZh ? '中' : 'EN' }}</el-button>
           <template #dropdown>
@@ -849,6 +856,7 @@ body { background: #1a1d28; color: #ccc; font-family: 'Segoe UI', system-ui, san
 /* Header */
 .header { display: flex; align-items: center; justify-content: space-between; padding: 10px 24px; background: #151822; border-bottom: 2px solid #ff3d3d; }
 .title { font-size: 22px; font-weight: 800; color: #ff3d3d; letter-spacing: 2px; text-shadow: 0 0 20px rgba(255,61,61,0.15); }
+.author-link { font-size: 12px; font-weight: 500; color: #bbb; margin-left: 8px; }
 .header-actions { display: flex; gap: 8px; align-items: center; }
 .header-btn { background: #252836 !important; border: 1px solid #3a3d4e !important; color: #ccc !important; font-size: 13px; transition: all .2s; }
 .header-btn:hover { background: #333648 !important; color: #fff !important; border-color: #5a5d6e !important; }
