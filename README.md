@@ -15,6 +15,7 @@ A web-based codex for [Brotato](https://store.steampowered.com/app/1942280/Brota
 ### Prerequisites
 
 - [GDRE Tools](https://github.com/GDRETools/gdsdecomp/releases) to decompile the game
+- Remember to choose "Add .pck" to decompile both the base game and DLC data at once
 
 ### Workflow
 

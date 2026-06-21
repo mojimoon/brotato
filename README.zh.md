@@ -15,6 +15,7 @@
 ### 前置条件
 
 - [GDRE Tools](https://github.com/GDRETools/gdsdecomp/releases) 用于反编译游戏
+- 注意选择 "Add .pck" 以同时反编译游戏本体和 DLC 数据
 
 ### 工作流程
 
