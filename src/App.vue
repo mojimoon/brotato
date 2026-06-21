@@ -18,7 +18,7 @@
     </header>
 
     <!-- Tabs -->
-    <el-tabs v-model="activeTab" class="main-tabs" @tab-change="onTabChange">
+    <el-tabs v-model="activeTab" type="card" class="main-tabs" @tab-change="onTabChange">
       <el-tab-pane name="weapons"><template #label><el-icon style="vertical-align:middle;margin-right:4px"><Aim /></el-icon>{{ isZh ? '武器' : 'Weapons' }}</template></el-tab-pane>
       <el-tab-pane name="items"><template #label><el-icon style="vertical-align:middle;margin-right:4px"><Box /></el-icon>{{ isZh ? '道具' : 'Items' }}</template></el-tab-pane>
       <el-tab-pane name="characters"><template #label><el-icon style="vertical-align:middle;margin-right:4px"><User /></el-icon>{{ isZh ? '角色' : 'Characters' }}</template></el-tab-pane>
@@ -29,31 +29,93 @@
       <el-input v-model="searchText" :placeholder="isZh ? '搜索...' : 'Search...'" clearable class="search-input" @input="onFilterChange">
         <template #prefix><el-icon><Search /></el-icon></template>
       </el-input>
-      <el-select v-if="activeTab !== 'characters'" v-model="filterTier" :placeholder="isZh ? '稀有度' : 'Rarity'" clearable class="filter-select" popper-class="dark-dropdown" @change="onFilterChange">
-        <el-option :label="tierDisplayName(0)" :value="0" />
-        <el-option :label="tierDisplayName(1)" :value="1" />
-        <el-option :label="tierDisplayName(2)" :value="2" />
-        <el-option :label="tierDisplayName(3)" :value="3" />
-      </el-select>
-      <el-select v-if="activeTab === 'weapons'" v-model="filterType" :placeholder="isZh ? '类型' : 'Type'" clearable class="filter-select" popper-class="dark-dropdown" @change="onFilterChange">
-        <el-option :label="isZh ? '近战' : 'Melee'" value="melee" />
-        <el-option :label="isZh ? '远战' : 'Ranged'" value="ranged" />
-      </el-select>
-      <el-select v-if="activeTab === 'weapons'" v-model="filterSet" :placeholder="isZh ? '武器类别' : 'Set'" clearable class="filter-select" popper-class="dark-dropdown" @change="onFilterChange">
-        <el-option v-for="setEntry in availableSets" :key="setEntry.key" :label="setEntry.label" :value="setEntry.key" />
-      </el-select>
-      <el-select v-model="filterDlc" :placeholder="isZh ? '来源' : 'Source'" clearable class="filter-select" popper-class="dark-dropdown" @change="onFilterChange">
-        <el-option :label="isZh ? '本体' : 'Base Game'" :value="0" />
-        <el-option label="DLC" :value="1" />
-      </el-select>
-      <el-select v-if="activeTab === 'items' || activeTab === 'characters'" v-model="filterTag" :placeholder="isZh ? '道具标签' : 'Tag'" clearable class="filter-select" popper-class="dark-dropdown" @change="onFilterChange">
-        <el-option v-for="tag in allTags" :key="tag" :label="tagTr(tag)" :value="tag" />
-      </el-select>
-      <el-select v-if="activeTab === 'weapons' || activeTab === 'items'" v-model="sortBy" :placeholder="isZh ? '排序' : 'Sort'" class="sort-select" popper-class="dark-dropdown" @change="onFilterChange">
-        <template #prefix><el-icon><Sort /></el-icon></template>
-        <el-option :label="isZh ? '默认' : 'Default'" value="default" />
-        <el-option :label="isZh ? '价格' : 'Price'" value="price" />
-      </el-select>
+
+      <!-- Tier -->
+      <el-dropdown v-if="activeTab !== 'characters'" trigger="click" popper-class="dark-dropdown" @command="(v) => { filterTier = v; onFilterChange(); }">
+        <el-button class="filter-btn" :class="{ 'has-value': filterTier !== null }">
+          {{ filterTier !== null ? tierDisplayName(filterTier) : (isZh ? '稀有度' : 'Rarity') }}
+          <el-icon class="el-icon--right"><ArrowDown /></el-icon>
+        </el-button>
+        <template #dropdown>
+          <el-dropdown-menu>
+            <el-dropdown-item :command="null" :class="{ 'is-active-opt': filterTier === null }">{{ isZh ? '全部' : 'All' }}</el-dropdown-item>
+            <el-dropdown-item v-for="n in 4" :key="n-1" :command="n-1" :class="{ 'is-active-opt': filterTier === n-1 }">{{ tierDisplayName(n-1) }}</el-dropdown-item>
+          </el-dropdown-menu>
+        </template>
+      </el-dropdown>
+
+      <!-- Type -->
+      <el-dropdown v-if="activeTab === 'weapons'" trigger="click" popper-class="dark-dropdown" @command="(v) => { filterType = v; onFilterChange(); }">
+        <el-button class="filter-btn" :class="{ 'has-value': !!filterType }">
+          {{ filterType === 'melee' ? (isZh ? '近战' : 'Melee') : filterType === 'ranged' ? (isZh ? '远战' : 'Ranged') : (isZh ? '类型' : 'Type') }}
+          <el-icon class="el-icon--right"><ArrowDown /></el-icon>
+        </el-button>
+        <template #dropdown>
+          <el-dropdown-menu>
+            <el-dropdown-item :command="null" :class="{ 'is-active-opt': !filterType }">{{ isZh ? '全部' : 'All' }}</el-dropdown-item>
+            <el-dropdown-item command="melee" :class="{ 'is-active-opt': filterType === 'melee' }">{{ isZh ? '近战' : 'Melee' }}</el-dropdown-item>
+            <el-dropdown-item command="ranged" :class="{ 'is-active-opt': filterType === 'ranged' }">{{ isZh ? '远战' : 'Ranged' }}</el-dropdown-item>
+          </el-dropdown-menu>
+        </template>
+      </el-dropdown>
+
+      <!-- Set -->
+      <el-dropdown v-if="activeTab === 'weapons'" trigger="click" popper-class="dark-dropdown" @command="(v) => { filterSet = v; onFilterChange(); }">
+        <el-button class="filter-btn" :class="{ 'has-value': filterSet !== null }">
+          {{ filterSet !== null ? ((availableSets.find(s => s.key === filterSet) || {}).label || filterSet) : (isZh ? '武器类别' : 'Set') }}
+          <el-icon class="el-icon--right"><ArrowDown /></el-icon>
+        </el-button>
+        <template #dropdown>
+          <el-dropdown-menu>
+            <el-dropdown-item :command="null" :class="{ 'is-active-opt': filterSet === null }">{{ isZh ? '全部' : 'All' }}</el-dropdown-item>
+            <el-dropdown-item v-for="s in availableSets" :key="s.key" :command="s.key" :class="{ 'is-active-opt': filterSet === s.key }">{{ s.label }}</el-dropdown-item>
+          </el-dropdown-menu>
+        </template>
+      </el-dropdown>
+
+      <!-- DLC -->
+      <el-dropdown trigger="click" popper-class="dark-dropdown" @command="(v) => { filterDlc = v; onFilterChange(); }">
+        <el-button class="filter-btn" :class="{ 'has-value': filterDlc !== null }">
+          {{ filterDlc === 0 ? (isZh ? '本体' : 'Base') : filterDlc === 1 ? 'DLC' : (isZh ? '来源' : 'Source') }}
+          <el-icon class="el-icon--right"><ArrowDown /></el-icon>
+        </el-button>
+        <template #dropdown>
+          <el-dropdown-menu>
+            <el-dropdown-item :command="null" :class="{ 'is-active-opt': filterDlc === null }">{{ isZh ? '全部' : 'All' }}</el-dropdown-item>
+            <el-dropdown-item :command="0" :class="{ 'is-active-opt': filterDlc === 0 }">{{ isZh ? '本体' : 'Base Game' }}</el-dropdown-item>
+            <el-dropdown-item :command="1" :class="{ 'is-active-opt': filterDlc === 1 }">DLC</el-dropdown-item>
+          </el-dropdown-menu>
+        </template>
+      </el-dropdown>
+
+      <!-- Tag -->
+      <el-dropdown v-if="activeTab === 'items' || activeTab === 'characters'" trigger="click" popper-class="dark-dropdown" @command="(v) => { filterTag = v; onFilterChange(); }">
+        <el-button class="filter-btn" :class="{ 'has-value': filterTag !== null }">
+          {{ filterTag !== null ? tagTr(filterTag) : (isZh ? '道具标签' : 'Tag') }}
+          <el-icon class="el-icon--right"><ArrowDown /></el-icon>
+        </el-button>
+        <template #dropdown>
+          <el-dropdown-menu>
+            <el-dropdown-item :command="null" :class="{ 'is-active-opt': filterTag === null }">{{ isZh ? '全部' : 'All' }}</el-dropdown-item>
+            <el-dropdown-item v-for="t in allTags" :key="t" :command="t" :class="{ 'is-active-opt': filterTag === t }">{{ tagTr(t) }}</el-dropdown-item>
+          </el-dropdown-menu>
+        </template>
+      </el-dropdown>
+
+      <!-- Sort -->
+      <el-dropdown v-if="activeTab === 'weapons' || activeTab === 'items'" trigger="click" popper-class="dark-dropdown" @command="(v) => { sortBy = v; onFilterChange(); }">
+        <el-button class="filter-btn sort-btn" :class="{ 'has-value': sortBy !== 'default' }">
+          <el-icon style="margin-right:4px"><Sort /></el-icon>
+          {{ sortBy === 'price' ? (isZh ? '价格' : 'Price') : (isZh ? '默认' : 'Default') }}
+          <el-icon class="el-icon--right"><ArrowDown /></el-icon>
+        </el-button>
+        <template #dropdown>
+          <el-dropdown-menu>
+            <el-dropdown-item command="default" :class="{ 'is-active-opt': sortBy === 'default' }">{{ isZh ? '默认' : 'Default' }}</el-dropdown-item>
+            <el-dropdown-item command="price" :class="{ 'is-active-opt': sortBy === 'price' }">{{ isZh ? '价格' : 'Price' }}</el-dropdown-item>
+          </el-dropdown-menu>
+        </template>
+      </el-dropdown>
     </div>
 
     <!-- Main Content -->
@@ -205,10 +267,10 @@
               <img :src="BASE + 'icons/items/materials/harvesting_icon.png'" class="price-icon" />
             </div>
             <div class="price-waves">
-              <span class="price-wave">{{ isZh ? '第1波' : 'Wave 1' }}:</span><span class="ws-val">{{ priceAtWave(1) }}</span>
+              <!-- <span class="price-wave">{{ isZh ? '第1波' : 'Wave 1' }}:</span><span class="ws-val">{{ priceAtWave(1) }}</span>
               <span class="price-wave">{{ isZh ? '第4波' : 'Wave 4' }}:</span><span class="ws-val">{{ priceAtWave(4) }}</span>
               <span class="price-wave">{{ isZh ? '第8波' : 'Wave 8' }}:</span><span class="ws-val">{{ priceAtWave(8) }}</span>
-              <span class="price-wave">{{ isZh ? '第19波' : 'Wave 19' }}:</span><span class="ws-val">{{ priceAtWave(19) }}</span>
+              <span class="price-wave">{{ isZh ? '第19波' : 'Wave 19' }}:</span><span class="ws-val">{{ priceAtWave(19) }}</span> -->
             </div>
             <div class="price-slider-row">
               <span class="price-slider-label">{{ isZh ? '波次' : 'Wave' }}</span>
@@ -359,7 +421,7 @@
 
 <script setup>
 import { ref, computed, onMounted, nextTick, watch } from 'vue'
-import { Search, Sort, User, Sunny, Moon, Box, Aim } from '@element-plus/icons-vue'
+import { Search, Sort, User, Sunny, Moon, Box, Aim, ArrowDown } from '@element-plus/icons-vue'
 
 const BASE = import.meta.env.BASE_URL
 
@@ -916,28 +978,46 @@ body { background: #1a1d28; color: #ccc; font-family: 'Segoe UI', system-ui, san
 
 /* Header */
 .header { display: flex; align-items: center; justify-content: space-between; padding: 10px 24px; background: #151822; border-bottom: 2px solid #ff3d3d; }
-.title { font-size: 22px; font-weight: 800; color: #ff3d3d; letter-spacing: 2px; }
+.title { font-size: 22px; font-weight: 800; color: #ff3d3d; letter-spacing: 2px; text-shadow: 0 0 20px rgba(255,61,61,0.15); }
 .header-actions { display: flex; gap: 8px; align-items: center; }
-.header-btn { background: #252836 !important; border: 1px solid #3a3d4e !important; color: #ccc !important; font-size: 13px; }
-.header-btn:hover { background: #333648 !important; color: #fff !important; }
+.header-btn { background: #252836 !important; border: 1px solid #3a3d4e !important; color: #ccc !important; font-size: 13px; transition: all .2s; }
+.header-btn:hover { background: #333648 !important; color: #fff !important; border-color: #5a5d6e !important; }
 .lang-btn { font-weight: 700; font-size: 14px; min-width: 36px; }
 
-/* Tabs */
+/* Tabs — card style */
 .main-tabs { background: #151822; padding: 0 24px; }
 .main-tabs :deep(.el-tabs__header) { margin: 0; }
-.main-tabs :deep(.el-tabs__nav-wrap::after) { background: #2a2d3a; height: 1px; }
-.main-tabs :deep(.el-tabs__item) { color: #bbb !important; height: 42px; line-height: 42px; font-size: 14px; background: #252836; margin-right: 2px; border-radius: 6px 6px 0 0; padding: 0 18px; transition: background .15s, color .15s; border: 1px solid #2a2d3a; border-bottom: none; }
-.main-tabs :deep(.el-tabs__item:hover) { color: #eee !important; background: #2e3148; }
-.main-tabs :deep(.el-tabs__item.is-active) { color: #ff3d3d !important; background: #1a1d28; border-color: #3a3d4e; }
-.main-tabs :deep(.el-tabs__active-bar) { background: #ff3d3d; }
+.main-tabs :deep(.el-tabs__nav-wrap::after) { display: none; }
+/* Card tabs — dark override */
+.el-tabs--card > .el-tabs__header { border-bottom: 1px solid #2a2d3a; background: #151822; }
+.el-tabs--card > .el-tabs__header .el-tabs__nav { border: none; }
+.el-tabs--card > .el-tabs__header .el-tabs__item {
+  color: #bbb !important; height: 42px; line-height: 42px; font-size: 14px;
+  background: #22253a; border: 1px solid #3a3d4e; border-bottom: none;
+  margin-right: 2px; border-radius: 8px 8px 0 0; padding: 0 18px;
+  transition: background .15s, color .15s, border-color .15s;
+}
+.el-tabs--card > .el-tabs__header .el-tabs__item:hover { color: #eee !important; background: #393d58; border-color: #4a4d5e; }
+.el-tabs--card > .el-tabs__header .el-tabs__item.is-active { color: #ff3d3d !important; background: #1a1d28; border-color: #5a5d6e; }
+.el-tabs--card > .el-tabs__header .el-tabs__active-bar { background: #ff3d3d; }
 
 /* Filters */
-.filters { display: flex; gap: 10px; padding: 8px 24px; background: #1a1d28; border-bottom: 1px solid #2a2d3a; flex-wrap: wrap; align-items: center; }
+.filters { display: flex; gap: 10px; padding: 10px 24px; background: #1a1d28; border-bottom: 1px solid #2a2d3a; flex-wrap: wrap; align-items: center; }
 .search-input { flex: 1; max-width: 280px; }
-.filter-select { width: 130px; }
-.sort-select { width: 120px; }
-.sort-select :deep(.el-input__wrapper) { border: 1px dashed #4a4d5e !important; }
-.sort-select :deep(.el-input__wrapper:hover) { border-color: #6a6d7e !important; }
+
+/* Filter dropdown buttons */
+.filter-btn {
+  background: #22253a !important; border: 1px solid #3a3d4e !important; color: #bbb !important;
+  font-size: 13px !important; height: 32px !important; padding: 0 10px !important;
+  min-width: 110px; justify-content: space-between; border-radius: 6px !important;
+  transition: all .15s !important;
+}
+.filter-btn:hover {
+  background: #2a2d3a !important; border-color: #5a5d6e !important; color: #fff !important;
+}
+.filter-btn.has-value { color: #eae2b0 !important; }
+.sort-btn { border-style: dashed !important; min-width: 100px; }
+.sort-btn:hover { border-color: #6a6d7e !important; }
 
 /* Main */
 .main-content { position: relative; height: calc(100vh - 160px); overflow: hidden; }
@@ -949,15 +1029,16 @@ body { background: #1a1d28; color: #ccc; font-family: 'Segoe UI', system-ui, san
   gap: 5px; align-content: start; background: #1a1d28;
 }
 .grid-item {
-  background: #22253a; border-radius: 6px; padding: 8px 4px; cursor: pointer;
-  transition: all .15s; display: flex; flex-direction: column; align-items: center; gap: 3px; position: relative;
+  background: #22253a; border-radius: 8px; padding: 8px 4px; cursor: pointer;
+  transition: all .2s ease; display: flex; flex-direction: column; align-items: center; gap: 4px; position: relative;
   border: 2px solid transparent;
 }
-.grid-item:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,.3); }
-.grid-item.selected { box-shadow: 0 0 12px rgba(255,255,255,0.1); }
+.grid-item:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(0,0,0,.35); border-color: #3a3d4e; }
+.grid-item.selected { box-shadow: 0 0 16px rgba(255,255,255,0.12); transform: translateY(-1px); }
 .item-icon {
   width: 52px; height: 52px; display: flex; align-items: center; justify-content: center;
-  background: #1e2030; border-radius: 6px; overflow: hidden; border: 2px solid #3a3d4e;
+  background: #1e2030; border-radius: 8px; overflow: hidden; border: 2px solid #3a3d4e;
+  transition: border-color .2s;
 }
 .item-icon img { max-width: 44px; max-height: 44px; image-rendering: pixelated; }
 .item-name-text { font-size: 12px; font-weight: 600; text-align: center; max-width: 80px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -969,28 +1050,29 @@ body { background: #1a1d28; color: #ccc; font-family: 'Segoe UI', system-ui, san
   background: #1e2030; border-left: 2px solid #2a2d3a;
 }
 .empty-panel { display: flex; align-items: center; justify-content: center; }
-.detail-header { display: flex; gap: 14px; align-items: center; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid #2a2d3a; }
+.detail-header { display: flex; gap: 14px; align-items: center; margin-bottom: 14px; padding-bottom: 14px; border-bottom: 1px solid #2a2d3a; }
 .detail-icon-wrap {
-  width: 68px; height: 68px; border-radius: 10px; display: flex; align-items: center; justify-content: center;
+  width: 68px; height: 68px; border-radius: 12px; display: flex; align-items: center; justify-content: center;
   background: #1e2030; border: 2px solid #3a3d4e; overflow: hidden; flex-shrink: 0;
 }
 .detail-icon-wrap img { max-width: 56px; max-height: 56px; image-rendering: pixelated; }
 .detail-title-wrap { flex: 1; min-width: 0; }
 .detail-title-wrap h2 { font-size: 20px; margin-bottom: 4px; }
 .detail-badges { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; margin-bottom: 2px; }
-.type-badge { font-size: 11px; padding: 3px 8px; border-radius: 3px; color: #fff; line-height: 1.4; font-weight: 600; }
+.type-badge { font-size: 11px; padding: 3px 8px; border-radius: 4px; color: #fff; line-height: 1.4; font-weight: 600; }
 .type-badge.melee { background: #c0392b; }
 .type-badge.ranged { background: #2980b9; }
-.dlc-badge { font-size: 11px; padding: 3px 8px; border-radius: 3px; background: #a855f7; color: #fff; font-weight: 600; }
-.set-badge { font-size: 11px; padding: 3px 8px; border-radius: 3px; background: #3a3d4e; color: #ccc; cursor: help; font-weight: 600; }
+.dlc-badge { font-size: 11px; padding: 3px 8px; border-radius: 4px; background: #a855f7; color: #fff; font-weight: 600; }
+.set-badge { font-size: 11px; padding: 3px 8px; border-radius: 4px; background: #3a3d4e; color: #ccc; cursor: help; font-weight: 600; transition: background .15s; }
+.set-badge:hover { background: #4a4d5e; }
 .detail-price { font-size: 14px; color: #eae2b0; margin-top: 4px; }
 
 /* Tier Tabs */
 .tier-tabs { display: flex; gap: 4px; margin-bottom: 12px; }
-.tier-tab { flex: 1; padding: 7px 0; border: 2px solid #444; background: #22253a; color: #888; border-radius: 4px; cursor: pointer; font-size: 13px; font-weight: 700; transition: all .15s; }
-.tier-tab:hover:not(.disabled) { color: #fff; }
+.tier-tab { flex: 1; padding: 8px 0; border: 2px solid #444; background: #22253a; color: #888; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 700; transition: all .2s; }
+.tier-tab:hover:not(.disabled) { color: #fff; border-color: #555; }
 .tier-tab.active { color: #fff !important; }
-.tier-tab.disabled { opacity: 0.3; cursor: default; border-color: #2a2d3a !important; background: #22253a !important; color: #444 !important; }
+.tier-tab.disabled { opacity: 0.25; cursor: default; border-color: #2a2d3a !important; background: #22253a !important; color: #444 !important; }
 
 /* Set tooltip */
 .set-tooltip-content { font-size: 12px; line-height: 1.6; }
@@ -998,9 +1080,10 @@ body { background: #1a1d28; color: #ccc; font-family: 'Segoe UI', system-ui, san
 .set-tooltip-line { color: #ccc; }
 
 /* Weapon Stat Rows */
-.detail-section { margin-top: 8px; }
-.section-title { font-size: 12px; color: #ff3d3d; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 1px; }
-.weapon-stat-row { display: flex; align-items: center; gap: 8px; padding: 6px 10px; background: #22253a; border-radius: 5px; margin-bottom: 3px; }
+.detail-section { margin-top: 10px; }
+.section-title { font-size: 12px; color: #ff3d3d; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; }
+.weapon-stat-row { display: flex; align-items: center; gap: 8px; padding: 7px 12px; background: #22253a; border-radius: 6px; margin-bottom: 4px; transition: background .15s; }
+.weapon-stat-row:hover { background: #282c44; }
 .ws-label { font-size: 14px; color: #bbb; min-width: 70px; }
 .ws-val { font-size: 15px; color: #eee; font-weight: 600; }
 .crit-dmg { color: #f39c12; font-size: 14px; }
@@ -1011,12 +1094,12 @@ body { background: #1a1d28; color: #ccc; font-family: 'Segoe UI', system-ui, san
 .stat-prefix-icon { width: 13px; height: 13px; vertical-align: middle; image-rendering: pixelated; }
 
 /* Price Section */
-.price-section { margin-top: 12px; padding: 12px 14px; background: #22253a; border-radius: 8px; border: 1px solid #2a2d3a; }
-.price-header { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.price-section { margin-top: 12px; padding: 14px 16px; background: #22253a; border-radius: 8px; border: 1px solid #2a2d3a; }
+.price-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
 .price-label { font-size: 13px; color: #bbb; }
-.price-value { font-size: 16px; font-weight: 800; color: #fff; }
+.price-value { font-size: 18px; font-weight: 800; color: #fff; }
 .price-icon { width: 24px; height: 24px; image-rendering: pixelated; }
-.price-waves { display: flex; gap: 8px; margin-bottom: 8px; flex-wrap: wrap; }
+.price-waves { display: flex; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
 .price-wave { font-size: 14px; color: #bbb; }
 .price-slider-row { display: flex; align-items: center; gap: 10px; }
 .price-slider-label { font-size: 13px; color: #bbb; min-width: 36px; }
@@ -1027,8 +1110,9 @@ body { background: #1a1d28; color: #ccc; font-family: 'Segoe UI', system-ui, san
 .price-slider :deep(.el-slider__button) { border-color: #ff3d3d; }
 
 /* Effects */
-.effects-list { display: flex; flex-direction: column; gap: 3px; }
-.effect-item { padding: 5px 10px; border-radius: 4px; font-size: 13px; background: #22253a; color: #ddd; line-height: 1.5; display: flex; align-items: baseline; gap: 6px; }
+.effects-list { display: flex; flex-direction: column; gap: 4px; }
+.effect-item { padding: 7px 10px; border-radius: 6px; font-size: 13px; background: #22253a; color: #ddd; line-height: 1.5; display: flex; align-items: baseline; gap: 6px; transition: background .15s; }
+.effect-item:hover { background: #282c44; }
 .eff-prefix { flex-shrink: 0; width: 8px; text-align: center; color: #777; display: flex; align-items: center; justify-content: center; line-height: 1; }
 .eff-text { flex: 1; min-width: 0; }
 
@@ -1041,18 +1125,18 @@ body { background: #1a1d28; color: #ccc; font-family: 'Segoe UI', system-ui, san
 
 /* Tags */
 .tags-wrap { display: flex; flex-wrap: wrap; gap: 5px; }
-.tag-badge { font-size: 11px; padding: 3px 8px; border-radius: 3px; background: #2a2d44; color: #bbb; font-weight: 600; line-height: 1.4; display: inline-block; }
-.tag-badge.clickable { cursor: pointer; transition: all .15s; }
+.tag-badge { font-size: 11px; padding: 4px 10px; border-radius: 4px; background: #2a2d44; color: #bbb; font-weight: 600; line-height: 1.4; display: inline-block; transition: all .15s; }
+.tag-badge.clickable { cursor: pointer; }
 .tag-badge.clickable:hover { background: #3a3d58; color: #fff; }
 .weapon-link { background: #2d2d1f; color: #eae2b0; }
 .weapon-link:hover { background: #4a4a2f; color: #fff; }
-.limit-badge { font-size: 11px; padding: 3px 8px; border-radius: 3px; color: #fff; font-weight: 600; line-height: 1.4; }
+.limit-badge { font-size: 11px; padding: 4px 10px; border-radius: 4px; color: #fff; font-weight: 600; line-height: 1.4; }
 .limit-badge.unique { background: #c0392b; }
 .limit-badge.limited { background: #d35400; }
-.tag-pet { background: #2d4a2d; color: #7dff7d; }
-.tag-pet:hover { background: #3d6a3d !important; color: #a0ffa0 !important; }
-.tag-structure { background: #4a3520; color: #ffb74d; }
-.tag-structure:hover { background: #6a4a30 !important; color: #ffcc80 !important; }
+.tag-pet { background: #1e3a1e; color: #6ee76e; }
+.tag-pet:hover { background: #2a4a2a !important; color: #9ef79e !important; }
+.tag-structure { background: #3a2a1a; color: #ffb74d; }
+.tag-structure:hover { background: #4a3520 !important; color: #ffcc80 !important; }
 .tag-tooltip-content { font-size: 12px; line-height: 1.6; max-width: 320px; }
 .tag-tooltip-name { font-weight: bold; margin-bottom: 2px; color: #fff; }
 .tag-tooltip-line { color: #aaa; word-break: break-all; }
@@ -1065,18 +1149,29 @@ body { background: #1a1d28; color: #ccc; font-family: 'Segoe UI', system-ui, san
 .el-input__inner::placeholder { color: #777 !important; }
 .el-select .el-select__caret { color: #888 !important; }
 .el-select .el-input .el-input__suffix .el-icon { color: #888 !important; }
+.el-select .el-input__wrapper { background-color: #22253a !important; border-color: #3a3d4e !important; }
+.el-select .el-tag { background-color: #2a2d3a !important; border-color: #444 !important; color: #ccc !important; }
+/* Prevent browser autofill from overriding dark styles */
+.el-input__inner:-webkit-autofill,
+.el-input__inner:-webkit-autofill:hover,
+.el-input__inner:-webkit-autofill:focus { -webkit-box-shadow: 0 0 0 30px #22253a inset !important; -webkit-text-fill-color: #ccc !important; transition: background-color 5000s ease-in-out 0s; }
 
-/* Dropdown */
+/* Dropdown popper — covers both el-select and el-dropdown */
 .dark-dropdown, .dark-dropdown.el-popper { background-color: #22253a !important; border: 1px solid #3a3d4e !important; border-radius: 6px !important; box-shadow: 0 4px 12px rgba(0,0,0,.4) !important; }
-.dark-dropdown .el-select-dropdown, .dark-dropdown .el-scrollbar, .dark-dropdown .el-scrollbar__wrap, .dark-dropdown .el-scrollbar__view, .dark-dropdown .el-select-dropdown__list { background-color: #22253a !important; }
+.dark-dropdown .el-select-dropdown, .dark-dropdown .el-scrollbar, .dark-dropdown .el-scrollbar__wrap, .dark-dropdown .el-scrollbar__view,
+.dark-dropdown .el-select-dropdown__list, .dark-dropdown .el-dropdown-menu { background-color: #22253a !important; }
 .dark-dropdown .el-popper__arrow::before { background: #22253a !important; border-color: #3a3d4e !important; }
+/* Select dropdown items */
 .dark-dropdown .el-select-dropdown__item { color: #bbb !important; padding: 8px 14px !important; font-size: 13px; transition: background .12s, color .12s; display: flex; align-items: center; min-height: 32px; line-height: 1.2; }
 .dark-dropdown .el-select-dropdown__item:hover { background-color: #2e3148 !important; color: #fff !important; }
 .dark-dropdown .el-select-dropdown__item.is-selected, .dark-dropdown .el-select-dropdown__item.selected { color: #ff3d3d !important; font-weight: 600; }
 .dark-dropdown .el-select-dropdown__item.is-hovering { background-color: #2e3148 !important; }
 .dark-dropdown .el-select-dropdown__empty { color: #777 !important; padding: 10px; }
+/* Dropdown menu items */
+.dark-dropdown .el-dropdown-menu__item { color: #bbb !important; padding: 8px 14px !important; font-size: 13px; transition: background .12s, color .12s; line-height: 1.2; }
+.dark-dropdown .el-dropdown-menu__item:hover { background-color: #2e3148 !important; color: #fff !important; }
+.dark-dropdown .el-dropdown-menu__item.is-active-opt { color: #ff3d3d !important; font-weight: 600; }
 .el-popper.is-dark { background: #22253a !important; border: 1px solid #3a3d4e !important; color: #ccc !important; }
-.el-select .el-tag { background-color: #2a2d3a !important; border-color: #444 !important; color: #ccc !important; }
 .is-active-lang { color: #ff3d3d !important; font-weight: 600; }
 
 /* Scrollbar */
@@ -1089,52 +1184,79 @@ body { background: #1a1d28; color: #ccc; font-family: 'Segoe UI', system-ui, san
 html.light-theme { background: #f0f2f5; }
 body.light-theme { background: #f0f2f5; color: #222; }
 body.light-theme .header { background: #fff; border-bottom-color: #ff3d3d; }
-body.light-theme .title { color: #ff3d3d; }
+body.light-theme .title { color: #ff3d3d; text-shadow: none; }
 body.light-theme .header-btn { background: #e8eaed !important; border-color: #bbb !important; color: #333 !important; }
 body.light-theme .header-btn:hover { background: #d8dade !important; color: #111 !important; }
 body.light-theme .main-tabs { background: #fff; }
-body.light-theme .main-tabs :deep(.el-tabs__nav-wrap::after) { background: #ccc; }
-body.light-theme .main-tabs :deep(.el-tabs__item) { color: #444 !important; background: #e2e4e8; border-color: #ccc; }
-body.light-theme .main-tabs :deep(.el-tabs__item:hover) { color: #222 !important; background: #d8dade; }
-body.light-theme .main-tabs :deep(.el-tabs__item.is-active) { color: #ff3d3d !important; background: #f0f2f5; border-color: #bbb; }
+body.light-theme .el-tabs--card > .el-tabs__header { border-bottom-color: #ccc; background: #fff; }
+body.light-theme .el-tabs--card > .el-tabs__header .el-tabs__item { color: #444 !important; background: #e8eaed; border-color: #ccc; }
+body.light-theme .el-tabs--card > .el-tabs__header .el-tabs__item:hover { color: #222 !important; background: #d5d8de; border-color: #aaa; }
+body.light-theme .el-tabs--card > .el-tabs__header .el-tabs__item.is-active { color: #ff3d3d !important; background: #f0f2f5; border-color: #bbb; }
 body.light-theme .filters { background: #f0f2f5; border-bottom-color: #ccc; }
+body.light-theme .filter-btn { background: #fff !important; border-color: #bbb !important; color: #444 !important; }
+body.light-theme .filter-btn:hover { background: #f0f2f5 !important; border-color: #999 !important; color: #222 !important; }
+body.light-theme .filter-btn.has-value { color: #111 !important; }
 body.light-theme .el-input__wrapper { background-color: #fff !important; border-color: #bbb !important; }
 body.light-theme .el-input__wrapper:hover { border-color: #999 !important; }
 body.light-theme .el-input__inner { color: #222 !important; }
 body.light-theme .el-input__inner::placeholder { color: #666 !important; }
+body.light-theme .el-select .el-input__wrapper { background-color: #fff !important; border-color: #bbb !important; }
+body.light-theme .el-input__inner:-webkit-autofill,
+body.light-theme .el-input__inner:-webkit-autofill:hover,
+body.light-theme .el-input__inner:-webkit-autofill:focus { -webkit-box-shadow: 0 0 0 30px #fff inset !important; -webkit-text-fill-color: #222 !important; }
 body.light-theme .grid-panel { background: #f0f2f5; }
 body.light-theme .grid-item { background: #fff; border-color: transparent; }
-body.light-theme .grid-item:hover { box-shadow: 0 4px 12px rgba(0,0,0,.08); }
+body.light-theme .grid-item:hover { box-shadow: 0 4px 16px rgba(0,0,0,.08); border-color: #ccc; }
+body.light-theme .grid-item.selected { box-shadow: 0 0 12px rgba(0,0,0,.10); }
 body.light-theme .item-icon { background: #f5f6f8; border-color: #ccc; }
 body.light-theme .detail-panel { background: #fff; border-left-color: #ccc; }
 body.light-theme .detail-header { border-bottom-color: #ddd; }
 body.light-theme .detail-icon-wrap { background: #f5f6f8; border-color: #ccc; }
 body.light-theme .set-badge { background: #ddd; color: #333; }
+body.light-theme .set-badge:hover { background: #ccc; }
 body.light-theme .weapon-stat-row { background: #f0f2f5; }
+body.light-theme .weapon-stat-row:hover { background: #e8eaed; }
 body.light-theme .ws-label { color: #444; }
 body.light-theme .ws-val { color: #111; }
 body.light-theme .price-section { background: #f0f2f5; border-color: #ccc; }
 body.light-theme .price-label, body.light-theme .price-wave { color: #444; }
 body.light-theme .price-value { color: #111; }
 body.light-theme .effect-item { background: #f0f2f5; color: #222; }
+body.light-theme .effect-item:hover { background: #e8eaed; }
 body.light-theme .eff-prefix { color: #777; }
 body.light-theme .starting-weapon-card { background: #fff; }
 body.light-theme .starting-weapon-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,.08); }
 body.light-theme .item-name-text { color: #222; }
 body.light-theme .tag-badge { background: #ddd; color: #333; }
 body.light-theme .tag-badge.clickable:hover { background: #ccc; color: #111; }
-body.light-theme .tier-tab { background: #e2e4e8; border-color: #bbb; color: #666; }
-body.light-theme .tier-tab.disabled { border-color: #ccc !important; background: #e2e4e8 !important; color: #bbb !important; }
-body.light-theme .sort-select :deep(.el-input__wrapper) { border-color: #bbb !important; }
-body.light-theme .section-title { color: #ff3d3d; }
-body.light-theme .el-select .el-select__caret { color: #666 !important; }
+body.light-theme .section-title { color: #ff3d3d; font-weight: 700; }
 body.light-theme ::-webkit-scrollbar-track { background: #f0f2f5; }
 body.light-theme ::-webkit-scrollbar-thumb { background: #bbb; }
 body.light-theme ::-webkit-scrollbar-thumb:hover { background: #999; }
 body.light-theme .tag-tooltip-line { color: #555; }
+body.light-theme .set-tooltip-line { color: #555; }
+body.light-theme .set-tooltip-name { color: #111; }
+body.light-theme .ws-scaling { color: #333; }
+body.light-theme .ws-scaling-pct { color: #333; }
+body.light-theme .crit-dmg { color: #c0392b; }
+body.light-theme .ws-attack-type { color: #666; }
+body.light-theme .tier-tab { background: #e2e4e8; border-color: #bbb; color: #666; }
+body.light-theme .tier-tab:not(.disabled):hover { background: #d5d8de; color: #333; }
+body.light-theme .tier-tab.disabled { border-color: #ccc !important; background: #eee !important; color: #ccc !important; }
+body.light-theme .tier-tab.active { color: #fff !important; }
+body.light-theme .tag-pet { background: #e8f5e9; color: #2e7d32; }
+body.light-theme .tag-pet:hover { background: #c8e6c9 !important; color: #1b5e20 !important; }
+body.light-theme .tag-structure { background: #fff3e0; color: #e65100; }
+body.light-theme .tag-structure:hover { background: #ffe0b2 !important; color: #bf360c !important; }
+body.light-theme .el-input.is-focus .el-input__wrapper { border-color: #ff3d3d !important; box-shadow: 0 0 0 1px #ff3d3d inset !important; }
+body.light-theme .el-select .el-select__caret { color: #555 !important; }
+body.light-theme .el-select .el-tag { background-color: #e8eaed !important; border-color: #ccc !important; color: #333 !important; }
 /* Light theme dropdown */
 body.light-theme .dark-dropdown, body.light-theme .dark-dropdown.el-popper { background-color: #fff !important; border-color: #ccc !important; box-shadow: 0 2px 8px rgba(0,0,0,.08) !important; }
-body.light-theme .dark-dropdown .el-select-dropdown, body.light-theme .dark-dropdown .el-scrollbar, body.light-theme .dark-dropdown .el-scrollbar__wrap, body.light-theme .dark-dropdown .el-scrollbar__view, body.light-theme .dark-dropdown .el-select-dropdown__list { background-color: #fff !important; }
+body.light-theme .dark-dropdown .el-select-dropdown, body.light-theme .dark-dropdown .el-scrollbar, body.light-theme .dark-dropdown .el-dropdown-menu, body.light-theme .dark-dropdown .el-dropdown-menu__item { background-color: #fff !important; }
+body.light-theme .dark-dropdown .el-dropdown-menu__item { color: #222 !important; }
+body.light-theme .dark-dropdown .el-dropdown-menu__item:hover { background-color: #f0f2f5 !important; color: #111 !important; }
+body.light-theme .dark-dropdown .el-dropdown-menu__item.is-active-opt { color: #ff3d3d !important; }
 body.light-theme .dark-dropdown .el-popper__arrow::before { background: #fff !important; border-color: #ccc !important; }
 body.light-theme .dark-dropdown .el-select-dropdown__item { color: #222 !important; }
 body.light-theme .dark-dropdown .el-select-dropdown__item:hover { background-color: #f0f2f5 !important; color: #111 !important; }
