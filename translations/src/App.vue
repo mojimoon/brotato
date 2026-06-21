@@ -277,7 +277,7 @@ function handleExport() {
   const url = URL.createObjectURL(blob)
   const a = document.createElement('a')
   a.href = url
-  a.download = `translations_merged_${new Date().toISOString().slice(0, 10)}.json`
+  a.download = `translations_merged.json`
   a.click()
   URL.revokeObjectURL(url)
 

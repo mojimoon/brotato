@@ -16,13 +16,14 @@ from collections import defaultdict
 from pathlib import Path
 
 # ============================================================================
-# 配置
+# 配置 — paths relative to this script's location
 # ============================================================================
-ROOT = Path(r"D:\dev\Brotato-v2")
-BASE_CSV = ROOT / ".assets" / "resources" / "translations" / "translations.csv"
-DLC_CSV = ROOT / ".assets" / "dlcs" / "dlc_1" / "translations" / "translations.csv"
+SCRIPT_DIR = Path(__file__).resolve().parent          # codex/translations/
+PROJECT_ROOT = SCRIPT_DIR.parent.parent               # decompiled game root
+BASE_CSV = PROJECT_ROOT / ".assets" / "resources" / "translations" / "translations.csv"
+DLC_CSV = PROJECT_ROOT / ".assets" / "dlcs" / "dlc_1" / "translations" / "translations.csv"
 
-OUTPUT_DIR = ROOT / "codex" / "translations" / "web" / "public"
+OUTPUT_DIR = SCRIPT_DIR           # merged_analysis.json goes here
 
 # 语言列（en 和 zh 是必须的，其余作为参考）
 LANG_COLS = ["en", "fr", "zh", "ja", "ko", "zh_TW", "ru", "pl", "es", "pt", "de", "tr", "it"]
@@ -366,10 +367,10 @@ def main():
     # 收集 effect tres
     print("\n收集 effect tres...")
     base_effects = collect_effects_for_source(
-        "base", ROOT, ROOT, exclude_dirs=["dlcs"])
+        "base", PROJECT_ROOT, PROJECT_ROOT, exclude_dirs=["dlcs"])
     print(f"基础游戏: {len(base_effects)} 个 effect tres")
 
-    dlc_root = ROOT / "dlcs" / "dlc_1"
+    dlc_root = PROJECT_ROOT / "dlcs" / "dlc_1"
     dlc_effects = collect_effects_for_source("dlc1", dlc_root, dlc_root)
     print(f"DLC1: {len(dlc_effects)} 个 effect tres")
 
