@@ -914,7 +914,7 @@ body { background: #1a1d28; color: #ccc; font-family: 'Segoe UI', system-ui, san
 .item-price-badge {
   position: absolute; top: 3px; left: 3px; font-size: 9px; line-height: 1;
   padding: 2px 5px; border-radius: 4px; font-weight: 500; z-index: 1;
-  background: #2980b9; color: #fff;
+  background: #3a3d4e; color: #fff;
   box-shadow: 0 1px 3px rgba(0,0,0,.35); pointer-events: none;
 }
 .item-dlc-badge { position: absolute; top: 3px; right: 3px; font-size: 8px; padding: 1px 3px; border-radius: 3px; background: #a855f7; color: #fff; font-weight: bold; }
@@ -1072,7 +1072,7 @@ body.light-theme .filters { background: #f0f2f5; border-bottom-color: #ccc; }
 body.light-theme .filter-btn { background: #fff !important; border-color: #bbb !important; color: #444 !important; }
 body.light-theme .filter-btn:hover { background: #f0f2f5 !important; border-color: #999 !important; color: #222 !important; }
 body.light-theme .filter-btn.has-value { color: #111 !important; }
-body.light-theme .item-price-badge { box-shadow: 0 1px 3px rgba(0,0,0,.15); }
+body.light-theme .item-price-badge { box-shadow: 0 1px 3px rgba(0,0,0,.15); background: #ddd; color: #000; }
 body.light-theme .el-input__wrapper { background-color: #fff !important; border-color: #bbb !important; }
 body.light-theme .el-input__wrapper:hover { border-color: #999 !important; }
 body.light-theme .el-input__inner { color: #222 !important; }
