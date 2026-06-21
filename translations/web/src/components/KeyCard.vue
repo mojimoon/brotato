@@ -66,14 +66,16 @@
           原始数据（key / text_key / 出现位置）
         </div>
         <table class="context-table">
-          <tr>
-            <td class="ctx-label">原始 key</td>
-            <td class="mono">{{ entry.key || '(空)' }}</td>
-          </tr>
-          <tr>
-            <td class="ctx-label">text_key</td>
-            <td class="mono">{{ entry.text_key || '(空，使用 key)' }}</td>
-          </tr>
+          <tbody>
+            <tr>
+              <td class="ctx-label">原始 key</td>
+              <td class="mono">{{ entry.key || '(空)' }}</td>
+            </tr>
+            <tr>
+              <td class="ctx-label">text_key</td>
+              <td class="mono">{{ entry.text_key || '(空，使用 key)' }}</td>
+            </tr>
+          </tbody>
         </table>
         <div class="context-files">
           <div v-for="(ctx, i) in entry.sample_contexts" :key="i" class="context-file">
@@ -129,7 +131,7 @@
           <el-button size="small" @click="autoSearch" :icon="MagicStick">自动推荐</el-button>
         </el-tooltip>
         <el-button size="small" text @click="switchToManual">
-          <el-icon><EditPen /></el-icon> 找不到？手动输入
+          <el-icon><EditPen /></el-icon> 手动输入
         </el-button>
       </div>
 
@@ -158,7 +160,7 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, onMounted } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { Search, MagicStick, EditPen } from '@element-plus/icons-vue'
 
 const props = defineProps({
@@ -173,6 +175,7 @@ const emit = defineEmits(['update'])
 const showContext = ref(false)
 const maxSources = 8
 const searchInput = ref('')
+const autoSearchInput = ref('')
 
 // 本地状态
 const status = ref(props.saved?.status || 'unmatched')
@@ -193,13 +196,6 @@ watch(() => props.saved, (val) => {
     editZh.value = ''
   }
 }, { deep: true })
-
-// 初始化时自动推荐一次
-onMounted(() => {
-  if (status.value === 'unmatched') {
-    autoSearch()
-  }
-})
 
 const statusClass = computed(() => ({
   matched: status.value === 'matched',
@@ -231,7 +227,7 @@ const coreKeywords = computed(() => {
 // 候选过滤 + 推荐
 const filteredCandidates = computed(() => {
   let list = props.candidates
-  const q = searchInput.value.trim().toLowerCase()
+  const q = (searchInput.value.trim() || autoSearchInput.value.trim()).toLowerCase()
 
   if (q) {
     const tokens = q.split(/\s+/).filter(Boolean)
@@ -269,7 +265,7 @@ const usedElsewhere = computed(() => {
 })
 
 function autoSearch() {
-  searchInput.value = coreKeywords.value.slice(0, 3).join(' ')
+  autoSearchInput.value = coreKeywords.value.slice(0, 3).join(' ')
 }
 
 function selectCandidate(cand) {
