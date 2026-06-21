@@ -5,8 +5,8 @@ import shutil
 import csv
 from pathlib import Path
 
-BASE_DIR = Path(__file__).parent.parent.parent
-OUTPUT_DIR = BASE_DIR / "tools" / "web" / "public"
+BASE_DIR = Path(__file__).parent.parent
+OUTPUT_DIR = BASE_DIR / "codex" / "public"
 OUTPUT_JSON = OUTPUT_DIR / "data" / "brotato_data.json"
 OUTPUT_ICONS = OUTPUT_DIR / "icons"
 
@@ -69,9 +69,9 @@ def load_merged_translations():
     Each entry has a 'key' (uppercase), 'status' (matched/manual/skipped), 
     and 'en'/'zh' template strings.
     """
-    merged_path = BASE_DIR / "tools" / "web" / "public" / "data" / "translations_merged.json"
+    merged_path = BASE_DIR / "codex" / "public" / "data" / "translations_merged.json"
     if not merged_path.exists():
-        merged_path = BASE_DIR / "translations-fix" / "data" / "translations_merged_2026-06-21.json"
+        merged_path = BASE_DIR / "codex" / "translations" / "data" / "translations_merged_2026-06-21.json"
     if not merged_path.exists():
         print("  WARNING: translations_merged.json not found, skipping")
         return 0
