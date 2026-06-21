@@ -1,5 +1,7 @@
 # Brotato 图鉴
 
+[English](README.md) | [中文](README.zh.md) | [在线图鉴](https://mojimoon.github.io/brotato/)
+
 基于反编译游戏数据构建的 [Brotato](https://store.steampowered.com/app/1942280/Brotato/)（土豆兄弟）网页图鉴。
 
 ## 技术栈
@@ -12,7 +14,7 @@
 
 ### 前置条件
 
-- [GDRE Tools](https://github.com/bruvzg/GDRE) 用于反编译游戏
+- [GDRE Tools](https://github.com/GDRETools/gdsdecomp/releases) 用于反编译游戏
 
 ### 工作流程
 
@@ -22,28 +24,29 @@
 
 # 2. 克隆本仓库到反编译目录下
 cd D:\brotato\decompiled
-git clone <repo-url> codex
+git clone https://github.com/mojimoon/brotato codex
 
 # 3. 预分析缺失的翻译键
-python codex/translations/analyze.py
-#    输出：codex/translations/web/public/merged_analysis.json
+cd codex/translations
+python analyze.py
+#    输出：codex/translations/merged_analysis.json
 
 # 4. 启动翻译补全网页工具
-cd codex/translations
 pnpm install
 pnpm dev
-#    打开 http://localhost:3001
+#    打开 http://localhost:3000
 
 # 5. 在网页工具中：加载 merged_analysis.json，逐条匹配翻译，导出
 #    导出文件位于：codex/public/data/translations_merged.json
 
 # 6. 生成完整的游戏数据
-python codex/main.py
-#    输出：codex/public/data/brotato_data.json（约 728 KB）
-#          codex/public/icons/（游戏图标）
+cd D:\brotato\decompiled
+cd codex
+python main.py
+#    输出：codex/public/data/brotato_data.json
+#          codex/public/icons/
 
 # 7. 构建图鉴网站
-cd codex
 pnpm install
 pnpm build
 #    输出：codex/dist/
@@ -52,7 +55,7 @@ pnpm build
 ### 项目结构
 
 ```
-<反编译游戏根目录>/
+root/
 ├── .assets/                  # 游戏资源（翻译 CSV、图片等）
 ├── weapons/                  # 基础武器（melee/、ranged/）
 ├── items/                    # 基础道具 + 角色
@@ -115,18 +118,3 @@ pnpm build
 - Tab 图标：武器=Aim，道具=Box，角色=User（@element-plus/icons-vue）
 - 语言切换：el-dropdown，按钮内直接写文字（`{{ isZh ? '中' : 'EN' }}`），不用 `:icon` prop
 - `html` 和 `body` 必须设置相同背景色，防止宽屏下两侧露出不同底色
-
-### CSS 注意事项
-
-- 亮色模式覆盖用 `body.light-theme` 前缀，逗号分隔的选择器必须每项都加前缀
-- 深色模式下每个 tab 用独立背景色 + 边框实现视觉分隔
-- 浅色模式 dropdown 阴影应轻量（`0 2px 8px rgba(0,0,0,.1)`）
-- `.el-input__wrapper` 的全局样式覆盖会同时影响搜索框和下拉选择框触发器
-
-### 角色效果硬编码
-
-角色效果的提取数据经常不完整，需要硬编码映射：
-- Tier 转换：0→Ⅰ, 1→Ⅱ, 2→Ⅲ, 3→Ⅳ
-- Convert stat：赛博格 100% 远程伤害→工程学；恶魔 50% 材料→最大生命值
-- Weapon class bonus：按角色映射（brawler→fist, wildling→blunt, diver→naval 等）
-- Piggy bank：波次数硬编码为 20（RunData.nb_of_waves 默认值）

@@ -1,6 +1,8 @@
 # Brotato Codex
 
-A web-based database/encyclopedia for [Brotato](https://store.steampowered.com/app/1942280/Brotato/), built from decompiled game data.
+[English](README.md) | [中文](README.zh.md) | [在线图鉴](https://mojimoon.github.io/brotato/)
+
+A web-based codex for [Brotato](https://store.steampowered.com/app/1942280/Brotato/), built from decompiled game data.
 
 ## Tech Stack
 
@@ -12,7 +14,7 @@ A web-based database/encyclopedia for [Brotato](https://store.steampowered.com/a
 
 ### Prerequisites
 
-- [GDRE Tools](https://github.com/bruvzg/GDRE) to decompile the game
+- [GDRE Tools](https://github.com/GDRETools/gdsdecomp/releases) to decompile the game
 
 ### Workflow
 
@@ -22,28 +24,29 @@ A web-based database/encyclopedia for [Brotato](https://store.steampowered.com/a
 
 # 2. Clone this repo into the decompiled directory
 cd D:\brotato\decompiled
-git clone <repo-url> codex
+git clone https://github.com/mojimoon/brotato codex
 
 # 3. Pre-analyze missing translations
-python codex/translations/analyze.py
-#    Outputs: codex/translations/web/public/merged_analysis.json
+cd codex/translations
+python analyze.py
+#    Outputs: codex/translations/merged_analysis.json
 
 # 4. Start the translation fix web tool
-cd codex/translations
 pnpm install
 pnpm dev
-#    Opens at http://localhost:3001
+#    Opens at http://localhost:3000
 
 # 5. In the web tool: load merged_analysis.json, match translations, export
 #    Exported file goes to: codex/public/data/translations_merged.json
 
 # 6. Generate the full game data
-python codex/main.py
-#    Outputs: codex/public/data/brotato_data.json (~728 KB)
-#             codex/public/icons/ (game icons)
+cd D:\brotato\decompiled
+cd codex
+python main.py
+#    Outputs: codex/public/data/brotato_data.json
+#             codex/public/icons/
 
 # 7. Build the codex website
-cd codex
 pnpm install
 pnpm build
 #    Output: codex/dist/
@@ -52,7 +55,7 @@ pnpm build
 ### Project Structure
 
 ```
-<decompiled game root>/
+root/
 ├── .assets/                  # Game resources (translations CSV, images, etc.)
 ├── weapons/                  # Base weapons (melee/, ranged/)
 ├── items/                    # Base items + characters
