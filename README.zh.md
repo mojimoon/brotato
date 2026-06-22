@@ -4,6 +4,8 @@
 
 基于反编译游戏数据构建的 [Brotato](https://store.steampowered.com/app/1942280/Brotato/)（土豆兄弟）网页图鉴。
 
+![](screenshot.png)
+
 ## 技术栈
 
 - **数据管线**：Python 3 — 解析 Godot `.tres` 资源文件，翻译效果文本，生成 JSON + 图标资源

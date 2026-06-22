@@ -4,6 +4,8 @@
 
 A web-based codex for [Brotato](https://store.steampowered.com/app/1942280/Brotato/), built from decompiled game data.
 
+![](screenshot.png)
+
 ## Tech Stack
 
 - **Data pipeline**: Python 3 — parses Godot `.tres` resource files, translates effect text, generates JSON + icon assets
