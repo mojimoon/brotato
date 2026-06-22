@@ -399,6 +399,7 @@ import { ref, computed, onMounted, nextTick, watch } from 'vue'
 import { Search, Sort, User, Sunny, Moon, Box, Aim, ArrowDown, View, Hide } from '@element-plus/icons-vue'
 
 const BASE = import.meta.env.BASE_URL
+const CDN_BASE = 'https://cdn.jsdmirror.com/gh/mojimoon/brotato@v1.0.0/public/'
 
 // ---- Shared string dictionary ----
 const S = computed(() => isZh.value ? {
@@ -453,7 +454,7 @@ const sortBy = ref('default')
 const showingPrice = ref(true)
 const isDark = ref(true)
 const isMobile = ref(window.innerWidth < 768)
-const priceIconSrc = computed(() => `${BASE}icons/items/materials/harvesting_icon.png`)
+const priceIconSrc = computed(() => `${CDN_BASE}icons/items/materials/harvesting_icon.png`)
 
 watch(isDark, (v) => {
   document.documentElement.classList.toggle('light-theme', !v)
@@ -472,7 +473,7 @@ function tierDisplayName(tier) { return ['T1','T2','T3','T4'][tier] || 'T1' }
 function tierTagType(tier) { return ['info','','warning','danger'][tier] || 'info' }
 
 function itemName(item) { return isZh.value ? item.name_zh : item.name_en }
-function getIconSrc(p) { return p ? `${BASE}icons/${p}` : '' }
+function getIconSrc(p) { return p ? `${CDN_BASE}icons/${p}` : '' }
 
 function statTr(key) {
   const trans = rawData.value.translations || {}
@@ -516,7 +517,7 @@ function renderSetBonusHtml(bonus) {
 
 function getStatIcon(statKey) {
   const map = rawData.value.stat_icons || {}
-  return map[statKey] ? `${BASE}icons/${map[statKey]}` : null
+  return map[statKey] ? `${CDN_BASE}icons/${map[statKey]}` : null
 }
 
 function getWeaponById(wid) { return rawData.value.weapons.find(x => x.id === wid) || null }
@@ -598,9 +599,9 @@ function getSignColor(eff) {
 function resolveStatIcon(iconKey) {
   const fullKey = 'stat_' + iconKey
   const icons = rawData.value.stat_icons || {}
-  if (icons[fullKey]) return `${BASE}icons/${icons[fullKey]}`
-  for (const [k, p] of Object.entries(icons)) {
-    if (k.replace('stat_', '') === iconKey) return `${BASE}icons/${p}`
+    if (icons[fullKey]) return `${CDN_BASE}icons/${icons[fullKey]}`
+    for (const [k, p] of Object.entries(icons)) {
+      if (k.replace('stat_', '') === iconKey) return `${CDN_BASE}icons/${p}`
   }
   return null
 }
@@ -877,7 +878,7 @@ function onTabChange() {
 }
 
 onMounted(async () => {
-  const resp = await fetch(BASE + 'data/brotato_data.json')
+  const resp = await fetch(CDN_BASE + 'data/brotato_data.json')
   rawData.value = await resp.json()
 })
 </script>
