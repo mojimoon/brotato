@@ -326,18 +326,28 @@
 
         <!-- Shared: Price Section (weapons & items) -->
         <div v-if="showPriceSection" class="detail-section price-section">
-          <div class="price-formula">
+          <div v-if="showPriceEnabled" class="price-formula">
+            <span class="price-label">{{ S.basePrice }}</span>
+            <div class="price-formula-value">
+              <span class="price-base">{{ getBasePrice() }}</span>
+              <img :src="BASE + 'icons/items/materials/harvesting_icon.png'" class="price-icon" />
+            </div>
+            <span class="price-label price-incr-row">{{ S.belowNightmare }}</span>
+            <div class="price-formula-value price-incr-row">
+              <span>+{{ formatIncr(getWaveIncrement()) }}</span>
+              <span v-if="waveSlider > 0">×{{ waveSlider }}=</span>
+              <span v-if="waveSlider > 0" class="price-final">{{ computedPrice }}</span>
+            </div>
+            <span class="price-label price-incr-row">{{ S.nightmare }}</span>
+            <div class="price-formula-value price-incr-row price-nightmare">
+              <span>+{{ formatIncr(getWaveIncrementD6()) }}</span>
+              <span v-if="waveSlider > 0">×{{ waveSlider }}=</span>
+              <span v-if="waveSlider > 0" class="price-final">{{ computedPriceD6 }}</span>
+            </div>
+          </div>
+          <div v-else>
             <span class="price-label">{{ S.basePrice }}</span>
             <span class="price-base">{{ getBasePrice() }}</span>
-            <!-- <template v-if="showPriceEnabled"> -->
-              <span class="price-op">(+</span>
-              <span class="price-incr">{{ getWaveIncrement().toFixed(1) }}</span>
-              <template v-if="waveSlider > 0">
-                <span class="price-op"> × {{ waveSlider }}) =</span>
-                <span class="price-final">{{ computedPrice }}</span>
-              </template>
-              <span v-else class="price-op">)</span>
-            <!-- </template> -->
             <img :src="BASE + 'icons/items/materials/harvesting_icon.png'" class="price-icon" />
           </div>
           <table v-if="showPriceEnabled" class="price-table">
@@ -345,12 +355,19 @@
               <tr><th>{{ S.wave }}</th><th>1</th><th>4</th><th>8</th><th>14</th><th>19</th></tr>
             </thead>
             <tbody>
-              <tr><td>{{ S.price }}</td>
+              <tr><td>{{ S.belowNightmare }}</td>
                 <td>{{ showPriceCell(1) ? priceAtWave(1) : '—' }}</td>
                 <td>{{ showPriceCell(4) ? priceAtWave(4) : '—' }}</td>
                 <td>{{ priceAtWave(8) }}</td>
                 <td>{{ priceAtWave(14) }}</td>
                 <td>{{ priceAtWave(19) }}</td>
+              </tr>
+              <tr><td>{{ S.nightmare }}</td>
+                <td>{{ showPriceCell(1) ? priceAtWaveD6(1) : '—' }}</td>
+                <td>{{ showPriceCell(4) ? priceAtWaveD6(4) : '—' }}</td>
+                <td>{{ priceAtWaveD6(8) }}</td>
+                <td>{{ priceAtWaveD6(14) }}</td>
+                <td>{{ priceAtWaveD6(19) }}</td>
               </tr>
             </tbody>
           </table>
@@ -400,6 +417,7 @@ const S = computed(() => isZh.value ? {
   effects: '效果', startingWeapons: '起始武器', preferredTags: '偏好标签',
   unique: '独特', limited: '限制',
   clickToSee: '点击左侧查看详情',
+  belowNightmare: '难度0-5', nightmare: '噩梦'
 } : {
   weapons: 'Weapons', items: 'Items', characters: 'Characters',
   search: 'Search...', all: 'All', tier: 'Rarity', type: 'Type',
@@ -413,6 +431,7 @@ const S = computed(() => isZh.value ? {
   effects: 'Effects', startingWeapons: 'Starting Weapons', preferredTags: 'Preferred Tags',
   unique: 'Unique', limited: 'Limited',
   clickToSee: 'Click to see details',
+  belowNightmare: 'Danger 0-5', nightmare: 'Nightmare'
 })
 
 // ---- Reactivity ----
@@ -519,7 +538,6 @@ const TAG_TRANSLATIONS = {
   stat_percent_damage: { en: '% Damage', zh: '%伤害' }, stat_range: { en: 'Range', zh: '范围' },
   stat_ranged_damage: { en: 'Ranged Damage', zh: '远程伤害' }, stat_speed: { en: 'Speed', zh: '速度' },
   structure: { en: 'Structure', zh: '构筑物' }, xp_gain: { en: 'XP Gain', zh: '经验获取' },
-  pet_or_tongue: { en: 'Pet/Tongue', zh: '宠物/舌头' },
 }
 
 function tagTr(tag) {
@@ -769,10 +787,18 @@ function priceAtWave(wave) {
   return Math.floor(bp + wave + (bp * wave * 0.1))
 }
 
+function priceAtWaveD6(wave) {
+  const bp = getBasePrice()
+  return Math.floor(bp + wave + (bp * wave * 0.11))
+}
+
 const computedPrice = computed(() => priceAtWave(waveSlider.value))
+const computedPriceD6 = computed(() => priceAtWaveD6(waveSlider.value))
 const showPriceSection = computed(() => (activeTab.value === 'weapons' || activeTab.value === 'items') && getBasePrice() > 1)
 
 function getWaveIncrement() { return getBasePrice() * 0.1 + 1 }
+
+function getWaveIncrementD6() { return getBasePrice() * 0.11 + 1 }
 
 function getCurrentTier() {
   if (activeTab.value === 'weapons') return activeWeaponData.value?.tier ?? 0
@@ -788,6 +814,11 @@ function showPriceCell(wave) {
 }
 
 const waveSliderMarks = computed(() => ({ 1:'1', 4:'4', 8:'8', 14:'14', 19:'19' }))
+
+function formatIncr(v) {
+  // up to 2 decimal places, remove trailing zeros
+  return v.toFixed(2).replace(/\.?0+$/, '')
+}
 
 // ---- Selection ----
 function selectItem(item) {
@@ -1045,7 +1076,9 @@ body { background: #1a1d28; color: #ccc; font-family: 'Segoe UI', system-ui, san
 
 /* Price Section */
 .price-section { margin-top: 12px; padding: 14px 16px; background: #22253a; border-radius: 8px; border: 1px solid #2a2d3a; display: flex; flex-wrap: wrap; gap: 10px 14px; align-items: flex-start; }
-.price-formula { display: flex; align-items: baseline; gap: 4px; flex-wrap: wrap; flex: 1 1 320px; min-width: 0; margin-bottom: 0; }
+.price-formula { display: grid; grid-template-columns: auto 1fr; gap: 4px; align-items: baseline; flex: 1 1 320px; min-width: 0; margin-bottom: 0; }
+.price-formula-value { display: flex; align-items: baseline; gap: 4px; }
+.price-incr-row { font-size: 13px; gap: 0; color: #ccc; }
 .price-label { font-size: 13px; margin-right: 8px; color: #bbb; }
 .price-base { font-size: 16px; font-weight: 700; color: #fff; }
 .price-final { font-size: 16px; font-weight: 700; color: #eae2b0; }
@@ -1208,6 +1241,7 @@ body.light-theme .price-base { color: #111; }
 body.light-theme .price-final { color: #b45309; }
 body.light-theme .price-incr { color: #444; }
 body.light-theme .price-op { color: #777; }
+body.light-theme .price-incr-row { color: #444; }
 body.light-theme .price-table th, body.light-theme .price-table td { border-color: #ccc; }
 body.light-theme .price-table th { color: #777; }
 body.light-theme .price-table td { color: #222; }
