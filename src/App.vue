@@ -121,8 +121,8 @@
         </template>
       </el-dropdown>
 
-      <el-button v-if="activeTab === 'weapons' || activeTab === 'items'" class="filter-btn price-toggle-btn" :class="{ 'has-value': showPriceEnabled }" @click="showPriceEnabled = !showPriceEnabled">
-        <el-icon style="margin-right:4px"><View v-if="showPriceEnabled" /><Hide v-else /></el-icon>
+      <el-button v-if="activeTab === 'weapons' || activeTab === 'items'" class="filter-btn price-toggle-btn" :class="{ 'has-value': showingPrice }" @click="showingPrice = !showingPrice">
+        <el-icon style="margin-right:4px"><View v-if="showingPrice" /><Hide v-else /></el-icon>
         {{ S.price }}
       </el-button>
     </div>
@@ -326,52 +326,55 @@
 
         <!-- Shared: Price Section (weapons & items) -->
         <div v-if="showPriceSection" class="detail-section price-section">
-          <div v-if="showPriceEnabled" class="price-formula">
-            <span class="price-label">{{ S.basePrice }}</span>
-            <div class="price-formula-value">
-              <span class="price-base">{{ getBasePrice() }}</span>
-              <img :src="BASE + 'icons/items/materials/harvesting_icon.png'" class="price-icon" />
-            </div>
-            <span class="price-label price-incr-row">{{ S.belowNightmare }}</span>
-            <div class="price-formula-value price-incr-row">
-              <span>+{{ formatIncr(getWaveIncrement()) }}</span>
-              <span v-if="waveSlider > 0">×{{ waveSlider }}=</span>
-              <span v-if="waveSlider > 0" class="price-final">{{ computedPrice }}</span>
-            </div>
-            <span class="price-label price-incr-row">{{ S.nightmare }}</span>
-            <div class="price-formula-value price-incr-row price-nightmare">
-              <span>+{{ formatIncr(getWaveIncrementD6()) }}</span>
-              <span v-if="waveSlider > 0">×{{ waveSlider }}=</span>
-              <span v-if="waveSlider > 0" class="price-final">{{ computedPriceD6 }}</span>
-            </div>
-          </div>
-          <div v-else>
-            <span class="price-label">{{ S.basePrice }}</span>
-            <span class="price-base">{{ getBasePrice() }}</span>
-            <img :src="BASE + 'icons/items/materials/harvesting_icon.png'" class="price-icon" />
-          </div>
-          <table v-if="showPriceEnabled" class="price-table">
+          <table class="price-table">
             <thead>
-              <tr><th>{{ S.wave }}</th><th>1</th><th>4</th><th>8</th><th>14</th><th>19</th></tr>
+              <tr>
+                <th></th>
+                <th></th>
+                <th>{{ S.wave }} {{ waveSlider }}</th>
+                <th>1</th>
+                <th>4</th>
+                <th>8</th>
+                <th>14</th>
+                <th>19</th>
+              </tr>
             </thead>
             <tbody>
-              <tr><td>{{ S.belowNightmare }}</td>
-                <td>{{ showPriceCell(1) ? priceAtWave(1) : '—' }}</td>
-                <td>{{ showPriceCell(4) ? priceAtWave(4) : '—' }}</td>
+              <tr>
+                <td>{{ isMobile ? S.basePriceShort : S.basePrice }}</td>
+                <td class="price-base">{{ getBasePrice() }}
+                  <img v-if="!isMobile" :src="priceIconSrc" class="price-icon" />
+                </td>
+                <td></td>
+                <td>{{ priceAtWave(1) }}</td>
+                <td>{{ priceAtWave(4) }}</td>
                 <td>{{ priceAtWave(8) }}</td>
                 <td>{{ priceAtWave(14) }}</td>
                 <td>{{ priceAtWave(19) }}</td>
               </tr>
-              <tr><td>{{ S.nightmare }}</td>
-                <td>{{ showPriceCell(1) ? priceAtWaveD6(1) : '—' }}</td>
-                <td>{{ showPriceCell(4) ? priceAtWaveD6(4) : '—' }}</td>
+              <tr>
+                <td>{{ isMobile ? S.belowNightmareShort : S.belowNightmare }}</td>
+                <td>+{{ formatIncr(getWaveIncrement()) }}</td>
+                <td class="price-base price-final">{{ waveSlider > 0 ? computedPrice : getBasePrice() }}</td>
+                <td>{{ priceAtWave(1) }}</td>
+                <td>{{ priceAtWave(4) }}</td>
+                <td>{{ priceAtWave(8) }}</td>
+                <td>{{ priceAtWave(14) }}</td>
+                <td>{{ priceAtWave(19) }}</td>
+              </tr>
+              <tr>
+                <td>{{ isMobile ? S.nightmareShort : S.nightmare }}</td>
+                <td>+{{ formatIncr(getWaveIncrementD6()) }}</td>
+                <td class="price-base price-final-nightmare">{{ waveSlider > 0 ? computedPriceD6 : getBasePrice() }}</td>
+                <td>{{ priceAtWaveD6(1) }}</td>
+                <td>{{ priceAtWaveD6(4) }}</td>
                 <td>{{ priceAtWaveD6(8) }}</td>
                 <td>{{ priceAtWaveD6(14) }}</td>
                 <td>{{ priceAtWaveD6(19) }}</td>
               </tr>
             </tbody>
           </table>
-          <div v-if="showPriceEnabled" class="price-slider-row">
+          <div class="price-slider-row">
             <span class="price-label">{{ S.wave }}</span>
             <el-slider v-model="waveSlider" :min="0" :max="20" :step="1" :marks="waveSliderMarks" class="price-slider" placement="bottom" />
           </div>
@@ -417,7 +420,8 @@ const S = computed(() => isZh.value ? {
   effects: '效果', startingWeapons: '起始武器', preferredTags: '偏好标签',
   unique: '独特', limited: '限制',
   clickToSee: '点击左侧查看详情',
-  belowNightmare: '难度0-5', nightmare: '噩梦'
+  belowNightmare: '难度0-5', nightmare: '噩梦',
+  basePriceShort: '价格', belowNightmareShort: '难0-5', nightmareShort: '噩梦'
 } : {
   weapons: 'Weapons', items: 'Items', characters: 'Characters',
   search: 'Search...', all: 'All', tier: 'Rarity', type: 'Type',
@@ -431,7 +435,8 @@ const S = computed(() => isZh.value ? {
   effects: 'Effects', startingWeapons: 'Starting Weapons', preferredTags: 'Preferred Tags',
   unique: 'Unique', limited: 'Limited',
   clickToSee: 'Click to see details',
-  belowNightmare: 'Danger 0-5', nightmare: 'Nightmare'
+  belowNightmare: 'Danger 0-5', nightmare: 'Nightmare',
+  basePriceShort: 'Price', belowNightmareShort: 'D0-5', nightmareShort: 'NM'
 })
 
 // ---- Reactivity ----
@@ -451,8 +456,10 @@ const waveSlider = ref(0)
 const stickyTierIndex = ref(0)
 const filterTag = ref(null)
 const sortBy = ref('default')
-const showPriceEnabled = ref(true)
+const showingPrice = ref(true)
 const isDark = ref(true)
+const isMobile = ref(window.innerWidth < 768)
+const priceIconSrc = computed(() => `${BASE}icons/items/materials/harvesting_icon.png`)
 
 watch(isDark, (v) => {
   document.documentElement.classList.toggle('light-theme', !v)
@@ -777,7 +784,7 @@ function getListPrice(item) {
 }
 
 function shouldShowCardPrice(item) {
-  if (!showPriceEnabled.value) return false
+  if (!showingPrice.value) return false
   if (activeTab.value !== 'weapons' && activeTab.value !== 'items') return false
   return getListPrice(item) > 1
 }
@@ -1075,24 +1082,19 @@ body { background: #1a1d28; color: #ccc; font-family: 'Segoe UI', system-ui, san
 .stat-prefix-icon { width: 13px; height: 13px; vertical-align: middle; image-rendering: pixelated; }
 
 /* Price Section */
-.price-section { margin-top: 12px; padding: 14px 16px; background: #22253a; border-radius: 8px; border: 1px solid #2a2d3a; display: flex; flex-wrap: wrap; gap: 10px 14px; align-items: flex-start; }
-.price-formula { display: grid; grid-template-columns: auto 1fr; gap: 4px; align-items: baseline; flex: 1 1 320px; min-width: 0; margin-bottom: 0; }
-.price-formula-value { display: flex; align-items: baseline; gap: 4px; }
-.price-incr-row { font-size: 13px; gap: 0; color: #ccc; }
-.price-label { font-size: 13px; margin-right: 8px; color: #bbb; }
+.price-section { margin-top: 12px; padding: 14px 16px; background: #22253a; border-radius: 8px; border: 1px solid #2a2d3a; }
+.price-table { width: 100%; border-collapse: collapse; margin-bottom: 12px; font-size: 13px; }
+.price-table th, .price-table td { padding: 6px 10px; text-align: center; border: 1px solid #2a2d3a; }
+.price-table th { color: #888; font-weight: 600; background: #1e2030; }
+.price-table td { color: #ddd; }
+.price-table .price-bold { font-weight: 700; color: #fff; }
 .price-base { font-size: 16px; font-weight: 700; color: #fff; }
-.price-final { font-size: 16px; font-weight: 700; color: #eae2b0; }
-.price-incr { font-size: 13px; color: #ccc; }
-.price-op { font-size: 13px; color: #888; }
+.price-final { color: #f39c12 !important; }
+.price-final-nightmare { color: #ff3d3d !important; }
 .price-icon { width: 18px; height: 18px; image-rendering: pixelated; vertical-align: middle; }
 
-.price-table { width: 100%; max-width: 50%; flex: 1 1 280px; border-collapse: collapse; margin-bottom: 0; font-size: 13px; }
-.price-table th, .price-table td { padding: 5px 8px; text-align: center; border: 1px solid #2a2d3a; }
-.price-table th { color: #888; font-weight: 600; }
-.price-table td { color: #ddd; }
-
-.price-slider-row { display: flex; align-items: center; gap: 12px; width: 100%; }
-.price-label { flex-shrink: 0; white-space: nowrap; }
+.price-slider-row { display: flex; align-items: center; gap: 12px; }
+.price-label { flex-shrink: 0; white-space: nowrap; font-size: 13px; color: #bbb; }
 .price-slider { --el-slider-height: 4px; flex: 1; min-width: 0; }
 .price-slider :deep(.el-slider__runway) { background: #2a2d3a; margin: 0; }
 .price-slider :deep(.el-slider__bar) { background: #ff3d3d; }
@@ -1238,12 +1240,10 @@ body.light-theme .ws-val { color: #111; }
 body.light-theme .price-section { background: #f0f2f5; border-color: #ccc; }
 body.light-theme .price-label { color: #444; }
 body.light-theme .price-base { color: #111; }
-body.light-theme .price-final { color: #b45309; }
-body.light-theme .price-incr { color: #444; }
-body.light-theme .price-op { color: #777; }
-body.light-theme .price-incr-row { color: #444; }
+body.light-theme .price-final { color: #1e88e5 !important; }
+body.light-theme .price-final-nightmare { color: #e53935 !important; }
 body.light-theme .price-table th, body.light-theme .price-table td { border-color: #ccc; }
-body.light-theme .price-table th { color: #777; }
+body.light-theme .price-table th { color: #777; background: #e8eaed; }
 body.light-theme .price-table td { color: #222; }
 body.light-theme .price-slider :deep(.el-slider__runway) { background: #ccc; }
 body.light-theme .price-slider :deep(.el-slider__marks-text) { color: #888; }
