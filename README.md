@@ -1,10 +1,12 @@
 # Brotato Codex
 
-[English](README.md) | [中文](README.zh.md) | [在线图鉴](https://mojimoon.github.io/brotato/)
+[English](README.md) | [中文](README.zh.md)
+
+## [Try it online](https://mojimoon.github.io/brotato/)
 
 A web-based codex for [Brotato](https://store.steampowered.com/app/1942280/Brotato/), built from decompiled game data.
 
-![](screenshot.png)
+![](images/screenshot.png)
 
 ## Tech Stack
 

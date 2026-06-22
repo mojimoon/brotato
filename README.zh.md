@@ -1,10 +1,12 @@
 # Brotato 图鉴
 
-[English](README.md) | [中文](README.zh.md) | [在线图鉴](https://mojimoon.github.io/brotato/)
+[English](README.md) | [中文](README.zh.md)
+
+## [在线使用](https://mojimoon.github.io/brotato/)
 
 基于反编译游戏数据构建的 [Brotato](https://store.steampowered.com/app/1942280/Brotato/)（土豆兄弟）网页图鉴。
 
-![](screenshot.png)
+![](images/screenshot_zh.png)
 
 ## 技术栈
 
