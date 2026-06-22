@@ -326,11 +326,17 @@
 
         <!-- Shared: Price Section (weapons & items) -->
         <div v-if="showPriceSection" class="detail-section price-section">
-          <table class="price-table">
+          <div class="price-row">
+            <span class="price-label">{{ S.basePrice }}</span>
+            <span class="price-base">{{ getBasePrice() }}
+              <img :src="priceIconSrc" class="price-icon" />
+            </span>
+          </div>
+          <table v-if="showingPrice" class="price-table">
             <thead>
               <tr>
                 <th></th>
-                <th></th>
+                <th>{{ S.perWave }}</th>
                 <th>{{ S.wave }} {{ waveSlider }}</th>
                 <th>1</th>
                 <th>4</th>
@@ -340,18 +346,6 @@
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>{{ isMobile ? S.basePriceShort : S.basePrice }}</td>
-                <td class="price-base">{{ getBasePrice() }}
-                  <img v-if="!isMobile" :src="priceIconSrc" class="price-icon" />
-                </td>
-                <td></td>
-                <td>{{ priceAtWave(1) }}</td>
-                <td>{{ priceAtWave(4) }}</td>
-                <td>{{ priceAtWave(8) }}</td>
-                <td>{{ priceAtWave(14) }}</td>
-                <td>{{ priceAtWave(19) }}</td>
-              </tr>
               <tr>
                 <td>{{ isMobile ? S.belowNightmareShort : S.belowNightmare }}</td>
                 <td>+{{ formatIncr(getWaveIncrement()) }}</td>
@@ -374,8 +368,8 @@
               </tr>
             </tbody>
           </table>
-          <div class="price-slider-row">
-            <span class="price-label">{{ S.wave }}</span>
+          <div v-if="showingPrice" class="price-slider-row">
+            <span class="wave-label">{{ S.wave }}</span>
             <el-slider v-model="waveSlider" :min="0" :max="20" :step="1" :marks="waveSliderMarks" class="price-slider" placement="bottom" />
           </div>
         </div>
@@ -421,7 +415,7 @@ const S = computed(() => isZh.value ? {
   unique: '独特', limited: '限制',
   clickToSee: '点击左侧查看详情',
   belowNightmare: '难度0-5', nightmare: '噩梦',
-  basePriceShort: '价格', belowNightmareShort: '难0-5', nightmareShort: '噩梦'
+  basePriceShort: '价格', belowNightmareShort: '难5', nightmareShort: '噩梦'
 } : {
   weapons: 'Weapons', items: 'Items', characters: 'Characters',
   search: 'Search...', all: 'All', tier: 'Rarity', type: 'Type',
@@ -436,7 +430,7 @@ const S = computed(() => isZh.value ? {
   unique: 'Unique', limited: 'Limited',
   clickToSee: 'Click to see details',
   belowNightmare: 'Danger 0-5', nightmare: 'Nightmare',
-  basePriceShort: 'Price', belowNightmareShort: 'D0-5', nightmareShort: 'NM'
+  basePriceShort: 'Price', belowNightmareShort: 'D5', nightmareShort: 'NM'
 })
 
 // ---- Reactivity ----
@@ -1094,7 +1088,8 @@ body { background: #1a1d28; color: #ccc; font-family: 'Segoe UI', system-ui, san
 .price-icon { width: 18px; height: 18px; image-rendering: pixelated; vertical-align: middle; }
 
 .price-slider-row { display: flex; align-items: center; gap: 12px; }
-.price-label { flex-shrink: 0; white-space: nowrap; font-size: 13px; color: #bbb; }
+.price-label { font-size: 13px; color: #bbb; margin: 0 8px 8px 0; }
+.wave-label { flex-shrink: 0; white-space: nowrap; font-size: 13px; color: #bbb; margin-right: 8px; }
 .price-slider { --el-slider-height: 4px; flex: 1; min-width: 0; }
 .price-slider :deep(.el-slider__runway) { background: #2a2d3a; margin: 0; }
 .price-slider :deep(.el-slider__bar) { background: #ff3d3d; }
@@ -1239,6 +1234,7 @@ body.light-theme .ws-label { color: #444; }
 body.light-theme .ws-val { color: #111; }
 body.light-theme .price-section { background: #f0f2f5; border-color: #ccc; }
 body.light-theme .price-label { color: #444; }
+body.light-theme .wave-label { color: #444; }
 body.light-theme .price-base { color: #111; }
 body.light-theme .price-final { color: #1e88e5 !important; }
 body.light-theme .price-final-nightmare { color: #e53935 !important; }
