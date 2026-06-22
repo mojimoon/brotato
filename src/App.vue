@@ -1020,12 +1020,12 @@ body { background: #1a1d28; color: #ccc; font-family: 'Segoe UI', system-ui, san
 .item-icon img { max-width: 44px; max-height: 44px; image-rendering: pixelated; }
 .item-name-text { font-size: 12px; font-weight: 600; text-align: center; max-width: 80px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .item-price-badge {
-  position: absolute; top: 3px; left: 3px; font-size: 9px; line-height: 1;
+  position: absolute; top: 3px; left: 3px; font-size: 12px; line-height: 1;
   padding: 2px 5px; border-radius: 4px; font-weight: 500; z-index: 1;
   background: #3a3d4e; color: #fff;
   box-shadow: 0 1px 3px rgba(0,0,0,.35); pointer-events: none;
 }
-.item-dlc-badge { position: absolute; top: 3px; right: 3px; font-size: 8px; padding: 1px 3px; border-radius: 3px; background: #a855f7; color: #fff; font-weight: bold; }
+.item-dlc-badge { position: absolute; top: 3px; right: 3px; font-size: 11px; padding: 1px 3px; border-radius: 3px; background: #a855f7; color: #fff; font-weight: 500; }
 
 /* Detail Panel */
 .detail-panel {
