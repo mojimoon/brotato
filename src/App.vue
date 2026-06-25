@@ -430,9 +430,9 @@
 import { ref, computed, onMounted, nextTick, watch } from 'vue'
 import { Search, Sort, User, Sunny, Moon, Box, Aim, ArrowDown, View, Hide } from '@element-plus/icons-vue'
 import { Line } from 'vue-chartjs'
-import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Tooltip } from 'chart.js'
+import { Chart as ChartJS, LinearScale, PointElement, LineElement, Tooltip } from 'chart.js'
 
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Tooltip)
+ChartJS.register(LinearScale, PointElement, LineElement, Tooltip)
 
 const BASE = import.meta.env.MODE === 'production'
   ? 'https://cdn.jsdmirror.com/gh/mojimoon/brotato@v1.1.0/public/'
@@ -504,20 +504,18 @@ const statRangeSlider = ref(0)
 
 const chartData = computed(() => {
   const stats = activeWeaponData.value?.stats
-  if (!stats) return { labels: [], datasets: [] }
+  if (!stats) return { datasets: [] }
 
   const minAtkSpd = -100
   const maxAtkSpd = 200
   const hasRange = activeWeaponData.value?.type === 'melee' && statRangeSlider.value !== 0
-  const labels = []
-  const mainValues = []
-  const baseValues = []
+  const mainPoints = []
+  const basePoints = []
 
-  for (let atkSpd = minAtkSpd; atkSpd <= maxAtkSpd; atkSpd += 5) {
-    labels.push(atkSpd)
-    mainValues.push(calculateCooldownWithAttackSpeed(stats.cooldown, stats.animation_cooldown || 0, atkSpd, statRangeSlider.value))
+  for (let atkSpd = minAtkSpd; atkSpd <= maxAtkSpd; atkSpd += 1) {
+    mainPoints.push({ x: atkSpd, y: calculateCooldownWithAttackSpeed(stats.cooldown, stats.animation_cooldown || 0, atkSpd, statRangeSlider.value) })
     if (hasRange) {
-      baseValues.push(calculateCooldownWithAttackSpeed(stats.cooldown, stats.animation_cooldown || 0, atkSpd, 0))
+      basePoints.push({ x: atkSpd, y: calculateCooldownWithAttackSpeed(stats.cooldown, stats.animation_cooldown || 0, atkSpd, 0) })
     }
   }
 
@@ -525,7 +523,7 @@ const chartData = computed(() => {
   const datasets = []
   if (hasRange) {
     datasets.push({
-      data: baseValues,
+      data: basePoints,
       borderColor: dark ? '#888' : '#bbb',
       borderWidth: 1.5,
       pointRadius: 0,
@@ -533,14 +531,14 @@ const chartData = computed(() => {
     })
   }
   datasets.push({
-    data: mainValues,
+    data: mainPoints,
     borderColor: dark ? '#4ade80' : '#22c55e',
     borderWidth: 2,
     pointRadius: 0,
     tension: 0.3,
   })
 
-  return { labels, datasets }
+  return { datasets }
 })
 
 const baseCooldownLinePlugin = {
@@ -555,7 +553,7 @@ const baseCooldownLinePlugin = {
     ctx.save()
     ctx.beginPath()
     ctx.setLineDash([6, 3])
-    ctx.strokeStyle = isDark.value ? '#888' : '#bbb'
+    ctx.strokeStyle = isDark.value ? '#f87171' : '#ef4444'
     ctx.lineWidth = 1
     ctx.moveTo(chart.chartArea.left, y)
     ctx.lineTo(chart.chartArea.right, y)
@@ -567,13 +565,27 @@ const baseCooldownLinePlugin = {
 const currentPointPlugin = {
   id: 'currentPoint',
   afterDraw(chart) {
-    const labels = chart.data.labels
-    if (!labels || !labels.length) return
-    const idx = labels.indexOf(attackSpeedSlider.value)
-    if (idx < 0) return
-    const meta = chart.getDatasetMeta(chart.data.datasets.length - 1)
-    if (!meta.data[idx]) return
-    const { x, y } = meta.data[idx]
+    const xScale = chart.scales.x
+    const yScale = chart.scales.y
+    if (!xScale || !yScale || !chart.chartArea) return
+
+    const val = attackSpeedSlider.value
+    const datasets = chart.data.datasets
+    if (!datasets.length) return
+
+    const lastDs = datasets[datasets.length - 1].data
+    if (!lastDs || !lastDs.length) return
+
+    let closest = lastDs[0]
+    let minDist = Infinity
+    lastDs.forEach(pt => {
+      const d = Math.abs(pt.x - val)
+      if (d < minDist) { minDist = d; closest = pt }
+    })
+    if (!closest) return
+
+    const x = xScale.getPixelForValue(closest.x)
+    const y = yScale.getPixelForValue(closest.y)
     const ctx = chart.ctx
     ctx.save()
     ctx.beginPath()
@@ -586,6 +598,7 @@ const currentPointPlugin = {
 
 const chartOptions = computed(() => {
   const dark = isDark.value
+  const _atkSpd = attackSpeedSlider.value // dependency so chart re-renders on slider change
   return {
     responsive: true,
     maintainAspectRatio: true,
@@ -597,19 +610,22 @@ const chartOptions = computed(() => {
         mode: 'index',
         intersect: false,
         callbacks: {
-          label: (ctx) => ctx.parsed.y.toFixed(3) + 's',
+          label: (ctx) => ctx.parsed.y.toFixed(3),
         },
       },
     },
     scales: {
       x: {
+        type: 'linear',
+        min: -100,
+        max: 200,
         grid: { color: dark ? '#333' : '#e5e5e5' },
-        ticks: { color: dark ? '#aaa' : '#666', font: { size: 10 }, autoSkipPadding: 5 },
+        ticks: { color: dark ? '#aaa' : '#666', font: { size: 10 }, stepSize: 25 },
       },
       y: {
         min: 0,
         grid: { color: dark ? '#333' : '#e5e5e5' },
-        ticks: { color: dark ? '#aaa' : '#666', font: { size: 10 }, callback: (v) => v.toFixed(1) },
+        ticks: { color: dark ? '#aaa' : '#666', font: { size: 10 }, callback: (v) => v.toFixed(2) },
       },
     },
   }
@@ -946,14 +962,16 @@ function formatCooldown(seconds) {
 
 function calculateCooldownWithAttackSpeed(baseCooldownFrames, animationCooldown, attackSpeed, statRange, rangeOverride) {
   const atkSpd = attackSpeed / 100
-  const baseCooldown = baseCooldownFrames / 60
+  const MIN_CD = 2
 
-  let attackCooldown
+  let attackCooldownFrames
   if (atkSpd < 0) {
-    attackCooldown = baseCooldown * (1 + Math.abs(atkSpd))
+    attackCooldownFrames = Math.trunc(baseCooldownFrames * (1 + Math.abs(atkSpd)))
   } else {
-    attackCooldown = baseCooldown / (1 + atkSpd)
+    attackCooldownFrames = Math.trunc(baseCooldownFrames / (1 + atkSpd))
   }
+  attackCooldownFrames = Math.max(MIN_CD, attackCooldownFrames)
+  const attackCooldown = attackCooldownFrames / 60
 
   let animCooldown = animationCooldown || 0
   if (animCooldown > 0) {
