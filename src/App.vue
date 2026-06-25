@@ -213,7 +213,7 @@
               <span class="ws-label">{{ S.cooldown }}</span>
               <span class="ws-val">
                 {{ formatCooldown(totalCooldown) }}
-                <span class="ws-cooldown-detail">({{ formatCooldown(activeWeaponData.stats.cooldown / 60) }}+{{ formatCooldown(activeWeaponData.stats.animation_cooldown || 0) }})</span>
+                <span class="ws-attack-type">({{ formatCooldown(activeWeaponData.stats.cooldown / 60) }}+{{ formatCooldown(activeWeaponData.stats.animation_cooldown || 0) }})</span>
               </span>
             </div>
 
@@ -350,7 +350,9 @@
               <label class="slider-label">{{ S.statRange }}</label>
               <el-slider v-model="statRangeSlider" :min="-200" :max="200" :step="1" :marks="rangeMarks" show-input />
             </div>
-            <canvas ref="chartCanvas" class="cooldown-chart" width="300" height="400"></canvas>
+            <div class="cooldown-chart-wrapper">
+              <Line :data="chartData" :options="chartOptions" :plugins="[baseCooldownLinePlugin, currentPointPlugin]" />
+            </div>
           </div>
         </div>
 
@@ -427,9 +429,13 @@
 <script setup>
 import { ref, computed, onMounted, nextTick, watch } from 'vue'
 import { Search, Sort, User, Sunny, Moon, Box, Aim, ArrowDown, View, Hide } from '@element-plus/icons-vue'
+import { Line } from 'vue-chartjs'
+import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Tooltip } from 'chart.js'
+
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Tooltip)
 
 const BASE = import.meta.env.MODE === 'production'
-  ? 'https://cdn.jsdmirror.com/gh/mojimoon/brotato@v1.0.0/public/'
+  ? 'https://cdn.jsdmirror.com/gh/mojimoon/brotato@v1.1.0/public/'
   : import.meta.env.BASE_URL
 
 // ---- Shared string dictionary ----
@@ -495,96 +501,122 @@ const priceIconSrc = computed(() => `${BASE}icons/items/materials/harvesting_ico
 const showAttackSpeedCalc = ref(false)
 const attackSpeedSlider = ref(0)
 const statRangeSlider = ref(0)
-const chartCanvas = ref(null)
 
-function drawCooldownChart() {
-  const canvas = chartCanvas.value
-  if (!canvas) return
-  const ctx = canvas.getContext('2d')
-  const width = canvas.width
-  const height = canvas.height
-  const padding = { top: 20, right: 20, bottom: 30, left: 50 }
-  const chartWidth = width - padding.left - padding.right
-  const chartHeight = height - padding.top - padding.bottom
-
-  ctx.clearRect(0, 0, width, height)
-
+const chartData = computed(() => {
   const stats = activeWeaponData.value?.stats
-  if (!stats) return
+  if (!stats) return { labels: [], datasets: [] }
 
   const minAtkSpd = -100
   const maxAtkSpd = 200
   const hasRange = activeWeaponData.value?.type === 'melee' && statRangeSlider.value !== 0
+  const labels = []
+  const mainValues = []
+  const baseValues = []
 
-  const points = []
-  const basePoints = []
   for (let atkSpd = minAtkSpd; atkSpd <= maxAtkSpd; atkSpd += 5) {
-    const cd = calculateCooldownWithAttackSpeed(stats.cooldown, stats.animation_cooldown || 0, atkSpd, statRangeSlider.value)
-    points.push({ x: atkSpd, y: cd })
+    labels.push(atkSpd)
+    mainValues.push(calculateCooldownWithAttackSpeed(stats.cooldown, stats.animation_cooldown || 0, atkSpd, statRangeSlider.value))
     if (hasRange) {
-      const baseCd = calculateCooldownWithAttackSpeed(stats.cooldown, stats.animation_cooldown || 0, atkSpd, 0)
-      basePoints.push({ x: atkSpd, y: baseCd })
+      baseValues.push(calculateCooldownWithAttackSpeed(stats.cooldown, stats.animation_cooldown || 0, atkSpd, 0))
     }
   }
 
-  const allY = hasRange ? [...points.map(p => p.y), ...basePoints.map(p => p.y)] : points.map(p => p.y)
-  const minY = 0
-  const maxY = Math.max(...allY) * 1.05
-  const yRange = maxY - minY || 1
-
-  ctx.strokeStyle = isDark.value ? '#555' : '#ccc'
-  ctx.lineWidth = 1
-  for (let i = 0; i <= 4; i++) {
-    const y = padding.top + (i / 4) * chartHeight
-    ctx.beginPath()
-    ctx.moveTo(padding.left, y)
-    ctx.lineTo(width - padding.right, y)
-    ctx.stroke()
-    const value = maxY - (i / 4) * yRange
-    ctx.fillStyle = isDark.value ? '#aaa' : '#666'
-    ctx.font = '10px sans-serif'
-    ctx.textAlign = 'right'
-    ctx.fillText(value.toFixed(2) + 's', padding.left - 5, y + 3)
-  }
-
-  function drawLine(data, color, lineWidth) {
-    ctx.beginPath()
-    ctx.strokeStyle = color
-    ctx.lineWidth = lineWidth
-    data.forEach((point, index) => {
-      const x = padding.left + ((point.x - minAtkSpd) / (maxAtkSpd - minAtkSpd)) * chartWidth
-      const y = padding.top + ((maxY - point.y) / yRange) * chartHeight
-      if (index === 0) ctx.moveTo(x, y)
-      else ctx.lineTo(x, y)
-    })
-    ctx.stroke()
-  }
-
+  const dark = isDark.value
+  const datasets = []
   if (hasRange) {
-    drawLine(basePoints, isDark.value ? '#888' : '#bbb', 1.5)
+    datasets.push({
+      data: baseValues,
+      borderColor: dark ? '#888' : '#bbb',
+      borderWidth: 1.5,
+      pointRadius: 0,
+      tension: 0.3,
+    })
   }
-  drawLine(points, isDark.value ? '#4ade80' : '#22c55e', 2)
+  datasets.push({
+    data: mainValues,
+    borderColor: dark ? '#4ade80' : '#22c55e',
+    borderWidth: 2,
+    pointRadius: 0,
+    tension: 0.3,
+  })
 
-  const currentX = padding.left + ((attackSpeedSlider.value - minAtkSpd) / (maxAtkSpd - minAtkSpd)) * chartWidth
-  const currentY = padding.top + ((maxY - calculatedCooldown.value) / yRange) * chartHeight
-  ctx.beginPath()
-  ctx.arc(currentX, currentY, 4, 0, Math.PI * 2)
-  ctx.fillStyle = isDark.value ? '#f87171' : '#ef4444'
-  ctx.fill()
+  return { labels, datasets }
+})
 
-  ctx.fillStyle = isDark.value ? '#aaa' : '#666'
-  ctx.font = '10px sans-serif'
-  ctx.textAlign = 'center'
-  for (let atkSpd = minAtkSpd; atkSpd <= maxAtkSpd; atkSpd += 50) {
-    const x = padding.left + ((atkSpd - minAtkSpd) / (maxAtkSpd - minAtkSpd)) * chartWidth
-    ctx.fillText(atkSpd + '%', x, height - 5)
+const baseCooldownLinePlugin = {
+  id: 'baseCooldownLine',
+  afterDraw(chart) {
+    const baseCd = totalCooldown.value
+    if (!baseCd) return
+    const yScale = chart.scales.y
+    const y = yScale.getPixelForValue(baseCd)
+    if (y < yScale.top || y > yScale.bottom) return
+    const ctx = chart.ctx
+    ctx.save()
+    ctx.beginPath()
+    ctx.setLineDash([6, 3])
+    ctx.strokeStyle = isDark.value ? '#888' : '#bbb'
+    ctx.lineWidth = 1
+    ctx.moveTo(chart.chartArea.left, y)
+    ctx.lineTo(chart.chartArea.right, y)
+    ctx.stroke()
+    ctx.restore()
   }
 }
 
-watch([showAttackSpeedCalc, attackSpeedSlider, statRangeSlider, isDark], () => {
-  if (showAttackSpeedCalc.value) {
-    nextTick(drawCooldownChart)
+const currentPointPlugin = {
+  id: 'currentPoint',
+  afterDraw(chart) {
+    const labels = chart.data.labels
+    if (!labels || !labels.length) return
+    const idx = labels.indexOf(attackSpeedSlider.value)
+    if (idx < 0) return
+    const meta = chart.getDatasetMeta(chart.data.datasets.length - 1)
+    if (!meta.data[idx]) return
+    const { x, y } = meta.data[idx]
+    const ctx = chart.ctx
+    ctx.save()
+    ctx.beginPath()
+    ctx.arc(x, y, 5, 0, Math.PI * 2)
+    ctx.fillStyle = isDark.value ? '#f87171' : '#ef4444'
+    ctx.fill()
+    ctx.restore()
   }
+}
+
+const chartOptions = computed(() => {
+  const dark = isDark.value
+  return {
+    responsive: true,
+    maintainAspectRatio: true,
+    aspectRatio: 3,
+    animation: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        mode: 'index',
+        intersect: false,
+        callbacks: {
+          label: (ctx) => ctx.parsed.y.toFixed(3) + 's',
+        },
+      },
+    },
+    scales: {
+      x: {
+        grid: { color: dark ? '#333' : '#e5e5e5' },
+        ticks: { color: dark ? '#aaa' : '#666', font: { size: 10 }, autoSkipPadding: 5 },
+      },
+      y: {
+        min: 0,
+        grid: { color: dark ? '#333' : '#e5e5e5' },
+        ticks: { color: dark ? '#aaa' : '#666', font: { size: 10 }, callback: (v) => v.toFixed(1) },
+      },
+    },
+  }
+})
+
+watch([showAttackSpeedCalc, attackSpeedSlider, statRangeSlider, isDark], () => {
+  // Chart.js is reactive via computed, no manual redraw needed
 })
 
 watch(isDark, (v) => {
@@ -957,7 +989,8 @@ const cooldownChangePct = computed(() => {
   return (totalCooldown.value / calculatedCooldown.value - 1) * 100
 })
 
-const atkSpeedMarks = { [-200]: '-200', [-100]: '-100', [0]: '0', [100]: '100', [200]: '200', [300]: '300', [400]: '400', [500]: '500' }
+// const atkSpeedMarks = { [-200]: '-200', [-100]: '-100', [0]: '0', [100]: '100', [200]: '200', [300]: '300', [400]: '400', [500]: '500' }
+const atkSpeedMarks = computed(() => isMobile.value ? { [-200]: '-200', [0]: '0', [100]: '100', [300]: '300', [500]: '500' } : { [-200]: '-200', [-100]: '-100', [0]: '0', [100]: '100', [200]: '200', [300]: '300', [400]: '400', [500]: '500' })
 const rangeMarks = { [-200]: '-200', [-100]: '-100', [0]: '0', [100]: '100', [200]: '200' }
 
 // ---- Price calculation ----
@@ -1541,13 +1574,14 @@ body.light-theme .el-popper.is-dark { background: #fff !important; border-color:
 .slider-row .el-slider :deep(.el-slider__button) {
   width: 14px; height: 14px; border-color: #4ade80;
 }
-.slider-row .el-slider :deep(.el-slider__input) { width: 72px; }
-.slider-row .el-slider :deep(.el-slider__marks-text) { font-size: 10px; color: #888; }
-.cooldown-chart {
-  width: 100%; max-width: 400px; aspect-ratio: 3 / 4; margin-top: 12px;
-  background: #1e2030; border-radius: 6px;
+/* .slider-row .el-slider :deep(.el-slider__input) { width: 60px; }
+.slider-row .el-slider :deep(.el-slider__input .el-input-number__decrease),
+.slider-row .el-slider :deep(.el-slider__input .el-input-number__increase) { display: none; }
+.slider-row .el-slider :deep(.el-slider__input .el-input__wrapper) { padding-left: 4px; padding-right: 4px; }
+.slider-row .el-slider :deep(.el-slider__marks-text) { font-size: 10px; color: #888; } */
+.cooldown-chart-wrapper {
+  margin-top: 12px; background: #1e2030; border-radius: 6px; padding: 8px;
 }
-.ws-cooldown-detail { font-size: 12px; color: #888; font-weight: 400; margin-left: 4px; }
 
 body.light-theme .attack-speed-toggle { background: #f5f5f5; color: #c0392b; }
 body.light-theme .attack-speed-toggle:hover { background: #e8e8e8; }
@@ -1557,8 +1591,7 @@ body.light-theme .calc-label { color: #666; }
 body.light-theme .slider-label { color: #666; }
 body.light-theme .slider-row .el-slider :deep(.el-slider__runway) { background: #ddd; }
 body.light-theme .slider-row .el-slider :deep(.el-slider__marks-text) { color: #999; }
-body.light-theme .cooldown-chart { background: #fff; }
-body.light-theme .ws-cooldown-detail { color: #999; }
+body.light-theme .cooldown-chart-wrapper { background: #fff; }
 body.light-theme .pct-pos { color: #16a34a; }
 body.light-theme .pct-neg { color: #dc2626; }
 </style>
