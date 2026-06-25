@@ -211,7 +211,10 @@
 
             <div class="weapon-stat-row">
               <span class="ws-label">{{ S.cooldown }}</span>
-              <span class="ws-val">{{ (activeWeaponData.stats.cooldown / 60).toFixed(2) }}s</span>
+              <span class="ws-val">
+                {{ formatCooldown(totalCooldown) }}
+                <span class="ws-cooldown-detail">({{ formatCooldown(activeWeaponData.stats.cooldown / 60) }}+{{ formatCooldown(activeWeaponData.stats.animation_cooldown || 0) }})</span>
+              </span>
             </div>
 
             <div v-if="activeWeaponData.stats.knockback !== 0" class="weapon-stat-row">
@@ -327,6 +330,30 @@
           </div>
         </template>
 
+        <!-- Attack Speed Calculator (weapons only) -->
+        <div v-if="activeTab === 'weapons' && activeWeaponData.stats" class="detail-section">
+          <div class="attack-speed-toggle" @click="showAttackSpeedCalc = !showAttackSpeedCalc">
+            <span class="toggle-icon">{{ showAttackSpeedCalc ? '▼' : '▶' }}</span>
+            <span>{{ S.attackSpeedCalc }}</span>
+          </div>
+          <div v-if="showAttackSpeedCalc" class="attack-speed-calc">
+            <div class="calc-result">
+              <span class="calc-label">{{ S.finalCooldown }}:</span>
+              <span class="calc-value">{{ formatCooldown(calculatedCooldown) }}</span>
+              <span class="calc-pct" :class="cooldownChangePct < 0 ? 'pct-neg' : cooldownChangePct > 0 ? 'pct-pos' : ''">({{ S.attackSpeed }} {{ cooldownChangePct > 0 ? '+' : '' }}{{ cooldownChangePct.toFixed(0) }}%)</span>
+            </div>
+            <div class="slider-row">
+              <label class="slider-label">{{ S.attackSpeed }}</label>
+              <el-slider v-model="attackSpeedSlider" :min="-200" :max="500" :step="1" :marks="atkSpeedMarks" show-input />
+            </div>
+            <div v-if="activeWeaponData.type === 'melee'" class="slider-row">
+              <label class="slider-label">{{ S.statRange }}</label>
+              <el-slider v-model="statRangeSlider" :min="-200" :max="200" :step="1" :marks="rangeMarks" show-input />
+            </div>
+            <canvas ref="chartCanvas" class="cooldown-chart" width="300" height="400"></canvas>
+          </div>
+        </div>
+
         <!-- Shared: Price Section (weapons & items) -->
         <div v-if="showPriceSection" class="detail-section price-section">
           <div class="price-row">
@@ -420,7 +447,9 @@ const S = computed(() => isZh.value ? {
   unique: '独特', limited: '限制',
   clickToSee: '点击左侧查看详情',
   belowNightmare: '难度0-5', nightmare: '噩梦',
-  basePriceShort: '价格', belowNightmareShort: '难5', nightmareShort: '噩梦'
+  basePriceShort: '价格', belowNightmareShort: '难5', nightmareShort: '噩梦',
+  attackSpeedCalc: '攻速计算器', attackSpeed: '攻速', statRange: '范围',
+  finalCooldown: '最终冷却'
 } : {
   weapons: 'Weapons', items: 'Items', characters: 'Characters',
   search: 'Search...', all: 'All', tier: 'Rarity', type: 'Type',
@@ -435,7 +464,9 @@ const S = computed(() => isZh.value ? {
   unique: 'Unique', limited: 'Limited',
   clickToSee: 'Click to see details',
   belowNightmare: 'Danger 0-5', nightmare: 'Nightmare',
-  basePriceShort: 'Price', belowNightmareShort: 'D5', nightmareShort: 'NM'
+  basePriceShort: 'Price', belowNightmareShort: 'D5', nightmareShort: 'NM',
+  attackSpeedCalc: 'Attack Speed Calculator', attackSpeed: 'A.Spd', statRange: 'Range',
+  finalCooldown: 'Final Cooldown'
 })
 
 // ---- Reactivity ----
@@ -459,6 +490,102 @@ const showingPrice = ref(true)
 const isDark = ref(true)
 const isMobile = ref(window.innerWidth < 768)
 const priceIconSrc = computed(() => `${BASE}icons/items/materials/harvesting_icon.png`)
+
+// ---- Attack Speed Calculator ----
+const showAttackSpeedCalc = ref(false)
+const attackSpeedSlider = ref(0)
+const statRangeSlider = ref(0)
+const chartCanvas = ref(null)
+
+function drawCooldownChart() {
+  const canvas = chartCanvas.value
+  if (!canvas) return
+  const ctx = canvas.getContext('2d')
+  const width = canvas.width
+  const height = canvas.height
+  const padding = { top: 20, right: 20, bottom: 30, left: 50 }
+  const chartWidth = width - padding.left - padding.right
+  const chartHeight = height - padding.top - padding.bottom
+
+  ctx.clearRect(0, 0, width, height)
+
+  const stats = activeWeaponData.value?.stats
+  if (!stats) return
+
+  const minAtkSpd = -100
+  const maxAtkSpd = 200
+  const hasRange = activeWeaponData.value?.type === 'melee' && statRangeSlider.value !== 0
+
+  const points = []
+  const basePoints = []
+  for (let atkSpd = minAtkSpd; atkSpd <= maxAtkSpd; atkSpd += 5) {
+    const cd = calculateCooldownWithAttackSpeed(stats.cooldown, stats.animation_cooldown || 0, atkSpd, statRangeSlider.value)
+    points.push({ x: atkSpd, y: cd })
+    if (hasRange) {
+      const baseCd = calculateCooldownWithAttackSpeed(stats.cooldown, stats.animation_cooldown || 0, atkSpd, 0)
+      basePoints.push({ x: atkSpd, y: baseCd })
+    }
+  }
+
+  const allY = hasRange ? [...points.map(p => p.y), ...basePoints.map(p => p.y)] : points.map(p => p.y)
+  const minY = 0
+  const maxY = Math.max(...allY) * 1.05
+  const yRange = maxY - minY || 1
+
+  ctx.strokeStyle = isDark.value ? '#555' : '#ccc'
+  ctx.lineWidth = 1
+  for (let i = 0; i <= 4; i++) {
+    const y = padding.top + (i / 4) * chartHeight
+    ctx.beginPath()
+    ctx.moveTo(padding.left, y)
+    ctx.lineTo(width - padding.right, y)
+    ctx.stroke()
+    const value = maxY - (i / 4) * yRange
+    ctx.fillStyle = isDark.value ? '#aaa' : '#666'
+    ctx.font = '10px sans-serif'
+    ctx.textAlign = 'right'
+    ctx.fillText(value.toFixed(2) + 's', padding.left - 5, y + 3)
+  }
+
+  function drawLine(data, color, lineWidth) {
+    ctx.beginPath()
+    ctx.strokeStyle = color
+    ctx.lineWidth = lineWidth
+    data.forEach((point, index) => {
+      const x = padding.left + ((point.x - minAtkSpd) / (maxAtkSpd - minAtkSpd)) * chartWidth
+      const y = padding.top + ((maxY - point.y) / yRange) * chartHeight
+      if (index === 0) ctx.moveTo(x, y)
+      else ctx.lineTo(x, y)
+    })
+    ctx.stroke()
+  }
+
+  if (hasRange) {
+    drawLine(basePoints, isDark.value ? '#888' : '#bbb', 1.5)
+  }
+  drawLine(points, isDark.value ? '#4ade80' : '#22c55e', 2)
+
+  const currentX = padding.left + ((attackSpeedSlider.value - minAtkSpd) / (maxAtkSpd - minAtkSpd)) * chartWidth
+  const currentY = padding.top + ((maxY - calculatedCooldown.value) / yRange) * chartHeight
+  ctx.beginPath()
+  ctx.arc(currentX, currentY, 4, 0, Math.PI * 2)
+  ctx.fillStyle = isDark.value ? '#f87171' : '#ef4444'
+  ctx.fill()
+
+  ctx.fillStyle = isDark.value ? '#aaa' : '#666'
+  ctx.font = '10px sans-serif'
+  ctx.textAlign = 'center'
+  for (let atkSpd = minAtkSpd; atkSpd <= maxAtkSpd; atkSpd += 50) {
+    const x = padding.left + ((atkSpd - minAtkSpd) / (maxAtkSpd - minAtkSpd)) * chartWidth
+    ctx.fillText(atkSpd + '%', x, height - 5)
+  }
+}
+
+watch([showAttackSpeedCalc, attackSpeedSlider, statRangeSlider, isDark], () => {
+  if (showAttackSpeedCalc.value) {
+    nextTick(drawCooldownChart)
+  }
+})
 
 watch(isDark, (v) => {
   document.documentElement.classList.toggle('light-theme', !v)
@@ -770,6 +897,68 @@ const meleeAttackTypeText = computed(() => {
   if (stats.attack_type === 1) return isZh.value ? '(横扫)' : '(Sweep)'
   return ''
 })
+
+// ---- Cooldown calculation ----
+const totalCooldown = computed(() => {
+  const stats = activeWeaponData.value?.stats
+  if (!stats) return 0
+  const attackCooldown = stats.cooldown / 60
+  const animationCooldown = stats.animation_cooldown || 0
+  return attackCooldown + animationCooldown
+})
+
+function formatCooldown(seconds) {
+  if (seconds < 0.1) return seconds.toFixed(3) + 's'
+  return seconds.toFixed(2) + 's'
+}
+
+function calculateCooldownWithAttackSpeed(baseCooldownFrames, animationCooldown, attackSpeed, statRange, rangeOverride) {
+  const atkSpd = attackSpeed / 100
+  const baseCooldown = baseCooldownFrames / 60
+
+  let attackCooldown
+  if (atkSpd < 0) {
+    attackCooldown = baseCooldown * (1 + Math.abs(atkSpd))
+  } else {
+    attackCooldown = baseCooldown / (1 + atkSpd)
+  }
+
+  let animCooldown = animationCooldown || 0
+  if (animCooldown > 0) {
+    const BASE_ATK_DURATION = 0.2
+    const stats = activeWeaponData.value?.stats
+    if (stats && activeWeaponData.value?.type === 'melee') {
+      const baseRange = stats.max_range || 150
+      const effectiveRange = rangeOverride !== undefined ? rangeOverride : baseRange + statRange / 2
+      const rangeFactor = Math.max(0, effectiveRange / Math.max(70 * (1 + (atkSpd / 3)), 70))
+      const atkDuration = Math.max(0.01, BASE_ATK_DURATION - (atkSpd / 10)) + rangeFactor * 0.15
+      const backDuration = atkSpd > 0 ? BASE_ATK_DURATION / (1 + (atkSpd * 3)) : BASE_ATK_DURATION
+      const recoilDuration = stats.recoil_duration || 0.1
+      animCooldown = atkDuration / 2 + backDuration + recoilDuration
+    }
+  }
+
+  return attackCooldown + animCooldown
+}
+
+const calculatedCooldown = computed(() => {
+  const stats = activeWeaponData.value?.stats
+  if (!stats) return 0
+  return calculateCooldownWithAttackSpeed(
+    stats.cooldown,
+    stats.animation_cooldown || 0,
+    attackSpeedSlider.value,
+    statRangeSlider.value
+  )
+})
+
+const cooldownChangePct = computed(() => {
+  if (totalCooldown.value === 0 || calculatedCooldown.value === 0) return 0
+  return (totalCooldown.value / calculatedCooldown.value - 1) * 100
+})
+
+const atkSpeedMarks = { [-200]: '-200', [-100]: '-100', [0]: '0', [100]: '100', [200]: '200', [300]: '300', [400]: '400', [500]: '500' }
+const rangeMarks = { [-200]: '-200', [-100]: '-100', [0]: '0', [100]: '100', [200]: '200' }
 
 // ---- Price calculation ----
 function getBasePrice() {
@@ -1317,4 +1506,59 @@ body.light-theme .el-popper.is-dark { background: #fff !important; border-color:
   .main-tabs { padding: 0 12px; }
   .main-tabs :deep(.el-tabs__item) { padding: 0 12px; font-size: 13px; }
 }
+
+/* Attack Speed Calculator */
+.attack-speed-toggle {
+  display: flex; align-items: center; gap: 8px; padding: 10px 12px;
+  background: #22253a; border-radius: 6px; cursor: pointer;
+  font-size: 14px; color: #f39c12; transition: background .15s; font-weight: 500;
+}
+.attack-speed-toggle:hover { background: #282c44; }
+.toggle-icon { font-size: 10px; color: #888; }
+.attack-speed-calc {
+  margin-top: 8px; padding: 12px; background: #22253a;
+  border-radius: 6px; border: 1px solid #2a2d3a;
+}
+.calc-result {
+  display: flex; align-items: center; gap: 8px;
+  margin-bottom: 12px; padding: 8px 12px;
+  background: #1e2030; border-radius: 6px;
+}
+.calc-label { font-size: 14px; color: #bbb; }
+.calc-value { font-size: 18px; font-weight: 700; color: #4ade80; }
+.calc-pct { font-size: 14px; font-weight: 600; margin-left: 4px; }
+.pct-pos { color: #4ade80; }
+.pct-neg { color: #f87171; }
+.slider-row {
+  display: flex; align-items: center; gap: 12px; margin-bottom: 12px;
+}
+.slider-label {
+  flex-shrink: 0; width: 60px; font-size: 13px; color: #bbb; text-align: right;
+}
+.slider-row .el-slider { flex: 1; --el-slider-height: 4px; }
+.slider-row .el-slider :deep(.el-slider__runway) { background: #2a2d3a; }
+.slider-row .el-slider :deep(.el-slider__bar) { background: #4ade80; }
+.slider-row .el-slider :deep(.el-slider__button) {
+  width: 14px; height: 14px; border-color: #4ade80;
+}
+.slider-row .el-slider :deep(.el-slider__input) { width: 72px; }
+.slider-row .el-slider :deep(.el-slider__marks-text) { font-size: 10px; color: #888; }
+.cooldown-chart {
+  width: 100%; max-width: 400px; aspect-ratio: 3 / 4; margin-top: 12px;
+  background: #1e2030; border-radius: 6px;
+}
+.ws-cooldown-detail { font-size: 12px; color: #888; font-weight: 400; margin-left: 4px; }
+
+body.light-theme .attack-speed-toggle { background: #f5f5f5; color: #c0392b; }
+body.light-theme .attack-speed-toggle:hover { background: #e8e8e8; }
+body.light-theme .attack-speed-calc { background: #f5f5f5; border-color: #ddd; }
+body.light-theme .calc-result { background: #fff; }
+body.light-theme .calc-label { color: #666; }
+body.light-theme .slider-label { color: #666; }
+body.light-theme .slider-row .el-slider :deep(.el-slider__runway) { background: #ddd; }
+body.light-theme .slider-row .el-slider :deep(.el-slider__marks-text) { color: #999; }
+body.light-theme .cooldown-chart { background: #fff; }
+body.light-theme .ws-cooldown-detail { color: #999; }
+body.light-theme .pct-pos { color: #16a34a; }
+body.light-theme .pct-neg { color: #dc2626; }
 </style>

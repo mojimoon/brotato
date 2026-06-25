@@ -299,6 +299,27 @@ def parse_weapon_stats(filepath):
             'alternate_attack_type': data.get('alternate_attack_type', False),
         })
     
+    # Calculate animation cooldown based on weapon type
+    recoil_duration = data.get('recoil_duration', 0.1)
+    max_range = data.get('max_range', 150)
+    stats['recoil_duration'] = recoil_duration
+    
+    if 'attack_type' in data:  # Melee weapon
+        # Melee animation: atk_duration/2 + back_duration + recoil_duration
+        # At base attack speed (atk_spd=0):
+        # atk_duration = BASE_ATK_DURATION + range_factor * 0.15
+        # back_duration = BASE_ATK_DURATION
+        BASE_ATK_DURATION = 0.2
+        range_factor = max(0.0, max_range / 70.0)
+        atk_duration = BASE_ATK_DURATION + range_factor * 0.15
+        back_duration = BASE_ATK_DURATION
+        stats['animation_cooldown'] = atk_duration / 2 + back_duration + recoil_duration
+    elif 'nb_projectiles' in data:  # Ranged weapon
+        # Ranged animation: recoil_duration * 2
+        stats['animation_cooldown'] = recoil_duration * 2
+    else:
+        stats['animation_cooldown'] = 0
+    
     return stats
 
 def parse_effect_file(filepath):
