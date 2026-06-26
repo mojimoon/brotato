@@ -144,8 +144,14 @@
         </template>
       </el-dropdown>
 
+      <el-button v-if="hasActiveFilter" class="filter-btn clear-btn" @click="clearAllFilters">
+        <el-icon>
+          <Close />
+        </el-icon>
+      </el-button>
+
       <el-dropdown v-if="activeTab === 'weapons' || activeTab === 'items'" trigger="click" popper-class="dark-dropdown"
-        @command="(v) => { sortBy = v; onFilterChange(); }">
+        @command="(v) => { sortBy = v; onFilterChange(); }" class="sort-dropdown">
         <el-button class="filter-btn sort-btn" :class="{ 'has-value': sortBy !== 'default' }">
           <el-icon style="margin-right:4px">
             <Sort />
@@ -332,7 +338,7 @@
                       <div class="tag-tooltip-content">
                         <div class="tag-tooltip-name">{{ tagTr(tag) }}</div>
                         <div v-if="tagItems(tag).length" class="tag-tooltip-line">{{ S.items }}：{{
-                          tagItems(tag).join(',') }}</div>
+                          tagItems(tag).join(' ,') }}</div>
                         <div v-if="tagCharacters(tag).length" class="tag-tooltip-line">{{ S.characters }}：{{
                           tagCharacters(tag).join(', ') }}</div>
                       </div>
@@ -381,8 +387,8 @@
                   <template #content>
                     <div class="tag-tooltip-content">
                       <div class="tag-tooltip-name">{{ tagTr(tag) }}</div>
-                      <div v-if="tagItems(tag).length" class="tag-tooltip-line">{{ S.items }}：{{ tagItems(tag).join(',')
-                      }}</div>
+                      <div v-if="tagItems(tag).length" class="tag-tooltip-line">{{ S.items }}：
+                        {{ tagItems(tag).join(', ') }}</div>
                       <div v-if="tagCharacters(tag).length" class="tag-tooltip-line">{{ S.characters }}：{{
                         tagCharacters(tag).join(', ') }}</div>
                     </div>
@@ -518,14 +524,14 @@
 
 <script setup>
 import { ref, computed, onMounted, nextTick, watch } from 'vue'
-import { Search, Sort, User, Sunny, Moon, Box, Aim, ArrowDown, View, Hide } from '@element-plus/icons-vue'
+import { Search, Sort, User, Sunny, Moon, Box, Aim, ArrowDown, View, Hide, Close } from '@element-plus/icons-vue'
 import { Line } from 'vue-chartjs'
 import { Chart as ChartJS, LinearScale, PointElement, LineElement, Tooltip } from 'chart.js'
 
 ChartJS.register(LinearScale, PointElement, LineElement, Tooltip)
 
 const BASE = import.meta.env.MODE === 'production'
-  ? 'https://cdn.jsdmirror.com/gh/mojimoon/brotato@v1.3.0/public/'
+  ? 'https://cdn.jsdmirror.com/gh/mojimoon/brotato@v1.4.0/public/'
   : import.meta.env.BASE_URL
 
 // ---- Shared string dictionary ----
@@ -544,7 +550,7 @@ const S = computed(() => isZh.value ? {
   belowNightmare: '难度0-5', nightmare: '噩梦',
   basePriceShort: '价格', belowNightmareShort: '难5', nightmareShort: '噩梦',
   attackSpeedCalc: '攻速计算器', attackSpeed: '攻速', statRange: '范围',
-  curse: '诅咒', finalCooldown: '最终冷却'
+  curse: '诅咒', finalCooldown: '最终冷却', clear: '清除筛选'
 } : {
   weapons: 'Weapons', items: 'Items', characters: 'Characters',
   search: 'Search...', all: 'All', tier: 'Rarity', type: 'Type',
@@ -560,7 +566,7 @@ const S = computed(() => isZh.value ? {
   belowNightmare: 'Danger 0-5', nightmare: 'Nightmare',
   basePriceShort: 'Price', belowNightmareShort: 'D5', nightmareShort: 'NM',
   attackSpeedCalc: 'Attack Speed Calculator', attackSpeed: 'A.Spd', statRange: 'Range',
-  curse: 'Curse', finalCooldown: 'Final Cooldown'
+  curse: 'Curse', finalCooldown: 'Final Cooldown', clear: 'Clear Filters'
 })
 
 // ---- Reactivity ----
@@ -913,7 +919,7 @@ const TAG_TRANSLATIONS = {
   stat_max_hp: { en: 'Max HP', zh: '最大生命' }, stat_melee_damage: { en: 'Melee Damage', zh: '近战伤害' },
   stat_percent_damage: { en: '% Damage', zh: '%伤害' }, stat_range: { en: 'Range', zh: '范围' },
   stat_ranged_damage: { en: 'Ranged Damage', zh: '远程伤害' }, stat_speed: { en: 'Speed', zh: '速度' },
-  structure: { en: 'Structure', zh: '构筑物' }, xp_gain: { en: 'XP Gain', zh: '经验获取' },
+  structure: { en: 'Structure (Preference)', zh: '构筑物(偏好)' }, structure_real: { en: 'Structure', zh: '构筑物' }, xp_gain: { en: 'XP Gain', zh: '经验获取' },
 }
 
 function tagTr(tag) {
@@ -922,13 +928,13 @@ function tagTr(tag) {
   return isZh.value ? t.zh : t.en
 }
 
-const SPECIAL_TAGS = ['pet', 'structure']
+const SPECIAL_TAGS = ['pet', 'structure_real']
 function specialTagClass(tag) { return SPECIAL_TAGS.includes(tag) ? 'tag-' + tag : '' }
 
 function isUniqueItem(item) { return item && item.max_nb === 1 }
 function isLimitedItem(item) { return item && item.max_nb > 1 }
 
-const TAG_SORT_ORDER = { pet: 0, structure: 1 }
+const TAG_SORT_ORDER = { pet: 0, structure_real: 1, structure: 2 }
 function sortedItemTags(item) {
   if (!item || !item.tags) return []
   return [...item.tags].sort((a, b) => {
@@ -941,10 +947,10 @@ function sortedItemTags(item) {
 
 // ---- Tooltip helpers ----
 function tagItems(tag) {
-  return (rawData.value.items || []).filter(i => (i.tags || []).includes(tag)).map(i => itemName(i)).slice(0, 10)
+  return (rawData.value.items || []).filter(i => (i.tags || []).includes(tag)).map(i => itemName(i))
 }
 function tagCharacters(tag) {
-  return (rawData.value.characters || []).filter(c => (c.wanted_tags || []).includes(tag) || (c.tags || []).includes(tag)).map(c => itemName(c)).slice(0, 10)
+  return (rawData.value.characters || []).filter(c => (c.wanted_tags || []).includes(tag) || (c.tags || []).includes(tag)).map(c => itemName(c))
 }
 function onTagClick(tag) {
   if (activeTab.value === 'characters') { pendingNavigate.value = true; activeTab.value = 'items'; filterTag.value = tag }
@@ -1437,6 +1443,15 @@ function onKeyDown(e) {
 }
 
 function onFilterChange() {}
+const hasActiveFilter = computed(() => searchText.value || filterTier.value !== null || filterType.value || filterSet.value !== null || filterDlc.value !== null || filterTag.value !== null)
+function clearAllFilters() {
+  searchText.value = ''
+  filterTier.value = null
+  filterType.value = null
+  filterSet.value = null
+  filterDlc.value = null
+  filterTag.value = null
+}
 const pendingNavigate = ref(false)
 
 function onTabChange() {
@@ -1542,6 +1557,9 @@ body { background: #1a1d28; color: #ccc; font-family: 'Segoe UI', system-ui, san
   box-shadow: 0 0 0 1px rgba(255, 196, 74, 0.16), 0 0 0 1px rgba(255, 196, 74, 0.12) inset;
 }
 .sort-btn :deep(.el-icon) { color: inherit; }
+.sort-dropdown { margin-left: auto; }
+.clear-btn { color: #888; padding: 8px !important; min-width: 0; }
+.clear-btn:hover { color: #f39c12 !important; border-color: #f39c12 !important; }
 .price-toggle-btn {
   gap: 8px;
   min-width: 124px;
@@ -1718,8 +1736,8 @@ body { background: #1a1d28; color: #ccc; font-family: 'Segoe UI', system-ui, san
 .limit-badge.limited { background: #d35400; }
 .tag-pet { background: #1e3a1e; color: #6ee76e; }
 .tag-pet:hover { background: #2a4a2a !important; color: #9ef79e !important; }
-.tag-structure { background: #3a2a1a; color: #ffb74d; }
-.tag-structure:hover { background: #4a3520 !important; color: #ffcc80 !important; }
+.tag-structure_real { background: #3a2a1a; color: #ffb74d; }
+.tag-structure_real:hover { background: #4a3520 !important; color: #ffcc80 !important; }
 .tag-tooltip-content { font-size: 12px; line-height: 1.6; max-width: 320px; }
 .tag-tooltip-name { font-weight: bold; margin-bottom: 2px; color: #fff; }
 .tag-tooltip-line { color: #aaa; word-break: break-all; }
@@ -1741,7 +1759,7 @@ body { background: #1a1d28; color: #ccc; font-family: 'Segoe UI', system-ui, san
 /* Dropdown popper */
 .dark-dropdown, .dark-dropdown.el-popper { background-color: #22253a !important; border: 1px solid #3a3d4e !important; border-radius: 6px !important; box-shadow: 0 4px 12px rgba(0,0,0,.4) !important; }
 .dark-dropdown .el-select-dropdown, .dark-dropdown .el-scrollbar, .dark-dropdown .el-scrollbar__wrap, .dark-dropdown .el-scrollbar__view,
-.dark-dropdown .el-select-dropdown__list, .dark-dropdown .el-dropdown-menu { background-color: #22253a !important; }
+.dark-dropdown .el-select-dropdown__list, .dark-dropdown .el-dropdown-menu { background-color: #22253a !important; max-height: 540px; overflow-y: auto; }
 .dark-dropdown .el-popper__arrow::before { background: #22253a !important; border-color: #3a3d4e !important; }
 .dark-dropdown .el-select-dropdown__item { color: #bbb !important; padding: 8px 14px !important; font-size: 13px; transition: background .12s, color .12s; display: flex; align-items: center; min-height: 32px; line-height: 1.2; }
 .dark-dropdown .el-select-dropdown__item:hover { background-color: #2e3148 !important; color: #fff !important; }
@@ -1803,6 +1821,8 @@ body.light-theme .sort-btn.has-value { border-color: #c59c43 !important; color: 
 body.light-theme .sort-btn:hover { border-color: #9ca3b4 !important; }
 body.light-theme .sort-btn:not(.has-value):hover { background: linear-gradient(180deg, #e6ebf2 0%, #d6dce7 100%) !important; color: #4b5568 !important; }
 body.light-theme .sort-btn.has-value:hover { color: #5e4100 !important; border-color: #b88b2d !important; box-shadow: 0 0 0 1px rgba(205, 155, 44, 0.14), 0 0 0 1px rgba(205, 155, 44, 0.1) inset; }
+body.light-theme .clear-btn { color: #999; }
+body.light-theme .clear-btn:hover { color: #c0392b !important; border-color: #c0392b !important; }
 body.light-theme .price-toggle-btn { border-color: #b5b9c7 !important; }
 body.light-theme .price-toggle-btn.has-value { border-color: #7aa95d !important; color: #214010 !important; box-shadow: 0 0 0 1px rgba(93, 168, 75, 0.12), 0 0 0 1px rgba(93, 168, 75, 0.08) inset; }
 body.light-theme .price-toggle-btn:not(.has-value) { background: linear-gradient(180deg, #eef1f5 0%, #dde2ea 100%) !important; border-color: #b4bac5 !important; color: #6b7280 !important; }
@@ -1873,8 +1893,8 @@ body.light-theme .tier-tab.disabled { border-color: #ccc !important; background:
 body.light-theme .tier-tab.active { color: #fff !important; }
 body.light-theme .tag-pet { background: #c8e6c9; color: #1b5e20; }
 body.light-theme .tag-pet:hover { background: #a5d6a7 !important; color: #0d3b0d !important; }
-body.light-theme .tag-structure { background: #fff3e0; color: #e65100; }
-body.light-theme .tag-structure:hover { background: #ffe0b2 !important; color: #bf360c !important; }
+body.light-theme .tag-structure_real { background: #fff3e0; color: #e65100; }
+body.light-theme .tag-structure_real:hover { background: #ffe0b2 !important; color: #bf360c !important; }
 body.light-theme .el-input.is-focus .el-input__wrapper { border-color: #ff3d3d !important; box-shadow: 0 0 0 1px #ff3d3d inset !important; }
 body.light-theme .el-select .el-select__caret { color: #555 !important; }
 body.light-theme .el-select .el-tag { background-color: #e8eaed !important; border-color: #ccc !important; color: #333 !important; }
@@ -1911,6 +1931,8 @@ body.light-theme .el-popper .el-popper__arrow::before { background: #fff !import
   body.light-theme .detail-panel { border-left: none; }
   .empty-panel { min-height: 20vh; }
   .filters { padding: 6px 12px; gap: 6px; }
+  .sort-dropdown { margin-left: 0 !important; flex-basis: 100%; }
+  .sort-dropdown + .price-toggle-btn { flex-basis: auto; }
   .filter-select { width: 110px; }
   .sort-select { width: 100px; }
   .search-input { max-width: 200px; }

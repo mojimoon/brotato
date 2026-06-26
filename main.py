@@ -3469,6 +3469,8 @@ def _parse_item_file(data_file, dlc, parsed=None):
     # The stray robot (Wandering Bot) already has its icon at items/all/wandering_bot/
     # Other pets previously used entities/units/pet/ icons which was incorrect
     tags = data.get('tags', [])
+    if 'structure' in tags and my_id not in ('item_clockwork_wasp', 'item_improved_tools'):
+        tags.append('structure_real')
     
     effects = get_effects(parsed, parent_id=my_id, is_weapon=False)
     
