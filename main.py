@@ -1221,6 +1221,11 @@ def _build_curse_types(eff, args, arg_signs, parent_id='', is_weapon=False):
         c(3, type='linked', linked_mult=max_stacks)
         return curse
 
+    # 30. ProjectilesOnHitEffect / SlowProjectilesOnHitEffect: curse damage (arg[1]), not projectile count (arg[0])
+    if key in ('EFFECT_PROJECTILES_ON_HIT', 'EFFECT_SLOW_PROJECTILES_ON_HIT'):
+        c(1, type='positive')
+        return curse
+
     # ---- Default: arg[0] gets 'default' type ----
     c(0, type='default')
     return curse
