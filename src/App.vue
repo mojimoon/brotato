@@ -568,7 +568,8 @@ const rawData = ref({ weapons: [], items: [], characters: [], translations: {}, 
 const mainContentRef = ref(null)
 const gridItemRefs = ref({})
 const activeTab = ref('weapons')
-const isZh = ref(navigator.language.startsWith('zh'))
+const lsGet = (k, d) => { try { const v = localStorage.getItem(k); return v !== null ? JSON.parse(v) : d } catch { return d } }
+const isZh = ref(lsGet('brotato_isZh', navigator.language.startsWith('zh')))
 const searchText = ref('')
 const filterTier = ref(null)
 const filterType = ref(null)
@@ -579,15 +580,15 @@ const currentTierIndex = ref(0)
 const waveSlider = ref(0)
 const stickyTierIndex = ref(0)
 const filterTag = ref(null)
-const sortBy = ref('default')
-const showingPrice = ref(true)
-const isDark = ref(true)
+const sortBy = ref(lsGet('brotato_sortBy', 'default'))
+const showingPrice = ref(lsGet('brotato_showingPrice', true))
+const isDark = ref(lsGet('brotato_isDark', true))
 const isMobile = ref(window.innerWidth < 768)
 const priceIconSrc = computed(() => `${BASE}icons/items/materials/harvesting_icon.png`)
 
 // ---- Attack Speed Calculator ----
-const showAttackSpeedCalc = ref(false)
-const showPriceDetail = ref(false)
+const showAttackSpeedCalc = ref(lsGet('brotato_showAtkCalc', false))
+const showPriceDetail = ref(lsGet('brotato_showPriceDetail', false))
 const attackSpeedSlider = ref(0)
 const statRangeSlider = ref(0)
 
@@ -818,6 +819,13 @@ watch(isDark, (v) => {
   document.documentElement.classList.toggle('light-theme', !v)
   document.body.classList.toggle('light-theme', !v)
 }, { immediate: true })
+
+watch(isZh, v => localStorage.setItem('brotato_isZh', JSON.stringify(v)))
+watch(sortBy, v => localStorage.setItem('brotato_sortBy', JSON.stringify(v)))
+watch(showingPrice, v => localStorage.setItem('brotato_showingPrice', JSON.stringify(v)))
+watch(isDark, v => localStorage.setItem('brotato_isDark', JSON.stringify(v)))
+watch(showAttackSpeedCalc, v => localStorage.setItem('brotato_showAtkCalc', JSON.stringify(v)))
+watch(showPriceDetail, v => localStorage.setItem('brotato_showPriceDetail', JSON.stringify(v)))
 
 // ---- Tier colors ----
 const TIER_COLORS = ['#aaaaaa', '#5cc4ff', '#b75cff', '#ff3d3d']
@@ -1664,7 +1672,7 @@ body { background: #1a1d28; color: #ccc; font-family: 'Segoe UI', system-ui, san
 
 /* Price Section */
 .price-section { margin-top: 12px; padding: 14px 16px; background: #22253a; border-radius: 8px; border: 1px solid #2a2d3a; }
-.price-toggle { display: flex; align-items: center; gap: 8px; padding: 10px 12px; background: #22253a; border-radius: 6px; cursor: pointer; font-size: 14px; color: #f39c12; transition: background .15s; font-weight: 500; }
+.price-toggle { display: flex; align-items: center; gap: 8px; padding: 10px 12px; background: #22253a; border-radius: 6px; cursor: pointer; font-size: 14px; color: #f39c12; transition: background .15s; }
 .price-toggle:hover { background: #282c44; }
 .price-table { width: 100%; border-collapse: collapse; margin-bottom: 12px; font-size: 13px; margin-top: 12px; }
 .price-table th, .price-table td { padding: 6px 10px; text-align: center; border: 1px solid #2a2d3a; }
