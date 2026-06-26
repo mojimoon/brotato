@@ -368,7 +368,7 @@
                   :style="{ borderColor: tierColor(getWeaponById(wid)?.tier ?? 0), background: tierBgColor(getWeaponById(wid)?.tier ?? 0) }">
                   <img :src="getIconSrc(getWeaponById(wid)?.icon)" />
                 </div>
-                <div class="item-name-text">{{ getWeaponById(wid) ? itemName(getWeaponById(wid)) : wid }}</div>
+                <div class="item-name-text">{{ getWeaponById(wid) ? itemName(getWeaponById(wid), true) : wid }}</div>
               </div>
             </div>
           </div>
@@ -393,6 +393,16 @@
             </div>
           </div>
         </template>
+
+        <!-- Curse Preview (weapons & items) -->
+        <div v-if="activeTab === 'weapons' || activeTab === 'items'" class="detail-section curse-section">
+          <div class="curse-row">
+            <el-button class="curse-toggle-btn" :class="{ 'curse-active': curseEnabled }"
+              @click="curseEnabled = !curseEnabled" size="small">{{ S.curse }}</el-button>
+            <el-slider v-if="curseEnabled" v-model="curseSlider" :min="10" :max="110" :step="1" show-input
+              class="curse-slider" />
+          </div>
+        </div>
 
         <!-- Attack Speed Calculator (weapons only) -->
         <div v-if="activeTab === 'weapons' && activeWeaponData.stats" class="detail-section">
@@ -423,16 +433,6 @@
           </div>
         </div>
 
-        <!-- Curse Preview (weapons & items) -->
-        <div v-if="activeTab === 'weapons' || activeTab === 'items'" class="detail-section curse-section">
-          <div class="curse-row">
-            <el-button class="curse-toggle-btn" :class="{ 'curse-active': curseEnabled }"
-              @click="curseEnabled = !curseEnabled" size="small">{{ S.curse }}</el-button>
-            <el-slider v-if="curseEnabled" v-model="curseSlider" :min="10" :max="110" :step="1" show-input
-              class="curse-slider" />
-          </div>
-        </div>
-
         <!-- Shared: Price Section (weapons & items) -->
         <div v-if="showPriceSection" class="detail-section price-section">
           <div class="price-row">
@@ -459,22 +459,22 @@
                 <td>{{ isMobile ? S.belowNightmareShort : S.belowNightmare }}</td>
                 <td>+{{ formatIncr(getWaveIncrement()) }}</td>
                 <td class="price-base price-final">{{ waveSlider > 0 ? computedPrice : getBasePrice() }}</td>
-                <td>{{ priceAtWave(1) }}</td>
-                <td>{{ priceAtWave(4) }}</td>
+                <td>{{ showPriceCell(1) ? priceAtWave(1) : '' }}</td>
+                <td>{{ showPriceCell(4) ? priceAtWave(4) : '' }}</td>
                 <td>{{ priceAtWave(8) }}</td>
                 <td>{{ priceAtWave(14) }}</td>
                 <td>{{ priceAtWave(19) }}</td>
               </tr>
               <tr>
                 <td>{{ isMobile ? S.nightmareShort : S.nightmare }}</td>
-                <td>+{{ formatIncr(getWaveIncrementD6()) }}</td>
-                <td class="price-base price-final-nightmare">{{ waveSlider > 0 ? computedPriceD6 : getBasePrice() }}
+                <td>+{{ formatIncr(getWaveIncrementNM()) }}</td>
+                <td class="price-base price-final-nightmare">{{ waveSlider > 0 ? computedPriceNM : getBasePrice() }}
                 </td>
-                <td>{{ priceAtWaveD6(1) }}</td>
-                <td>{{ priceAtWaveD6(4) }}</td>
-                <td>{{ priceAtWaveD6(8) }}</td>
-                <td>{{ priceAtWaveD6(14) }}</td>
-                <td>{{ priceAtWaveD6(19) }}</td>
+                <td>{{ showPriceCell(1) ? priceAtWaveNM(1) : '' }}</td>
+                <td>{{ showPriceCell(4) ? priceAtWaveNM(4) : '' }}</td>
+                <td>{{ priceAtWaveNM(8) }}</td>
+                <td>{{ priceAtWaveNM(14) }}</td>
+                <td>{{ priceAtWaveNM(19) }}</td>
               </tr>
             </tbody>
           </table>
@@ -537,13 +537,11 @@ const S = computed(() => isZh.value ? {
   bounce: '反弹', projectiles: '投射物', dmg: '伤害',
   basePrice: '基础价格', perWave: '每波', wave: '波次',
   effects: '效果', startingWeapons: '起始武器', preferredTags: '偏好标签',
-  unique: '独特', limited: '限制',
-  clickToSee: '点击左侧查看详情',
+  unique: '独特', limited: '限制', clickToSee: '点击左侧查看详情',
   belowNightmare: '难度0-5', nightmare: '噩梦',
   basePriceShort: '价格', belowNightmareShort: '难5', nightmareShort: '噩梦',
   attackSpeedCalc: '攻速计算器', attackSpeed: '攻速', statRange: '范围',
-  curse: '诅咒',
-  finalCooldown: '最终冷却'
+  curse: '诅咒', finalCooldown: '最终冷却'
 } : {
   weapons: 'Weapons', items: 'Items', characters: 'Characters',
   search: 'Search...', all: 'All', tier: 'Rarity', type: 'Type',
@@ -555,13 +553,11 @@ const S = computed(() => isZh.value ? {
   bounce: 'Bounce', projectiles: 'Projectiles', dmg: 'dmg',
   basePrice: 'Base Price', perWave: '/wave', wave: 'Wave',
   effects: 'Effects', startingWeapons: 'Starting Weapons', preferredTags: 'Preferred Tags',
-  unique: 'Unique', limited: 'Limited',
-  clickToSee: 'Click to see details',
+  unique: 'Unique', limited: 'Limited', clickToSee: 'Click to see details',
   belowNightmare: 'Danger 0-5', nightmare: 'Nightmare',
   basePriceShort: 'Price', belowNightmareShort: 'D5', nightmareShort: 'NM',
   attackSpeedCalc: 'Attack Speed Calculator', attackSpeed: 'A.Spd', statRange: 'Range',
-  curse: 'Curse',
-  finalCooldown: 'Final Cooldown'
+  curse: 'Curse', finalCooldown: 'Final Cooldown'
 })
 
 // ---- Reactivity ----
@@ -828,9 +824,17 @@ function tierBgColor(tier) { return TIER_BG_COLORS[tier] || 'rgba(170,170,170,0.
 const TIER_SELECTED_BG = ['rgba(170,170,170,0.35)', 'rgba(92,196,255,0.30)', 'rgba(183,92,255,0.30)', 'rgba(255,61,61,0.30)']
 function tierSelectedBg(tier) { return TIER_SELECTED_BG[tier] || TIER_SELECTED_BG[0] }
 function tierDisplayName(tier) { return ['T1','T2','T3','T4'][tier] || 'T1' }
+function tierSuffix(tier) { return ['',' Ⅱ',' Ⅲ',' Ⅳ'][tier] || '' }
 function tierTagType(tier) { return ['info','','warning','danger'][tier] || 'info' }
 
-function itemName(item) { return isZh.value ? item.name_zh : item.name_en }
+function itemName(item, showWeaponTier = false) { 
+  if (showWeaponTier) {
+    const tier = activeWeaponData.value?.tier ?? 0
+    const suffix = tierSuffix(tier)
+    return isZh.value ? `${item.name_zh}${suffix}` : `${item.name_en}${suffix}`
+  }
+  return isZh.value ? item.name_zh : item.name_en 
+}
 function getIconSrc(p) { return p ? `${BASE}icons/${p}` : '' }
 
 function statTr(key) {
@@ -1347,18 +1351,18 @@ function priceAtWave(wave) {
   return Math.floor(bp + wave + (bp * wave * 0.1))
 }
 
-function priceAtWaveD6(wave) {
+function priceAtWaveNM(wave) {
   const bp = getBasePrice()
   return Math.floor(bp + wave + (bp * wave * 0.11))
 }
 
 const computedPrice = computed(() => priceAtWave(waveSlider.value))
-const computedPriceD6 = computed(() => priceAtWaveD6(waveSlider.value))
+const computedPriceNM = computed(() => priceAtWaveNM(waveSlider.value))
 const showPriceSection = computed(() => (activeTab.value === 'weapons' || activeTab.value === 'items') && getBasePrice() > 1)
 
 function getWaveIncrement() { return getBasePrice() * 0.1 + 1 }
 
-function getWaveIncrementD6() { return getBasePrice() * 0.11 + 1 }
+function getWaveIncrementNM() { return getBasePrice() * 0.11 + 1 }
 
 function getCurrentTier() {
   if (activeTab.value === 'weapons') return activeWeaponData.value?.tier ?? 0
