@@ -2746,7 +2746,7 @@ def render_effect_text(eff, lang, parent_id='', is_weapon=False):
             # Sign for sub-effect value: based on the value itself (like FROM_VALUE)
             se_effect_sign = se.get('effect_sign', SIGN_FROM_VALUE)
             se_sign = _get_effect_sign(se_effect_sign, se_val, se_val)
-            se_color = 'g' if se_sign == SIGN_POSITIVE else ('r' if se_sign == SIGN_NEGATIVE else ('p' if se_sign == SIGN_OVERRIDE else ''))
+            se_color = 'zvg' if se_sign == SIGN_POSITIVE else ('zvr' if se_sign == SIGN_NEGATIVE else ('zvp' if se_sign == SIGN_OVERRIDE else ''))
             arg_signs[idx] = se_color
             args[idx + 1] = tr(se_key.upper(), lang) if se_key else ''
             idx += 2
