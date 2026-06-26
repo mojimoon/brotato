@@ -280,6 +280,8 @@ def parse_weapon_stats(filepath):
         'scaling_stats': data.get('scaling_stats', []),
         'effect_scale': data.get('effect_scale', 1.0),
         'is_healing': data.get('is_healing', False),
+        'additional_cooldown_every_x_shots': data.get('additional_cooldown_every_x_shots', -1),
+        'additional_cooldown_multiplier': data.get('additional_cooldown_multiplier', -1.0),
     }
     
     if 'nb_projectiles' in data:
@@ -1067,9 +1069,10 @@ def _build_curse_types(eff, args, arg_signs, parent_id='', is_weapon=False):
         c(2, type='negative')
         return curse
 
-    # 8. gain_stat_for_every_step_after_equip: value2 → negative
+    # 8. gain_stat_for_every_step_after_equip: stat bonus(args[0]) increases, steps(args[1]) decreases
     if custom_key == 'gain_stat_for_every_step_after_equip':
-        c(1, type='negative')
+        c(0, type='default')  # stat bonus increases
+        c(1, type='negative')  # steps required decreases (negative curse)
         return curse
 
     # 9. break_on_hit: value2[2] → default
@@ -1171,6 +1174,20 @@ def _build_curse_types(eff, args, arg_signs, parent_id='', is_weapon=False):
         c(0, type='negative', decimalPlaces=2, no_min=True)
         return curse
 
+    # 24f. Pet cooldowns (Blazemander ranged, Bonk Dog dash, Bot-O-Mine landmine)
+    if tk in ('EFFECT_PET_BLAZEMANDER', 'EFFECT_PET_BONK_DOG', 'EFFECT_PET_BOT_O_MINE'):
+        # These pets have baked cooldown at specific arg indices
+        if tk == 'EFFECT_PET_BLAZEMANDER':
+            c(0, type='default')  # melee dmg
+            c(5, type='negative', no_min=True, decimalPlaces=1)  # hardcoded 4s cooldown
+        elif tk == 'EFFECT_PET_BONK_DOG':
+            c(0, type='default')  # melee dmg
+            c(2, type='negative', no_min=True, decimalPlaces=1)  # hardcoded 5s cooldown
+        elif tk == 'EFFECT_PET_BOT_O_MINE':
+            c(0, type='default')  # bullet dmg
+            c(2, type='negative', no_min=True, decimalPlaces=1)  # hardcoded 5s cooldown
+        return curse
+
     # 25-27. Linked effects: value2 follows value with linked_mult ratio (parent=curseArgs[0])
     if custom_key == 'consumable_stats_while_max':
         c(0, type='default')
@@ -1183,6 +1200,18 @@ def _build_curse_types(eff, args, arg_signs, parent_id='', is_weapon=False):
     if key in ('burning_enemy_hp_percent_damage', 'giant_crit_damage', 'bonus_current_health_damage'):
         c(0, type='default')
         c(2, type='linked', linked_mult=0.1, decimalPlaces=1)
+        return curse
+
+    # 28. Charm effects: curse charm probability (args[1]), NOT HP threshold (args[0])
+    if 'CHARM' in tk:
+        c(1, type='default')
+        return curse
+
+    # 29. EFFECT_INCREASE_DAMAGE_RECEIVED (lute): cap (args[3]) is linked to value (args[0])
+    if tk == 'EFFECT_INCREASE_DAMAGE_RECEIVED':
+        c(0, type='default')
+        max_stacks = extra.get('max_stacks', 3)
+        c(3, type='linked', linked_mult=max_stacks)
         return curse
 
     # ---- Default: arg[0] gets 'default' type ----
@@ -1288,6 +1317,10 @@ def _get_cursed_text_key(eff, parent_id='', is_weapon=False):
         'trees': 'effect_trees_plural',
     }
     if key in m: return m[key]
+    # Also check by text_key (for effects with empty key like doc_moth)
+    tk = eff.get('text_key', '').upper()
+    for k, v in m.items():
+        if k.upper() in tk: return v
     if custom_key == 'increase_tier_on_reroll': return 'effect_increase_tier_on_reroll_plural'
     if key == 'knockback_aura' and value <= 1: return 'effect_knockback_aura'
     if parent_id == 'item_tardigrade' and key == 'hit_protection': return 'effect_hit_protection_plural'
@@ -2682,6 +2715,11 @@ def render_effect_text(eff, lang, parent_id='', is_weapon=False):
             se_val = se.get('value', 0)
             se_key = se.get('key', '')
             args[idx] = str(se_val)
+            # Sign for sub-effect value: based on the value itself (like FROM_VALUE)
+            se_effect_sign = se.get('effect_sign', SIGN_FROM_VALUE)
+            se_sign = _get_effect_sign(se_effect_sign, se_val, se_val)
+            se_color = 'g' if se_sign == SIGN_POSITIVE else ('r' if se_sign == SIGN_NEGATIVE else ('p' if se_sign == SIGN_OVERRIDE else ''))
+            arg_signs[idx] = se_color
             args[idx + 1] = tr(se_key.upper(), lang) if se_key else ''
             idx += 2
         args_built = True
@@ -2765,6 +2803,12 @@ def render_effect_text(eff, lang, parent_id='', is_weapon=False):
         elif arg_sign == 2:
             sign = ''
         elif arg_sign == 3:  # FROM_VALUE
+            try:
+                v = float(str(raw).lstrip('+').rstrip('%'))
+                sign = 'g' if v > 0 else ('r' if v < 0 else '')
+            except (ValueError, TypeError):
+                sign = base_color
+        elif arg_sign == 4:  # FROM_ARG
             try:
                 v = float(str(raw).lstrip('+').rstrip('%'))
                 sign = 'g' if v > 0 else ('r' if v < 0 else '')
@@ -2913,6 +2957,34 @@ def build_effect_text_dict(eff):
     extra_effects = _build_cursed_extra_effects(eff, parent_id)
     if extra_effects:
         result['extra_effects'] = extra_effects
+    
+    # ---- Hardcoded pet second-damage injection ----
+    # Pets have sub-weapon stats not captured by the normal rendering pipeline.
+    # The game's format strings omit these damage values; we inject them here.
+    tk = (eff.get('text_key','')).upper()
+    
+    if tk == 'EFFECT_PET_BLAZEMANDER':
+        # Hardcoded: ranged_weapon_stats damage=1, scaling=1% elemental_damage
+        result['en'] = result['en'].replace('each dealing damage',
+            'each dealing <span class="zvg">1</span> (<span class="zvg"><scaling type="elemental_damage" value="0.01" /></span>) damage')
+        result['zh'] = result['zh'].replace('每发造成伤害',
+            '每发造成<span class="zvg">1</span>（<span class="zvg"><scaling type="elemental_damage" value="0.01" /></span>）伤害')
+    
+    if tk == 'EFFECT_PET_BONK_DOG':
+        # Hardcoded: explosion_effect.stats damage=8, scaling=40% melee_damage
+        result['en'] = result['en'].replace('deals explosive damage in an area',
+            'deals <span class="zvg">8</span> (<span class="zvg"><scaling type="melee_damage" value="0.4" /></span>) explosive damage in an area')
+        result['zh'] = result['zh'].replace('在范围内造成爆炸伤害',
+            '在范围内造成<span class="zvg">8</span>（<span class="zvg"><scaling type="melee_damage" value="0.4" /></span>）爆炸伤害')
+    
+    if tk == 'EFFECT_PET_BOT_O_MINE':
+        # Hardcoded: landmine_effect_stat.stats damage=10, scaling=100% engineering
+        result['en'] = result['en'].replace('dealing damage in an area',
+            'dealing <span class="zvg">10</span> (<span class="zvg"><scaling type="engineering" value="1.0" /></span>) damage in an area')
+        result['zh'] = result['zh'].replace('在范围内造成伤害',
+            '在范围内造成<span class="zvg">10</span>（<span class="zvg"><scaling type="engineering" value="1.0" /></span>）伤害')
+    
+    # ---- End hardcoded pet fix ----
     
     # Put back popped keys
     eff['_parent_id'] = parent_id

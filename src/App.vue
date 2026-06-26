@@ -217,6 +217,11 @@
               </span>
             </div>
 
+            <div v-if="addlCooldownInfo" class="weapon-stat-row">
+              <span class="ws-label">{{ S.cooldown }}</span>
+              <span class="ws-val">{{ addlCooldownInfo }}</span>
+            </div>
+
             <div v-if="displayStats.knockback !== 0" class="weapon-stat-row">
               <span class="ws-label">{{ S.knockback }}</span>
               <span class="ws-val">{{ displayStats.knockback }}</span>
@@ -965,7 +970,7 @@ function renderEffectText(eff) {
         }
         let rawValue = curseEnabled.value
           ? applyCurse(arg, effectSign, origValue)
-          : Math.round(arg.value)
+          : (arg.decimalPlaces != null ? arg.value.toFixed(arg.decimalPlaces) : Math.round(arg.value))
         if (arg.decimalPlaces != null && curseEnabled.value) {
           rawValue = parseFloat(rawValue).toFixed(arg.decimalPlaces)
         }
@@ -991,9 +996,31 @@ function renderEffectText(eff) {
       }
     }
     if (sp.special === 'modify_projectile' || sp.special === 'modify_projectile_weapon') {
-      // value changes: max(1, cursed_value - 1) for weapon; just text_key for non-weapon
-      // For simplicity, just swap text_key based on the message
-      // This is complex — defer to a more detailed implementation
+      // Per dlc_1_data.gd:290, weapon: max(1, cursed_value - 1); non-weapon: just cursed_value
+      const baseValue = sp.base_value
+      const cv = curseFactor.value
+      // Apply negative curse: floor(abs / (1+cv))
+      const cursedVal = Math.floor(Math.abs(baseValue) / (1 + cv))
+      const finalVal = sp.special === 'modify_projectile_weapon'
+        ? Math.max(1, cursedVal - 1)
+        : cursedVal
+      // Swap text_key if applicable
+      if (finalVal === 1 || finalVal === 2 || finalVal === 3) {
+        const newKey = sp.text_keys?.[String(finalVal)]
+        if (newKey) {
+          const trans = rawData.value.translations || {}
+          const tkey = newKey.toUpperCase()
+          if (trans[tkey]) {
+            text = lang === 'zh' ? trans[tkey].zh : trans[tkey].en
+            // Restore curse placeholders for the new text (re-process with curse args if needed)
+            // For simplicity, return the new text with value injected
+            text = text.replace('{0}', String(finalVal))
+            return text
+          }
+        }
+      }
+      // Replace the value in the current text (find and replace the first number)
+      text = text.replace(/(\d+)/, String(finalVal))
     }
     if (sp.special === 'mirror') {
       // Mirror keeps original effect but adds new text line
@@ -1162,6 +1189,19 @@ const allFourTierSlots = computed(() => {
   const slots = [null, null, null, null]
   for (const tw of activeTierWeapons.value) slots[tw.tier] = tw
   return slots
+})
+
+// Additional cooldown every X shots (e.g. revolver, grenade launcher, chain gun)
+const addlCooldownInfo = computed(() => {
+  const stats = activeWeaponData.value?.stats
+  if (!stats || stats.additional_cooldown_every_x_shots <= 0) return ''
+  const shots = stats.additional_cooldown_every_x_shots
+  const mult = stats.additional_cooldown_multiplier
+  const baseCd = stats.cooldown / 60
+  const effectiveCd = baseCd * mult
+  const cdStr = formatCooldown(effectiveCd)
+  if (isZh.value) return `每发射${shots}次冷却增加至${cdStr}`
+  return `Cooldown is ${cdStr} every ${shots} shots`
 })
 
 // ---- Shared computed: effects source ----

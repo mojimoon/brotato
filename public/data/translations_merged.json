@@ -1644,8 +1644,8 @@
       ],
       "status": "matched",
       "matched_missing_key_id": "B_328",
-      "en": "Increases the attack speed of your structures by {0} ({1})",
-      "zh": "构建物的攻击速度提升{0} （{1}）",
+      "en": "Increases the attack speed of your structures by 0% ({0} Attack Speed)",
+      "zh": "构建物的攻击速度提升0%（{0}攻击速度）",
       "source_names": [
         "improved_tools"
       ],
