@@ -434,54 +434,57 @@
         </div>
 
         <!-- Shared: Price Section (weapons & items) -->
-        <div v-if="showPriceSection" class="detail-section price-section">
-          <div class="price-row">
-            <span class="price-label">{{ S.basePrice }}</span>
+        <div v-if="showPriceSection" class="detail-section">
+          <div class="price-toggle" @click="showPriceDetail = !showPriceDetail">
+            <span class="toggle-icon">{{ showPriceDetail ? '▼' : '▶' }}</span>
+            <span>{{ S.basePrice }}</span>
             <span class="price-base">{{ getBasePrice() }}
               <img :src="priceIconSrc" class="price-icon" />
             </span>
           </div>
-          <table v-if="showingPrice" class="price-table">
-            <thead>
-              <tr>
-                <th></th>
-                <th>{{ S.perWave }}</th>
-                <th>{{ S.wave }} {{ waveSlider }}</th>
-                <th>1</th>
-                <th>4</th>
-                <th>8</th>
-                <th>14</th>
-                <th>19</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>{{ isMobile ? S.belowNightmareShort : S.belowNightmare }}</td>
-                <td>+{{ formatIncr(getWaveIncrement()) }}</td>
-                <td class="price-base price-final">{{ waveSlider > 0 ? computedPrice : getBasePrice() }}</td>
-                <td>{{ showPriceCell(1) ? priceAtWave(1) : '' }}</td>
-                <td>{{ showPriceCell(4) ? priceAtWave(4) : '' }}</td>
-                <td>{{ priceAtWave(8) }}</td>
-                <td>{{ priceAtWave(14) }}</td>
-                <td>{{ priceAtWave(19) }}</td>
-              </tr>
-              <tr>
-                <td>{{ isMobile ? S.nightmareShort : S.nightmare }}</td>
-                <td>+{{ formatIncr(getWaveIncrementNM()) }}</td>
-                <td class="price-base price-final-nightmare">{{ waveSlider > 0 ? computedPriceNM : getBasePrice() }}
-                </td>
-                <td>{{ showPriceCell(1) ? priceAtWaveNM(1) : '' }}</td>
-                <td>{{ showPriceCell(4) ? priceAtWaveNM(4) : '' }}</td>
-                <td>{{ priceAtWaveNM(8) }}</td>
-                <td>{{ priceAtWaveNM(14) }}</td>
-                <td>{{ priceAtWaveNM(19) }}</td>
-              </tr>
-            </tbody>
-          </table>
-          <div v-if="showingPrice" class="price-slider-row">
-            <span class="wave-label">{{ S.wave }}</span>
-            <el-slider v-model="waveSlider" :min="0" :max="20" :step="1" :marks="waveSliderMarks" class="price-slider"
-              placement="bottom" />
+          <div v-if="showPriceDetail" class="price-section">
+            <table class="price-table">
+              <thead>
+                <tr>
+                  <th></th>
+                  <th>{{ S.perWave }}</th>
+                  <th>{{ S.wave }} {{ waveSlider }}</th>
+                  <th>1</th>
+                  <th>4</th>
+                  <th>8</th>
+                  <th>14</th>
+                  <th>19</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>{{ isMobile ? S.belowNightmareShort : S.belowNightmare }}</td>
+                  <td>+{{ formatIncr(getWaveIncrement()) }}</td>
+                  <td class="price-base price-final">{{ waveSlider > 0 ? computedPrice : getBasePrice() }}</td>
+                  <td>{{ showPriceCell(1) ? priceAtWave(1) : '' }}</td>
+                  <td>{{ showPriceCell(4) ? priceAtWave(4) : '' }}</td>
+                  <td>{{ priceAtWave(8) }}</td>
+                  <td>{{ priceAtWave(14) }}</td>
+                  <td>{{ priceAtWave(19) }}</td>
+                </tr>
+                <tr>
+                  <td>{{ isMobile ? S.nightmareShort : S.nightmare }}</td>
+                  <td>+{{ formatIncr(getWaveIncrementNM()) }}</td>
+                  <td class="price-base price-final-nightmare">{{ waveSlider > 0 ? computedPriceNM : getBasePrice() }}
+                  </td>
+                  <td>{{ showPriceCell(1) ? priceAtWaveNM(1) : '' }}</td>
+                  <td>{{ showPriceCell(4) ? priceAtWaveNM(4) : '' }}</td>
+                  <td>{{ priceAtWaveNM(8) }}</td>
+                  <td>{{ priceAtWaveNM(14) }}</td>
+                  <td>{{ priceAtWaveNM(19) }}</td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="price-slider-row">
+              <span class="wave-label">{{ S.wave }}</span>
+              <el-slider v-model="waveSlider" :min="0" :max="20" :step="1" :marks="waveSliderMarks" class="price-slider"
+                placement="bottom" />
+            </div>
           </div>
         </div>
 
@@ -584,6 +587,7 @@ const priceIconSrc = computed(() => `${BASE}icons/items/materials/harvesting_ico
 
 // ---- Attack Speed Calculator ----
 const showAttackSpeedCalc = ref(false)
+const showPriceDetail = ref(false)
 const attackSpeedSlider = ref(0)
 const statRangeSlider = ref(0)
 
@@ -1660,7 +1664,9 @@ body { background: #1a1d28; color: #ccc; font-family: 'Segoe UI', system-ui, san
 
 /* Price Section */
 .price-section { margin-top: 12px; padding: 14px 16px; background: #22253a; border-radius: 8px; border: 1px solid #2a2d3a; }
-.price-table { width: 100%; border-collapse: collapse; margin-bottom: 12px; font-size: 13px; }
+.price-toggle { display: flex; align-items: center; gap: 8px; padding: 10px 12px; background: #22253a; border-radius: 6px; cursor: pointer; font-size: 14px; color: #f39c12; transition: background .15s; font-weight: 500; }
+.price-toggle:hover { background: #282c44; }
+.price-table { width: 100%; border-collapse: collapse; margin-bottom: 12px; font-size: 13px; margin-top: 12px; }
 .price-table th, .price-table td { padding: 6px 10px; text-align: center; border: 1px solid #2a2d3a; }
 .price-table th { color: #888; font-weight: 600; background: #1e2030; }
 .price-table td { color: #ddd; }
@@ -1669,9 +1675,9 @@ body { background: #1a1d28; color: #ccc; font-family: 'Segoe UI', system-ui, san
 .price-final { color: #f39c12 !important; }
 .price-final-nightmare { color: #ff3d3d !important; }
 .price-icon { width: 18px; height: 18px; image-rendering: pixelated; vertical-align: middle; }
+.price-label { font-size: 13px; color: #bbb; }
 
 .price-slider-row { display: flex; align-items: center; gap: 12px; }
-.price-label { font-size: 13px; color: #bbb; margin: 0 8px 8px 0; }
 .wave-label { flex-shrink: 0; white-space: nowrap; font-size: 13px; color: #bbb; margin-right: 8px; }
 .price-slider { --el-slider-height: 4px; flex: 1; min-width: 0; }
 .price-slider :deep(.el-slider__runway) { background: #2a2d3a; margin: 0; }
@@ -1822,7 +1828,8 @@ body.light-theme .curse-toggle-btn { background: #e8eaed !important; border-colo
 body.light-theme .curse-toggle-btn.curse-active { background: #ede9fe !important; border-color: #a78bfa !important; color: #7c3aed !important; }
 body.light-theme .curse-modified { color: #7c3aed !important; }
 body.light-theme .price-section { background: #f0f2f5; border-color: #ccc; }
-body.light-theme .price-label { color: #444; }
+body.light-theme .price-toggle { background: #f5f5f5; color: #c0392b; }
+body.light-theme .price-toggle:hover { background: #e8e8e8; }
 body.light-theme .wave-label { color: #444; }
 body.light-theme .price-base { color: #111; }
 body.light-theme .price-final { color: #1e88e5 !important; }
