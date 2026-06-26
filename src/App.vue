@@ -190,12 +190,12 @@
             </button>
           </div>
 
-          <div v-if="activeWeaponData.stats" class="detail-section">
+          <div v-if="displayStats" class="detail-section">
             <div class="weapon-stat-row">
               <span class="ws-label">{{ S.damage }}</span>
-              <span class="ws-val">{{ activeWeaponData.stats.damage }}</span>
-              <span v-if="activeWeaponData.stats.scaling_stats?.length" class="ws-scaling">
-                (<template v-for="(ss, i) in activeWeaponData.stats.scaling_stats" :key="i">
+              <span class="ws-val" :class="{ 'curse-modified': curseEnabled }">{{ displayStats.damage }}</span>
+              <span v-if="displayStats.scaling_stats?.length" class="ws-scaling">
+                (<template v-for="(ss, i) in displayStats.scaling_stats" :key="i">
                   <span v-if="i > 0">+</span><span class="ws-scaling-pct">{{ (ss[1] * 100).toFixed(0) }}%</span>
                   <img v-if="getStatIcon(ss[0])" :src="getStatIcon(ss[0])" class="stat-inline-icon" />
                   <span v-else>{{ statTr(ss[0]) }}</span>
@@ -206,49 +206,49 @@
             <div class="weapon-stat-row">
               <span class="ws-label">{{ S.crit }}</span>
               <span class="ws-val">{{ (activeWeaponData.stats.crit_chance * 100).toFixed(0) }}%</span>
-              <span class="ws-val crit-dmg">x{{ activeWeaponData.stats.crit_damage }}</span>
+              <span class="ws-val crit-dmg" :class="{ 'curse-modified': curseEnabled }">x{{ displayStats.crit_damage }}</span>
             </div>
 
             <div class="weapon-stat-row">
               <span class="ws-label">{{ S.cooldown }}</span>
               <span class="ws-val">
-                {{ formatCooldown(totalCooldown) }}
-                <span class="ws-attack-type">({{ formatCooldown(activeWeaponData.stats.cooldown / 60) }}+{{ formatCooldown(activeWeaponData.stats.animation_cooldown || 0) }})</span>
+                {{ formatCooldown(displayCooldown) }}
+                <span class="ws-attack-type">({{ formatCooldown(displayStats.cooldown / 60) }}+{{ formatCooldown(displayStats.animation_cooldown || 0) }})</span>
               </span>
             </div>
 
-            <div v-if="activeWeaponData.stats.knockback !== 0" class="weapon-stat-row">
+            <div v-if="displayStats.knockback !== 0" class="weapon-stat-row">
               <span class="ws-label">{{ S.knockback }}</span>
-              <span class="ws-val">{{ activeWeaponData.stats.knockback }}</span>
+              <span class="ws-val">{{ displayStats.knockback }}</span>
             </div>
 
             <div class="weapon-stat-row">
               <span class="ws-label">{{ S.range }}</span>
-              <span class="ws-val">{{ activeWeaponData.stats.max_range }}
+              <span class="ws-val">{{ displayStats.max_range }}
                 <span v-if="activeWeaponData.type === 'melee'" class="ws-attack-type">{{ meleeAttackTypeText }}</span>
               </span>
             </div>
 
-            <div v-if="(activeWeaponData.stats.accuracy * 100) < 100" class="weapon-stat-row">
+            <div v-if="(displayStats.accuracy * 100) < 100" class="weapon-stat-row">
               <span class="ws-label">{{ S.accuracy }}</span>
-              <span class="ws-val">{{ (activeWeaponData.stats.accuracy * 100).toFixed(0) }}%</span>
+              <span class="ws-val">{{ (displayStats.accuracy * 100).toFixed(0) }}%</span>
             </div>
 
-            <div v-if="activeWeaponData.stats.lifesteal > 0" class="weapon-stat-row">
+            <div v-if="displayStats.lifesteal > 0" class="weapon-stat-row">
               <span class="ws-label">{{ S.lifesteal }}</span>
-              <span class="ws-val">{{ (activeWeaponData.stats.lifesteal * 100).toFixed(0) }}%</span>
+              <span class="ws-val" :class="{ 'curse-modified': curseEnabled }">{{ (displayStats.lifesteal * 100).toFixed(0) }}%</span>
             </div>
 
-            <div v-if="activeWeaponData.type === 'ranged' && activeWeaponData.stats.piercing > 0" class="weapon-stat-row">
+            <div v-if="activeWeaponData.type === 'ranged' && displayStats.piercing > 0" class="weapon-stat-row">
               <span class="ws-label">{{ S.piercing }}</span>
-              <span class="ws-val">{{ activeWeaponData.stats.piercing }}
-                <span v-if="activeWeaponData.stats.piercing_dmg_reduction > 0" class="ws-attack-type"> (-{{ (activeWeaponData.stats.piercing_dmg_reduction * 100).toFixed(0) }}% {{ S.dmg }})</span>
+              <span class="ws-val" :class="{ 'curse-modified': curseEnabled }">{{ displayStats.piercing }}
+                <span v-if="displayStats.piercing_dmg_reduction > 0" class="ws-attack-type"> (-{{ (displayStats.piercing_dmg_reduction * 100).toFixed(0) }}% {{ S.dmg }})</span>
               </span>
             </div>
 
-            <div v-if="activeWeaponData.type === 'ranged' && activeWeaponData.stats.bounce > 0" class="weapon-stat-row">
+            <div v-if="activeWeaponData.type === 'ranged' && displayStats.bounce > 0" class="weapon-stat-row">
               <span class="ws-label">{{ S.bounce }}</span>
-              <span class="ws-val">{{ activeWeaponData.stats.bounce }}</span>
+              <span class="ws-val" :class="{ 'curse-modified': curseEnabled }">{{ displayStats.bounce }}</span>
             </div>
 
             <div v-if="activeWeaponData.type === 'ranged' && activeWeaponData.stats.nb_projectiles > 1" class="weapon-stat-row">
@@ -356,6 +356,27 @@
           </div>
         </div>
 
+        <!-- Curse Preview (weapons & items) -->
+        <div v-if="activeTab === 'weapons' || activeTab === 'items'" class="detail-section curse-section">
+          <div class="curse-row">
+            <el-button 
+              class="curse-toggle-btn" 
+              :class="{ 'curse-active': curseEnabled }"
+              @click="curseEnabled = !curseEnabled"
+              size="small"
+            >{{ S.curse }}</el-button>
+            <el-slider
+              v-if="curseEnabled"
+              v-model="curseSlider"
+              :min="10"
+              :max="110"
+              :step="1"
+              show-input
+              class="curse-slider"
+            />
+          </div>
+        </div>
+
         <!-- Shared: Price Section (weapons & items) -->
         <div v-if="showPriceSection" class="detail-section price-section">
           <div class="price-row">
@@ -455,6 +476,7 @@ const S = computed(() => isZh.value ? {
   belowNightmare: '难度0-5', nightmare: '噩梦',
   basePriceShort: '价格', belowNightmareShort: '难5', nightmareShort: '噩梦',
   attackSpeedCalc: '攻速计算器', attackSpeed: '攻速', statRange: '范围',
+  curse: '诅咒',
   finalCooldown: '最终冷却'
 } : {
   weapons: 'Weapons', items: 'Items', characters: 'Characters',
@@ -472,6 +494,7 @@ const S = computed(() => isZh.value ? {
   belowNightmare: 'Danger 0-5', nightmare: 'Nightmare',
   basePriceShort: 'Price', belowNightmareShort: 'D5', nightmareShort: 'NM',
   attackSpeedCalc: 'Attack Speed Calculator', attackSpeed: 'A.Spd', statRange: 'Range',
+  curse: 'Curse',
   finalCooldown: 'Final Cooldown'
 })
 
@@ -501,6 +524,63 @@ const priceIconSrc = computed(() => `${BASE}icons/items/materials/harvesting_ico
 const showAttackSpeedCalc = ref(false)
 const attackSpeedSlider = ref(0)
 const statRangeSlider = ref(0)
+
+// ---- Curse System ----
+const curseEnabled = ref(false)
+const curseSlider = ref(110)
+
+// Persist curse state (similar to other UI state)
+const CURSE_STORAGE_KEY = 'brotato_curse'
+const CURSE_ENABLED_KEY = 'brotato_curse_enabled'
+
+function loadCurseState() {
+  try {
+    const saved = localStorage.getItem(CURSE_STORAGE_KEY)
+    if (saved !== null) curseSlider.value = parseInt(saved) || 110
+    const savedEnabled = localStorage.getItem(CURSE_ENABLED_KEY)
+    if (savedEnabled !== null) curseEnabled.value = savedEnabled === 'true'
+  } catch (e) { /* localStorage not available */ }
+}
+
+watch(curseSlider, (v) => {
+  try { localStorage.setItem(CURSE_STORAGE_KEY, String(v)) } catch (e) {}
+})
+watch(curseEnabled, (v) => {
+  try { localStorage.setItem(CURSE_ENABLED_KEY, String(v)) } catch (e) {}
+})
+
+// Curse value as a fraction: slider value / 100
+const curseFactor = computed(() => curseEnabled.value ? curseSlider.value / 100 : 0)
+
+function applyCurse(baseValue, curseType, effectSign, originalValue) {
+  // curseType: 'base' = standard formula (positive boost, negative reduce)
+  //            'negative' = always divide by (1+curse)
+  // originalValue: the effect.value from raw data, used only for FROM_VALUE resolution
+  const cv = curseFactor.value
+  if (cv <= 0) return Math.round(baseValue)
+  
+  const absV = Math.abs(baseValue)
+  const sign = baseValue < 0 ? -1 : 1
+  
+  if (curseType === 'negative') {
+    // Always reduce: divide by (1+curse)
+    return sign * Math.max(1, Math.floor(absV / (1 + cv)))
+  }
+  
+  // 'base': determine direction from effect sign
+  // effect_sign: 0=POSITIVE, 1=NEGATIVE, 2=NEUTRAL, 3=FROM_VALUE, 5=OVERRIDE
+  let isPositive
+  if (effectSign === 0 || effectSign === 5) isPositive = true
+  else if (effectSign === 1) isPositive = false
+  else if (effectSign === 3) isPositive = (originalValue ?? baseValue) > 0
+  else return Math.round(baseValue) // NEUTRAL or unknown
+  
+  if (isPositive) {
+    return sign * Math.ceil(absV * (1 + cv))
+  } else {
+    return sign * Math.max(1, Math.floor(absV / (1 + cv)))
+  }
+}
 
 const chartData = computed(() => {
   const stats = activeWeaponData.value?.stats
@@ -797,8 +877,35 @@ function renderEffectPrefix(eff) {
 
 function renderEffectText(eff) {
   const lang = isZh.value ? 'zh' : 'en'
-  let text = eff['text_' + lang] || eff.text_en || ''
+  let text
+  
+  // New format: text object with templates and curse args
+  if (eff.text && eff.text[lang]) {
+    text = eff.text[lang]
+    const curseArgs = eff.text.args || []
+    
+    if (curseArgs.length > 0) {
+      const effectSign = eff.effect_sign ?? 3
+      const origValue = eff.value  // original signed value for FROM_VALUE resolution
+      text = text.replace(/\{(\d+)\}/g, (m, idx) => {
+        const i = parseInt(idx)
+        if (i < curseArgs.length) {
+          const arg = curseArgs[i]
+          const value = curseEnabled.value
+            ? applyCurse(arg.value, arg.curse, effectSign, origValue)
+            : Math.round(arg.value)
+          return String(value)
+        }
+        return m
+      })
+    }
+  } else {
+    // Old format fallback: pre-rendered text
+    text = eff['text_' + lang] || eff.text_en || ''
+  }
+  
   if (!text) return `${eff.value} ${statTr(eff.key)}`
+  
   text = text.replace(/<icon>([^<]+)<\/icon>/g, (m, icKey) => {
     const src = resolveStatIcon(icKey)
     if (src) {
@@ -922,6 +1029,25 @@ const activeWeaponData = computed(() => {
 
 const activeWeaponTier = computed(() => activeWeaponData.value.tier || 0)
 
+// Cursed weapon stats for display
+const displayStats = computed(() => {
+  const stats = activeWeaponData.value?.stats
+  if (!stats) return null
+  const cv = curseFactor.value
+  if (cv <= 0) return stats
+  return {
+    ...stats,
+    damage: Math.ceil(stats.damage * (1 + cv)),
+    crit_damage: Math.round(stats.crit_damage * (1 + cv / 5) * 10) / 10,
+    cooldown: Math.trunc(stats.cooldown / (1 + cv)),
+    animation_cooldown: stats.animation_cooldown || 0,
+    lifesteal: stats.lifesteal > 0 ? Math.round(stats.lifesteal * (1 + cv) * 100) / 100 : stats.lifesteal,
+    piercing: stats.piercing > 0 ? Math.min(stats.piercing + 1, Math.ceil(stats.piercing * (1 + cv / 5))) : stats.piercing,
+    bounce: stats.bounce > 0 ? Math.min(stats.bounce + 1, Math.ceil(stats.bounce * (1 + cv / 5))) : stats.bounce,
+    scaling_stats: (stats.scaling_stats || []).map(([k, v]) => [k, v * (1 + cv)]),
+  }
+})
+
 const allFourTierSlots = computed(() => {
   const slots = [null, null, null, null]
   for (const tw of activeTierWeapons.value) slots[tw.tier] = tw
@@ -946,6 +1072,14 @@ const meleeAttackTypeText = computed(() => {
 // ---- Cooldown calculation ----
 const totalCooldown = computed(() => {
   const stats = activeWeaponData.value?.stats
+  if (!stats) return 0
+  const attackCooldown = stats.cooldown / 60
+  const animationCooldown = stats.animation_cooldown || 0
+  return attackCooldown + animationCooldown
+})
+
+const displayCooldown = computed(() => {
+  const stats = displayStats.value
   if (!stats) return 0
   const attackCooldown = stats.cooldown / 60
   const animationCooldown = stats.animation_cooldown || 0
@@ -1119,6 +1253,7 @@ function onTabChange() {
 }
 
 onMounted(async () => {
+  loadCurseState()
   const resp = await fetch(BASE + 'data/brotato_data.json')
   rawData.value = await resp.json()
 })
@@ -1310,12 +1445,31 @@ body { background: #1a1d28; color: #ccc; font-family: 'Segoe UI', system-ui, san
 .weapon-stat-row:hover { background: #282c44; }
 .ws-label { font-size: 14px; color: #bbb; min-width: 70px; }
 .ws-val { font-size: 15px; color: #eee; font-weight: 600; }
+.ws-val.curse-modified { color: #c084fc; text-shadow: 0 0 6px rgba(139, 92, 246, 0.3); }
 .crit-dmg { color: #f39c12; font-size: 14px; }
 .ws-scaling { font-size: 15px; color: #eae2b0; }
 .ws-scaling-pct { color: #ddd; }
 .ws-attack-type { font-size: 13px; color: #bbb; font-weight: 400; margin-left: 4px; }
 .stat-inline-icon { width: 16px; height: 16px; vertical-align: middle; image-rendering: pixelated; margin: 0 1px; }
 .stat-prefix-icon { width: 13px; height: 13px; vertical-align: middle; image-rendering: pixelated; }
+
+/* Curse Section */
+.curse-section { margin-top: 12px; padding: 12px 16px; background: #22253a; border-radius: 8px; border: 1px solid #2a2d3a; }
+.curse-row { display: flex; align-items: center; gap: 12px; }
+.curse-toggle-btn { 
+  font-size: 13px; font-weight: 600; 
+  background: #2a2d3a !important; border: 1px solid #3a3d4e !important; color: #888 !important;
+  transition: all 0.2s;
+}
+.curse-toggle-btn.curse-active {
+  background: #3d1f5e !important; border-color: #7b3fa3 !important; color: #c084fc !important;
+  box-shadow: 0 0 8px rgba(139, 92, 246, 0.3);
+}
+.curse-slider { flex: 1; min-width: 150px; --el-slider-height: 4px; }
+.curse-slider :deep(.el-slider__runway) { background: #2a2d3a; }
+.curse-slider :deep(.el-slider__bar) { background: #7b3fa3; }
+.curse-slider :deep(.el-slider__button) { width: 14px; height: 14px; border-color: #7b3fa3; }
+.curse-slider :deep(.el-input-number) { width: 80px; }
 
 /* Price Section */
 .price-section { margin-top: 12px; padding: 14px 16px; background: #22253a; border-radius: 8px; border: 1px solid #2a2d3a; }
@@ -1474,6 +1628,10 @@ body.light-theme .weapon-stat-row { background: #f0f2f5; }
 body.light-theme .weapon-stat-row:hover { background: #e8eaed; }
 body.light-theme .ws-label { color: #444; }
 body.light-theme .ws-val { color: #111; }
+body.light-theme .curse-section { background: #f0f2f5; border-color: #ccc; }
+body.light-theme .curse-toggle-btn { background: #e8eaed !important; border-color: #ccc !important; color: #777 !important; }
+body.light-theme .curse-toggle-btn.curse-active { background: #ede9fe !important; border-color: #a78bfa !important; color: #7c3aed !important; }
+body.light-theme .curse-modified { color: #7c3aed !important; }
 body.light-theme .price-section { background: #f0f2f5; border-color: #ccc; }
 body.light-theme .price-label { color: #444; }
 body.light-theme .wave-label { color: #444; }

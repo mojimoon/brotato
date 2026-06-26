@@ -544,29 +544,44 @@ def stat_display_name(stat_key, lang='zh'):
 def fmt_val(v, lang='zh', add_op=False, add_pct=False):
     """Format a numeric value with optional + prefix and % suffix"""
     s = str(v)
-    if add_op and v > 0:
-        s = '+' + s
+    if add_op:
+        try:
+            if v > 0:
+                s = '+' + s
+        except (TypeError, ValueError):
+            pass  # v is not a number (e.g., '{0}' placeholder)
     if add_pct:
         s = s + '%'
     return s
 
+_keys_needing_operator = {
+    'stat_max_hp', 'stat_damage', 'stat_armor', 'stat_crit_chance', 'stat_luck',
+    'stat_attack_speed', 'stat_elemental_damage', 'stat_hp_regeneration', 'stat_lifesteal',
+    'stat_melee_damage', 'stat_percent_damage', 'stat_dodge', 'stat_engineering',
+    'stat_range', 'stat_ranged_damage', 'stat_speed', 'stat_harvesting',
+    'xp_gain', 'weapon_slot', 'items_price', 'weapons_price',
+    'number_of_enemies', 'map_size', 'enemy_speed', 'enemy_health', 'enemy_damage',
+    'effect_enemy_health', 'effect_enemy_speed', 'effect_knockback',
+    'explosion_size', 'stat_explosion_size',
+    'explosion_damage', 'stat_explosion_damage',
+    'effect_gain_stat_every_killed_enemies', 'effect_damage_against_bosses',
+    'stat_damage_against_bosses',
+    'effect_pickup_range', 'pickup_range', 'knockback',
+    'stat_curse',  # curse always shows +
+}
+
 def needs_operator(key):
     """Check if a key needs + operator prefix (from Godot's keys_needing_operator)"""
-    return key.lower() in {
-        'stat_max_hp', 'stat_damage', 'stat_armor', 'stat_crit_chance', 'stat_luck',
-        'stat_attack_speed', 'stat_elemental_damage', 'stat_hp_regeneration', 'stat_lifesteal',
-        'stat_melee_damage', 'stat_percent_damage', 'stat_dodge', 'stat_engineering',
-        'stat_range', 'stat_ranged_damage', 'stat_speed', 'stat_harvesting',
-        'xp_gain', 'weapon_slot', 'items_price', 'weapons_price',
-        'number_of_enemies', 'map_size', 'enemy_speed', 'enemy_health', 'enemy_damage',
-        'effect_enemy_health', 'effect_enemy_speed', 'effect_knockback',
+    return key.lower() in _keys_needing_operator
+
+_keys_needing_percent = {
+        'effect_burn_chance', 'effect_explode_custom',
+        'effect_damage_against_bosses',
+        'stat_damage_against_bosses',
         'explosion_size', 'stat_explosion_size',
         'explosion_damage', 'stat_explosion_damage',
-        'effect_gain_stat_every_killed_enemies', 'effect_damage_against_bosses',
-        'stat_damage_against_bosses',
-        'effect_pickup_range', 'pickup_range', 'knockback',
-        'stat_curse',  # curse always shows +
-    }
+        'piercing_damage', 'effect_piercing_damage_short',
+}
 
 def needs_percent(key):
     """Check if a key needs % suffix.
@@ -578,14 +593,7 @@ def needs_percent(key):
     The % suffix is only needed for non-stat keys where the raw value represents a 
     percentage (e.g., chance-based effects).
     """
-    return key.lower() in {
-        'effect_burn_chance', 'effect_explode_custom',
-        'effect_damage_against_bosses',
-        'stat_damage_against_bosses',
-        'explosion_size', 'stat_explosion_size',
-        'explosion_damage', 'stat_explosion_damage',
-        'piercing_damage', 'effect_piercing_damage_short',
-    }
+    return key.lower() in _keys_needing_percent
 
 def sign_color(eff):
     """Get sign color based on effect_sign and value"""
@@ -984,6 +992,145 @@ def _sign_to_color(sign):
     return ''
 
 SIGN_NEUTRAL = ''
+
+# ====================================================================
+# Curse system constants & mapping (from dlc_1/dlc_1_data.gd)
+# ====================================================================
+CURSE_NONE = None       # Not affected by curse
+CURSE_BASE = 'base'     # Standard: positive→*(1+curse), negative→/(1+curse)
+CURSE_NEGATIVE = 'negative'  # Always divided by (1+curse)
+
+def _build_curse_types(eff, args, arg_signs):
+    """Determine which arg indices are affected by curse and how.
+    
+    Returns a list parallel to args where each entry is CURSE_BASE, CURSE_NEGATIVE, or CURSE_NONE.
+    Default: arg 0 gets CURSE_BASE if it's a colored numeric value.
+    """
+    key = eff.get('key', '')
+    text_key = eff.get('text_key', '')
+    custom_key = eff.get('custom_key', '')
+    extra = eff.get('extra', {})
+    tk_upper = (text_key or key).upper()
+    n = len(args)
+    curse = [CURSE_NONE] * max(n, 10)
+    
+    # Helper: determine if arg i should be cursed as "base"
+    def set_base(i):
+        if i < len(curse) and arg_signs[i] not in (SIGN_NEUTRAL, ''):
+            curse[i] = CURSE_BASE
+    
+    # ---- Special case overrides based on dlc_1_data.gd curse_item() ----
+    
+    # GainStatEveryKilledEnemiesEffect: only the "kills required" value (arg 2) cursed, NEGATIVE
+    if key == 'effect_gain_stat_every_killed_enemies':
+        if len(args) > 2:
+            curse[2] = CURSE_NEGATIVE
+        return curse
+    
+    # gain_stat_for_every_step_after_equip: value2 cursed NEGATIVE
+    if custom_key == 'gain_stat_for_every_step_after_equip':
+        if len(args) > 1:
+            curse[1] = CURSE_NEGATIVE
+        return curse
+    
+    # break_on_hit: only value2 (arg 2 in format string) cursed base
+    if key in ('break_on_hit', 'effect_break_on_hit'):
+        if len(args) > 2:
+            curse[2] = CURSE_BASE
+        return curse
+    
+    # knockback_aura: override Sign.NEGATIVE → curse negative
+    if key == 'knockback_aura' or (tk_upper == 'EFFECT_KNOCKBACK_AURA'):
+        curse[0] = CURSE_NEGATIVE
+        return curse
+    
+    # modify_every_x_projectile: override Sign.NEGATIVE → curse negative  
+    if key == 'modify_every_x_projectile' or tk_upper == 'EFFECT_MODIFY_EVERY_X_PROJECTILE':
+        curse[0] = CURSE_NEGATIVE
+        return curse
+    
+    # consumable_heal_over_time: override Sign.NEUTRAL → NOT cursed
+    if key == 'consumable_heal_over_time':
+        return curse
+    
+    # estys_couch stat_speed: override Sign.POSITIVE → still base curse
+    # weapon_mace stat_attack_speed: override Sign.POSITIVE → still base curse
+    # (these are handled by default behavior below)
+    
+    # baby_gecko stat_range, potion stat_hp_regeneration, pile_of_books, pocket_factory:
+    # modifier *= 3, but still base curse formula
+    # (handled by default)
+    
+    # Effects with randomized / fixed values (NOT cursed):
+    # dodge_cap, will_o_the_wisp stat_elemental_damage, candy_bag, hp_start_next_wave, hit_protection
+    for not_cursed_key in ('dodge_cap', 'hp_start_next_wave'):
+        if key == not_cursed_key or tk_upper == not_cursed_key.upper():
+            return curse
+    
+    if key == 'hit_protection':
+        return curse
+    
+    # ---- Default behavior: arg 0 gets base curse ----
+    # Stat effects with text_key (translations): arg 0 is the value
+    STAT_KEYS_CURSE = {
+        'stat_max_hp', 'stat_damage', 'stat_percent_damage', 'stat_armor',
+        'stat_crit_chance', 'stat_luck', 'stat_attack_speed', 'stat_elemental_damage',
+        'stat_hp_regeneration', 'stat_lifesteal', 'stat_melee_damage', 'stat_ranged_damage',
+        'stat_dodge', 'stat_engineering', 'stat_range', 'stat_speed',
+        'stat_harvesting', 'stat_knockback', 'stat_curse', 'stat_xp_gain',
+        'xp_gain', 'explosion_size', 'stat_explosion_size',
+        'explosion_damage', 'stat_explosion_damage',
+        'enemy_health', 'enemy_speed', 'enemy_damage', 'number_of_enemies',
+        'map_size', 'pickup_range', 'items_price', 'weapons_price',
+        'weapon_slot', 'knockback',
+    }
+    
+    if key in STAT_KEYS_CURSE:
+        curse[0] = CURSE_BASE
+        return curse
+    
+    # Generic: if arg 0 has a non-neutral sign, it gets base curse
+    if n > 0 and arg_signs[0] not in (SIGN_NEUTRAL, ''):
+        curse[0] = CURSE_BASE
+    
+    # For burning effects: duration (arg 0 for BurnChance) and damage (arg 1/2) are cursed
+    if key in ('effect_burning', 'burning', 'EFFECT_BURNING'):
+        if n > 0: curse[0] = CURSE_BASE  # duration
+        if n > 1: curse[1] = CURSE_BASE  # damage
+    elif key in ('burn_chance', 'effect_burn_chance', 'EFFECT_BURN_CHANCE'):
+        if n > 1: curse[1] = CURSE_BASE  # duration
+        if n > 2: curse[2] = CURSE_BASE  # damage
+    
+    # PlayerNoHitEffect: value cursed base
+    if key == 'effect_no_hit_boost' or tk_upper == 'EFFECT_NO_HIT_BOOST':
+        curse[0] = CURSE_BASE
+    
+    # ItemExplodingEffect with scale_with_missing_health: value cursed
+    # ExplodingEffect on weapon with chance < 1.0: chance boosted
+    
+    # ProjectileEffect / ProjectilesOnHitEffect: weapon_stats boosted (not in args)
+    
+    return curse
+
+
+def _determine_effect_sign_for_curse(eff):
+    """Return the effective sign for curse calculation: 'positive', 'negative', or 'neutral'.
+    
+    Replicates Godot's _boost_effect_value_positively sign logic.
+    """
+    sign = eff.get('effect_sign', SIGN_FROM_VALUE)
+    value = eff.get('value', 0)
+    
+    if sign == SIGN_FROM_VALUE:
+        sign = SIGN_POSITIVE if value > 0 else SIGN_NEGATIVE if value < 0 else SIGN_NEUTRAL
+    elif sign == SIGN_FROM_ARG:
+        return 'positive'  # Conservative default
+    
+    if sign == SIGN_POSITIVE or sign == SIGN_OVERRIDE:
+        return 'positive'
+    elif sign == SIGN_NEGATIVE:
+        return 'negative'
+    return 'neutral'
 
 
 
@@ -1565,6 +1712,105 @@ def _text_render(fmt_key, fmt, args, arg_signs, lang):
     return result
 
 
+def _text_render_template(fmt_key, fmt, args, arg_signs, curse_types, lang):
+    """Render a format string to a template with {0},{1} placeholders for cursed values.
+    
+    Like _text_render but:
+    - Cursed args: replaced with colored/operatored/{i} placeholder in template
+    - Non-cursed args: baked into the template as final rendered text
+    
+    Returns tuple: (template_string_en, template_string_zh, curse_args_list)
+    where curse_args_list = [{"value": v, "curse": type}, ...] for cursed args only.
+    """
+    if not fmt:
+        return fmt, []
+
+    key_lower = (fmt_key or '').lower()
+
+    # Auto-prepend {0} if key needs operator but template has no {0}
+    if '{0}' not in fmt and key_lower in KEYS_NEEDING_OPERATOR:
+        fmt = ('{0}' if fmt.startswith('%') else '{0} ') + fmt
+
+    if '{' not in fmt:
+        return fmt, []
+
+    max_idx = max((int(m.group(1)) for m in re.finditer(r'\{(\d+)\}', fmt)), default=-1)
+    count = max(max_idx + 1, len(args))
+
+    # Build rendered replacements and track curse
+    rendered = []      # what goes into template for each {i}
+    curse_args = []    # collected curse info
+    curse_remap = {}   # original index → new curse arg index
+    next_curse_idx = 0
+
+    for i in range(count):
+        raw = str(args[i]) if i < len(args) and args[i] else ''
+        sign = arg_signs[i] if i < len(arg_signs) else ''
+        ct = curse_types[i] if i < len(curse_types) else CURSE_NONE
+
+        # Parse numeric value for this arg
+        try:
+            # Strip both + and - signs: the sign in the template (e.g., "-{0}") 
+            # carries the visual sign; the arg value should be positive.
+            numeric_val = float(raw.lstrip('+-').rstrip('%'))
+        except (ValueError, TypeError):
+            numeric_val = None
+
+        # Add operator (+)
+        if key_lower in KEYS_NEEDING_OPERATOR and i in KEYS_NEEDING_OPERATOR[key_lower]:
+            if raw and not raw.startswith('+') and not raw.startswith('-'):
+                try:
+                    v = float(raw.lstrip('+').rstrip('%'))
+                    if v >= 0:
+                        raw = '+' + raw
+                except (ValueError, TypeError):
+                    raw = '+' + raw
+
+        # Add percent (%)
+        if key_lower in KEYS_NEEDING_PERCENT and i in KEYS_NEEDING_PERCENT[key_lower]:
+            if raw and not raw.endswith('%'):
+                raw = raw + '%'
+
+        if ct is not CURSE_NONE and numeric_val is not None:
+            # This arg is cursed → replace with {curse_idx} wrapped in color
+            ci = next_curse_idx
+            next_curse_idx += 1
+            curse_remap[i] = ci
+            
+            # Build the cursed placeholder: same color/operator/percent, but {ci} instead of value
+            val_with_sign = raw  # e.g., "+10" or "10%"
+            # Extract the numeric part and replace with placeholder
+            numeric_str = raw.lstrip('+-').rstrip('%')
+            placeholder_raw = raw.replace(numeric_str, '{' + str(ci) + '}', 1)
+            
+            if sign and placeholder_raw:
+                placeholder_raw = wrap_color(placeholder_raw, sign)
+            rendered.append(placeholder_raw)
+            
+            # Record the original value and curse type
+            curse_args.append({
+                'value': numeric_val,
+                'curse': ct,
+            })
+        else:
+            # Not cursed → bake final rendered value into template
+            if sign and raw:
+                raw = wrap_color(raw, sign)
+            rendered.append(raw)
+
+    # Replace placeholders with rendered (some baked, some templates)
+    result = fmt
+    for i, rep in enumerate(rendered):
+        result = result.replace('{' + str(i) + '}', str(rep))
+
+    # Cleanup empty brackets and runtime-value brackets (KEEP {0},{1}... curse placeholders!)
+    result = re.sub(r'[（(]\s*[）)]', '', result)
+    # Remove runtime-value brackets: [anything]
+    result = re.sub(r'\s*\[.*?\]', '', result)
+    result = re.sub(r'\s+', ' ', result).strip()
+    return result, curse_args
+
+
 def render_effect_text(eff, lang):
     """Render an effect to human-readable text following Godot's rendering pipeline.
 
@@ -1585,7 +1831,7 @@ def render_effect_text(eff, lang):
 
     # Godot: Text.text("[EMPTY]") returns ""
     if text_key == '[EMPTY]' or (not text_key and not key):
-        return ''
+        return '', []
 
     STAT_KEYS = {
         'stat_max_hp', 'stat_damage', 'stat_percent_damage', 'stat_armor',
@@ -1634,6 +1880,15 @@ def render_effect_text(eff, lang):
         args[0] = str(stat_nb)
         args[1] = tr(stat_field.upper(), lang)
         args[2] = str(value)
+        args_built = True
+
+    # --- BreakOnHitEffect ---
+    elif key in ('break_on_hit', 'effect_break_on_hit'):
+        chance_pct = value
+        materials = extra.get('value2', 10)
+        # Format string uses {0} for chance and {2} for materials (skipping {1})
+        args[0] = str(chance_pct)
+        args[2] = str(int(materials) if isinstance(materials, float) else materials)
         args_built = True
 
     # --- SlowInZoneEffect ---
@@ -2344,35 +2599,65 @@ def render_effect_text(eff, lang):
         arg_signs[idx] = sign
 
     # ------------------------------------------------------------------
-    # Step 4: Render with text.gd rules
+    # Step 4: Build curse types and render
     # ------------------------------------------------------------------
+    curse_types = _build_curse_types(eff, args, arg_signs)
+    
     if fmt and args_built:
-        result = _text_render(fmt_key, fmt, args, arg_signs, lang)
-        if result:
-            return result
+        template, curse_args = _text_render_template(fmt_key, fmt, args, arg_signs, curse_types, lang)
+        if template:
+            return template, curse_args
 
     # Translation found but no args built (e.g. static text with no placeholders)
     if fmt and '{' not in fmt:
-        return fmt
+        return fmt, []
 
     # ------------------------------------------------------------------
     # Fallback: simple stat format (no translation found)
     # ------------------------------------------------------------------
     if key in STAT_KEYS:
-        if key == 'xp_gain':
-            s_val = wrap_color(fmt_val(value, add_op=needs_operator(key), add_pct=False), base_color)
-            return f'{s_val}%经验获得' if lang == 'zh' else f'{s_val} XP Gain'
-        s_val = wrap_color(fmt_val(value, add_op=needs_operator(key),
-                                    add_pct=needs_percent(key)), base_color)
-        s_name = stat_display_name(key, lang)
-        return f'{s_val}{s_name}' if lang == 'zh' else f'{s_val} {s_name}'
+        ct = curse_types[0] if len(curse_types) > 0 else CURSE_NONE
+        add_op = needs_operator(key)
+        add_pct = needs_percent(key)
+        
+        if ct is not CURSE_NONE:
+            # Build template with {0} placeholder
+            raw_val = fmt_val(value, add_op=add_op, add_pct=False)
+            s_val_template = wrap_color(fmt_val('{0}', add_op=add_op if not raw_val.startswith('+') else False, add_pct=add_pct), base_color)
+            s_name = stat_display_name(key, lang)
+            if key == 'xp_gain':
+                template = f'{s_val_template}%{s_name}' if lang == 'zh' else f'{s_val_template} XP Gain'
+            else:
+                template = f'{s_val_template}{s_name}' if lang == 'zh' else f'{s_val_template} {s_name}'
+            # Parse the base numeric value (use abs: sign is in template)
+            curse_args = [{'value': abs(float(value)), 'curse': ct}]
+            return template, curse_args
+        else:
+            s_val = wrap_color(fmt_val(value, add_op=add_op, add_pct=add_pct), base_color)
+            s_name = stat_display_name(key, lang)
+            if key == 'xp_gain':
+                template = f'{s_val}%{s_name}' if lang == 'zh' else f'{s_val} XP Gain'
+            else:
+                template = f'{s_val}{s_name}' if lang == 'zh' else f'{s_val} {s_name}'
+            return template, []
 
     if custom_key == 'starting_weapon':
-        s_val = wrap_color(fmt_val(value, add_op=needs_operator(key),
-                                    add_pct=needs_percent(key)), base_color)
-        displayed_key = key[:-2] if len(key) > 2 else key
-        s_name = stat_display_name(displayed_key, lang)
-        return f'{s_val}{s_name}' if lang == 'zh' else f'{s_val} {s_name}'
+        ct = curse_types[0] if len(curse_types) > 0 else CURSE_NONE
+        add_op = needs_operator(key)
+        add_pct = needs_percent(key)
+        if ct is not CURSE_NONE:
+            s_val_template = wrap_color(fmt_val('{0}', add_op=True, add_pct=add_pct), base_color)
+            displayed_key = key[:-2] if len(key) > 2 else key
+            s_name = stat_display_name(displayed_key, lang)
+            template = f'{s_val_template}{s_name}' if lang == 'zh' else f'{s_val_template} {s_name}'
+            curse_args = [{'value': float(value), 'curse': ct}]
+            return template, curse_args
+        else:
+            s_val = wrap_color(fmt_val(value, add_op=add_op, add_pct=add_pct), base_color)
+            displayed_key = key[:-2] if len(key) > 2 else key
+            s_name = stat_display_name(displayed_key, lang)
+            template = f'{s_val}{s_name}' if lang == 'zh' else f'{s_val} {s_name}'
+            return template, []
 
     # ------------------------------------------------------------------
     # Track unrenderable effect
@@ -2383,15 +2668,46 @@ def render_effect_text(eff, lang):
     })
 
     # Final fallback
-    s_val = wrap_color(str(value), base_color)
-    s_key = tr(key.upper(), lang) if key else ''
-    return f'{s_val} {s_key}' if lang == 'en' else f'{s_val}{s_key}'
+    ct = curse_types[0] if len(curse_types) > 0 else CURSE_NONE
+    if ct is not CURSE_NONE:
+        s_val_template = wrap_color(fmt_val('{0}', add_op=True, add_pct=False), base_color)
+        s_key = tr(key.upper(), lang) if key else ''
+        template = f'{s_val_template} {s_key}' if lang == 'en' else f'{s_val_template}{s_key}'
+        curse_args = [{'value': float(value), 'curse': ct}]
+        return template, curse_args
+    else:
+        s_val = wrap_color(str(value), base_color)
+        s_key = tr(key.upper(), lang) if key else ''
+        return f'{s_val} {s_key}' if lang == 'en' else f'{s_val}{s_key}', []
 
 def render_effect_text_en(eff):
-    return render_effect_text(eff, 'en')
+    template, _ = render_effect_text(eff, 'en')
+    return template
 
 def render_effect_text_zh(eff):
-    return render_effect_text(eff, 'zh')
+    template, _ = render_effect_text(eff, 'zh')
+    return template
+
+def build_effect_text_dict(eff):
+    """Build the combined 'text' dict for an effect, with templates and curse args.
+    
+    Returns dict: {'en': template_en, 'zh': template_zh, 'args': curse_args}
+    or None if neither language produces text.
+    """
+    template_en, args_en = render_effect_text(eff, 'en')
+    template_zh, args_zh = render_effect_text(eff, 'zh')
+    
+    if not template_en and not template_zh:
+        return None
+    
+    # Merge args: use whichever produced curse args (should be identical)
+    curse_args = args_en if args_en else args_zh
+    
+    return {
+        'en': template_en,
+        'zh': template_zh,
+        'args': curse_args,
+    }
 
 # ====================================================================
 # Set bonuses
@@ -2628,13 +2944,14 @@ def build_sets_data():
                 for tier_effects in bonuses:
                     rendered_tier = []
                     for eff_data in tier_effects:
-                        text_en = render_effect_text_en(eff_data)
-                        text_zh = render_effect_text_zh(eff_data)
+                        text_dict = build_effect_text_dict(eff_data)
                         # Skip [EMPTY] effects entirely
-                        if not text_en and not text_zh:
+                        if not text_dict:
                             continue
-                        eff_data['text_en'] = text_en
-                        eff_data['text_zh'] = text_zh
+                        eff_data['text'] = text_dict
+                        # Also keep backward-compat fields
+                        eff_data['text_en'] = text_dict['en']
+                        eff_data['text_zh'] = text_dict['zh']
                         # Add stat icon prefix
                         eff_key = eff_data.get('key', '')
                         if eff_key.startswith('stat_') or eff_key in ('xp_gain', 'explosion_size', 'explosion_damage'):
@@ -2673,14 +2990,14 @@ def get_effects(parsed):
                     eff_path = BASE_DIR / ext[ext_id]['path']
                     eff_data = parse_effect_file(eff_path)
                     if eff_data:
-                        # Pre-render effect text
-                        text_en = render_effect_text_en(eff_data)
-                        text_zh = render_effect_text_zh(eff_data)
+                        # Build effect text dict with templates and curse args
+                        text_dict = build_effect_text_dict(eff_data)
                         # Skip [EMPTY] effects entirely
-                        if not text_en and not text_zh:
+                        if not text_dict:
                             continue
-                        eff_data['text_en'] = text_en
-                        eff_data['text_zh'] = text_zh
+                        eff_data['text'] = text_dict
+                        eff_data['text_en'] = text_dict['en']
+                        eff_data['text_zh'] = text_dict['zh']
                         # Add stat icon prefix
                         eff_key = eff_data.get('key', '')
                         if eff_key.startswith('stat_') or eff_key in ('xp_gain', 'explosion_size', 'explosion_damage'):
