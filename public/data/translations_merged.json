@@ -1,8 +1,8 @@
 {
   "label": "merged",
-  "exported_at": "2026-06-21T06:11:44.215Z",
-  "total": 89,
-  "matched": 86,
+  "exported_at": "2026-06-26T03:48:50.255Z",
+  "total": 100,
+  "matched": 97,
   "manual": 1,
   "skipped": 2,
   "unmatched": 0,
@@ -128,6 +128,21 @@
       "occurrence_count": 1
     },
     {
+      "key": "EFFECT_BOUNCING_PLURAL",
+      "category": "effect",
+      "original_key": "",
+      "text_key": "effect_bouncing_plural",
+      "sources": [
+        "dlc1"
+      ],
+      "status": "matched",
+      "matched_missing_key_id": "D_256",
+      "en": "Your projectiles gain {0} bounces",
+      "zh": "你的投射物获得{0}次反弹",
+      "source_names": [],
+      "occurrence_count": 1
+    },
+    {
       "key": "EFFECT_BREAK_ON_HIT",
       "category": "effect",
       "original_key": "break_on_hit",
@@ -210,6 +225,21 @@
       "source_names": [
         "effects"
       ],
+      "occurrence_count": 1
+    },
+    {
+      "key": "EFFECT_BURNING_SPREAD_PLURAL",
+      "category": "effect",
+      "original_key": "",
+      "text_key": "effect_burning_spread_plural",
+      "sources": [
+        "dlc1"
+      ],
+      "status": "matched",
+      "matched_missing_key_id": "B_899",
+      "en": "Burning spreads to {0} nearby enemies",
+      "zh": "燃烧蔓延至附近的{0}名敌人",
+      "source_names": [],
       "occurrence_count": 1
     },
     {
@@ -599,6 +629,21 @@
       "occurrence_count": 1
     },
     {
+      "key": "EFFECT_FREE_SHOP_REROLL_PLURAL",
+      "category": "effect",
+      "original_key": "",
+      "text_key": "effect_free_shop_reroll_plural",
+      "sources": [
+        "dlc1"
+      ],
+      "status": "matched",
+      "matched_missing_key_id": "D_111",
+      "en": "{0} free rerolls in the shop",
+      "zh": "商店免费刷新{0}次",
+      "source_names": [],
+      "occurrence_count": 1
+    },
+    {
       "key": "EFFECT_GAIN_PCT_GOLD_START_WAVE",
       "category": "effect",
       "original_key": "gain_pct_gold_start_wave",
@@ -711,6 +756,21 @@
         "streamer"
       ],
       "occurrence_count": 5
+    },
+    {
+      "key": "EFFECT_GOLD_ON_CURSED_ENEMY_KILL_PLURAL",
+      "category": "effect",
+      "original_key": "",
+      "text_key": "effect_gold_on_cursed_enemy_kill_plural",
+      "sources": [
+        "dlc1"
+      ],
+      "status": "matched",
+      "matched_missing_key_id": "D_221",
+      "en": "{0} materials when you kill a cursed enemy",
+      "zh": "击杀被诅咒的敌人时获得{0}材料",
+      "source_names": [],
+      "occurrence_count": 1
     },
     {
       "key": "EFFECT_GROUP_STRUCTURES",
@@ -833,6 +893,21 @@
       "occurrence_count": 1
     },
     {
+      "key": "EFFECT_HIT_PROTECTION_PLURAL",
+      "category": "effect",
+      "original_key": "",
+      "text_key": "effect_hit_protection_plural",
+      "sources": [
+        "dlc1"
+      ],
+      "status": "matched",
+      "matched_missing_key_id": "D_264",
+      "en": "Nullifies the damage of {0} hits taken every wave",
+      "zh": "在每一波敌袭中会抵消{0}次攻击伤害",
+      "source_names": [],
+      "occurrence_count": 1
+    },
+    {
       "key": "EFFECT_HP_REGEN_BONUS_DOUBLE",
       "category": "effect",
       "original_key": "hp_regen_bonus",
@@ -917,6 +992,21 @@
       "occurrence_count": 17
     },
     {
+      "key": "EFFECT_INCREASE_TIER_ON_REROLL_PLURAL",
+      "category": "effect",
+      "original_key": "",
+      "text_key": "effect_increase_tier_on_reroll_plural",
+      "sources": [
+        "dlc1"
+      ],
+      "status": "matched",
+      "matched_missing_key_id": "D_170",
+      "en": "Items will be {0} tiers higher after the next reroll",
+      "zh": "道具将在下次刷新后提升{0}个级别",
+      "source_names": [],
+      "occurrence_count": 1
+    },
+    {
       "key": "EFFECT_ITEM_STEALS_SPAWNS_ELITE",
       "category": "effect",
       "original_key": "item_steals_spawns_random_elite",
@@ -931,6 +1021,21 @@
       "source_names": [
         "effects"
       ],
+      "occurrence_count": 1
+    },
+    {
+      "key": "EFFECT_KNOCKBACK_AURA",
+      "category": "effect",
+      "original_key": "",
+      "text_key": "effect_knockback_aura",
+      "sources": [
+        "dlc1"
+      ],
+      "status": "matched",
+      "matched_missing_key_id": "D_40",
+      "en": "Knocks nearby enemies back every {0} second",
+      "zh": "每{0}秒击退附近的敌人",
+      "source_names": [],
       "occurrence_count": 1
     },
     {
@@ -1075,6 +1180,21 @@
         "knight"
       ],
       "occurrence_count": 2
+    },
+    {
+      "key": "EFFECT_MODIFY_EVERY_X_PROJECTILE_FIRST",
+      "category": "effect",
+      "original_key": "",
+      "text_key": "effect_modify_every_x_projectile_first",
+      "sources": [
+        "dlc1"
+      ],
+      "status": "matched",
+      "matched_missing_key_id": "D_8",
+      "en": "Every ranged weapon's projectile has {2} {3}",
+      "zh": "每把远战武器的投射物有{2}{3}",
+      "source_names": [],
+      "occurrence_count": 1
     },
     {
       "key": "EFFECT_MORE_ELITES",
@@ -1251,6 +1371,21 @@
       "source_names": [
         "sharp_bullet"
       ],
+      "occurrence_count": 1
+    },
+    {
+      "key": "EFFECT_PIERCING_PLURAL",
+      "category": "effect",
+      "original_key": "",
+      "text_key": "effect_piercing_plural",
+      "sources": [
+        "dlc1"
+      ],
+      "status": "matched",
+      "matched_missing_key_id": "D_69",
+      "en": "Projectiles pierce through {0} additional targets",
+      "zh": "投射物贯通{0}个额外目标",
+      "source_names": [],
       "occurrence_count": 1
     },
     {
@@ -1517,6 +1652,21 @@
       "occurrence_count": 1
     },
     {
+      "key": "EFFECT_TREES_PLURAL",
+      "category": "effect",
+      "original_key": "",
+      "text_key": "effect_trees_plural",
+      "sources": [
+        "dlc1"
+      ],
+      "status": "matched",
+      "matched_missing_key_id": "D_12",
+      "en": "A lot more trees spawn",
+      "zh": "生成更大量的树木",
+      "source_names": [],
+      "occurrence_count": 1
+    },
+    {
       "key": "EFFECT_UNIQUE_WEAPON_BONUS",
       "category": "effect",
       "original_key": "stat_attack_speed",
@@ -1568,6 +1718,21 @@
       "source_names": [
         "anvil"
       ],
+      "occurrence_count": 1
+    },
+    {
+      "key": "EFFECT_WEAPON_MODIFY_EVERY_X_PROJECTILE_FIRST",
+      "category": "effect",
+      "original_key": "",
+      "text_key": "effect_weapon_modify_every_x_projectile_first",
+      "sources": [
+        "dlc1"
+      ],
+      "status": "matched",
+      "matched_missing_key_id": "D_147",
+      "en": "Every projectile has {2} {3}",
+      "zh": "每个投射物有{2}{3}",
+      "source_names": [],
       "occurrence_count": 1
     },
     {

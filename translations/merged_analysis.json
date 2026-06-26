@@ -1,18 +1,18 @@
 {
   "label": "merged",
   "stats": {
-    "total_effects": 1341,
-    "unique_keys": 271,
-    "known_count": 182,
-    "missing_count": 89,
+    "total_effects": 1361,
+    "unique_keys": 287,
+    "known_count": 187,
+    "missing_count": 100,
     "by_category": {
       "stat": 0,
-      "effect": 87,
+      "effect": 98,
       "other": 2
     },
     "by_source": {
       "base_only": 55,
-      "dlc1_only": 21,
+      "dlc1_only": 32,
       "both": 13
     }
   },
@@ -263,6 +263,33 @@
       "status": "missing"
     },
     {
+      "final_key": "EFFECT_BOUNCING_PLURAL",
+      "key": "",
+      "text_key": "effect_bouncing_plural",
+      "category": "effect",
+      "source_names": [],
+      "source_types": [
+        "other"
+      ],
+      "occurrence_count": 1,
+      "sample_contexts": [
+        {
+          "path": "dlc_1_data.gd",
+          "value": 0,
+          "source_name": "",
+          "source_type": "other",
+          "script": "",
+          "source": "dlc1"
+        }
+      ],
+      "sources": [
+        "dlc1"
+      ],
+      "csv_en": "",
+      "csv_zh": "",
+      "status": "missing"
+    },
+    {
       "final_key": "EFFECT_BREAK_ON_HIT",
       "key": "break_on_hit",
       "text_key": "effect_break_on_hit",
@@ -450,6 +477,33 @@
       ],
       "sources": [
         "base"
+      ],
+      "csv_en": "",
+      "csv_zh": "",
+      "status": "missing"
+    },
+    {
+      "final_key": "EFFECT_BURNING_SPREAD_PLURAL",
+      "key": "",
+      "text_key": "effect_burning_spread_plural",
+      "category": "effect",
+      "source_names": [],
+      "source_types": [
+        "other"
+      ],
+      "occurrence_count": 1,
+      "sample_contexts": [
+        {
+          "path": "dlc_1_data.gd",
+          "value": 0,
+          "source_name": "",
+          "source_type": "other",
+          "script": "",
+          "source": "dlc1"
+        }
+      ],
+      "sources": [
+        "dlc1"
       ],
       "csv_en": "",
       "csv_zh": "",
@@ -1277,6 +1331,33 @@
       "status": "missing"
     },
     {
+      "final_key": "EFFECT_FREE_SHOP_REROLL_PLURAL",
+      "key": "",
+      "text_key": "effect_free_shop_reroll_plural",
+      "category": "effect",
+      "source_names": [],
+      "source_types": [
+        "other"
+      ],
+      "occurrence_count": 1,
+      "sample_contexts": [
+        {
+          "path": "dlc_1_data.gd",
+          "value": 0,
+          "source_name": "",
+          "source_type": "other",
+          "script": "",
+          "source": "dlc1"
+        }
+      ],
+      "sources": [
+        "dlc1"
+      ],
+      "csv_en": "",
+      "csv_zh": "",
+      "status": "missing"
+    },
+    {
       "final_key": "EFFECT_GAIN_PCT_GOLD_START_WAVE",
       "key": "gain_pct_gold_start_wave",
       "text_key": "effect_gain_pct_gold_start_wave",
@@ -1641,6 +1722,33 @@
       "status": "missing"
     },
     {
+      "final_key": "EFFECT_GOLD_ON_CURSED_ENEMY_KILL_PLURAL",
+      "key": "",
+      "text_key": "effect_gold_on_cursed_enemy_kill_plural",
+      "category": "effect",
+      "source_names": [],
+      "source_types": [
+        "other"
+      ],
+      "occurrence_count": 1,
+      "sample_contexts": [
+        {
+          "path": "dlc_1_data.gd",
+          "value": 0,
+          "source_name": "",
+          "source_type": "other",
+          "script": "",
+          "source": "dlc1"
+        }
+      ],
+      "sources": [
+        "dlc1"
+      ],
+      "csv_en": "",
+      "csv_zh": "",
+      "status": "missing"
+    },
+    {
       "final_key": "EFFECT_GROUP_STRUCTURES",
       "key": "group_structures",
       "text_key": "effect_group_structures",
@@ -1848,6 +1956,33 @@
       ],
       "sources": [
         "base"
+      ],
+      "csv_en": "",
+      "csv_zh": "",
+      "status": "missing"
+    },
+    {
+      "final_key": "EFFECT_HIT_PROTECTION_PLURAL",
+      "key": "",
+      "text_key": "effect_hit_protection_plural",
+      "category": "effect",
+      "source_names": [],
+      "source_types": [
+        "other"
+      ],
+      "occurrence_count": 1,
+      "sample_contexts": [
+        {
+          "path": "dlc_1_data.gd",
+          "value": 0,
+          "source_name": "",
+          "source_type": "other",
+          "script": "",
+          "source": "dlc1"
+        }
+      ],
+      "sources": [
+        "dlc1"
       ],
       "csv_en": "",
       "csv_zh": "",
@@ -2083,6 +2218,33 @@
       "status": "missing"
     },
     {
+      "final_key": "EFFECT_INCREASE_TIER_ON_REROLL_PLURAL",
+      "key": "",
+      "text_key": "effect_increase_tier_on_reroll_plural",
+      "category": "effect",
+      "source_names": [],
+      "source_types": [
+        "other"
+      ],
+      "occurrence_count": 1,
+      "sample_contexts": [
+        {
+          "path": "dlc_1_data.gd",
+          "value": 0,
+          "source_name": "",
+          "source_type": "other",
+          "script": "",
+          "source": "dlc1"
+        }
+      ],
+      "sources": [
+        "dlc1"
+      ],
+      "csv_en": "",
+      "csv_zh": "",
+      "status": "missing"
+    },
+    {
       "final_key": "EFFECT_ITEM_STEALS_SPAWNS_ELITE",
       "key": "item_steals_spawns_random_elite",
       "text_key": "effect_item_steals_spawns_elite",
@@ -2101,6 +2263,33 @@
           "source_name": "effects",
           "source_type": "other",
           "script": "items/global/effect.gd",
+          "source": "dlc1"
+        }
+      ],
+      "sources": [
+        "dlc1"
+      ],
+      "csv_en": "",
+      "csv_zh": "",
+      "status": "missing"
+    },
+    {
+      "final_key": "EFFECT_KNOCKBACK_AURA",
+      "key": "",
+      "text_key": "effect_knockback_aura",
+      "category": "effect",
+      "source_names": [],
+      "source_types": [
+        "other"
+      ],
+      "occurrence_count": 1,
+      "sample_contexts": [
+        {
+          "path": "dlc_1_data.gd",
+          "value": 0,
+          "source_name": "",
+          "source_type": "other",
+          "script": "",
           "source": "dlc1"
         }
       ],
@@ -2418,6 +2607,33 @@
       ],
       "sources": [
         "base",
+        "dlc1"
+      ],
+      "csv_en": "",
+      "csv_zh": "",
+      "status": "missing"
+    },
+    {
+      "final_key": "EFFECT_MODIFY_EVERY_X_PROJECTILE_FIRST",
+      "key": "",
+      "text_key": "effect_modify_every_x_projectile_first",
+      "category": "effect",
+      "source_names": [],
+      "source_types": [
+        "other"
+      ],
+      "occurrence_count": 1,
+      "sample_contexts": [
+        {
+          "path": "dlc_1_data.gd",
+          "value": 0,
+          "source_name": "",
+          "source_type": "other",
+          "script": "",
+          "source": "dlc1"
+        }
+      ],
+      "sources": [
         "dlc1"
       ],
       "csv_en": "",
@@ -2782,6 +2998,33 @@
       ],
       "sources": [
         "base"
+      ],
+      "csv_en": "",
+      "csv_zh": "",
+      "status": "missing"
+    },
+    {
+      "final_key": "EFFECT_PIERCING_PLURAL",
+      "key": "",
+      "text_key": "effect_piercing_plural",
+      "category": "effect",
+      "source_names": [],
+      "source_types": [
+        "other"
+      ],
+      "occurrence_count": 1,
+      "sample_contexts": [
+        {
+          "path": "dlc_1_data.gd",
+          "value": 0,
+          "source_name": "",
+          "source_type": "other",
+          "script": "",
+          "source": "dlc1"
+        }
+      ],
+      "sources": [
+        "dlc1"
       ],
       "csv_en": "",
       "csv_zh": "",
@@ -3422,6 +3665,33 @@
       "status": "missing"
     },
     {
+      "final_key": "EFFECT_TREES_PLURAL",
+      "key": "",
+      "text_key": "effect_trees_plural",
+      "category": "effect",
+      "source_names": [],
+      "source_types": [
+        "other"
+      ],
+      "occurrence_count": 1,
+      "sample_contexts": [
+        {
+          "path": "dlc_1_data.gd",
+          "value": 0,
+          "source_name": "",
+          "source_type": "other",
+          "script": "",
+          "source": "dlc1"
+        }
+      ],
+      "sources": [
+        "dlc1"
+      ],
+      "csv_en": "",
+      "csv_zh": "",
+      "status": "missing"
+    },
+    {
       "final_key": "EFFECT_UNIQUE_WEAPON_BONUS",
       "key": "stat_attack_speed",
       "text_key": "effect_unique_weapon_bonus",
@@ -3531,6 +3801,33 @@
       ],
       "sources": [
         "base"
+      ],
+      "csv_en": "",
+      "csv_zh": "",
+      "status": "missing"
+    },
+    {
+      "final_key": "EFFECT_WEAPON_MODIFY_EVERY_X_PROJECTILE_FIRST",
+      "key": "",
+      "text_key": "effect_weapon_modify_every_x_projectile_first",
+      "category": "effect",
+      "source_names": [],
+      "source_types": [
+        "other"
+      ],
+      "occurrence_count": 1,
+      "sample_contexts": [
+        {
+          "path": "dlc_1_data.gd",
+          "value": 0,
+          "source_name": "",
+          "source_type": "other",
+          "script": "",
+          "source": "dlc1"
+        }
+      ],
+      "sources": [
+        "dlc1"
       ],
       "csv_en": "",
       "csv_zh": "",
@@ -4526,6 +4823,33 @@
       "status": "known"
     },
     {
+      "final_key": "EFFECT_CURSED_MIRROR",
+      "key": "",
+      "text_key": "EFFECT_CURSED_MIRROR",
+      "category": "effect",
+      "source_names": [],
+      "source_types": [
+        "other"
+      ],
+      "occurrence_count": 1,
+      "sample_contexts": [
+        {
+          "path": "dlc_1_data.gd",
+          "value": 0,
+          "source_name": "",
+          "source_type": "other",
+          "script": "",
+          "source": "dlc1"
+        }
+      ],
+      "sources": [
+        "dlc1"
+      ],
+      "csv_en": "Effects and curse are lost after using the item",
+      "csv_zh": "使用道具后会失去效果和诅咒",
+      "status": "known"
+    },
+    {
       "final_key": "EFFECT_CURSE_LOCKED_ITEMS",
       "key": "curse_locked_items",
       "text_key": "EFFECT_CURSE_LOCKED_ITEMS",
@@ -5060,7 +5384,7 @@
       "source_types": [
         "other"
       ],
-      "occurrence_count": 9,
+      "occurrence_count": 10,
       "sample_contexts": [
         {
           "path": "items/all/turret_rocket/turret_rocket_exploding_effect.tres",
@@ -5132,6 +5456,14 @@
           "source_name": "grenade_launcher",
           "source_type": "other",
           "script": "effects/weapons/exploding_effect.gd",
+          "source": "dlc1"
+        },
+        {
+          "path": "dlc_1_data.gd",
+          "value": 0,
+          "source_name": "",
+          "source_type": "other",
+          "script": "",
           "source": "dlc1"
         }
       ],
@@ -6919,6 +7251,60 @@
       "status": "known"
     },
     {
+      "final_key": "EFFECT_MODIFY_EVERY_X_PROJECTILE_SECOND",
+      "key": "",
+      "text_key": "effect_modify_every_x_projectile_second",
+      "category": "effect",
+      "source_names": [],
+      "source_types": [
+        "other"
+      ],
+      "occurrence_count": 1,
+      "sample_contexts": [
+        {
+          "path": "dlc_1_data.gd",
+          "value": 0,
+          "source_name": "",
+          "source_type": "other",
+          "script": "",
+          "source": "dlc1"
+        }
+      ],
+      "sources": [
+        "dlc1"
+      ],
+      "csv_en": "Every ranged weapon's {0}nd projectile has {2} {3}",
+      "csv_zh": "每把远战武器的第{0}个投射物有{2}{3}",
+      "status": "known"
+    },
+    {
+      "final_key": "EFFECT_MODIFY_EVERY_X_PROJECTILE_THIRD",
+      "key": "",
+      "text_key": "effect_modify_every_x_projectile_third",
+      "category": "effect",
+      "source_names": [],
+      "source_types": [
+        "other"
+      ],
+      "occurrence_count": 1,
+      "sample_contexts": [
+        {
+          "path": "dlc_1_data.gd",
+          "value": 0,
+          "source_name": "",
+          "source_type": "other",
+          "script": "",
+          "source": "dlc1"
+        }
+      ],
+      "sources": [
+        "dlc1"
+      ],
+      "csv_en": "Every ranged weapon's {0}rd projectile has {2} {3}",
+      "csv_zh": "每把远战武器的第{0}个投射物有{2}{3}",
+      "status": "known"
+    },
+    {
       "final_key": "EFFECT_NEW_ENEMIES",
       "key": "EFFECT_NEW_ENEMIES",
       "text_key": "",
@@ -7339,6 +7725,33 @@
       "status": "known"
     },
     {
+      "final_key": "EFFECT_PET_DOC_MOTH_CURSED",
+      "key": "",
+      "text_key": "EFFECT_PET_DOC_MOTH_CURSED",
+      "category": "effect",
+      "source_names": [],
+      "source_types": [
+        "other"
+      ],
+      "occurrence_count": 1,
+      "sample_contexts": [
+        {
+          "path": "dlc_1_data.gd",
+          "value": 0,
+          "source_name": "",
+          "source_type": "other",
+          "script": "",
+          "source": "dlc1"
+        }
+      ],
+      "sources": [
+        "dlc1"
+      ],
+      "csv_en": "Spawns a Doc Moth pet that flies around the map. When the player is inside its aura, their HP regeneration and Life Steal are doubled. The aura size is bigger",
+      "csv_zh": "生成一个蛾医生宠物，绕着地图飞行。当玩家处于其光环内时，玩家的生命再生和生命窃取属性翻倍。光环范围变大",
+      "status": "known"
+    },
+    {
       "final_key": "EFFECT_PET_JELLYSHIELD",
       "key": "jellyshield_count",
       "text_key": "EFFECT_PET_JELLYSHIELD",
@@ -7452,6 +7865,33 @@
       ],
       "csv_en": "Spawns a Scapegoat pet that moves around the map and gets targeted by enemies instead of the player. When it dies, the player can revive it by standing next to it",
       "csv_zh": "生成一个替罪羔羊宠物，绕着地图移动并取代玩家被敌人攻击。当其死亡时，玩家可以站在它身边将其复活",
+      "status": "known"
+    },
+    {
+      "final_key": "EFFECT_PET_SCAPEGOAT_CURSED",
+      "key": "",
+      "text_key": "EFFECT_PET_SCAPEGOAT_CURSED",
+      "category": "effect",
+      "source_names": [],
+      "source_types": [
+        "other"
+      ],
+      "occurrence_count": 1,
+      "sample_contexts": [
+        {
+          "path": "dlc_1_data.gd",
+          "value": 0,
+          "source_name": "",
+          "source_type": "other",
+          "script": "",
+          "source": "dlc1"
+        }
+      ],
+      "sources": [
+        "dlc1"
+      ],
+      "csv_en": "Spawns a Scapegoat pet that moves around the map and gets targeted by enemies instead of the player. When it dies, the player can revive it by standing next to it. When cursed, it has more health and revives faster",
+      "csv_zh": "生成一个替罪羔羊宠物，绕着地图移动并取代玩家被敌人攻击。当其死亡时，玩家可以站在它身边将其复活。被诅咒时羔羊有更多生命值且复活速度更快",
       "status": "known"
     },
     {
@@ -8616,7 +9056,7 @@
         "character",
         "other"
       ],
-      "occurrence_count": 3,
+      "occurrence_count": 4,
       "sample_contexts": [
         {
           "path": "items/all/tree/tree_effect_1.tres",
@@ -8641,10 +9081,19 @@
           "source_type": "character",
           "script": "items/global/effect.gd",
           "source": "base"
+        },
+        {
+          "path": "dlc_1_data.gd",
+          "value": 0,
+          "source_name": "",
+          "source_type": "other",
+          "script": "",
+          "source": "dlc1"
         }
       ],
       "sources": [
-        "base"
+        "base",
+        "dlc1"
       ],
       "csv_en": "More trees spawn",
       "csv_zh": "生成更多树木",
@@ -9081,7 +9530,7 @@
       "source_types": [
         "other"
       ],
-      "occurrence_count": 1,
+      "occurrence_count": 2,
       "sample_contexts": [
         {
           "path": "weapons/ranged/javelin/4/javelin_4_effect_0.tres",
@@ -9089,6 +9538,14 @@
           "source_name": "javelin",
           "source_type": "other",
           "script": "effects/weapons/weapon_effect_with_sub_effect.gd",
+          "source": "dlc1"
+        },
+        {
+          "path": "dlc_1_data.gd",
+          "value": 0,
+          "source_name": "",
+          "source_type": "other",
+          "script": "",
           "source": "dlc1"
         }
       ],
@@ -9110,7 +9567,7 @@
       "source_types": [
         "other"
       ],
-      "occurrence_count": 1,
+      "occurrence_count": 2,
       "sample_contexts": [
         {
           "path": "weapons/ranged/javelin/3/javelin_3_effect_0.tres",
@@ -9118,6 +9575,14 @@
           "source_name": "javelin",
           "source_type": "other",
           "script": "effects/weapons/weapon_effect_with_sub_effect.gd",
+          "source": "dlc1"
+        },
+        {
+          "path": "dlc_1_data.gd",
+          "value": 0,
+          "source_name": "",
+          "source_type": "other",
+          "script": "",
           "source": "dlc1"
         }
       ],

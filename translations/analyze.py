@@ -78,6 +78,9 @@ _RE_VALUE = re.compile(r'^value\s*=\s*(-?\d+)\s*$', re.MULTILINE)
 _RE_EFFECT_SIGN = re.compile(r'^effect_sign\s*=\s*(\d+)\s*$', re.MULTILINE)
 _RE_SCRIPT = re.compile(r'\[ext_resource\s+path="res://([^"]+)"\s+type="Script"', re.MULTILINE)
 
+# 匹配 .gd 文件中的 text_key 赋值
+_RE_GD_TEXT_KEY = re.compile(r'\.text_key\s*=\s*"([^"]+)"', re.MULTILINE)
+
 
 def parse_effect_tres(path: Path) -> dict | None:
     """解析单个 effect tres 文件，提取 key/text_key/value 等"""
@@ -144,6 +147,52 @@ def collect_effects(search_root: Path, base_root: Path, exclude_dirs: list = Non
             rel_path = str(tres_path).replace("\\", "/")
         info["path"] = rel_path
         results.append(info)
+    return results
+
+
+def parse_gd_text_keys(path: Path) -> list:
+    """解析 .gd 文件中的 text_key 赋值，返回 [{final_key, key, text_key, ...}]"""
+    try:
+        text = path.read_text(encoding="utf-8")
+    except Exception:
+        try:
+            text = path.read_text(encoding="latin-1")
+        except Exception:
+            return []
+
+    results = []
+    for match in _RE_GD_TEXT_KEY.finditer(text):
+        text_key = match.group(1)
+        final_key = text_key.strip().upper()
+        if final_key:
+            results.append({
+                "key": "",
+                "text_key": text_key,
+                "final_key": final_key,
+                "value": 0,
+                "effect_sign": 3,
+                "script": "",
+                "filename": path.name,
+            })
+    return results
+
+
+def collect_gd_text_keys(search_root: Path, base_root: Path, label: str) -> list:
+    """收集指定目录下所有 .gd 文件中的 text_key 赋值"""
+    results = []
+    for gd_path in sorted(search_root.rglob("*.gd")):
+        # 只处理 dlc_1_data.gd
+        if gd_path.name != "dlc_1_data.gd":
+            continue
+        keys = parse_gd_text_keys(gd_path)
+        for info in keys:
+            try:
+                rel_path = str(gd_path.relative_to(base_root)).replace("\\", "/")
+            except ValueError:
+                rel_path = str(gd_path).replace("\\", "/")
+            info["path"] = rel_path
+            info["source"] = label
+            results.append(info)
     return results
 
 
@@ -373,6 +422,12 @@ def main():
     dlc_root = PROJECT_ROOT / "dlcs" / "dlc_1"
     dlc_effects = collect_effects_for_source("dlc1", dlc_root, dlc_root)
     print(f"DLC1: {len(dlc_effects)} 个 effect tres")
+
+    # 收集 dlc_1_data.gd 中 curse_item() 使用的 text_key
+    print("\n收集 dlc_1_data.gd 中的 text_key...")
+    dlc_gd_text_keys = collect_gd_text_keys(dlc_root, dlc_root, "dlc1")
+    print(f"DLC1 .gd 文件: {len(dlc_gd_text_keys)} 个 text_key")
+    dlc_effects.extend(dlc_gd_text_keys)
 
     # 合并分析
     print("\n合并分析...")
