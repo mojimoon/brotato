@@ -1946,7 +1946,7 @@ body.light-theme .el-popper .el-popper__arrow::before { background: #fff !import
 .attack-speed-toggle {
   display: flex; align-items: center; gap: 8px; padding: 10px 12px;
   background: #22253a; border-radius: 6px; cursor: pointer;
-  font-size: 14px; color: #f39c12; transition: background .15s; font-weight: 500;
+  font-size: 14px; color: #f39c12; transition: background .15s;
 }
 .attack-speed-toggle:hover { background: #282c44; }
 .toggle-icon { font-size: 10px; color: #888; }

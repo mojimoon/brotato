@@ -6,6 +6,8 @@
 
 基于反编译游戏数据构建的 [Brotato](https://store.steampowered.com/app/1942280/Brotato/)（土豆兄弟）网页图鉴。
 
+**功能：价格 / 攻速 / 诅咒计算器，多语言支持，以及更多游戏里没有的实用功能。**
+
 ![](images/screenshot_zh.png)
 
 ## 技术栈

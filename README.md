@@ -6,6 +6,8 @@
 
 A web-based codex for [Brotato](https://store.steampowered.com/app/1942280/Brotato/), built from decompiled game data.
 
+**Features: price / attack speed / curse calculator, multiple language support, and more QoL features.**
+
 ![](images/screenshot.png)
 
 ## Tech Stack
