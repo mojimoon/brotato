@@ -1036,7 +1036,30 @@ function renderEffectText(eff) {
   
   // Handle special cases
   if (curseEnabled.value && special) {
-    const sp = special
+    if (special.special === 'modify_projectile' || special.special === 'modify_projectile_weapon') {
+      let effectiveVal
+      if (special.special === 'modify_projectile_weapon') {
+        // Weapon: fixed base_value - 1, no curse scaling
+        effectiveVal = Math.max(1, (special.base_value ?? origValue) - 1)
+      } else {
+        // Item: negative curse type, value scales with curse
+        const arg = curseArgs[0]
+        effectiveVal = arg ? applyCurse(arg, effectSign, origValue) : origValue
+      }
+      const tpl = special.base_text?.[effectiveVal]
+      if (tpl) {
+        text = (tpl[lang] || tpl.en || '').replace(/\{0\}/g, String(effectiveVal))
+      }
+    } else if (special.special === 'weapon_explode') {
+      const arg = curseArgs[0]
+      if (arg) {
+        const cursedChance = applyCurse(arg, effectSign, origValue)
+        if (cursedChance >= 100 && special.cursed_text) {
+          text = special.cursed_text[lang] || special.cursed_text.en || text
+          curseArgs = []
+        }
+      }
+    }
   }
   
   // Scaling tag: <scaling type="key" value="0.6" /> (may be inside color span)

@@ -1060,8 +1060,8 @@ def _build_curse_types(eff, args, arg_signs, parent_id='', is_weapon=False):
             c(idx, type='default')
         else:
             c(1, type='default')  # damage only, chance capped below
-        # Cap any chance arg at 100
-        c(0, type='default', max_val=100)
+        # Cap any chance arg at 100; mult=0.2 matches GDScript: chance * (1 + effect_modifier / 5.0)
+        c(0, type='default', max_val=100, mult=0.2)
         return curse
 
     # 7. gain_stat_every_killed_enemies: value[2] → negative
@@ -1118,9 +1118,9 @@ def _build_curse_types(eff, args, arg_signs, parent_id='', is_weapon=False):
         c(0, type='negative')
         return curse
 
-    # 18. modify_every_x_projectile (EffectWithSubEffects, not weapon): negative
+    # 18. modify_every_x_projectile: weapon=special (fixed base_value-1), item=negative (scales with curse)
     if key == 'modify_every_x_projectile':
-        c(0, type='negative')
+        c(0, type='special' if is_weapon else 'negative')
         return curse
 
     # 19. estys_couch stat_speed: positive (forced)
@@ -1329,21 +1329,53 @@ def _get_cursed_special(eff, parent_id='', is_weapon=False):
     extra = eff.get('extra', {})
     value = eff.get('value', 0)
     tk = (eff.get('text_key', '') or key).upper()
-    # if is_weapon and key and ('explode' in key.lower() or 'EXPLODE' in tk):
-    #     chance = extra.get('chance', 0)
-    #     if 0 < chance < 1.0:
-    #         return {'special': 'weapon_explode', 'chance': chance, 'cursed_text_key_if_100': 'effect_explode'}
+    if is_weapon and key and ('explode' in key.lower() or 'EXPLODE' in tk):
+        chance = extra.get('chance', 0)
+        if 0 < chance < 1.0:
+            return {'special': 'weapon_explode', 'base_chance': chance,
+                    'cursed_text': {'en': tr('EFFECT_EXPLODE', 'en'), 'zh': tr('EFFECT_EXPLODE', 'zh')}}
     if key == 'modify_every_x_projectile':
+        # Pre-render sub-effect text from the parent effect's rendered template.
+        # The parent template is like "Every {0}th projectile has <span>...</span> Crit Chance"
+        # We extract everything after "has"/"有" to get the sub-effect portion.
+        rendered_en, _ = render_effect_text(eff, 'en', parent_id, is_weapon)
+        rendered_zh, _ = render_effect_text(eff, 'zh', parent_id, is_weapon)
+        sub_en = ''
+        sub_zh = ''
+        if rendered_en:
+            m = re.search(r'\bhas\s+(.+)', rendered_en)
+            if m:
+                sub_en = m.group(1)
+        if rendered_zh:
+            idx = rendered_zh.find('有')
+            if idx >= 0:
+                sub_zh = rendered_zh[idx + len('有'):]
         if is_weapon:
+            base_text = {}
+            for val, tk_key in [(1, 'EFFECT_WEAPON_MODIFY_EVERY_X_PROJECTILE_FIRST'),
+                                (2, 'EFFECT_WEAPON_MODIFY_EVERY_X_PROJECTILE_SECOND'),
+                                (3, 'EFFECT_WEAPON_MODIFY_EVERY_X_PROJECTILE_THIRD')]:
+                en_tpl = tr(tk_key, 'en').replace('{2} {3}', sub_en) if sub_en else tr(tk_key, 'en')
+                zh_tpl = tr(tk_key, 'zh').replace('{2}{3}', sub_zh) if sub_zh else tr(tk_key, 'zh')
+                base_text[val] = {'en': en_tpl, 'zh': zh_tpl}
             return {'special': 'modify_projectile_weapon', 'base_value': value,
                     'text_keys': {1: 'effect_weapon_modify_every_x_projectile_first',
                                   2: 'effect_weapon_modify_every_x_projectile_second',
-                                  3: 'effect_weapon_modify_every_x_projectile_third'}}
+                                  3: 'effect_weapon_modify_every_x_projectile_third'},
+                    'base_text': base_text}
         else:
+            base_text = {}
+            for val, tk_key in [(1, 'EFFECT_MODIFY_EVERY_X_PROJECTILE_FIRST'),
+                                (2, 'EFFECT_MODIFY_EVERY_X_PROJECTILE_SECOND'),
+                                (3, 'EFFECT_MODIFY_EVERY_X_PROJECTILE_THIRD')]:
+                en_tpl = tr(tk_key, 'en').replace('{2} {3}', sub_en) if sub_en else tr(tk_key, 'en')
+                zh_tpl = tr(tk_key, 'zh').replace('{2}{3}', sub_zh) if sub_zh else tr(tk_key, 'zh')
+                base_text[val] = {'en': en_tpl, 'zh': zh_tpl}
             return {'special': 'modify_projectile', 'base_value': value,
                     'text_keys': {1: 'effect_modify_every_x_projectile_first',
                                   2: 'effect_modify_every_x_projectile_second',
-                                  3: 'effect_modify_every_x_projectile_third'}}
+                                  3: 'effect_modify_every_x_projectile_third'},
+                    'base_text': base_text}
     if key == 'item_mirror':
         return {'special': 'mirror', 'extra_items_price': -10, 'cursed_text_key': 'EFFECT_CURSED_MIRROR'}
     return None
