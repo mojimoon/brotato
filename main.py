@@ -1112,7 +1112,7 @@ def _build_curse_types(eff, args, arg_signs, parent_id='', is_weapon=False):
         return curse
 
     # 18. modify_every_x_projectile (EffectWithSubEffects, not weapon): negative
-    if key == 'modify_every_x_projectile' and not eff.get('is_weapon_effect_with_sub_effects'):
+    if key == 'modify_every_x_projectile':
         c(0, type='negative')
         return curse
 
@@ -1141,15 +1141,19 @@ def _build_curse_types(eff, args, arg_signs, parent_id='', is_weapon=False):
         c(0, type='default', max_val=100)
         return curse
 
-    # 25-27. Linked value2 effects
+    # 25-27. Linked value2 effects: value2 follows value with stepify ratio
+    # Godot: value2 = value * stepify after curse. Both get default curse independently.
     if custom_key == 'consumable_stats_while_max':
-        c(1, type='linked', linked_mult=1.0)
+        c(0, type='default')
+        c(1, type='default', stepify=1.0)
         return curse
     if key == 'remove_speed':
-        c(1, type='linked', linked_mult=4.0)
+        c(0, type='default')
+        c(2, type='default', stepify=4.0)
         return curse
     if key in ('burning_enemy_hp_percent_damage', 'giant_crit_damage', 'bonus_current_health_damage'):
-        c(1, type='linked', linked_mult=0.1)
+        c(0, type='default')
+        c(2, type='default', stepify=0.1)
         return curse
 
     # ---- Default: arg[0] gets 'default' type ----
@@ -1201,8 +1205,22 @@ def _build_cursed_extra_effects(eff, parent_id=''):
     if key in ('one_shot_trees', 'tree_turrets'):
         items.append({'key': 'trees', 'value': 1, 'effect_sign': 0, 'text_key': 'effect_trees'})
 
+    # item_mirror → items_price (base -10, sign POSITIVE)
+    if key == 'item_mirror':
+        items.append({'key': 'items_price', 'value': -10, 'effect_sign': 0})
+        items.append({'key': '__text__', 'value': 0, 'effect_sign': 0, 'text_key': 'EFFECT_CURSED_MIRROR'})
+
     # Build text dicts for each extra effect (basic stat effects)
     for item in items:
+        if item.get('key') == '__text__':
+            # Pure text entry: just use the translation
+            if item.get('text_key'):
+                tr_en = tr(item['text_key'], 'en')
+                tr_zh = tr(item['text_key'], 'zh')
+                item['text'] = {'en': tr_en, 'zh': tr_zh, 'args': []}
+                item['text_en'] = tr_en
+                item['text_zh'] = tr_zh
+            continue
         fake_eff = {
             'key': item['key'],
             'value': item['value'],
@@ -1216,9 +1234,61 @@ def _build_cursed_extra_effects(eff, parent_id=''):
             item['text'] = text_dict
             item['text_en'] = text_dict['en']
             item['text_zh'] = text_dict['zh']
+        # Add icon for stat prefix display
+        eff_key = item.get('key', '')
+        if eff_key.startswith('stat_') or eff_key in ('xp_gain', 'explosion_size', 'explosion_damage', 'trees'):
+            ic_key = eff_key.replace('stat_', '', 1) if eff_key.startswith('stat_') else eff_key
+            item['icon'] = ic_key
 
     return items
 
+
+def _get_cursed_text_key(eff, parent_id='', is_weapon=False):
+    """Return cursed_text_key string or None."""
+    key = eff.get('key', '')
+    custom_key = eff.get('custom_key', '')
+    value = eff.get('value', 0)
+    m = {
+        'doc_moth': 'EFFECT_PET_DOC_MOTH_CURSED',
+        'scapegoat': 'EFFECT_PET_SCAPEGOAT_CURSED',
+        'bounce': 'effect_bouncing_plural',
+        'piercing': 'effect_piercing_plural',
+        'free_rerolls': 'effect_free_shop_reroll_plural',
+        'gold_on_cursed_enemy_kill': 'effect_gold_on_cursed_enemy_kill_plural',
+        'burning_spread': 'effect_burning_spread_plural',
+        'trees': 'effect_trees_plural',
+    }
+    if key in m: return m[key]
+    if custom_key == 'increase_tier_on_reroll': return 'effect_increase_tier_on_reroll_plural'
+    if key == 'knockback_aura' and value <= 1: return 'effect_knockback_aura'
+    if parent_id == 'item_tardigrade' and key == 'hit_protection': return 'effect_hit_protection_plural'
+    return None
+
+
+def _get_cursed_special(eff, parent_id='', is_weapon=False):
+    """Return metadata dict for frontend special-casing, or None."""
+    key = eff.get('key', '')
+    extra = eff.get('extra', {})
+    value = eff.get('value', 0)
+    tk = (eff.get('text_key', '') or key).upper()
+    if is_weapon and key and ('explode' in key.lower() or 'EXPLODE' in tk):
+        chance = extra.get('chance', 0)
+        if 0 < chance < 1.0:
+            return {'special': 'weapon_explode', 'chance': chance, 'cursed_text_key_if_100': 'effect_explode'}
+    if key == 'modify_every_x_projectile':
+        if is_weapon:
+            return {'special': 'modify_projectile_weapon', 'base_value': value,
+                    'text_keys': {1: 'effect_weapon_modify_every_x_projectile_first',
+                                  2: 'effect_weapon_modify_every_x_projectile_second',
+                                  3: 'effect_weapon_modify_every_x_projectile_third'}}
+        else:
+            return {'special': 'modify_projectile', 'base_value': value,
+                    'text_keys': {1: 'effect_modify_every_x_projectile_first',
+                                  2: 'effect_modify_every_x_projectile_second',
+                                  3: 'effect_modify_every_x_projectile_third'}}
+    if key == 'item_mirror':
+        return {'special': 'mirror', 'extra_items_price': -10, 'cursed_text_key': 'EFFECT_CURSED_MIRROR'}
+    return None
 
 
 def _build_effect_args_and_signs(eff, lang):
@@ -2792,6 +2862,23 @@ def build_effect_text_dict(eff):
         'zh': template_zh,
         'args': curse_args,
     }
+    
+    # Add cursed text_key (if this effect changes text when cursed)
+    cursed_tk = _get_cursed_text_key(eff, parent_id, is_weapon)
+    if cursed_tk:
+        result['cursed_text_key'] = cursed_tk
+        # Also generate cursed template from the cursed text_key
+        cursed_eff = dict(eff)
+        cursed_eff['text_key'] = cursed_tk
+        ct_en, ct_args_en = render_effect_text(cursed_eff, 'en', parent_id, is_weapon)
+        ct_zh, ct_args_zh = render_effect_text(cursed_eff, 'zh', parent_id, is_weapon)
+        if ct_en or ct_zh:
+            result['text_cursed'] = {'en': ct_en, 'zh': ct_zh, 'args': ct_args_en or ct_args_zh}
+    
+    # Add special-case metadata
+    special = _get_cursed_special(eff, parent_id, is_weapon)
+    if special:
+        result['special'] = special
     
     # Add cursed extra effects (only for cursed items)
     extra_effects = _build_cursed_extra_effects(eff, parent_id)

@@ -431,10 +431,17 @@
         <div v-if="currentEffects?.length" class="detail-section">
           <h3 class="section-title">{{ S.effects }}</h3>
           <div class="effects-list">
-            <div v-for="(eff, idx) in currentEffects" :key="idx" class="effect-item">
-              <span class="eff-prefix" v-html="renderEffectPrefix(eff)"></span>
-              <span class="eff-text" v-html="renderEffectText(eff)"></span>
-            </div>
+            <template v-for="(eff, idx) in currentEffects" :key="idx">
+              <div class="effect-item">
+                <span class="eff-prefix" v-html="renderEffectPrefix(eff)"></span>
+                <span class="eff-text" v-html="renderEffectText(eff)"></span>
+              </div>
+              <!-- Extra effects only when cursed -->
+              <div v-if="curseEnabled && eff.text?.extra_effects" v-for="(extra, ei) in eff.text.extra_effects" :key="'x'+idx+'_'+ei" class="effect-item curse-extra-effect">
+                <span class="eff-prefix" v-html="renderEffectPrefix(extra)"></span>
+                <span class="eff-text" v-html="renderEffectText(extra)"></span>
+              </div>
+            </template>
           </div>
         </div>
       </div>
@@ -581,7 +588,6 @@ function applyCurse(curseArg, effectSign, originalValue) {
       return fv
     }
     
-    case 'linked':
     case 'none':
       return Math.round(curseArg.value)
     
@@ -901,46 +907,75 @@ function renderEffectPrefix(eff) {
 
 function renderEffectText(eff) {
   const lang = isZh.value ? 'zh' : 'en'
-  let text
+  let text, curseArgs, useCurseData
   
-  // New format: text object with templates and curse args
-  if (eff.text && eff.text[lang]) {
+  // Choose text source: cursed or normal
+  const textSrc = (curseEnabled.value && eff.text?.text_cursed) ? eff.text.text_cursed : eff.text
+  const special = eff.text?.special
+  
+  if (textSrc && textSrc[lang]) {
+    text = textSrc[lang]
+    curseArgs = textSrc.args || []
+    useCurseData = true  // always allow curse when we have args
+  } else if (eff.text && eff.text[lang]) {
     text = eff.text[lang]
-    const curseArgs = eff.text.args || []
-    
-    if (curseArgs.length > 0) {
-      const effectSign = eff.effect_sign ?? 3
-      const origValue = eff.value  // original signed value for FROM_VALUE resolution
-      text = text.replace(/\{(\d+)\}/g, (m, idx) => {
-        const i = parseInt(idx)
-        if (i < curseArgs.length && curseArgs[i]) {
-          const arg = curseArgs[i]
-          const value = curseEnabled.value
-            ? applyCurse(arg, effectSign, origValue)
-            : Math.round(arg.value)
-          // Handle linked values: value2 follows value with linked_mult
-          if (arg.type === 'linked' && i > 0) {
-            // Find the corresponding value arg (usually arg[0])
-            const parentArg = curseArgs[0]
-            if (parentArg && parentArg.type !== 'linked') {
-              const parentValue = curseEnabled.value
-                ? applyCurse(parentArg, effectSign, origValue)
-                : Math.round(parentArg.value)
-              return String(Math.round(parentValue * (arg.linked_mult ?? 1)))
-            }
-          }
-          return String(value)
-        }
-        return m
-      })
-    }
+    curseArgs = eff.text.args || []
+    useCurseData = true
   } else {
-    // Old format fallback: pre-rendered text
+    // Old format fallback
     text = eff['text_' + lang] || eff.text_en || ''
+    curseArgs = []
+    useCurseData = false
   }
   
   if (!text) return `${eff.value} ${statTr(eff.key)}`
   
+  const effectSign = eff.effect_sign ?? 3
+  const origValue = eff.value
+  
+  // Apply curse to placeholders
+  if (curseArgs.length > 0) {
+    text = text.replace(/\{(\d+)\}/g, (m, idx) => {
+      const i = parseInt(idx)
+      if (i < curseArgs.length && curseArgs[i]) {
+        const arg = curseArgs[i]
+        const value = curseEnabled.value
+          ? applyCurse(arg, effectSign, origValue)
+          : Math.round(arg.value)
+        return String(value)
+      }
+      return m
+    })
+  }
+  
+  // Handle special cases
+  if (curseEnabled.value && special) {
+    const sp = special
+    if (sp.special === 'weapon_explode') {
+      const cursedChance = Math.min(1, sp.chance * (1 + curseFactor.value / 5))
+      if (cursedChance >= 1) {
+        // Swap to fixed explosion text
+        const ctk = sp.cursed_text_key_if_100
+        const trans = rawData.value.translations || {}
+        const tkey = ctk?.toUpperCase()
+        if (trans[tkey]) {
+          text = lang === 'zh' ? trans[tkey].zh : trans[tkey].en
+        }
+      }
+    }
+    if (sp.special === 'modify_projectile' || sp.special === 'modify_projectile_weapon') {
+      // value changes: max(1, cursed_value - 1) for weapon; just text_key for non-weapon
+      // For simplicity, just swap text_key based on the message
+      // This is complex — defer to a more detailed implementation
+    }
+    if (sp.special === 'mirror') {
+      // Mirror keeps original effect but adds new text line
+      // The extra_effects already handle the items_price effect
+      return text  // Return unchanged
+    }
+  }
+  
+  // Icon replacement
   text = text.replace(/<icon>([^<]+)<\/icon>/g, (m, icKey) => {
     const src = resolveStatIcon(icKey)
     if (src) {
@@ -1532,6 +1567,8 @@ body { background: #1a1d28; color: #ccc; font-family: 'Segoe UI', system-ui, san
 /* Effects */
 .effects-list { display: flex; flex-direction: column; gap: 4px; }
 .effect-item { padding: 7px 10px; border-radius: 6px; font-size: 13px; background: #22253a; color: #ddd; line-height: 1.5; display: flex; align-items: baseline; gap: 6px; transition: background .15s; }
+.curse-extra-effect { border-left: 3px solid #c084fc; padding-left: 8px; }
+.curse-extra-effect .eff-prefix { color: #c084fc; }
 .effect-item:hover { background: #282c44; }
 .eff-prefix { flex-shrink: 0; width: 8px; text-align: center; color: #777; display: flex; align-items: center; justify-content: center; line-height: 1; }
 .eff-text { flex: 1; min-width: 0; }
