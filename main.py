@@ -1179,13 +1179,13 @@ def _build_curse_types(eff, args, arg_signs, parent_id='', is_weapon=False):
         # These pets have baked cooldown at specific arg indices
         if tk == 'EFFECT_PET_BLAZEMANDER':
             c(0, type='default')  # melee dmg
-            c(5, type='negative', no_min=True, decimalPlaces=1)  # hardcoded 4s cooldown
+            c(5, type='negative', no_min=True, decimalPlaces=1)
         elif tk == 'EFFECT_PET_BONK_DOG':
             c(0, type='default')  # melee dmg
-            c(2, type='negative', no_min=True, decimalPlaces=1)  # hardcoded 5s cooldown
+            c(2, type='negative', no_min=True, decimalPlaces=1)
         elif tk == 'EFFECT_PET_BOT_O_MINE':
             c(0, type='default')  # bullet dmg
-            c(2, type='negative', no_min=True, decimalPlaces=1)  # hardcoded 5s cooldown
+            c(2, type='negative', no_min=True, decimalPlaces=1)
         return curse
 
     # 25-27. Linked effects: value2 follows value with linked_mult ratio (parent=curseArgs[0])
@@ -1333,10 +1333,10 @@ def _get_cursed_special(eff, parent_id='', is_weapon=False):
     extra = eff.get('extra', {})
     value = eff.get('value', 0)
     tk = (eff.get('text_key', '') or key).upper()
-    if is_weapon and key and ('explode' in key.lower() or 'EXPLODE' in tk):
-        chance = extra.get('chance', 0)
-        if 0 < chance < 1.0:
-            return {'special': 'weapon_explode', 'chance': chance, 'cursed_text_key_if_100': 'effect_explode'}
+    # if is_weapon and key and ('explode' in key.lower() or 'EXPLODE' in tk):
+    #     chance = extra.get('chance', 0)
+    #     if 0 < chance < 1.0:
+    #         return {'special': 'weapon_explode', 'chance': chance, 'cursed_text_key_if_100': 'effect_explode'}
     if key == 'modify_every_x_projectile':
         if is_weapon:
             return {'special': 'modify_projectile_weapon', 'base_value': value,
@@ -3778,11 +3778,11 @@ def main():
     print(f"  JSON size: {OUTPUT_JSON.stat().st_size / 1024:.1f} KB")
     
     # Output report table
-    print(f"\n=== Effect Text Report ===")
-    print(f"{'Weapon':<30} {'Key':<35} {'Val':<6} {'EN Text':<80}")
-    print("-" * 155)
-    for e in effects_with_text[:5] + effects_without_text:
-        print(f"{e['weapon']:<30} {e['key']:<35} {e['value']:<6} {e['text_en'][:80]}")
+    # print(f"\n=== Effect Text Report ===")
+    # print(f"{'Weapon':<30} {'Key':<35} {'Val':<6} {'EN Text':<80}")
+    # print("-" * 155)
+    # for e in effects_with_text[:5] + effects_without_text:
+    #     print(f"{e['weapon']:<30} {e['key']:<35} {e['value']:<6} {e['text_en'][:80]}")
     
     # Output missing effects as table
     if effects_without_text:

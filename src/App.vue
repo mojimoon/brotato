@@ -4,7 +4,8 @@
     <header class="header">
       <h1>
         <span class="title">Brotato Codex</span>
-         <a href="https://github.com/mojimoon/" target="_blank" rel="noopener noreferrer" class="author-link">@mojimoon</a>
+        <a href="https://github.com/mojimoon/" target="_blank" rel="noopener noreferrer"
+          class="author-link">@mojimoon</a>
       </h1>
       <div class="header-actions">
         <span>
@@ -12,7 +13,8 @@
         </span>
         <!-- [![](https://img.shields.io/github/stars/mojimoon/brotato)](https://github.com/mojimoon/brotato) -->
         <a href="https://github.com/mojimoon/brotato" target="_blank" rel="noopener noreferrer">
-          <img src="https://img.shields.io/github/stars/mojimoon/brotato?style=social" alt="GitHub stars" style="height: 20px;" />
+          <img src="https://img.shields.io/github/stars/mojimoon/brotato?style=social" alt="GitHub stars"
+            style="height: 20px;" />
         </a>
         <a href="https://brotato.wiki.spellsandguns.com/" target="_blank" rel="noopener noreferrer">
           <el-button class="header-btn" circle>Wiki</el-button>
@@ -32,53 +34,76 @@
 
     <!-- Tabs -->
     <el-tabs v-model="activeTab" type="card" class="main-tabs" @tab-change="onTabChange">
-      <el-tab-pane name="weapons"><template #label><el-icon style="vertical-align:middle;margin-right:4px"><Aim /></el-icon>{{ S.weapons }}</template></el-tab-pane>
-      <el-tab-pane name="items"><template #label><el-icon style="vertical-align:middle;margin-right:4px"><Box /></el-icon>{{ S.items }}</template></el-tab-pane>
-      <el-tab-pane name="characters"><template #label><el-icon style="vertical-align:middle;margin-right:4px"><User /></el-icon>{{ S.characters }}</template></el-tab-pane>
+      <el-tab-pane name="weapons"><template #label><el-icon style="vertical-align:middle;margin-right:4px">
+            <Aim />
+          </el-icon>{{ S.weapons }}</template></el-tab-pane>
+      <el-tab-pane name="items"><template #label><el-icon style="vertical-align:middle;margin-right:4px">
+            <Box />
+          </el-icon>{{ S.items }}</template></el-tab-pane>
+      <el-tab-pane name="characters"><template #label><el-icon style="vertical-align:middle;margin-right:4px">
+            <User />
+          </el-icon>{{ S.characters }}</template></el-tab-pane>
     </el-tabs>
 
     <!-- Filters -->
     <div class="filters">
       <el-input v-model="searchText" :placeholder="S.search" clearable class="search-input" @input="onFilterChange">
-        <template #prefix><el-icon><Search /></el-icon></template>
+        <template #prefix><el-icon>
+            <Search />
+          </el-icon></template>
       </el-input>
 
-      <el-dropdown v-if="activeTab !== 'characters'" trigger="click" popper-class="dark-dropdown" @command="(v) => { filterTier = v; onFilterChange(); }">
+      <el-dropdown v-if="activeTab !== 'characters'" trigger="click" popper-class="dark-dropdown"
+        @command="(v) => { filterTier = v; onFilterChange(); }">
         <el-button class="filter-btn" :class="{ 'has-value': filterTier !== null }">
           {{ filterTier !== null ? tierDisplayName(filterTier) : S.tier }}
-          <el-icon class="el-icon--right"><ArrowDown /></el-icon>
+          <el-icon class="el-icon--right">
+            <ArrowDown />
+          </el-icon>
         </el-button>
         <template #dropdown>
           <el-dropdown-menu>
-            <el-dropdown-item :command="null" :class="{ 'is-active-opt': filterTier === null }">{{ S.all }}</el-dropdown-item>
-            <el-dropdown-item v-for="n in 4" :key="n-1" :command="n-1" :class="{ 'is-active-opt': filterTier === n-1 }">{{ tierDisplayName(n-1) }}</el-dropdown-item>
+            <el-dropdown-item :command="null" :class="{ 'is-active-opt': filterTier === null }">{{ S.all
+            }}</el-dropdown-item>
+            <el-dropdown-item v-for="n in 4" :key="n - 1" :command="n - 1"
+              :class="{ 'is-active-opt': filterTier === n - 1 }">{{ tierDisplayName(n - 1) }}</el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>
 
-      <el-dropdown v-if="activeTab === 'weapons'" trigger="click" popper-class="dark-dropdown" @command="(v) => { filterType = v; onFilterChange(); }">
+      <el-dropdown v-if="activeTab === 'weapons'" trigger="click" popper-class="dark-dropdown"
+        @command="(v) => { filterType = v; onFilterChange(); }">
         <el-button class="filter-btn" :class="{ 'has-value': !!filterType }">
           {{ filterType ? S[filterType] : S.type }}
-          <el-icon class="el-icon--right"><ArrowDown /></el-icon>
+          <el-icon class="el-icon--right">
+            <ArrowDown />
+          </el-icon>
         </el-button>
         <template #dropdown>
           <el-dropdown-menu>
             <el-dropdown-item :command="null" :class="{ 'is-active-opt': !filterType }">{{ S.all }}</el-dropdown-item>
-            <el-dropdown-item command="melee" :class="{ 'is-active-opt': filterType === 'melee' }">{{ S.melee }}</el-dropdown-item>
-            <el-dropdown-item command="ranged" :class="{ 'is-active-opt': filterType === 'ranged' }">{{ S.ranged }}</el-dropdown-item>
+            <el-dropdown-item command="melee" :class="{ 'is-active-opt': filterType === 'melee' }">{{ S.melee
+            }}</el-dropdown-item>
+            <el-dropdown-item command="ranged" :class="{ 'is-active-opt': filterType === 'ranged' }">{{ S.ranged
+            }}</el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>
 
-      <el-dropdown v-if="activeTab === 'weapons'" trigger="click" popper-class="dark-dropdown" @command="(v) => { filterSet = v; onFilterChange(); }">
+      <el-dropdown v-if="activeTab === 'weapons'" trigger="click" popper-class="dark-dropdown"
+        @command="(v) => { filterSet = v; onFilterChange(); }">
         <el-button class="filter-btn" :class="{ 'has-value': filterSet !== null }">
-          {{ filterSet !== null ? ((availableSets.find(s => s.key === filterSet) || {}).label || filterSet) : S.set }}
-          <el-icon class="el-icon--right"><ArrowDown /></el-icon>
+          {{filterSet !== null ? ((availableSets.find(s => s.key === filterSet) || {}).label || filterSet) : S.set}}
+          <el-icon class="el-icon--right">
+            <ArrowDown />
+          </el-icon>
         </el-button>
         <template #dropdown>
           <el-dropdown-menu>
-            <el-dropdown-item :command="null" :class="{ 'is-active-opt': filterSet === null }">{{ S.all }}</el-dropdown-item>
-            <el-dropdown-item v-for="s in availableSets" :key="s.key" :command="s.key" :class="{ 'is-active-opt': filterSet === s.key }">{{ s.label }}</el-dropdown-item>
+            <el-dropdown-item :command="null" :class="{ 'is-active-opt': filterSet === null }">{{ S.all
+            }}</el-dropdown-item>
+            <el-dropdown-item v-for="s in availableSets" :key="s.key" :command="s.key"
+              :class="{ 'is-active-opt': filterSet === s.key }">{{ s.label }}</el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>
@@ -86,46 +111,66 @@
       <el-dropdown trigger="click" popper-class="dark-dropdown" @command="(v) => { filterDlc = v; onFilterChange(); }">
         <el-button class="filter-btn" :class="{ 'has-value': filterDlc !== null }">
           {{ filterDlc === 0 ? S.base : filterDlc === 1 ? 'DLC' : S.source }}
-          <el-icon class="el-icon--right"><ArrowDown /></el-icon>
+          <el-icon class="el-icon--right">
+            <ArrowDown />
+          </el-icon>
         </el-button>
         <template #dropdown>
           <el-dropdown-menu>
-            <el-dropdown-item :command="null" :class="{ 'is-active-opt': filterDlc === null }">{{ S.all }}</el-dropdown-item>
-            <el-dropdown-item :command="0" :class="{ 'is-active-opt': filterDlc === 0 }">{{ S.baseGame }}</el-dropdown-item>
+            <el-dropdown-item :command="null" :class="{ 'is-active-opt': filterDlc === null }">{{ S.all
+            }}</el-dropdown-item>
+            <el-dropdown-item :command="0" :class="{ 'is-active-opt': filterDlc === 0 }">{{ S.baseGame
+            }}</el-dropdown-item>
             <el-dropdown-item :command="1" :class="{ 'is-active-opt': filterDlc === 1 }">DLC</el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>
 
-      <el-dropdown v-if="activeTab === 'items' || activeTab === 'characters'" trigger="click" popper-class="dark-dropdown" @command="(v) => { filterTag = v; onFilterChange(); }">
+      <el-dropdown v-if="activeTab === 'items' || activeTab === 'characters'" trigger="click"
+        popper-class="dark-dropdown" @command="(v) => { filterTag = v; onFilterChange(); }">
         <el-button class="filter-btn" :class="{ 'has-value': filterTag !== null }">
           {{ filterTag !== null ? tagTr(filterTag) : S.tag }}
-          <el-icon class="el-icon--right"><ArrowDown /></el-icon>
+          <el-icon class="el-icon--right">
+            <ArrowDown />
+          </el-icon>
         </el-button>
         <template #dropdown>
           <el-dropdown-menu>
-            <el-dropdown-item :command="null" :class="{ 'is-active-opt': filterTag === null }">{{ S.all }}</el-dropdown-item>
-            <el-dropdown-item v-for="t in allTags" :key="t" :command="t" :class="{ 'is-active-opt': filterTag === t }">{{ tagTr(t) }}</el-dropdown-item>
+            <el-dropdown-item :command="null" :class="{ 'is-active-opt': filterTag === null }">{{ S.all
+            }}</el-dropdown-item>
+            <el-dropdown-item v-for="t in allTags" :key="t" :command="t"
+              :class="{ 'is-active-opt': filterTag === t }">{{ tagTr(t) }}</el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>
 
-      <el-dropdown v-if="activeTab === 'weapons' || activeTab === 'items'" trigger="click" popper-class="dark-dropdown" @command="(v) => { sortBy = v; onFilterChange(); }">
+      <el-dropdown v-if="activeTab === 'weapons' || activeTab === 'items'" trigger="click" popper-class="dark-dropdown"
+        @command="(v) => { sortBy = v; onFilterChange(); }">
         <el-button class="filter-btn sort-btn" :class="{ 'has-value': sortBy !== 'default' }">
-          <el-icon style="margin-right:4px"><Sort /></el-icon>
+          <el-icon style="margin-right:4px">
+            <Sort />
+          </el-icon>
           {{ sortBy === 'price' ? S.price : S.default }}
-          <el-icon class="el-icon--right"><ArrowDown /></el-icon>
+          <el-icon class="el-icon--right">
+            <ArrowDown />
+          </el-icon>
         </el-button>
         <template #dropdown>
           <el-dropdown-menu>
-            <el-dropdown-item command="default" :class="{ 'is-active-opt': sortBy === 'default' }">{{ S.default }}</el-dropdown-item>
-            <el-dropdown-item command="price" :class="{ 'is-active-opt': sortBy === 'price' }">{{ S.price }}</el-dropdown-item>
+            <el-dropdown-item command="default" :class="{ 'is-active-opt': sortBy === 'default' }">{{ S.default
+            }}</el-dropdown-item>
+            <el-dropdown-item command="price" :class="{ 'is-active-opt': sortBy === 'price' }">{{ S.price
+            }}</el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>
 
-      <el-button v-if="activeTab === 'weapons' || activeTab === 'items'" class="filter-btn price-toggle-btn" :class="{ 'has-value': showingPrice }" @click="showingPrice = !showingPrice">
-        <el-icon style="margin-right:4px"><View v-if="showingPrice" /><Hide v-else /></el-icon>
+      <el-button v-if="activeTab === 'weapons' || activeTab === 'items'" class="filter-btn price-toggle-btn"
+        :class="{ 'has-value': showingPrice }" @click="showingPrice = !showingPrice">
+        <el-icon style="margin-right:4px">
+          <View v-if="showingPrice" />
+          <Hide v-else />
+        </el-icon>
         {{ S.price }}
       </el-button>
     </div>
@@ -134,15 +179,10 @@
     <div class="main-content" tabindex="0" @keydown="onKeyDown" ref="mainContentRef">
       <!-- Left: Grid -->
       <div class="grid-panel">
-        <div
-          v-for="item in currentDisplayList"
-          :key="item.id"
-          :ref="el => { if (el) gridItemRefs[item.id] = el }"
-          class="grid-item"
-          :class="{ selected: selectedItem?.id === item.id }"
+        <div v-for="item in currentDisplayList" :key="item.id" :ref="el => { if (el) gridItemRefs[item.id] = el }"
+          class="grid-item" :class="{ selected: selectedItem?.id === item.id }"
           :style="selectedItem?.id === item.id ? { background: tierSelectedBg(item.tier), borderColor: tierColor(item.tier) } : {}"
-          @click="selectItem(item)"
-        >
+          @click="selectItem(item)">
           <div v-if="shouldShowCardPrice(item)" class="item-price-badge">{{ getListPrice(item) }}</div>
           <div class="item-icon" :style="{ borderColor: tierColor(item.tier), background: tierBgColor(item.tier) }">
             <img :src="getIconSrc(item.icon)" />
@@ -157,7 +197,8 @@
         <!-- Weapon Detail -->
         <template v-if="activeTab === 'weapons'">
           <div class="detail-header">
-            <div class="detail-icon-wrap" :style="{ borderColor: tierColor(activeWeaponTier), background: tierBgColor(activeWeaponTier) }">
+            <div class="detail-icon-wrap"
+              :style="{ borderColor: tierColor(activeWeaponTier), background: tierBgColor(activeWeaponTier) }">
               <img :src="getIconSrc(selectedItem.icon)" />
             </div>
             <div class="detail-title-wrap">
@@ -165,7 +206,8 @@
               <div class="detail-badges">
                 <span class="type-badge" :class="selectedItem.type">{{ S[selectedItem.type] }}</span>
                 <span v-if="selectedItem.dlc" class="dlc-badge">DLC</span>
-                <el-tooltip v-for="(setNameKey, si) in (selectedItem.sets || [])" :key="si" placement="top" effect="dark" :hide-after="0">
+                <el-tooltip v-for="(setNameKey, si) in (selectedItem.sets || [])" :key="si" placement="top"
+                  effect="dark" :hide-after="0">
                   <template #content>
                     <div class="set-tooltip-content">
                       <div class="set-tooltip-name">{{ setTr(setNameKey) }}</div>
@@ -206,14 +248,16 @@
             <div class="weapon-stat-row">
               <span class="ws-label">{{ S.crit }}</span>
               <span class="ws-val">{{ (activeWeaponData.stats.crit_chance * 100).toFixed(0) }}%</span>
-              <span class="ws-val crit-dmg" :class="{ 'curse-modified': curseEnabled }">x{{ displayStats.crit_damage }}</span>
+              <span class="ws-val crit-dmg" :class="{ 'curse-modified': curseEnabled }">x{{ displayStats.crit_damage
+              }}</span>
             </div>
 
             <div class="weapon-stat-row">
               <span class="ws-label">{{ S.cooldown }}</span>
               <span class="ws-val">
                 {{ formatCooldown(displayCooldown) }}
-                <span class="ws-attack-type">({{ formatCooldown(displayStats.cooldown / 60) }}+{{ formatCooldown(displayStats.animation_cooldown || 0) }})</span>
+                <span class="ws-attack-type">({{ formatCooldown(displayStats.cooldown / 60) }}+{{
+                  formatCooldown(displayStats.animation_cooldown || 0) }})</span>
               </span>
             </div>
 
@@ -241,13 +285,16 @@
 
             <div v-if="displayStats.lifesteal > 0" class="weapon-stat-row">
               <span class="ws-label">{{ S.lifesteal }}</span>
-              <span class="ws-val" :class="{ 'curse-modified': curseEnabled }">{{ (displayStats.lifesteal * 100).toFixed(0) }}%</span>
+              <span class="ws-val" :class="{ 'curse-modified': curseEnabled }">{{ (displayStats.lifesteal *
+                100).toFixed(0)
+              }}%</span>
             </div>
 
             <div v-if="activeWeaponData.type === 'ranged' && displayStats.piercing > 0" class="weapon-stat-row">
               <span class="ws-label">{{ S.piercing }}</span>
               <span class="ws-val" :class="{ 'curse-modified': curseEnabled }">{{ displayStats.piercing }}
-                <span v-if="displayStats.piercing_dmg_reduction > 0" class="ws-attack-type"> (-{{ (displayStats.piercing_dmg_reduction * 100).toFixed(0) }}% {{ S.dmg }})</span>
+                <span v-if="displayStats.piercing_dmg_reduction > 0" class="ws-attack-type"> (-{{
+                  (displayStats.piercing_dmg_reduction * 100).toFixed(0) }}% {{ S.dmg }})</span>
               </span>
             </div>
 
@@ -256,7 +303,8 @@
               <span class="ws-val" :class="{ 'curse-modified': curseEnabled }">{{ displayStats.bounce }}</span>
             </div>
 
-            <div v-if="activeWeaponData.type === 'ranged' && activeWeaponData.stats.nb_projectiles > 1" class="weapon-stat-row">
+            <div v-if="activeWeaponData.type === 'ranged' && activeWeaponData.stats.nb_projectiles > 1"
+              class="weapon-stat-row">
               <span class="ws-label">{{ S.projectiles }}</span>
               <span class="ws-val">{{ activeWeaponData.stats.nb_projectiles }}</span>
             </div>
@@ -266,7 +314,8 @@
         <!-- Item Detail -->
         <template v-else-if="activeTab === 'items'">
           <div class="detail-header">
-            <div class="detail-icon-wrap" :style="{ borderColor: tierColor(selectedItem.tier), background: tierBgColor(selectedItem.tier) }">
+            <div class="detail-icon-wrap"
+              :style="{ borderColor: tierColor(selectedItem.tier), background: tierBgColor(selectedItem.tier) }">
               <img :src="getIconSrc(selectedItem.icon)" />
             </div>
             <div class="detail-title-wrap">
@@ -274,14 +323,18 @@
               <div class="detail-badges">
                 <span v-if="selectedItem.dlc" class="dlc-badge">DLC</span>
                 <span v-if="isUniqueItem(selectedItem)" class="limit-badge unique">{{ S.unique }}</span>
-                <span v-else-if="isLimitedItem(selectedItem)" class="limit-badge limited">{{ S.limited }}({{ selectedItem.max_nb }})</span>
-                <span v-for="tag in sortedItemTags(selectedItem)" :key="tag" class="tag-badge clickable" :class="specialTagClass(tag)" @click.stop="onTagClick(tag)">
+                <span v-else-if="isLimitedItem(selectedItem)" class="limit-badge limited">{{ S.limited }}({{
+                  selectedItem.max_nb }})</span>
+                <span v-for="tag in sortedItemTags(selectedItem)" :key="tag" class="tag-badge clickable"
+                  :class="specialTagClass(tag)" @click.stop="onTagClick(tag)">
                   <el-tooltip placement="top" effect="dark" :hide-after="0">
                     <template #content>
                       <div class="tag-tooltip-content">
                         <div class="tag-tooltip-name">{{ tagTr(tag) }}</div>
-                        <div v-if="tagItems(tag).length" class="tag-tooltip-line">{{ S.items }}：{{ tagItems(tag).join(', ') }}</div>
-                        <div v-if="tagCharacters(tag).length" class="tag-tooltip-line">{{ S.characters }}：{{ tagCharacters(tag).join(', ') }}</div>
+                        <div v-if="tagItems(tag).length" class="tag-tooltip-line">{{ S.items }}：{{
+                          tagItems(tag).join(',') }}</div>
+                        <div v-if="tagCharacters(tag).length" class="tag-tooltip-line">{{ S.characters }}：{{
+                          tagCharacters(tag).join(', ') }}</div>
                       </div>
                     </template>
                     {{ tagTr(tag) }}
@@ -295,7 +348,8 @@
         <!-- Character Detail -->
         <template v-else>
           <div class="detail-header">
-            <div class="detail-icon-wrap" :style="{ borderColor: tierColor(selectedItem.tier), background: tierBgColor(selectedItem.tier) }">
+            <div class="detail-icon-wrap"
+              :style="{ borderColor: tierColor(selectedItem.tier), background: tierBgColor(selectedItem.tier) }">
               <img :src="getIconSrc(selectedItem.icon)" />
             </div>
             <div class="detail-title-wrap">
@@ -308,8 +362,10 @@
           <div v-if="selectedItem.starting_weapons?.length" class="detail-section">
             <h3 class="section-title">{{ S.startingWeapons }}</h3>
             <div class="starting-weapons-grid">
-              <div v-for="wid in selectedItem.starting_weapons" :key="wid" class="grid-item starting-weapon-card" @click="navigateToWeapon(wid)">
-                <div class="item-icon" :style="{ borderColor: tierColor(getWeaponById(wid)?.tier ?? 0), background: tierBgColor(getWeaponById(wid)?.tier ?? 0) }">
+              <div v-for="wid in selectedItem.starting_weapons" :key="wid" class="grid-item starting-weapon-card"
+                @click="navigateToWeapon(wid)">
+                <div class="item-icon"
+                  :style="{ borderColor: tierColor(getWeaponById(wid)?.tier ?? 0), background: tierBgColor(getWeaponById(wid)?.tier ?? 0) }">
                   <img :src="getIconSrc(getWeaponById(wid)?.icon)" />
                 </div>
                 <div class="item-name-text">{{ getWeaponById(wid) ? itemName(getWeaponById(wid)) : wid }}</div>
@@ -319,13 +375,16 @@
           <div v-if="(selectedItem.wanted_tags || []).length" class="detail-section">
             <h3 class="section-title">{{ S.preferredTags }}</h3>
             <div class="tags-wrap">
-              <span v-for="tag in selectedItem.wanted_tags" :key="tag" class="tag-badge clickable" @click.stop="onTagClick(tag)">
+              <span v-for="tag in selectedItem.wanted_tags" :key="tag" class="tag-badge clickable"
+                @click.stop="onTagClick(tag)">
                 <el-tooltip placement="top" effect="dark" :hide-after="0">
                   <template #content>
                     <div class="tag-tooltip-content">
                       <div class="tag-tooltip-name">{{ tagTr(tag) }}</div>
-                      <div v-if="tagItems(tag).length" class="tag-tooltip-line">{{ S.items }}：{{ tagItems(tag).join(', ') }}</div>
-                      <div v-if="tagCharacters(tag).length" class="tag-tooltip-line">{{ S.characters }}：{{ tagCharacters(tag).join(', ') }}</div>
+                      <div v-if="tagItems(tag).length" class="tag-tooltip-line">{{ S.items }}：{{ tagItems(tag).join(',')
+                      }}</div>
+                      <div v-if="tagCharacters(tag).length" class="tag-tooltip-line">{{ S.characters }}：{{
+                        tagCharacters(tag).join(', ') }}</div>
                     </div>
                   </template>
                   {{ tagTr(tag) }}
@@ -345,11 +404,14 @@
             <div class="calc-result">
               <span class="calc-label">{{ S.finalCooldown }}:</span>
               <span class="calc-value">{{ formatCooldown(calculatedCooldown) }}</span>
-              <span class="calc-pct" :class="cooldownChangePct < 0 ? 'pct-neg' : cooldownChangePct > 0 ? 'pct-pos' : ''">({{ S.attackSpeed }} {{ cooldownChangePct > 0 ? '+' : '' }}{{ cooldownChangePct.toFixed(0) }}%)</span>
+              <span class="calc-pct"
+                :class="cooldownChangePct < 0 ? 'pct-neg' : cooldownChangePct > 0 ? 'pct-pos' : ''">({{
+                  S.attackSpeed }} {{ cooldownChangePct > 0 ? '+' : '' }}{{ cooldownChangePct.toFixed(0) }}%)</span>
             </div>
             <div class="slider-row">
               <label class="slider-label">{{ S.attackSpeed }}</label>
-              <el-slider v-model="attackSpeedSlider" :min="-200" :max="500" :step="1" :marks="atkSpeedMarks" show-input />
+              <el-slider v-model="attackSpeedSlider" :min="-200" :max="500" :step="1" :marks="atkSpeedMarks"
+                show-input />
             </div>
             <div v-if="activeWeaponData.type === 'melee'" class="slider-row">
               <label class="slider-label">{{ S.statRange }}</label>
@@ -364,21 +426,10 @@
         <!-- Curse Preview (weapons & items) -->
         <div v-if="activeTab === 'weapons' || activeTab === 'items'" class="detail-section curse-section">
           <div class="curse-row">
-            <el-button 
-              class="curse-toggle-btn" 
-              :class="{ 'curse-active': curseEnabled }"
-              @click="curseEnabled = !curseEnabled"
-              size="small"
-            >{{ S.curse }}</el-button>
-            <el-slider
-              v-if="curseEnabled"
-              v-model="curseSlider"
-              :min="10"
-              :max="110"
-              :step="1"
-              show-input
-              class="curse-slider"
-            />
+            <el-button class="curse-toggle-btn" :class="{ 'curse-active': curseEnabled }"
+              @click="curseEnabled = !curseEnabled" size="small">{{ S.curse }}</el-button>
+            <el-slider v-if="curseEnabled" v-model="curseSlider" :min="10" :max="110" :step="1" show-input
+              class="curse-slider" />
           </div>
         </div>
 
@@ -417,7 +468,8 @@
               <tr>
                 <td>{{ isMobile ? S.nightmareShort : S.nightmare }}</td>
                 <td>+{{ formatIncr(getWaveIncrementD6()) }}</td>
-                <td class="price-base price-final-nightmare">{{ waveSlider > 0 ? computedPriceD6 : getBasePrice() }}</td>
+                <td class="price-base price-final-nightmare">{{ waveSlider > 0 ? computedPriceD6 : getBasePrice() }}
+                </td>
                 <td>{{ priceAtWaveD6(1) }}</td>
                 <td>{{ priceAtWaveD6(4) }}</td>
                 <td>{{ priceAtWaveD6(8) }}</td>
@@ -428,7 +480,8 @@
           </table>
           <div v-if="showingPrice" class="price-slider-row">
             <span class="wave-label">{{ S.wave }}</span>
-            <el-slider v-model="waveSlider" :min="0" :max="20" :step="1" :marks="waveSliderMarks" class="price-slider" placement="bottom" />
+            <el-slider v-model="waveSlider" :min="0" :max="20" :step="1" :marks="waveSliderMarks" class="price-slider"
+              placement="bottom" />
           </div>
         </div>
 
@@ -442,7 +495,8 @@
                 <span class="eff-text" v-html="renderEffectText(eff)"></span>
               </div>
               <!-- Extra effects only when cursed -->
-              <div v-if="curseEnabled && eff.text?.extra_effects" v-for="(extra, ei) in eff.text.extra_effects" :key="'x'+idx+'_'+ei" class="effect-item curse-extra-effect">
+              <div v-if="curseEnabled && eff.text?.extra_effects" v-for="(extra, ei) in eff.text.extra_effects"
+                :key="'x' + idx + '_' + ei" class="effect-item curse-extra-effect">
                 <span class="eff-prefix" v-html="renderEffectPrefix(extra)"></span>
                 <span class="eff-text" v-html="renderEffectText(extra)"></span>
               </div>
@@ -983,50 +1037,6 @@ function renderEffectText(eff) {
   // Handle special cases
   if (curseEnabled.value && special) {
     const sp = special
-    if (sp.special === 'weapon_explode') {
-      const cursedChance = Math.min(1, sp.chance * (1 + curseFactor.value / 5))
-      if (cursedChance >= 1) {
-        // Swap to fixed explosion text
-        const ctk = sp.cursed_text_key_if_100
-        const trans = rawData.value.translations || {}
-        const tkey = ctk?.toUpperCase()
-        if (trans[tkey]) {
-          text = lang === 'zh' ? trans[tkey].zh : trans[tkey].en
-        }
-      }
-    }
-    if (sp.special === 'modify_projectile' || sp.special === 'modify_projectile_weapon') {
-      // Per dlc_1_data.gd:290, weapon: max(1, cursed_value - 1); non-weapon: just cursed_value
-      const baseValue = sp.base_value
-      const cv = curseFactor.value
-      // Apply negative curse: floor(abs / (1+cv))
-      const cursedVal = Math.floor(Math.abs(baseValue) / (1 + cv))
-      const finalVal = sp.special === 'modify_projectile_weapon'
-        ? Math.max(1, cursedVal - 1)
-        : cursedVal
-      // Swap text_key if applicable
-      if (finalVal === 1 || finalVal === 2 || finalVal === 3) {
-        const newKey = sp.text_keys?.[String(finalVal)]
-        if (newKey) {
-          const trans = rawData.value.translations || {}
-          const tkey = newKey.toUpperCase()
-          if (trans[tkey]) {
-            text = lang === 'zh' ? trans[tkey].zh : trans[tkey].en
-            // Restore curse placeholders for the new text (re-process with curse args if needed)
-            // For simplicity, return the new text with value injected
-            text = text.replace('{0}', String(finalVal))
-            return text
-          }
-        }
-      }
-      // Replace the value in the current text (find and replace the first number)
-      text = text.replace(/(\d+)/, String(finalVal))
-    }
-    if (sp.special === 'mirror') {
-      // Mirror keeps original effect but adds new text line
-      // The extra_effects already handle the items_price effect
-      return text  // Return unchanged
-    }
   }
   
   // Scaling tag: <scaling type="key" value="0.6" /> (may be inside color span)
@@ -1139,8 +1149,8 @@ const CHAR_BASE_ORDER = [
   'character_soldier','character_masochist','character_knight','character_demon',
   'character_baby','character_vagabond','character_technomage','character_vampire',
   'character_beast_master','character_wounded',
-]
-const CHAR_DLC_ORDER = [
+// ]
+// const CHAR_DLC_ORDER = [
   'character_sailor','character_curious','character_builder','character_captain',
   'character_creature','character_chef','character_druid','character_dwarf',
   'character_gangster','character_diver','character_hiker','character_buccaneer',
@@ -1148,7 +1158,7 @@ const CHAR_DLC_ORDER = [
 ]
 const CHAR_ORDER_MAP = {}
 CHAR_BASE_ORDER.forEach((id, i) => { CHAR_ORDER_MAP[id] = i })
-CHAR_DLC_ORDER.forEach((id, i) => { CHAR_ORDER_MAP[id] = i + CHAR_BASE_ORDER.length })
+// CHAR_DLC_ORDER.forEach((id, i) => { CHAR_ORDER_MAP[id] = i + CHAR_BASE_ORDER.length })
 function sortCharacters(chars) {
   return chars.sort((a, b) => (CHAR_ORDER_MAP[a.id] ?? 9999) - (CHAR_ORDER_MAP[b.id] ?? 9999))
 }
