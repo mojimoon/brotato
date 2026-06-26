@@ -552,33 +552,57 @@ watch(curseEnabled, (v) => {
 // Curse value as a fraction: slider value / 100
 const curseFactor = computed(() => curseEnabled.value ? curseSlider.value / 100 : 0)
 
-function applyCurse(baseValue, curseType, effectSign, originalValue) {
-  // curseType: 'base' = standard formula (positive boost, negative reduce)
-  //            'negative' = always divide by (1+curse)
-  // originalValue: the effect.value from raw data, used only for FROM_VALUE resolution
+function applyCurse(curseArg, effectSign, originalValue) {
+  // curseArg: {value, type, mult?, ceil?, curse_value?, curse_min?, curse_max?, linked_mult?, max_val?}
+  // type: default|positive|negative|random|fixed|linked|none
   const cv = curseFactor.value
-  if (cv <= 0) return Math.round(baseValue)
+  if (cv <= 0) return Math.round(curseArg.value)
   
-  const absV = Math.abs(baseValue)
-  const sign = baseValue < 0 ? -1 : 1
+  const type = curseArg.type || 'default'
+  const absV = Math.abs(curseArg.value)
+  const sign = curseArg.value < 0 ? -1 : 1
+  const mult = curseArg.mult ?? 1.0
+  const useCeil = curseArg.ceil ?? true
+  const effMod = cv * mult
   
-  if (curseType === 'negative') {
-    // Always reduce: divide by (1+curse)
-    return sign * Math.max(1, Math.floor(absV / (1 + cv)))
-  }
-  
-  // 'base': determine direction from effect sign
-  // effect_sign: 0=POSITIVE, 1=NEGATIVE, 2=NEUTRAL, 3=FROM_VALUE, 5=OVERRIDE
-  let isPositive
-  if (effectSign === 0 || effectSign === 5) isPositive = true
-  else if (effectSign === 1) isPositive = false
-  else if (effectSign === 3) isPositive = (originalValue ?? baseValue) > 0
-  else return Math.round(baseValue) // NEUTRAL or unknown
-  
-  if (isPositive) {
-    return sign * Math.ceil(absV * (1 + cv))
-  } else {
-    return sign * Math.max(1, Math.floor(absV / (1 + cv)))
+  switch (type) {
+    case 'positive':
+      return sign * (useCeil ? Math.ceil(absV * (1 + effMod)) : Math.trunc(absV * (1 + effMod)))
+    
+    case 'negative':
+      return sign * Math.max(1, Math.floor(absV / (1 + effMod)))
+    
+    case 'random':
+      // Preview: show curse_min (conservative estimate)
+      return Math.round(curseArg.curse_min ?? curseArg.value)
+    
+    case 'fixed': {
+      const fv = Math.round(curseArg.curse_value ?? curseArg.value)
+      return fv
+    }
+    
+    case 'linked':
+    case 'none':
+      return Math.round(curseArg.value)
+    
+    case 'default':
+    default: {
+      let isPositive
+      if (effectSign === 0 || effectSign === 5) isPositive = true
+      else if (effectSign === 1) isPositive = false
+      else if (effectSign === 3) isPositive = (originalValue ?? curseArg.value) > 0
+      else return Math.round(curseArg.value)
+      
+      if (isPositive) {
+        let v = sign * Math.ceil(absV * (1 + effMod))
+        if (curseArg.max_val != null) v = Math.min(v, Math.round(curseArg.max_val))
+        return v
+      } else {
+        let v = sign * Math.max(1, Math.floor(absV / (1 + effMod)))
+        if (curseArg.max_val != null) v = Math.min(v, Math.round(curseArg.max_val))
+        return v
+      }
+    }
   }
 }
 
@@ -889,11 +913,22 @@ function renderEffectText(eff) {
       const origValue = eff.value  // original signed value for FROM_VALUE resolution
       text = text.replace(/\{(\d+)\}/g, (m, idx) => {
         const i = parseInt(idx)
-        if (i < curseArgs.length) {
+        if (i < curseArgs.length && curseArgs[i]) {
           const arg = curseArgs[i]
           const value = curseEnabled.value
-            ? applyCurse(arg.value, arg.curse, effectSign, origValue)
+            ? applyCurse(arg, effectSign, origValue)
             : Math.round(arg.value)
+          // Handle linked values: value2 follows value with linked_mult
+          if (arg.type === 'linked' && i > 0) {
+            // Find the corresponding value arg (usually arg[0])
+            const parentArg = curseArgs[0]
+            if (parentArg && parentArg.type !== 'linked') {
+              const parentValue = curseEnabled.value
+                ? applyCurse(parentArg, effectSign, origValue)
+                : Math.round(parentArg.value)
+              return String(Math.round(parentValue * (arg.linked_mult ?? 1)))
+            }
+          }
           return String(value)
         }
         return m
