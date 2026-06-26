@@ -955,14 +955,17 @@ function renderEffectText(eff) {
       if (i < curseArgs.length && curseArgs[i]) {
         const arg = curseArgs[i]
         if (arg.type === 'linked') {
-          const val = linkedParentVal * (arg.stepify ?? 1)
-          // stepify >= 1 → round; stepify < 1 → 1 decimal place
-          return arg.stepify >= 1 ? String(Math.round(val)) : val.toFixed(1)
+          const val = linkedParentVal * (arg.linked_mult ?? 1)
+          const dp = arg.decimalPlaces
+          return dp != null ? val.toFixed(dp) : String(Math.round(val))
         }
-        const value = curseEnabled.value
+        let rawValue = curseEnabled.value
           ? applyCurse(arg, effectSign, origValue)
           : Math.round(arg.value)
-        return String(value)
+        if (arg.decimalPlaces != null && curseEnabled.value) {
+          rawValue = parseFloat(rawValue).toFixed(arg.decimalPlaces)
+        }
+        return String(rawValue)
       }
       return m
     })
@@ -994,6 +997,20 @@ function renderEffectText(eff) {
       return text  // Return unchanged
     }
   }
+  
+  // Scaling tag: <scaling type="key" value="0.6" /> (may be inside color span)
+  text = text.replace(/(?:<span[^>]*>)?\s*<scaling type="([^"]+)" value="([^"]+)"\s*\/>\s*(?:<\/span>)?/g,
+    (m, icKey, valStr) => {
+    const baseVal = parseFloat(valStr)
+    const cv = curseFactor.value
+    const cursedVal = curseEnabled.value && cv > 0 ? baseVal * (1 + cv) : baseVal
+    const pct = Math.round(cursedVal * 100)
+    const src = resolveStatIcon(icKey)
+    if (src) {
+      return pct + '%<img src="' + src + '" class="stat-inline-icon" title="' + statTr('stat_' + icKey) + '" />'
+    }
+    return pct + '%' + statTr('stat_' + icKey)
+  })
   
   // Icon replacement
   text = text.replace(/<icon>([^<]+)<\/icon>/g, (m, icKey) => {

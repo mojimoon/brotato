@@ -711,15 +711,16 @@ def _fmt_extra_val(val):
     return str(val)
 
 def build_scaling_text(scaling_stats, lang='zh'):
-    """Build scaling stat icon text like '100%<icon>ranged_damage</icon>'"""
+    """Build scaling tags like '<scaling type="ranged_damage" value="0.6" />'.
+    
+    Frontend parses these tags and applies curse to the value.
+    """
     parts = []
     for ss in scaling_stats:
         if isinstance(ss, list) and len(ss) >= 2:
-            pct = int(ss[1] * 100)
-            stat_key = ss[0]  # e.g. "stat_ranged_damage"
-            # Extract short key for icon: "stat_ranged_damage" -> "ranged_damage"
+            stat_key = ss[0]
             ic_key = stat_key.replace('stat_', '', 1) if stat_key.startswith('stat_') else stat_key
-            parts.append(f"{pct}%<icon>{ic_key}</icon>")
+            parts.append(f'<scaling type="{ic_key}" value="{ss[1]}" />')
     return '+'.join(parts) if parts else ''
 
 
@@ -1148,34 +1149,39 @@ def _build_curse_types(eff, args, arg_signs, parent_id='', is_weapon=False):
         c(0, type='default', max_val=100)
         return curse
 
-    # 24b. instant_gold_attracting at 100%: fixed (Sifd's Relic)
+    # 24b. Riposte EFFECT_DEAL_DMG_WHEN_DODGE: 100% chance is fixed
+    if tk == 'EFFECT_DEAL_DMG_WHEN_DODGE':
+        c(0, type='fixed', curse_value=100)
+        return curse
+
+    # 24c. instant_gold_attracting at 100%: fixed (Sifd's Relic)
     if parent_id == 'item_sifds_relic' and key == 'instant_gold_attracting':
         c(0, type='fixed', curse_value=100)
         return curse
 
-    # 24c. anvil upgrade: fixed value (original armor)
-    if custom_key == 'upgrade_random_weapon' and parent_id == 'item_anvil':
-        c(0, type='fixed', curse_value=2)
-        return curse
-
-    # 24d. Landmine / Garden spawn cooldown: negative (divide)
+    # 24d. Landmine / Garden spawn cooldown: negative (divide, 1 decimal)
     if tk in ('EFFECT_LANDMINES', 'EFFECT_GARDEN', 'EFFECT_SPAWN_GARDEN'):
-        c(1, type='negative')  # cooldown at args[1] for landmines
-        c(0, type='negative')  # also try args[0] for garden/spawn_garden
+        c(1, type='negative', decimalPlaces=1)
+        c(0, type='negative', decimalPlaces=1)
         return curse
 
-    # 25-27. Linked effects: value2 follows value with stepify ratio (parent=curseArgs[0])
+    # 24e. Ball and Chain minimum weapon cooldown: negative, 2 decimals
+    if key == 'minimum_weapon_cooldowns' or tk == 'EFFECT_MINIMUM_WEAPON_COOLDOWN':
+        c(0, type='negative', decimalPlaces=2)
+        return curse
+
+    # 25-27. Linked effects: value2 follows value with linked_mult ratio (parent=curseArgs[0])
     if custom_key == 'consumable_stats_while_max':
         c(0, type='default')
-        c(1, type='linked', stepify=1.0)
+        c(1, type='linked', linked_mult=1.0)
         return curse
     if key == 'remove_speed':
         c(0, type='default')
-        c(2, type='linked', stepify=4.0)
+        c(2, type='linked', linked_mult=4.0)
         return curse
     if key in ('burning_enemy_hp_percent_damage', 'giant_crit_damage', 'bonus_current_health_damage'):
         c(0, type='default')
-        c(2, type='linked', stepify=0.1)
+        c(2, type='linked', linked_mult=0.1, decimalPlaces=1)
         return curse
 
     # ---- Default: arg[0] gets 'default' type ----
