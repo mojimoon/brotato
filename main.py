@@ -1276,8 +1276,6 @@ def _build_cursed_extra_effects(eff, parent_id=''):
                 tr_en = tr(item['text_key'], 'en')
                 tr_zh = tr(item['text_key'], 'zh')
                 item['text'] = {'en': tr_en, 'zh': tr_zh, 'args': []}
-                item['text_en'] = tr_en
-                item['text_zh'] = tr_zh
             continue
         fake_eff = {
             'key': item['key'],
@@ -1290,8 +1288,6 @@ def _build_cursed_extra_effects(eff, parent_id=''):
         text_dict = build_effect_text_dict(fake_eff)
         if text_dict:
             item['text'] = text_dict
-            item['text_en'] = text_dict['en']
-            item['text_zh'] = text_dict['zh']
         # Add icon for stat prefix display
         eff_key = item.get('key', '')
         if eff_key.startswith('stat_') or eff_key in ('xp_gain', 'explosion_size', 'explosion_damage', 'trees'):
@@ -3232,9 +3228,6 @@ def build_sets_data():
                         if not text_dict:
                             continue
                         eff_data['text'] = text_dict
-                        # Also keep backward-compat fields
-                        eff_data['text_en'] = text_dict['en']
-                        eff_data['text_zh'] = text_dict['zh']
                         # Add stat icon prefix
                         eff_key = eff_data.get('key', '')
                         if eff_key.startswith('stat_') or eff_key in ('xp_gain', 'explosion_size', 'explosion_damage'):
@@ -3281,8 +3274,6 @@ def get_effects(parsed, parent_id='', is_weapon=False):
                         if not text_dict:
                             continue
                         eff_data['text'] = text_dict
-                        eff_data['text_en'] = text_dict['en']
-                        eff_data['text_zh'] = text_dict['zh']
                         # Add stat icon prefix
                         eff_key = eff_data.get('key', '')
                         if eff_key.startswith('stat_') or eff_key in ('xp_gain', 'explosion_size', 'explosion_damage'):
@@ -3707,6 +3698,7 @@ def main():
     effects_without_text = []
     for w in weapons_with_effects:
         for e in w['effects']:
+            text_en = e.get('text', {}).get('en', '')
             entry = {
                 'weapon': f"{w['name_en']} (T{w['tier']+1}) [{w['id']}]",
                 'key': e['key'],
@@ -3714,10 +3706,10 @@ def main():
                 'value': e['value'],
                 'sign': e['effect_sign'],
                 'extra': e.get('extra', {}),
-                'text_en': e.get('text_en', ''),
-                'text_zh': e.get('text_zh', ''),
+                'text_en': text_en,
+                'text_zh': e.get('text', {}).get('zh', ''),
             }
-            if e.get('text_en'):
+            if text_en:
                 effects_with_text.append(entry)
             else:
                 effects_without_text.append(entry)

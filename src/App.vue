@@ -522,7 +522,7 @@ import { Chart as ChartJS, LinearScale, PointElement, LineElement, Tooltip } fro
 ChartJS.register(LinearScale, PointElement, LineElement, Tooltip)
 
 const BASE = import.meta.env.MODE === 'production'
-  ? 'https://cdn.jsdmirror.com/gh/mojimoon/brotato@v1.2.0/public/'
+  ? 'https://cdn.jsdmirror.com/gh/mojimoon/brotato@v1.3.0/public/'
   : import.meta.env.BASE_URL
 
 // ---- Shared string dictionary ----
@@ -862,7 +862,7 @@ function setBonusText(bonus) {
   if (bonus.en || bonus.zh) return isZh.value ? (bonus.zh || bonus.en) : (bonus.en || bonus.zh)
   if (!Array.isArray(bonus)) return ''
   const lang = isZh.value ? 'zh' : 'en'
-  return bonus.map(e => e['text_' + lang] || e.text_en || '').join(' / ')
+  return bonus.map(e => (e.text && e.text[lang]) || '').join(' / ')
 }
 
 // function renderSetBonusHtml(bonus) {
@@ -992,7 +992,7 @@ function renderEffectText(eff) {
     useCurseData = true
   } else {
     // Old format fallback
-    text = eff['text_' + lang] || eff.text_en || ''
+    text = eff.text?.[lang] || ''
     curseArgs = []
     useCurseData = false
   }
