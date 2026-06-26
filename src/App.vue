@@ -170,7 +170,7 @@
                     <div class="set-tooltip-content">
                       <div class="set-tooltip-name">{{ setTr(setNameKey) }}</div>
                       <div v-for="(bonus, bi) in (getSetBonuses(setNameKey) || [])" :key="bi" class="set-tooltip-line">
-                        ({{ bi + 2 }}) <span v-html="renderSetBonusHtml(bonus)"></span>
+                        ({{ bi + 2 }}) <span v-html="setBonusText(bonus)"></span>
                       </div>
                     </div>
                   </template>
@@ -435,7 +435,7 @@ import { Chart as ChartJS, LinearScale, PointElement, LineElement, Tooltip } fro
 ChartJS.register(LinearScale, PointElement, LineElement, Tooltip)
 
 const BASE = import.meta.env.MODE === 'production'
-  ? 'https://cdn.jsdmirror.com/gh/mojimoon/brotato@v1.1.0/public/'
+  ? 'https://cdn.jsdmirror.com/gh/mojimoon/brotato@v1.2.0/public/'
   : import.meta.env.BASE_URL
 
 // ---- Shared string dictionary ----
@@ -686,13 +686,13 @@ function setBonusText(bonus) {
   return bonus.map(e => e['text_' + lang] || e.text_en || '').join(' / ')
 }
 
-function renderSetBonusHtml(bonus) {
-  const raw = setBonusText(bonus)
-  if (!raw) return ''
-  return raw.replace(/<span class="g">/g, '<span style="color:#22c55e">')
-    .replace(/<span class="r">/g, '<span style="color:#ef4444">')
-    .replace(/<span class="p">/g, '<span style="color:#a855f7">')
-}
+// function renderSetBonusHtml(bonus) {
+//   const raw = setBonusText(bonus)
+//   if (!raw) return ''
+//   return raw.replace(/<span class="g">/g, '<span style="color:#22c55e">')
+//     .replace(/<span class="r">/g, '<span style="color:#ef4444">')
+//     .replace(/<span class="p">/g, '<span style="color:#a855f7">')
+// }
 
 function getStatIcon(statKey) {
   const map = rawData.value.stat_icons || {}
@@ -799,9 +799,6 @@ function renderEffectText(eff) {
   const lang = isZh.value ? 'zh' : 'en'
   let text = eff['text_' + lang] || eff.text_en || ''
   if (!text) return `${eff.value} ${statTr(eff.key)}`
-  text = text.replace(/<span class="g">/g, '<span style="color:#22c55e">')
-    .replace(/<span class="r">/g, '<span style="color:#ef4444">')
-    .replace(/<span class="p">/g, '<span style="color:#a855f7">')
   text = text.replace(/<icon>([^<]+)<\/icon>/g, (m, icKey) => {
     const src = resolveStatIcon(icKey)
     if (src) {
@@ -1530,6 +1527,9 @@ body.light-theme .dark-dropdown .el-select-dropdown__item:hover { background-col
 body.light-theme .dark-dropdown .el-select-dropdown__item.is-selected { color: #ff3d3d !important; }
 body.light-theme .dark-dropdown .el-select-dropdown__item.is-hovering { background-color: #f0f2f5 !important; }
 body.light-theme .el-popper.is-dark { background: #fff !important; border-color: #ccc !important; color: #222 !important; }
+body.light-theme .el-slider__tooltip { background: #fff !important; border: 1px solid #ddd !important; color: #222 !important; }
+body.light-theme .el-slider__tooltip::after { border-top-color: #fff !important; }
+body.light-theme .el-popper .el-popper__arrow::before { background: #fff !important; border-color: #ccc !important; }
 
 /* ==================== Responsive ==================== */
 @media (max-width: 768px) {
@@ -1606,10 +1606,19 @@ body.light-theme .attack-speed-toggle:hover { background: #e8e8e8; }
 body.light-theme .attack-speed-calc { background: #f5f5f5; border-color: #ddd; }
 body.light-theme .calc-result { background: #fff; }
 body.light-theme .calc-label { color: #666; }
+body.light-theme .calc-value { color: #107535; }
 body.light-theme .slider-label { color: #666; }
 body.light-theme .slider-row .el-slider :deep(.el-slider__runway) { background: #ddd; }
 body.light-theme .slider-row .el-slider :deep(.el-slider__marks-text) { color: #999; }
 body.light-theme .cooldown-chart-wrapper { background: #fff; }
 body.light-theme .pct-pos { color: #16a34a; }
 body.light-theme .pct-neg { color: #dc2626; }
+
+/* Effect text color markers */
+.zvg { color: #22c55e; }
+.zvr { color: #ef4444; }
+.zvp { color: #a855f7; }
+body.light-theme .zvg { color: #107535; }
+body.light-theme .zvr { color: #dc2626; }
+body.light-theme .zvp { color: #9333ea; }
 </style>

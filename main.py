@@ -510,9 +510,9 @@ STAT_DISPLAY = {
 }
 
 # Color markers for preprocessed text
-GREEN = '<span class="g">'
-RED = '<span class="r">'
-PURPLE = '<span class="p">'
+GREEN = '<span class="zvg">'
+RED = '<span class="zvr">'
+PURPLE = '<span class="zvp">'
 CLOSE = '</span>'
 
 # English stat display names (override translations that have % prefix)
@@ -591,14 +591,14 @@ def sign_color(eff):
     """Get sign color based on effect_sign and value"""
     sign = eff.get('effect_sign', 3)
     value = eff.get('value', 0)
-    if sign == 0: return 'g'  # POSITIVE -> green
-    elif sign == 1: return 'r'  # NEGATIVE -> red
+    if sign == 0: return 'zvg'  # POSITIVE -> green
+    elif sign == 1: return 'zvr'  # NEGATIVE -> red
     elif sign == 2: return ''  # NEUTRAL -> no color
     elif sign == 3:  # FROM_VALUE
-        if value > 0: return 'g'
-        elif value < 0: return 'r'
+        if value > 0: return 'zvg'
+        elif value < 0: return 'zvr'
         return ''
-    elif sign == 5: return 'p'  # OVERRIDE (curse) -> purple
+    elif sign == 5: return 'zvp'  # OVERRIDE (curse) -> purple
     return ''
 
 def wrap_color(text, color):
@@ -953,9 +953,9 @@ def _get_effect_sign(sign_type, value, arg_value=0):
 
 def _sign_to_color(sign):
     """Convert sign constant to CSS class"""
-    if sign == SIGN_POSITIVE: return 'g'
-    elif sign == SIGN_NEGATIVE: return 'r'
-    elif sign == SIGN_OVERRIDE: return 'p'
+    if sign == SIGN_POSITIVE: return 'zvg'
+    elif sign == SIGN_NEGATIVE: return 'zvr'
+    elif sign == SIGN_OVERRIDE: return 'zvp'
     return ''
 
 
@@ -975,12 +975,12 @@ def _get_formatted_value(value_str, arg_format, base_arg_value):
 
 def _sign_to_color(sign):
     """Map sign constant to CSS color class."""
-    if sign == 'g':
-        return 'g'
-    elif sign == 'r':
-        return 'r'
-    elif sign == 'p':
-        return 'p'
+    if sign == 'zvg':
+        return 'zvg'
+    elif sign == 'zvr':
+        return 'zvr'
+    elif sign == 'zvp':
+        return 'zvp'
     return ''
 
 SIGN_NEUTRAL = ''
