@@ -580,7 +580,10 @@ function applyCurse(curseArg, effectSign, originalValue) {
       return sign * Math.max(1, Math.floor(absV / (1 + effMod)))
     
     case 'random':
-      // Preview: show curse_min (conservative estimate)
+      // Show range: 72~76
+      if (curseArg.curse_min != null && curseArg.curse_max != null) {
+        return Math.round(curseArg.curse_min) + '~' + Math.round(curseArg.curse_max)
+      }
       return Math.round(curseArg.curse_min ?? curseArg.value)
     
     case 'fixed': {
@@ -590,6 +593,9 @@ function applyCurse(curseArg, effectSign, originalValue) {
     
     case 'none':
       return Math.round(curseArg.value)
+    
+    case 'linked':
+      return Math.round(curseArg.value)  // placeholder; real calc in renderEffectText
     
     case 'default':
     default: {
@@ -935,10 +941,24 @@ function renderEffectText(eff) {
   
   // Apply curse to placeholders
   if (curseArgs.length > 0) {
+    // Pre-compute linked parent value (always curseArgs[0])
+    let linkedParentVal = 0
+    const parentArg = curseArgs[0]
+    if (parentArg && curseEnabled.value) {
+      linkedParentVal = applyCurse(parentArg, effectSign, origValue)
+    } else if (parentArg) {
+      linkedParentVal = Math.round(parentArg.value)
+    }
+    
     text = text.replace(/\{(\d+)\}/g, (m, idx) => {
       const i = parseInt(idx)
       if (i < curseArgs.length && curseArgs[i]) {
         const arg = curseArgs[i]
+        if (arg.type === 'linked') {
+          const val = linkedParentVal * (arg.stepify ?? 1)
+          // stepify >= 1 → round; stepify < 1 → 1 decimal place
+          return arg.stepify >= 1 ? String(Math.round(val)) : val.toFixed(1)
+        }
         const value = curseEnabled.value
           ? applyCurse(arg, effectSign, origValue)
           : Math.round(arg.value)

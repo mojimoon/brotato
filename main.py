@@ -1049,14 +1049,16 @@ def _build_curse_types(eff, args, arg_signs, parent_id='', is_weapon=False):
         c(1, type='positive')
         return curse
 
-    # 6. ItemExplodingEffect with scale_with_missing_health → default
+    # 6. ItemExplodingEffect
     if key and ('explode' in key.lower() or 'EXPLODE' in tk):
         if extra.get('scale_with_missing_health'):
-            # value lives at args[3] for explode_on_overkill/consumable, else args[0]
             idx = 3 if key in ('explode_on_overkill','explode_on_consumable') or \
                          tk in ('EFFECT_EXPLODE_ON_OVERKILL','EFFECT_EXPLODE_ON_CONSUMABLE') else 0
             c(idx, type='default')
-        return curse  # !scale_with_missing_health → internal stats only
+        else:
+            # !scale: damage at args[1], chance not cursed
+            c(1, type='default')
+        return curse
 
     # 7. gain_stat_every_killed_enemies: value[2] → negative
     if key == 'effect_gain_stat_every_killed_enemies':
@@ -1141,19 +1143,39 @@ def _build_curse_types(eff, args, arg_signs, parent_id='', is_weapon=False):
         c(0, type='default', max_val=100)
         return curse
 
-    # 25-27. Linked value2 effects: value2 follows value with stepify ratio
-    # Godot: value2 = value * stepify after curse. Both get default curse independently.
+    # 24a. Adrenaline heal-on-dodge: chance capped at 100%
+    if tk == 'EFFECT_HEAL_WHEN_DODGE':
+        c(0, type='default', max_val=100)
+        return curse
+
+    # 24b. instant_gold_attracting at 100%: fixed (Sifd's Relic)
+    if parent_id == 'item_sifds_relic' and key == 'instant_gold_attracting':
+        c(0, type='fixed', curse_value=100)
+        return curse
+
+    # 24c. anvil upgrade: fixed value (original armor)
+    if custom_key == 'upgrade_random_weapon' and parent_id == 'item_anvil':
+        c(0, type='fixed', curse_value=2)
+        return curse
+
+    # 24d. Landmine / Garden spawn cooldown: negative (divide)
+    if tk in ('EFFECT_LANDMINES', 'EFFECT_GARDEN', 'EFFECT_SPAWN_GARDEN'):
+        c(1, type='negative')  # cooldown at args[1] for landmines
+        c(0, type='negative')  # also try args[0] for garden/spawn_garden
+        return curse
+
+    # 25-27. Linked effects: value2 follows value with stepify ratio (parent=curseArgs[0])
     if custom_key == 'consumable_stats_while_max':
         c(0, type='default')
-        c(1, type='default', stepify=1.0)
+        c(1, type='linked', stepify=1.0)
         return curse
     if key == 'remove_speed':
         c(0, type='default')
-        c(2, type='default', stepify=4.0)
+        c(2, type='linked', stepify=4.0)
         return curse
     if key in ('burning_enemy_hp_percent_damage', 'giant_crit_damage', 'bonus_current_health_damage'):
         c(0, type='default')
-        c(2, type='default', stepify=0.1)
+        c(2, type='linked', stepify=0.1)
         return curse
 
     # ---- Default: arg[0] gets 'default' type ----
