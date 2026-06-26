@@ -576,8 +576,12 @@ function applyCurse(curseArg, effectSign, originalValue) {
     case 'positive':
       return sign * (useCeil ? Math.ceil(absV * (1 + effMod)) : Math.trunc(absV * (1 + effMod)))
     
-    case 'negative':
+    case 'negative': {
+      if (curseArg.no_min) {
+        return sign * (absV / (1 + effMod))  // raw division, no floor/max
+      }
       return sign * Math.max(1, Math.floor(absV / (1 + effMod)))
+    }
     
     case 'random':
       // Show range: 72~76
@@ -1146,8 +1150,7 @@ const displayStats = computed(() => {
     ...stats,
     damage: Math.ceil(stats.damage * (1 + cv)),
     crit_damage: Math.round(stats.crit_damage * (1 + cv / 5) * 10) / 10,
-    cooldown: Math.trunc(stats.cooldown / (1 + cv)),
-    animation_cooldown: stats.animation_cooldown || 0,
+    // NOTE: cooldown(attack speed) is NOT modified by curse (per _boost_weapon_stats_damage)
     lifesteal: stats.lifesteal > 0 ? Math.round(stats.lifesteal * (1 + cv) * 100) / 100 : stats.lifesteal,
     piercing: stats.piercing > 0 ? Math.min(stats.piercing + 1, Math.ceil(stats.piercing * (1 + cv / 5))) : stats.piercing,
     bounce: stats.bounce > 0 ? Math.min(stats.bounce + 1, Math.ceil(stats.bounce * (1 + cv / 5))) : stats.bounce,

@@ -1050,15 +1050,16 @@ def _build_curse_types(eff, args, arg_signs, parent_id='', is_weapon=False):
         c(1, type='positive')
         return curse
 
-    # 6. ItemExplodingEffect
+    # 6. ItemExplodingEffect: cap explosion chance at 100%
     if key and ('explode' in key.lower() or 'EXPLODE' in tk):
         if extra.get('scale_with_missing_health'):
             idx = 3 if key in ('explode_on_overkill','explode_on_consumable') or \
                          tk in ('EFFECT_EXPLODE_ON_OVERKILL','EFFECT_EXPLODE_ON_CONSUMABLE') else 0
             c(idx, type='default')
         else:
-            # !scale: damage at args[1], chance not cursed
-            c(1, type='default')
+            c(1, type='default')  # damage only, chance capped below
+        # Cap any chance arg at 100
+        c(0, type='default', max_val=100)
         return curse
 
     # 7. gain_stat_every_killed_enemies: value[2] → negative
@@ -1159,15 +1160,15 @@ def _build_curse_types(eff, args, arg_signs, parent_id='', is_weapon=False):
         c(0, type='fixed', curse_value=100)
         return curse
 
-    # 24d. Landmine / Garden spawn cooldown: negative (divide, 1 decimal)
+    # 24d. Landmine / Garden spawn cooldown: negative (divide, 1 decimal, no min clamp)
     if tk in ('EFFECT_LANDMINES', 'EFFECT_GARDEN', 'EFFECT_SPAWN_GARDEN'):
-        c(1, type='negative', decimalPlaces=1)
-        c(0, type='negative', decimalPlaces=1)
+        c(1, type='negative', decimalPlaces=1, no_min=True)
+        c(0, type='negative', decimalPlaces=1, no_min=True)
         return curse
 
-    # 24e. Ball and Chain minimum weapon cooldown: negative, 2 decimals
+    # 24e. Ball and Chain / Pruner minimum weapon cooldown: negative, 2 decimals, no min clamp
     if key == 'minimum_weapon_cooldowns' or tk == 'EFFECT_MINIMUM_WEAPON_COOLDOWN':
-        c(0, type='negative', decimalPlaces=2)
+        c(0, type='negative', decimalPlaces=2, no_min=True)
         return curse
 
     # 25-27. Linked effects: value2 follows value with linked_mult ratio (parent=curseArgs[0])
