@@ -1,9 +1,16 @@
 import os
 import re
 import json
+import logging
 import shutil
 import csv
 from pathlib import Path
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(message)s",
+)
+log = logging.getLogger(__name__)
 
 CODEX_DIR = Path(__file__).resolve().parent            # codex/
 BASE_DIR = CODEX_DIR.parent                           # decompiled game root
@@ -26,7 +33,7 @@ def load_translations():
     
     def load_csv(path):
         if not path.exists():
-            print(f"  WARNING: Translation not found: {path}")
+            log.warning(f"Translation not found: {path}")
             return
         with open(path, encoding='utf-8-sig') as f:
             reader = csv.DictReader(f)
@@ -51,10 +58,10 @@ def load_translations():
                 if en_text and en_text not in TR_BY_EN:
                     TR_BY_EN[en_text] = key
     
-    print("Loading translations...")
+    log.info("Loading translations...")
     load_csv(BASE_DIR / ".assets" / "resources" / "translations" / "translations.csv")
     load_csv(BASE_DIR / ".assets" / "dlcs" / "dlc_1" / "translations" / "translations.csv")
-    print(f"  Loaded {len(translations)} translation keys")
+    log.info(f"  Loaded {len(translations)} translation keys")
     return translations
 
 def tr(key, lang='en'):
@@ -76,7 +83,7 @@ def load_merged_translations():
     if not merged_path.exists():
         merged_path = CODEX_DIR / "translations" / "translations_merged.json"
     if not merged_path.exists():
-        print("  WARNING: translations_merged.json not found, skipping")
+        log.warning("translations_merged.json not found, skipping")
         return 0
     
     with open(merged_path, encoding='utf-8') as f:
@@ -105,7 +112,7 @@ def load_merged_translations():
                     TR_BY_EN[en] = key_upper
                 count += 1
     
-    print(f"  Loaded {count} merged translation entries")
+    log.info(f"  Loaded {count} merged translation entries")
     return count
 
 # ====================================================================
@@ -3391,7 +3398,7 @@ def collect_weapons(search_dir, dlc=0):
             continue
         
         relative = data_file.relative_to(BASE_DIR)
-        print(f"  Parsing weapon: {relative}")
+        log.debug(f"Parsing weapon: {relative}")
         
         parsed = parse_tres_file(data_file)
         data = parsed['data']
@@ -3403,7 +3410,7 @@ def collect_weapons(search_dir, dlc=0):
         
         # Skip excluded weapons (废案)
         if my_id in EXCLUDED_WEAPONS:
-            print(f"    SKIPPING (excluded): {my_id}")
+            log.debug(f"  SKIPPING (excluded): {my_id}")
             continue
         
         name_key = data.get('name', '')
@@ -3453,7 +3460,7 @@ def _parse_item_file(data_file, dlc, parsed=None):
         if parent_name not in my_id:
             return None
     
-    print(f"  Parsing item: {relative}")
+    log.debug(f"Parsing item: {relative}")
     
     name_key = data.get('name', '')
     icon = find_icon_for_dlc(data_file, parsed) if dlc else find_icon_file(data_file, parsed)
@@ -3525,7 +3532,7 @@ def collect_characters(search_dir, dlc=0):
         if 'appearance' in data_file.name.lower() or 'effect' in data_file.name.lower():
             continue
         
-        print(f"  Parsing character: {relative}")
+        log.debug(f"Parsing character: {relative}")
         
         name_key = data.get('name', '')
         icon = find_icon_for_dlc(data_file, parsed) if dlc else find_icon_file(data_file, parsed)
@@ -3566,14 +3573,14 @@ def copy_icons(all_data_entries, output_icons_dir):
         if not icon: continue
         src = BASE_DIR / icon
         if not src.exists():
-            print(f"  WARNING: Icon not found: {src}")
+            log.warning(f"Icon not found: {src}")
             continue
         if icon in copied: continue
         copied.add(icon)
         dst = output_icons_dir / icon
         dst.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(src, dst)
-    print(f"  Copied {len(copied)} icon files")
+    log.info(f"  Copied {len(copied)} icon files")
 
 def collect_stat_icons():
     mapping = {}
@@ -3667,14 +3674,14 @@ def main():
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
     OUTPUT_ICONS.mkdir(parents=True, exist_ok=True)
     
-    print("\n=== Collecting Base Game Weapons ===")
+    log.debug("=== Collecting Base Game Weapons ===")
     base_weapons = (
         collect_weapons(BASE_DIR / "weapons" / "melee", dlc=0) +
         collect_weapons(BASE_DIR / "weapons" / "ranged", dlc=0)
     )
-    print(f"  Found {len(base_weapons)} base weapons")
+    log.debug(f"  Found {len(base_weapons)} base weapons")
     
-    print("\n=== Collecting DLC Weapons ===")
+    log.debug("=== Collecting DLC Weapons ===")
     dlc_weapons = []
     dlc_weapons_dir = BASE_DIR / "dlcs" / "dlc_1" / "weapons"
     if dlc_weapons_dir.exists():
@@ -3682,29 +3689,29 @@ def main():
             collect_weapons(dlc_weapons_dir / "melee", dlc=1) +
             collect_weapons(dlc_weapons_dir / "ranged", dlc=1)
         )
-    print(f"  Found {len(dlc_weapons)} DLC weapons")
+    log.debug(f"  Found {len(dlc_weapons)} DLC weapons")
     
-    print("\n=== Collecting Base Game Items ===")
+    log.debug("=== Collecting Base Game Items ===")
     base_items = collect_items(BASE_DIR / "items" / "all", dlc=0)
-    print(f"  Found {len(base_items)} base items")
+    log.debug(f"  Found {len(base_items)} base items")
     
-    print("\n=== Collecting DLC Items ===")
+    log.debug("=== Collecting DLC Items ===")
     dlc_items = []
     dlc_items_dir = BASE_DIR / "dlcs" / "dlc_1" / "items"
     if dlc_items_dir.exists():
         dlc_items = collect_items(dlc_items_dir, dlc=1)
-    print(f"  Found {len(dlc_items)} DLC items")
+    log.debug(f"  Found {len(dlc_items)} DLC items")
     
-    print("\n=== Collecting Base Game Characters ===")
+    log.debug("=== Collecting Base Game Characters ===")
     base_characters = collect_characters(BASE_DIR / "items" / "characters", dlc=0)
-    print(f"  Found {len(base_characters)} base characters")
+    log.debug(f"  Found {len(base_characters)} base characters")
     
-    print("\n=== Collecting DLC Characters ===")
+    log.debug("=== Collecting DLC Characters ===")
     dlc_characters = []
     dlc_chars_dir = BASE_DIR / "dlcs" / "dlc_1" / "characters"
     if dlc_chars_dir.exists():
         dlc_characters = collect_characters(dlc_chars_dir, dlc=1)
-    print(f"  Found {len(dlc_characters)} DLC characters")
+    log.debug(f"  Found {len(dlc_characters)} DLC characters")
     
     all_weapons = base_weapons + dlc_weapons
     all_items = base_items + dlc_items
@@ -3716,13 +3723,13 @@ def main():
     all_characters.sort(key=sort_key)
     
     translations = get_relevant_translations()
-    print(f"  Extracted {len(translations)} relevant translation entries")
+    log.info(f"  Extracted {len(translations)} relevant translation entries")
     
     stat_icons = collect_stat_icons()
-    print(f"  Extracted {len(stat_icons)} stat icon mappings")
+    log.info(f"  Extracted {len(stat_icons)} stat icon mappings")
     
     all_sets = build_sets_data()
-    print(f"  Extracted {len(all_sets)} sets with bonuses")
+    log.info(f"  Extracted {len(all_sets)} sets with bonuses")
     
     # Verify effect text coverage
     weapons_with_effects = [w for w in all_weapons if w['effects']]
@@ -3746,13 +3753,13 @@ def main():
             else:
                 effects_without_text.append(entry)
     
-    print(f"\n=== Effect Text Coverage ===")
-    print(f"  With text: {len(effects_with_text)}")
-    print(f"  Without text: {len(effects_without_text)}")
+    log.debug("=== Effect Text Coverage ===")
+    log.debug(f"  With text: {len(effects_with_text)}")
+    log.debug(f"  Without text: {len(effects_without_text)}")
     if effects_without_text:
-        print(f"  Missing translations:")
+        log.debug("  Missing translations:")
         for e in effects_without_text:
-            print(f"    [{e['weapon']}] key={e['key']} text_key={e['text_key']} value={e['value']} sign={e['sign']} extra={e['extra']}")
+            log.debug(f"    [{e['weapon']}] key={e['key']} text_key={e['text_key']} value={e['value']} sign={e['sign']} extra={e['extra']}")
     
     data = {
         'weapons': all_weapons,
@@ -3778,12 +3785,12 @@ def main():
     
     data = clean_arrays_for_json(data)
     
-    print(f"\n=== Writing JSON ===")
+    log.debug("=== Writing JSON ===")
     with open(OUTPUT_JSON, 'w', encoding='utf-8') as f:
         json.dump(data, f, ensure_ascii=False, separators=(',', ':'))
-    print(f"  Written to {OUTPUT_JSON}")
+    log.info(f"  Written to {OUTPUT_JSON}")
     
-    print(f"\n=== Copying Icons ===")
+    log.debug("=== Copying Icons ===")
     all_entries = all_weapons + all_items + all_characters
     copy_icons(all_entries, OUTPUT_ICONS)
     
@@ -3793,13 +3800,13 @@ def main():
             dst = OUTPUT_ICONS / icon_path
             dst.parent.mkdir(parents=True, exist_ok=True)
             shutil.copy2(src, dst)
-    print(f"  Copied stat icons: {len(stat_icons)} files")
+    log.info(f"  Copied stat icons: {len(stat_icons)} files")
     
-    print(f"\n=== Summary ===")
-    print(f"  Total weapons: {len(all_weapons)} (base: {len(base_weapons)}, dlc: {len(dlc_weapons)})")
-    print(f"  Total items: {len(all_items)} (base: {len(base_items)}, dlc: {len(dlc_items)})")
-    print(f"  Total characters: {len(all_characters)} (base: {len(base_characters)}, dlc: {len(dlc_characters)})")
-    print(f"  JSON size: {OUTPUT_JSON.stat().st_size / 1024:.1f} KB")
+    log.info("=== Summary ===")
+    log.info(f"  Total weapons: {len(all_weapons)} (base: {len(base_weapons)}, dlc: {len(dlc_weapons)})")
+    log.info(f"  Total items: {len(all_items)} (base: {len(base_items)}, dlc: {len(dlc_items)})")
+    log.info(f"  Total characters: {len(all_characters)} (base: {len(base_characters)}, dlc: {len(dlc_characters)})")
+    log.info(f"  JSON size: {OUTPUT_JSON.stat().st_size / 1024:.1f} KB")
     
     # Output report table
     # print(f"\n=== Effect Text Report ===")
@@ -3810,9 +3817,9 @@ def main():
     
     # Output missing effects as table
     if effects_without_text:
-        print(f"\n=== Missing Effect Texts ({len(effects_without_text)}) ===")
+        log.debug(f"=== Missing Effect Texts ({len(effects_without_text)}) ===")
         for e in effects_without_text:
-            print(f"  {e['weapon']}: key={e['key']}, text_key={e['text_key']}, val={e['value']}, sign={e['sign']}, extra={e['extra']}")
+            log.debug(f"  {e['weapon']}: key={e['key']}, text_key={e['text_key']}, val={e['value']}, sign={e['sign']}, extra={e['extra']}")
     
     if UNRENDERABLE_EFFECTS:
         unrenderable_path = OUTPUT_DIR / "data" / "unrenderable_effects.md"
@@ -3822,7 +3829,7 @@ def main():
                 f.write(f"- key=`{ue['key']}` text_key=`{ue['text_key']}` "
                         f"custom_key=`{ue['custom_key']}` value={ue['value']} "
                         f"extra={ue.get('extra', {})}\n")
-        print(f"\n  Wrote {len(UNRENDERABLE_EFFECTS)} unrenderable effects to {unrenderable_path}")
+        log.info(f"  Wrote {len(UNRENDERABLE_EFFECTS)} unrenderable effects to {unrenderable_path}")
 
 if __name__ == '__main__':
     main()
