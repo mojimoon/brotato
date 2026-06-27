@@ -531,7 +531,7 @@ import { Chart as ChartJS, LinearScale, PointElement, LineElement, Tooltip } fro
 ChartJS.register(LinearScale, PointElement, LineElement, Tooltip)
 
 const BASE = import.meta.env.MODE === 'production'
-  ? 'https://cdn.jsdmirror.com/gh/mojimoon/brotato@v1.4.1/public/'
+  ? 'https://cdn.jsdmirror.com/gh/mojimoon/brotato@v1.4.2/public/'
   : import.meta.env.BASE_URL
 
 // ---- Shared string dictionary ----

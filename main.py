@@ -1150,38 +1150,38 @@ def _build_curse_types(eff, args, arg_signs, parent_id='', is_weapon=False):
         c(0, type='default', mult=3.0)
         return curse
 
-    # 24. gold_on_crit_kill: default with max 100
+    # 24a. gold_on_crit_kill: default with max 100
     if key == 'gold_on_crit_kill':
         c(0, type='default', max_val=100)
         return curse
 
-    # 24a. Adrenaline heal-on-dodge: chance capped at 100%
+    # 24b. Adrenaline heal-on-dodge: chance capped at 100%
     if tk == 'EFFECT_HEAL_WHEN_DODGE':
         c(0, type='default', max_val=100)
         return curse
 
-    # 24b. Riposte EFFECT_DEAL_DMG_WHEN_DODGE: 100% chance is fixed
+    # 24c. Riposte EFFECT_DEAL_DMG_WHEN_DODGE: 100% chance is fixed
     if tk == 'EFFECT_DEAL_DMG_WHEN_DODGE':
         c(0, type='fixed', curse_value=100)
         return curse
 
-    # 24c. instant_gold_attracting at 100%: fixed (Sifd's Relic)
+    # 24d. instant_gold_attracting at 100%: fixed (Sifd's Relic)
     if parent_id == 'item_sifds_relic' and key == 'instant_gold_attracting':
         c(0, type='fixed', curse_value=100)
         return curse
 
-    # 24d. Landmine / Garden spawn cooldown: negative (divide, 1 decimal, no min clamp)
+    # 25a. Landmine / Garden spawn cooldown: negative (divide, 1 decimal, no min clamp)
     if tk in ('EFFECT_LANDMINES', 'EFFECT_GARDEN', 'EFFECT_SPAWN_GARDEN'):
         c(1, type='negative', decimalPlaces=1, no_min=True)
         c(0, type='negative', decimalPlaces=1, no_min=True)
         return curse
 
-    # 24e. Ball and Chain / Pruner minimum weapon cooldown: negative, 2 decimals, no min clamp
+    # 25b. Ball and Chain / Pruner minimum weapon cooldown: negative, 2 decimals, no min clamp
     if key == 'minimum_weapon_cooldowns' or tk == 'EFFECT_MINIMUM_WEAPON_COOLDOWN':
         c(0, type='negative', decimalPlaces=2, no_min=True)
         return curse
 
-    # 24f. Pet cooldowns (Blazemander ranged, Bonk Dog dash, Bot-O-Mine landmine)
+    # 25c. Pet cooldowns (Blazemander ranged, Bonk Dog dash, Bot-O-Mine landmine)
     if tk in ('EFFECT_PET_BLAZEMANDER', 'EFFECT_PET_BONK_DOG', 'EFFECT_PET_BOT_O_MINE'):
         # These pets have baked cooldown at specific arg indices
         if tk == 'EFFECT_PET_BLAZEMANDER':
@@ -1195,7 +1195,7 @@ def _build_curse_types(eff, args, arg_signs, parent_id='', is_weapon=False):
             c(2, type='negative', no_min=True, decimalPlaces=1)
         return curse
 
-    # 25-27. Linked effects: value2 follows value with linked_mult ratio (parent=curseArgs[0])
+    # 26-28. Linked effects: value2 follows value with linked_mult ratio (parent=curseArgs[0])
     if custom_key == 'consumable_stats_while_max':
         c(0, type='default')
         c(1, type='linked', linked_mult=1.0)
@@ -1209,11 +1209,6 @@ def _build_curse_types(eff, args, arg_signs, parent_id='', is_weapon=False):
         c(2, type='linked', linked_mult=0.1, decimalPlaces=1)
         return curse
 
-    # 28. Charm effects: curse charm probability (args[1]), NOT HP threshold (args[0])
-    if 'CHARM' in tk:
-        c(1, type='default')
-        return curse
-
     # 29. EFFECT_INCREASE_DAMAGE_RECEIVED (lute): cap (args[3]) is linked to value (args[0])
     if tk == 'EFFECT_INCREASE_DAMAGE_RECEIVED':
         c(0, type='default')
@@ -1221,9 +1216,24 @@ def _build_curse_types(eff, args, arg_signs, parent_id='', is_weapon=False):
         c(3, type='linked', linked_mult=max_stacks)
         return curse
 
-    # 30. ProjectilesOnHitEffect / SlowProjectilesOnHitEffect: curse damage (arg[1]), not projectile count (arg[0])
+    # 30. Charm effects: curse charm probability (args[1]), NOT HP threshold (args[0])
+    if 'CHARM' in tk:
+        c(1, type='default')
+        return curse
+
+    # 31a. ProjectilesOnHitEffect / SlowProjectilesOnHitEffect: curse damage (arg[1]), not projectile count (arg[0])
     if key in ('EFFECT_PROJECTILES_ON_HIT', 'EFFECT_SLOW_PROJECTILES_ON_HIT'):
-        c(1, type='positive')
+        c(1, type='default')
+        return curse
+
+    # 31b. Alien Eyes (ProjectileEffect): curse damage (arg[1]), not projectile count (arg[0])
+    if tk == 'EFFECT_ALIEN_EYES':
+        c(1, type='default')
+        return curse
+
+    # 31c. Baby Elephant / Cyberball (ChanceStatDamageEffect): curse damage (arg[1]), not chance (arg[0])
+    if tk in ('EFFECT_DEAL_DMG_WHEN_PICKUP_GOLD', 'EFFECT_DEAL_DMG_WHEN_DEATH'):
+        c(1, type='default')
         return curse
 
     # ---- Default: arg[0] gets 'default' type ----
