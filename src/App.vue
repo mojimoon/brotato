@@ -430,7 +430,13 @@
                 show-input />
             </div>
             <div v-if="activeWeaponData.type === 'melee'" class="slider-row">
-              <label class="slider-label">{{ S.statRange }}</label>
+              <label class="slider-label">{{ S.statRange }}
+                <el-tooltip :content="S.rangeTooltip" placement="top" :show-after="200">
+                  <el-icon class="range-help-icon">
+                    <QuestionFilled />
+                  </el-icon>
+                </el-tooltip>
+              </label>
               <el-slider v-model="statRangeSlider" :min="-200" :max="200" :step="1" :marks="rangeMarks" show-input />
             </div>
             <div class="cooldown-chart-wrapper">
@@ -524,7 +530,7 @@
 
 <script setup>
 import { ref, computed, onMounted, nextTick, watch } from 'vue'
-import { Search, Sort, User, Sunny, Moon, Box, Aim, ArrowDown, View, Hide, Close } from '@element-plus/icons-vue'
+import { Search, Sort, User, Sunny, Moon, Box, Aim, ArrowDown, View, Hide, Close, QuestionFilled } from '@element-plus/icons-vue'
 import { Line } from 'vue-chartjs'
 import { Chart as ChartJS, LinearScale, PointElement, LineElement, Tooltip } from 'chart.js'
 
@@ -550,7 +556,8 @@ const S = computed(() => isZh.value ? {
   belowNightmare: '难度0-5', nightmare: '噩梦',
   basePriceShort: '价格', belowNightmareShort: '难5', nightmareShort: '噩梦',
   attackSpeedCalc: '攻速计算器', attackSpeed: '攻速', statRange: '范围',
-  curse: '诅咒', finalCooldown: '最终冷却', clear: '清除筛选'
+  curse: '诅咒', finalCooldown: '最终冷却', clear: '清除筛选',
+  rangeTooltip: '玩家范围属性，实际作用于近战武器的范围修改需要减半（如150基础范围+100范围属性→200范围）'
 } : {
   weapons: 'Weapons', items: 'Items', characters: 'Characters',
   search: 'Search...', all: 'All', tier: 'Rarity', type: 'Type',
@@ -566,7 +573,8 @@ const S = computed(() => isZh.value ? {
   belowNightmare: 'Danger 0-5', nightmare: 'Nightmare',
   basePriceShort: 'Price', belowNightmareShort: 'D5', nightmareShort: 'NM',
   attackSpeedCalc: 'Attack Speed Calculator', attackSpeed: 'A.Spd', statRange: 'Range',
-  curse: 'Curse', finalCooldown: 'Final Cooldown', clear: 'Clear Filters'
+  curse: 'Curse', finalCooldown: 'Final Cooldown', clear: 'Clear Filters',
+  rangeTooltip: 'Player Range stat. For melee weapons, the actual range modification is halved (e.g. 150 base range + 100 Range → 200 range)'
 })
 
 // ---- Reactivity ----
@@ -1970,6 +1978,7 @@ body.light-theme .el-popper .el-popper__arrow::before { background: #fff !import
 .slider-label {
   flex-shrink: 0; width: 60px; font-size: 13px; color: #bbb; text-align: right;
 }
+.range-help-icon { margin-left: 4px; font-size: 14px; color: #888; cursor: help; vertical-align: middle; }
 .slider-row .el-slider { flex: 1; --el-slider-height: 4px; }
 .slider-row .el-slider :deep(.el-slider__runway) { background: #2a2d3a; }
 .slider-row .el-slider :deep(.el-slider__bar) { background: #4ade80; }
@@ -1992,6 +2001,7 @@ body.light-theme .calc-result { background: #fff; }
 body.light-theme .calc-label { color: #666; }
 body.light-theme .calc-value { color: #107535; }
 body.light-theme .slider-label { color: #666; }
+body.light-theme .range-help-icon { color: #aaa; }
 body.light-theme .slider-row .el-slider :deep(.el-slider__runway) { background: #ddd; }
 body.light-theme .slider-row .el-slider :deep(.el-slider__marks-text) { color: #999; }
 body.light-theme .cooldown-chart-wrapper { background: #fff; }
