@@ -1939,8 +1939,9 @@ body.light-theme .el-popper .el-popper__arrow::before { background: #fff !import
   body.light-theme .detail-panel { border-left: none; }
   .empty-panel { min-height: 20vh; }
   .filters { padding: 6px 12px; gap: 6px; }
-  .sort-dropdown { margin-left: 0 !important; flex-basis: 100%; }
-  .sort-dropdown + .price-toggle-btn { flex-basis: auto; }
+  .sort-dropdown { margin-left: 0 !important; order: 2; }
+  .price-toggle-btn { order: 2; }
+  .filters::after { content: ""; order: 1; flex-basis: 100%; height: 0; }
   .filter-select { width: 110px; }
   .sort-select { width: 100px; }
   .search-input { max-width: 200px; }
