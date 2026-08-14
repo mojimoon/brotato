@@ -180,8 +180,12 @@
         {{ S.price }}
       </el-button>
 
-      <el-button v-if="activeTab === 'weapons'" class="filter-btn frames-toggle-btn"
-        :class="{ 'frames-active': showFrames }" @click="showFrames = !showFrames">
+      <el-button v-if="activeTab === 'weapons'" class="filter-btn price-toggle-btn frames-toggle-btn"
+        :class="{ 'has-value': showFrames }" @click="showFrames = !showFrames">
+        <el-icon style="margin-right:4px">
+          <MoreFilled v-if="showFrames" />
+          <More v-else />
+        </el-icon>
         {{ S.frames }}
       </el-button>
     </div>
@@ -427,7 +431,7 @@
             <el-button class="curse-toggle-btn" :class="{ 'curse-active': curseEnabled }"
               @click="curseEnabled = !curseEnabled" size="small">{{ S.curse }}</el-button>
             <el-slider v-if="curseEnabled" v-model="curseSlider" :min="10" :max="110" :step="1" show-input
-              class="curse-slider" />
+              class="curse-slider" size="small" />
           </div>
         </div>
 
@@ -467,8 +471,8 @@
             </div>
             <div class="slider-row">
               <label class="slider-label">{{ S.attackSpeed }}</label>
-              <el-slider v-model="attackSpeedSlider" :min="-200" :max="500" :step="1" :marks="atkSpeedMarks"
-                show-input />
+              <el-slider v-model="attackSpeedSlider" :min="-200" :max="500" :step="1" :marks="atkSpeedMarks" show-input
+                size="small" />
             </div>
             <div v-if="activeWeaponData.type === 'melee'" class="slider-row">
               <label class="slider-label">{{ S.statRange }}
@@ -478,11 +482,13 @@
                   </el-icon>
                 </el-tooltip>
               </label>
-              <el-slider v-model="statRangeSlider" :min="-200" :max="200" :step="1" :marks="rangeMarks" show-input />
+              <el-slider v-model="statRangeSlider" :min="-200" :max="200" :step="1" :marks="rangeMarks" show-input
+                size="small" />
             </div>
             <div class="slider-row">
               <label class="slider-label">{{ S.weaponCount }}</label>
-              <el-slider v-model="weaponCountSlider" :min="1" :max="6" :step="1" :marks="weaponCountMarks" show-input />
+              <el-slider v-model="weaponCountSlider" :min="1" :max="6" :step="1" :marks="weaponCountMarks" show-input
+                size="small" />
             </div>
           </div>
         </div>
@@ -537,7 +543,7 @@
             <div class="price-slider-row">
               <span class="wave-label">{{ S.wave }}</span>
               <el-slider v-model="waveSlider" :min="0" :max="20" :step="1" :marks="waveSliderMarks" class="price-slider"
-                placement="bottom" />
+                placement="bottom" size="small" show-input />
             </div>
           </div>
         </div>
@@ -572,7 +578,7 @@
 
 <script setup>
 import { ref, computed, onMounted, nextTick, watch } from 'vue'
-import { Search, Sort, User, Sunny, Moon, Box, Aim, ArrowDown, View, Hide, Close, QuestionFilled } from '@element-plus/icons-vue'
+import { Search, Sort, User, Sunny, Moon, Box, Aim, ArrowDown, View, Hide, Close, QuestionFilled, More, MoreFilled } from '@element-plus/icons-vue'
 import { Line } from 'vue-chartjs'
 import { Chart as ChartJS, LinearScale, PointElement, LineElement, Tooltip } from 'chart.js'
 
@@ -615,7 +621,7 @@ const S = computed(() => isZh.value ? {
   unique: 'Unique', limited: 'Limited', clickToSee: 'Click to see details',
   belowNightmare: 'Danger 5', nightmare: 'Nightmare', basePriceShort: 'Price', 
   belowNightmareShort: 'D5', nightmareShort: 'NM',
-  attackSpeedCalc: 'Attack Speed Calculator', attackSpeed: 'A.Spd', statRange: 'Range', weaponCount: 'Weapon Count', frames: 'Frames',
+  attackSpeedCalc: 'Attack Speed Calculator', attackSpeed: 'A.Spd', statRange: 'Range', weaponCount: '#Weapon', frames: 'Frames',
   curse: 'Curse', clear: 'Clear Filters',
   tooltipCooldown: 'Tooltip Cooldown', actualCooldown: 'Actual Cooldown', tooltip: 'Tooltip', actual: 'Actual',
   rangeInfo: 'Player range stat. Actual bonus is halved (e.g. 150 base range + 100 range stat → 200 weapon range)'
@@ -650,7 +656,7 @@ const showPriceDetail = ref(lsGet('brotato_showPriceDetail', false))
 const attackSpeedSlider = ref(0)
 const statRangeSlider = ref(0)
 const weaponCountSlider = ref(1)
-const showFrames = ref(false)
+const showFrames = ref(lsGet('brotato_showFrames', false))
 
 // ---- Curse System ----
 const curseEnabled = ref(false)
@@ -886,6 +892,7 @@ watch(showingPrice, v => localStorage.setItem('brotato_showingPrice', JSON.strin
 watch(isDark, v => localStorage.setItem('brotato_isDark', JSON.stringify(v)))
 watch(showAttackSpeedCalc, v => localStorage.setItem('brotato_showAtkCalc', JSON.stringify(v)))
 watch(showPriceDetail, v => localStorage.setItem('brotato_showPriceDetail', JSON.stringify(v)))
+watch(showFrames, v => localStorage.setItem('brotato_showFrames', JSON.stringify(v)))
 
 // ---- Tier colors ----
 const TIER_COLORS = ['#aaaaaa', '#5cc4ff', '#b75cff', '#ff3d3d']
@@ -2062,18 +2069,20 @@ body { background: var(--bg-app); color: var(--text); font-family: 'Segoe UI', s
 .curse-slider :deep(.el-slider__button) { width: 14px; height: 14px; border-color: var(--curse-deep); }
 .curse-slider :deep(.el-input-number) { width: 80px; }
 
-.frames-toggle-btn {
-  font-weight: 700; min-width: 72px;
-  background: var(--bg-alt) !important; border: 1px solid var(--border-hover) !important; color: var(--text) !important;
-  transition: all 0.2s;
-}
-.frames-toggle-btn.frames-active {
+.frames-toggle-btn :deep(.el-icon) { color: inherit; }
+.frames-toggle-btn.has-value {
   background: rgba(34, 197, 94, 0.15) !important;
   border-color: #22c55e !important; color: #22c55e !important;
   box-shadow: 0 0 8px rgba(34, 197, 94, 0.3);
 }
-body.light-theme .frames-toggle-btn.frames-active {
+.frames-toggle-btn.has-value:hover {
+  color: #22c55e !important; border-color: #22c55e !important;
+}
+body.light-theme .frames-toggle-btn.has-value {
   background: #ecfdf3 !important; color: #15803d !important; border-color: #16a34a !important;
+}
+body.light-theme .frames-toggle-btn.has-value:hover {
+  color: #15803d !important; border-color: #16a34a !important;
 }
 
 /* Price Section */
@@ -2338,12 +2347,16 @@ body.light-theme .el-popper .el-popper__arrow::before { background: #fff !import
   flex-shrink: 0; width: 60px; font-size: 13px; color: var(--text-muted); text-align: right;
 }
 .range-help-icon { margin-left: 4px; font-size: 14px; color: var(--range-icon); cursor: help; vertical-align: middle; }
-.slider-row .el-slider { flex: 1; --el-slider-height: 4px; }
+.slider-row .el-slider { flex: 1; --el-slider-height: 4px; 
+  --el-slider-button-size: 14px; 
+  /* --el-slider-button-wrapper-size: 12px;  */
+}
 .slider-row .el-slider :deep(.el-slider__runway) { background: var(--border-soft); }
 .slider-row .el-slider :deep(.el-slider__bar) { background: var(--accent-green); }
-.slider-row .el-slider :deep(.el-slider__button) {
-  width: 14px; height: 14px; border-color: var(--accent-green);
-}
+/* .slider-row .el-slider :deep(.el-slider__marks-text) {
+  font-size: 9px; 
+  margin-top: 4px;
+} */
 .cooldown-chart-wrapper {
   margin-top: 12px; background: var(--bg-inset); border-radius: 6px; padding: 8px;
 }
