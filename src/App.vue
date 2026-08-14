@@ -1386,24 +1386,18 @@ function formatCooldownFixed(seconds) {
 // from the game's cooldown randomization: rand_range(max(1, base - max_rand),
 // base + max_rand) on the weapon-cooldown frames, plus the deterministic
 // recoil/melee idle frames. max_rand = min(weaponCount * base / 5, weaponCount * 5).
+// Appends a frame-range suffix (e.g. " (9-16f)") to a cooldown value when the
+// "Frames" toggle is on. The range is the true per-shot attack-interval spread
+// from _wl-ImprovedTooltips: add_cd + rand_range(max(1, wcf - max_rand), wcf + max_rand),
+// where add_cd is the deterministic idle time (recoil / melee animations) and
+// max_rand = min(weaponCount * wcf / 5, weaponCount * 5).
 function frameRange() {
   if (!showFrames.value) return ''
   const stats = activeWeaponData.value?.stats
   if (!stats) return ''
   const atkSpd = getAttackSpeedFactor(attackSpeedSlider.value)
   const count = weaponCountSlider.value
-  if (activeWeaponData.value?.type === 'melee') {
-    // Melee uses its own idle (attack + back frames) centered on wcf + 1.
-    const wcf = currentWeaponCooldownFrames.value
-    const idle = currentRecoilIdleFrames.value
-    const maxRand = Math.min((count * wcf) / 5.0, count * 5.0)
-    const minF = Math.round(Math.max(1, wcf - maxRand) + idle)
-    const maxF = Math.round(wcf + maxRand + idle)
-    return ` (${minF}-${maxF}f)`
-  }
-  // Ranged: use the mod's exact min/max so the suffix matches the displayed
-  // "actual" value (which is the same midpoint).
-  const range = getRangedCooldownRange(stats, atkSpd, count)
+  const range = getCooldownRange(stats, atkSpd, count, statRangeSlider.value)
   return ` (${range.min}-${range.max}f)`
 }
 
@@ -1436,27 +1430,26 @@ function getRecoilDuration(stats, atkSpd) {
     : baseRecoil
 }
 
-// Matches DPS Calculator!U8/V8 for weapons with a reload cooldown.
+// Mirrors _wl-ImprovedTooltips: a reload (big_reload) is a single fixed
+// cooldown of (add_cd + weapon_cooldown * multiplier) frames, with no
+// randomization spread. add_cd uses the same tween model as the normal attack
+// interval, so the displayed reload value stays consistent with the main one.
 function getReloadCooldowns(stats, attackSpeed) {
   const shots = Number(stats?.additional_cooldown_every_x_shots)
   const multiplier = Number(stats?.additional_cooldown_multiplier)
   if (!Number.isFinite(shots) || shots <= 0 || !Number.isFinite(multiplier) || multiplier <= 0) return null
 
   const atkSpd = getAttackSpeedFactor(attackSpeed)
-  const weaponCooldownFrames = getWeaponCooldownFrames(stats.cooldown, atkSpd)
+  const count = weaponCountSlider.value
+  const range = activeWeaponData.value?.type === 'melee'
+    ? getMeleeCooldownRange(stats, atkSpd, count, statRangeSlider.value)
+    : getRangedCooldownRange(stats, atkSpd, count)
+  const reloadWeaponCooldownFrames = range.wcf * multiplier
   const recoilDuration = getRecoilDuration(stats, atkSpd)
-  const reloadWeaponCooldownFrames = weaponCooldownFrames * multiplier
   const tooltipRecoilFrames = Math.floor(recoilDuration * COOLDOWN_FPS)
-  // ROUND here to match calculateCooldownWithAttackSpeed: the old
-  // Math.floor(x * 60 + 1) over-counted exactly-integer recoil and skewed the
-  // reload breakpoint the same way the main cooldown did.
-  const trueRecoilFrames = Math.round(recoilDuration * COOLDOWN_FPS)
-
-  return {
-    shots,
-    tooltip: reloadWeaponCooldownFrames / COOLDOWN_FPS + (tooltipRecoilFrames / COOLDOWN_FPS) * 2,
-    actual: (reloadWeaponCooldownFrames + 1) / COOLDOWN_FPS + (trueRecoilFrames / COOLDOWN_FPS) * 2,
-  }
+  const tooltip = reloadWeaponCooldownFrames / COOLDOWN_FPS + (tooltipRecoilFrames / COOLDOWN_FPS) * 2
+  const actual = (range.add_cd + reloadWeaponCooldownFrames) / COOLDOWN_FPS
+  return { shots, tooltip, actual }
 }
 
 // Matches DPS Calculator!F33. Range affects melee animation time only.
@@ -1473,33 +1466,6 @@ function getMeleeTiming(stats, atkSpd, statRange) {
   return { attackDuration, backDuration }
 }
 
-function getMeleeAttackType(stats) {
-  if (stats?.alternate_attack_type) return 'Swing/Thrust'
-  if (stats?.attack_type === 1 || stats?.attack_type === 'Swing' || stats?.attack_type === 'sweep') return 'Swing'
-  return 'Thrust'
-}
-
-function getMeleeAttackTypeFrameBonus(stats) {
-  const attackType = getMeleeAttackType(stats)
-  if (attackType === 'Swing') return 1
-  if (attackType === 'Swing/Thrust') return 0.5
-  return 0
-}
-
-// DPS Calculator!W36. This is the workbook's average correction for the
-// randomized starting cooldown of a six-weapon loadout, expressed in frames.
-function getWeaponRandomizationFrames(weaponCooldownFrames, weaponCount = DEFAULT_WEAPON_COUNT) {
-  const count = Math.max(0, Number(weaponCount) || 0)
-  const randomPercent = Math.min(0.2 * count, 1.2)
-  if (randomPercent === 0) return 0
-
-  const frameInterval = Math.min(randomPercent * weaponCooldownFrames, 5 * count)
-  const rangeMin = Math.max(1, weaponCooldownFrames - frameInterval)
-  const rangeMax = weaponCooldownFrames + frameInterval
-  const average = (rangeMin + rangeMax) / 2
-  const averageRounding = 0.5
-  return average + averageRounding - weaponCooldownFrames
-}
 
 // Matches DPS Calculator!N6 (the value shown in the game's tooltip).
 function calculateTooltipCooldown(stats, attackSpeed, statRange = 0) {
@@ -1516,7 +1482,7 @@ function calculateTooltipCooldown(stats, attackSpeed, statRange = 0) {
   return attackCooldown + recoilDuration + attackDuration / 2 + backDuration
 }
 
-// Mirrors the _wl-ImprovedTooltips mod's ranged cooldown model exactly:
+// Mirrors _wl-ImprovedTooltips _wl_get_ranged_attack_duration exactly:
 //   add_cd = 2 * tween_duration(recoil) - 1
 //   spread = min(weaponCount * cd / 5, weaponCount * 5)
 //   min_cd = add_cd + floor(max(1, cd - spread)) + 1
@@ -1529,55 +1495,66 @@ function getTweenDuration(duration) {
   return Math.floor(d * 60) + 2
 }
 
-function getRangedCooldownRange(stats, atkSpd, weaponCount = DEFAULT_WEAPON_COUNT) {
+function getRangedCooldownRange(stats, atkSpd, weaponCount = DEFAULT_WEAPON_COUNT, bigReload = false) {
   const wcf = getWeaponCooldownFrames(stats.cooldown, atkSpd)
   const recoil = getRecoilDuration(stats, atkSpd)
   const add_cd = 2 * getTweenDuration(recoil) - 1
+  if (bigReload) {
+    const reloadFrames = wcf * (Number(stats?.additional_cooldown_multiplier) || 1)
+    return { wcf, add_cd, min: add_cd + reloadFrames, max: add_cd + reloadFrames, avgFrames: add_cd + reloadFrames }
+  }
   const maxRand = Math.min((weaponCount * wcf) / 5.0, weaponCount * 5.0)
   const min_cd = add_cd + Math.floor(Math.max(1, wcf - maxRand)) + 1
   const max_cd = add_cd + Math.ceil(wcf + maxRand)
   return { wcf, add_cd, min: min_cd, max: max_cd, avgFrames: (min_cd + max_cd) / 2 }
 }
 
-// Matches DPS Calculator!M6 (the true, frame-rounded attack cooldown).
+// Mirrors _wl_get_melee_attack_duration exactly:
+//   add_cd = tween(recoil) + tween(back) - 1
+//   thrust (attack_type == 0): add_cd += tween(atk / 2)
+//   sweep  (otherwise):        add_cd += 2 * tween(atk / 4)
+//   spread / min / max as ranged; alternate_attack_type shaves 2 off min when
+//   the thrust variant would be the shorter of the two.
+function getMeleeCooldownRange(stats, atkSpd, weaponCount = DEFAULT_WEAPON_COUNT, statRange = 0, bigReload = false) {
+  const wcf = getWeaponCooldownFrames(stats.cooldown, atkSpd)
+  const recoil = getRecoilDuration(stats, atkSpd)
+  const { attackDuration, backDuration } = getMeleeTiming(stats, atkSpd, statRange)
+  let add_cd = getTweenDuration(recoil) + getTweenDuration(backDuration) - 1
+  const tweenAtkHalf = getTweenDuration(attackDuration / 2)
+  const tweenAtkQuarter = getTweenDuration(attackDuration / 4)
+  if (Number(stats?.attack_type) === 0) {
+    add_cd += tweenAtkHalf
+  } else {
+    add_cd += 2 * tweenAtkQuarter
+  }
+  if (bigReload) {
+    const reloadFrames = wcf * (Number(stats?.additional_cooldown_multiplier) || 1)
+    return { wcf, add_cd, min: add_cd + reloadFrames, max: add_cd + reloadFrames, avgFrames: add_cd + reloadFrames }
+  }
+  const maxRand = Math.min((weaponCount * wcf) / 5.0, weaponCount * 5.0)
+  let min_cd = add_cd + Math.floor(Math.max(1, wcf - maxRand)) + 1
+  let max_cd = add_cd + Math.ceil(wcf + maxRand)
+  if (stats?.alternate_attack_type && tweenAtkHalf > 2 * tweenAtkQuarter) {
+    min_cd -= 2
+  }
+  return { wcf, add_cd, min: min_cd, max: max_cd, avgFrames: (min_cd + max_cd) / 2 }
+}
+
+// Picks the ranged vs melee range model based on the active weapon type.
+function getCooldownRange(stats, atkSpd, weaponCount, statRange = 0, bigReload = false) {
+  return activeWeaponData.value?.type === 'melee'
+    ? getMeleeCooldownRange(stats, atkSpd, weaponCount, statRange, bigReload)
+    : getRangedCooldownRange(stats, atkSpd, weaponCount, bigReload)
+}
+
+// The "actual" attack cooldown shown in the calculator. Mirrors
+// _wl-ImprovedTooltips: the average interval is the midpoint of the min/max
+// range (a uniform rand_range), so the displayed value and the frame-range
+// suffix from frameRange() are always consistent.
 function calculateCooldownWithAttackSpeed(stats, attackSpeed, statRange = 0, weaponCount = DEFAULT_WEAPON_COUNT) {
   if (!stats) return 0
-
   const atkSpd = getAttackSpeedFactor(attackSpeed)
-  const weaponCooldownFrames = getWeaponCooldownFrames(stats.cooldown, atkSpd)
-  // Recoil frames are ROUNDED, not floored after adding 1. The old
-  // Math.floor(x * 60 + 1) added the buffer before rounding, which
-  // over-counts exactly-integer recoil (0.05s -> 3.0 frames becomes 4) and
-  // makes a 1% attack-speed gain look like a 3-frame breakpoint on SMG
-  // instead of the true 1 frame (0.0495s -> 2.97 rounds back to 3).
-  const recoilFrames = Math.round(getRecoilDuration(stats, atkSpd) * COOLDOWN_FPS)
-  let trueCooldownFrames
-
-  if (activeWeaponData.value?.type === 'melee') {
-    const { attackDuration, backDuration } = getMeleeTiming(stats, atkSpd, statRange)
-    // Same ROUND (not floor(x*60+1)) fix as the recoil frames: the workbook's
-    // melee branch (DPS Calculator!M6) also applies ROUNDDOWN(Atk_Dur/2*60+1)
-    // and ROUNDDOWN(Back_Dur*60+1); the +1 before rounding over-counts exactly.
-    const attackDurationFrames = Math.round(attackDuration / 2 * COOLDOWN_FPS)
-    const backDurationFrames = Math.round(backDuration * COOLDOWN_FPS)
-
-    trueCooldownFrames = Math.floor(
-      (weaponCooldownFrames + 1)
-      + recoilFrames
-      + attackDurationFrames
-      + backDurationFrames
-      + 1,
-    )
-    trueCooldownFrames += getMeleeAttackTypeFrameBonus(stats)
-    // Melee keeps the workbook's average-correction randomization.
-    trueCooldownFrames += getWeaponRandomizationFrames(weaponCooldownFrames, weaponCount)
-  } else {
-    // Ranged: use the exact mod min/max midpoint so the "actual" value and the
-    // frame-range suffix (frameRangeSuffix) stay perfectly consistent.
-    trueCooldownFrames = getRangedCooldownRange(stats, atkSpd, weaponCount).avgFrames
-  }
-
-  return trueCooldownFrames / COOLDOWN_FPS
+  return getCooldownRange(stats, atkSpd, weaponCount, statRange).avgFrames / COOLDOWN_FPS
 }
 
 const calculatedCooldown = computed(() => {
@@ -1605,29 +1582,6 @@ const calculatedReloadCooldowns = computed(() => {
   const stats = activeWeaponData.value?.stats
   if (!stats) return null
   return getReloadCooldowns(stats, attackSpeedSlider.value)
-})
-
-// Frame components of the *current* weapon + sliders, used by frameRangeSuffix
-// to build the true per-shot attack-interval spread.
-const currentWeaponCooldownFrames = computed(() => {
-  const stats = activeWeaponData.value?.stats
-  if (!stats) return 0
-  return getWeaponCooldownFrames(stats.cooldown, getAttackSpeedFactor(attackSpeedSlider.value))
-})
-
-const currentRecoilIdleFrames = computed(() => {
-  const stats = activeWeaponData.value?.stats
-  if (!stats) return 0
-  const atkSpd = getAttackSpeedFactor(attackSpeedSlider.value)
-  if (activeWeaponData.value?.type === 'melee') {
-    const { attackDuration, backDuration } = getMeleeTiming(stats, atkSpd, statRangeSlider.value)
-    return (
-      Math.round(attackDuration / 2 * COOLDOWN_FPS) +
-      Math.round(backDuration * COOLDOWN_FPS) +
-      getMeleeAttackTypeFrameBonus(stats)
-    )
-  }
-  return Math.round(getRecoilDuration(stats, atkSpd) * COOLDOWN_FPS) * 2
 })
 
 // Build the trailing segments for a cooldown line so each piece can be
