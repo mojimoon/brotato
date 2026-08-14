@@ -179,6 +179,11 @@
         </el-icon>
         {{ S.price }}
       </el-button>
+
+      <el-button v-if="activeTab === 'weapons'" class="filter-btn frames-toggle-btn"
+        :class="{ 'frames-active': showFrames }" @click="showFrames = !showFrames">
+        {{ S.frames }}
+      </el-button>
     </div>
 
     <!-- Main Content -->
@@ -264,7 +269,7 @@
               <span class="ws-val">{{ formatCooldown(displayCooldown) }}</span>
               <span class="calc-reload">({{ S.tooltip }})</span>
               <span class="calc-reload-separator">/</span>
-              <span class="ws-val">{{ formatCooldownFixed(totalCooldown) }}</span>
+              <span class="ws-val">{{ formatCooldownFixed(totalCooldown, true) }}</span>
               <span class="calc-reload">({{ S.actual }})</span>
             </div>
 
@@ -443,7 +448,7 @@
               </div>
               <div class="calc-line">
                 <span class="calc-label">{{ S.actualCooldown }}:</span>
-                <span class="calc-value">{{ formatCooldownFixed(calculatedCooldown) }}</span>
+                <span class="calc-value">{{ formatCooldownFixed(calculatedCooldown, true) }}</span>
                 <template v-for="(seg, i) in cooldownSegments('actual')" :key="i">
                   <span :class="seg.cls">{{ seg.text }}</span>
                 </template>
@@ -588,7 +593,7 @@ const S = computed(() => isZh.value ? {
   unique: '独特', limited: '限制', clickToSee: '点击左侧查看详情',
   belowNightmare: '难5', nightmare: '噩梦', basePriceShort: '价格', 
   belowNightmareShort: '难5', nightmareShort: '噩梦',
-  attackSpeedCalc: '攻速计算器', attackSpeed: '攻速', statRange: '范围', weaponCount: '武器数量',
+  attackSpeedCalc: '攻速计算器', attackSpeed: '攻速', statRange: '范围', weaponCount: '武器数量', frames: '帧数',
   curse: '诅咒', clear: '清除筛选',
   tooltipCooldown: '显示冷却', actualCooldown: '实际冷却', tooltip: '显示', actual: '实际',
   rangeInfo: '玩家范围属性。实际加成减半（例如，150基础范围 + 100范围属性 → 200武器范围）'
@@ -606,7 +611,7 @@ const S = computed(() => isZh.value ? {
   unique: 'Unique', limited: 'Limited', clickToSee: 'Click to see details',
   belowNightmare: 'Danger 5', nightmare: 'Nightmare', basePriceShort: 'Price', 
   belowNightmareShort: 'D5', nightmareShort: 'NM',
-  attackSpeedCalc: 'Attack Speed Calculator', attackSpeed: 'A.Spd', statRange: 'Range', weaponCount: 'Weapon Count',
+  attackSpeedCalc: 'Attack Speed Calculator', attackSpeed: 'A.Spd', statRange: 'Range', weaponCount: 'Weapon Count', frames: 'Frames',
   curse: 'Curse', clear: 'Clear Filters',
   tooltipCooldown: 'Tooltip Cooldown', actualCooldown: 'Actual Cooldown', tooltip: 'Tooltip', actual: 'Actual',
   rangeInfo: 'Player range stat. Actual bonus is halved (e.g. 150 base range + 100 range stat → 200 weapon range)'
@@ -641,6 +646,7 @@ const showPriceDetail = ref(lsGet('brotato_showPriceDetail', false))
 const attackSpeedSlider = ref(0)
 const statRangeSlider = ref(0)
 const weaponCountSlider = ref(6)
+const showFrames = ref(false)
 
 // ---- Curse System ----
 const curseEnabled = ref(false)
@@ -1353,7 +1359,7 @@ const DEFAULT_WEAPON_COUNT = 6
 const totalCooldown = computed(() => {
   const stats = activeWeaponData.value?.stats
   if (!stats) return 0
-  return calculateCooldownWithAttackSpeed(stats, 0, 0)
+  return calculateCooldownWithAttackSpeed(stats, 0, 0, weaponCountSlider.value)
 })
 
 const displayCooldown = computed(() => {
@@ -1367,8 +1373,24 @@ function formatCooldown(seconds) {
   return seconds.toFixed(2) + 's'
 }
 
-function formatCooldownFixed(seconds) {
-  return seconds.toFixed(3) + 's'
+function formatCooldownFixed(seconds, frameRange = false) {
+  return seconds.toFixed(3) + 's' + (frameRange ? frameRangeSuffix() : '')
+}
+
+// Appends a frame-range suffix (e.g. " (7-15f)") to a cooldown value when the
+// "Frames" toggle is on. The range is the true per-shot attack-interval spread
+// from the game's cooldown randomization: rand_range(max(1, base - max_rand),
+// base + max_rand) on the weapon-cooldown frames, plus the deterministic
+// recoil/melee idle frames. max_rand = min(weaponCount * base / 5, weaponCount * 5).
+function frameRangeSuffix() {
+  if (!showFrames.value) return ''
+  const wcf = currentWeaponCooldownFrames.value
+  const count = weaponCountSlider.value
+  const idle = currentRecoilIdleFrames.value
+  const maxRand = Math.min((count * wcf) / 5.0, count * 5.0)
+  const minF = Math.round(Math.max(1, wcf - maxRand) + idle)
+  const maxF = Math.round(wcf + maxRand + idle)
+  return ` (${minF}-${maxF}f)`
 }
 
 function getAttackSpeedFactor(attackSpeed) {
@@ -1496,8 +1518,11 @@ function calculateCooldownWithAttackSpeed(stats, attackSpeed, statRange = 0, wea
 
   if (activeWeaponData.value?.type === 'melee') {
     const { attackDuration, backDuration } = getMeleeTiming(stats, atkSpd, statRange)
-    const attackDurationFrames = Math.floor(attackDuration / 2 * COOLDOWN_FPS + 1)
-    const backDurationFrames = Math.floor(backDuration * COOLDOWN_FPS + 1)
+    // Same ROUND (not floor(x*60+1)) fix as the recoil frames: the workbook's
+    // melee branch (DPS Calculator!M6) also applies ROUNDDOWN(Atk_Dur/2*60+1)
+    // and ROUNDDOWN(Back_Dur*60+1); the +1 before rounding over-counts exactly.
+    const attackDurationFrames = Math.round(attackDuration / 2 * COOLDOWN_FPS)
+    const backDurationFrames = Math.round(backDuration * COOLDOWN_FPS)
 
     trueCooldownFrames = Math.floor(
       (weaponCooldownFrames + 1)
@@ -1540,6 +1565,29 @@ const calculatedReloadCooldowns = computed(() => {
   const stats = activeWeaponData.value?.stats
   if (!stats) return null
   return getReloadCooldowns(stats, attackSpeedSlider.value)
+})
+
+// Frame components of the *current* weapon + sliders, used by frameRangeSuffix
+// to build the true per-shot attack-interval spread.
+const currentWeaponCooldownFrames = computed(() => {
+  const stats = activeWeaponData.value?.stats
+  if (!stats) return 0
+  return getWeaponCooldownFrames(stats.cooldown, getAttackSpeedFactor(attackSpeedSlider.value))
+})
+
+const currentRecoilIdleFrames = computed(() => {
+  const stats = activeWeaponData.value?.stats
+  if (!stats) return 0
+  const atkSpd = getAttackSpeedFactor(attackSpeedSlider.value)
+  if (activeWeaponData.value?.type === 'melee') {
+    const { attackDuration, backDuration } = getMeleeTiming(stats, atkSpd, statRangeSlider.value)
+    return (
+      Math.round(attackDuration / 2 * COOLDOWN_FPS) +
+      Math.round(backDuration * COOLDOWN_FPS) +
+      getMeleeAttackTypeFrameBonus(stats)
+    )
+  }
+  return Math.round(getRecoilDuration(stats, atkSpd) * COOLDOWN_FPS) * 2
 })
 
 // Build the trailing segments for a cooldown line so each piece can be
@@ -2015,6 +2063,20 @@ body { background: var(--bg-app); color: var(--text); font-family: 'Segoe UI', s
 .curse-slider :deep(.el-slider__bar) { background: var(--curse-deep); }
 .curse-slider :deep(.el-slider__button) { width: 14px; height: 14px; border-color: var(--curse-deep); }
 .curse-slider :deep(.el-input-number) { width: 80px; }
+
+.frames-toggle-btn {
+  font-weight: 700; min-width: 72px;
+  background: var(--bg-alt) !important; border: 1px solid var(--border-hover) !important; color: var(--text) !important;
+  transition: all 0.2s;
+}
+.frames-toggle-btn.frames-active {
+  background: rgba(34, 197, 94, 0.15) !important;
+  border-color: #22c55e !important; color: #22c55e !important;
+  box-shadow: 0 0 8px rgba(34, 197, 94, 0.3);
+}
+body.light-theme .frames-toggle-btn.frames-active {
+  background: #ecfdf3 !important; color: #15803d !important; border-color: #16a34a !important;
+}
 
 /* Price Section */
 .price-section { margin-top: 12px; padding: 14px 16px; background: var(--bg-row); border-radius: 8px; border: 1px solid var(--border-subtle); }
