@@ -2183,7 +2183,7 @@ body.light-theme .el-popper .el-popper__arrow::before { background: #fff !import
   margin-bottom: 12px; padding: 8px 12px;
   background: #1e2030; border-radius: 6px;
 }
-.calc-line { display: flex; align-items: center; gap: 8px; }
+.calc-line { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
 .calc-label { font-size: 14px; color: #bbb; }
 .calc-value { font-size: 18px; font-weight: 700; color: #4ade80; }
 .calc-pct { font-size: 14px; font-weight: 600; margin-left: 4px; }
