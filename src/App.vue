@@ -419,8 +419,20 @@
           </div>
           <div v-if="showAttackSpeedCalc" class="attack-speed-calc">
             <div class="calc-result">
+              <span class="calc-label">{{ S.tooltipCooldown }}:</span>
+              <span class="calc-value">{{ formatCooldown(calculatedTooltipCooldown) }}</span>
+              <span v-if="calculatedReloadCooldowns" class="calc-reload">
+                <span class="calc-reload-separator">/</span>{{
+                  formatReloadCooldownInfo(calculatedReloadCooldowns.tooltip) }}
+              </span>
+            </div>
+            <div class="calc-result">
               <span class="calc-label">{{ S.actualCooldown }}:</span>
               <span class="calc-value">{{ formatCooldownFixed(calculatedCooldown) }}</span>
+              <span v-if="calculatedReloadCooldowns" class="calc-reload">
+                <span class="calc-reload-separator">/</span>{{
+                  formatReloadCooldownInfo(calculatedReloadCooldowns.actual) }}
+              </span>
               <span class="calc-pct"
                 :class="cooldownChangePct < 0 ? 'pct-neg' : cooldownChangePct > 0 ? 'pct-pos' : ''">(DPS {{
                   cooldownChangePct >= 0 ? '+' : '' }}{{ cooldownChangePct.toFixed(0) }}%)</span>
@@ -1257,19 +1269,6 @@ const allFourTierSlots = computed(() => {
   return slots
 })
 
-// Additional cooldown every X shots (e.g. revolver, grenade launcher, chain gun)
-const addlCooldownInfo = computed(() => {
-  const stats = activeWeaponData.value?.stats
-  if (!stats || stats.additional_cooldown_every_x_shots <= 0) return ''
-  const shots = stats.additional_cooldown_every_x_shots
-  const mult = stats.additional_cooldown_multiplier
-  const baseCd = stats.cooldown / 60
-  const effectiveCd = baseCd * mult
-  const cdStr = formatCooldown(effectiveCd)
-  if (isZh.value) return `每发射${shots}次冷却增加至${cdStr}`
-  return `Cooldown is ${cdStr} every ${shots} shots`
-})
-
 // ---- Shared computed: effects source ----
 const currentEffects = computed(() => {
   if (activeTab.value === 'weapons') return activeWeaponData.value?.effects
@@ -1307,7 +1306,7 @@ const displayCooldown = computed(() => {
 })
 
 function formatCooldown(seconds) {
-  if (seconds < 1) return seconds.toFixed(3) + 's'
+  if (seconds < 0.1) return seconds.toFixed(3) + 's'
   return seconds.toFixed(2) + 's'
 }
 
@@ -1342,6 +1341,26 @@ function getRecoilDuration(stats, atkSpd) {
   return atkSpd >= 0
     ? baseRecoil / (1 + atkSpd)
     : baseRecoil
+}
+
+// Matches DPS Calculator!U8/V8 for weapons with a reload cooldown.
+function getReloadCooldowns(stats, attackSpeed) {
+  const shots = Number(stats?.additional_cooldown_every_x_shots)
+  const multiplier = Number(stats?.additional_cooldown_multiplier)
+  if (!Number.isFinite(shots) || shots <= 0 || !Number.isFinite(multiplier) || multiplier <= 0) return null
+
+  const atkSpd = getAttackSpeedFactor(attackSpeed)
+  const weaponCooldownFrames = getWeaponCooldownFrames(stats.cooldown, atkSpd)
+  const recoilDuration = getRecoilDuration(stats, atkSpd)
+  const reloadWeaponCooldownFrames = weaponCooldownFrames * multiplier
+  const tooltipRecoilFrames = Math.floor(recoilDuration * COOLDOWN_FPS)
+  const trueRecoilFrames = Math.floor(recoilDuration * COOLDOWN_FPS + 1)
+
+  return {
+    shots,
+    tooltip: reloadWeaponCooldownFrames / COOLDOWN_FPS + (tooltipRecoilFrames / COOLDOWN_FPS) * 2,
+    actual: (reloadWeaponCooldownFrames + 1) / COOLDOWN_FPS + (trueRecoilFrames / COOLDOWN_FPS) * 2,
+  }
 }
 
 // Matches DPS Calculator!F33. Range affects melee animation time only.
@@ -1440,6 +1459,30 @@ const calculatedCooldown = computed(() => {
     statRangeSlider.value
   )
 })
+
+const calculatedTooltipCooldown = computed(() => {
+  const stats = activeWeaponData.value?.stats
+  if (!stats) return 0
+  return calculateTooltipCooldown(
+    stats,
+    attackSpeedSlider.value,
+    statRangeSlider.value,
+  )
+})
+
+const calculatedReloadCooldowns = computed(() => {
+  const stats = activeWeaponData.value?.stats
+  if (!stats) return null
+  return getReloadCooldowns(stats, attackSpeedSlider.value)
+})
+
+function formatReloadCooldownInfo(seconds) {
+  const reload = calculatedReloadCooldowns.value
+  if (!reload) return ''
+  const formatted = formatCooldown(seconds)
+  if (isZh.value) return `每发射${reload.shots}次冷却增加到${formatted}`
+  return `Cooldown becomes ${formatted} every ${reload.shots} shots`
+}
 
 const cooldownChangePct = computed(() => {
   if (totalCooldown.value === 0 || calculatedCooldown.value === 0) return 0
@@ -2068,6 +2111,8 @@ body.light-theme .el-popper .el-popper__arrow::before { background: #fff !import
 .calc-pct { font-size: 14px; font-weight: 600; margin-left: 4px; }
 .pct-pos { color: #4ade80; }
 .pct-neg { color: #f87171; }
+.calc-reload { font-size: 13px; color: #bbb; }
+.calc-reload-separator { margin: 0 4px; color: #888; }
 .slider-row {
   display: flex; align-items: center; gap: 12px; margin-bottom: 12px;
 }
