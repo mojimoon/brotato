@@ -108,24 +108,6 @@
         </template>
       </el-dropdown>
 
-      <el-dropdown trigger="click" popper-class="dark-dropdown" @command="(v) => { filterDlc = v; onFilterChange(); }">
-        <el-button class="filter-btn" :class="{ 'has-value': filterDlc !== null }">
-          {{ filterDlc === 0 ? S.base : filterDlc === 1 ? 'DLC1' : S.source }}
-          <el-icon class="el-icon--right">
-            <ArrowDown />
-          </el-icon>
-        </el-button>
-        <template #dropdown>
-          <el-dropdown-menu>
-            <el-dropdown-item :command="null" :class="{ 'is-active-opt': filterDlc === null }">{{ S.all
-            }}</el-dropdown-item>
-            <el-dropdown-item :command="0" :class="{ 'is-active-opt': filterDlc === 0 }">{{ S.baseGame
-            }}</el-dropdown-item>
-            <el-dropdown-item :command="1" :class="{ 'is-active-opt': filterDlc === 1 }">DLC1</el-dropdown-item>
-          </el-dropdown-menu>
-        </template>
-      </el-dropdown>
-
       <el-dropdown v-if="activeTab === 'items' || activeTab === 'characters'" trigger="click"
         popper-class="dark-dropdown" @command="(v) => { filterTag = v; onFilterChange(); }">
         <el-button class="filter-btn" :class="{ 'has-value': filterTag !== null }">
@@ -140,6 +122,24 @@
             }}</el-dropdown-item>
             <el-dropdown-item v-for="t in allTags" :key="t" :command="t"
               :class="{ 'is-active-opt': filterTag === t }">{{ tagTr(t) }}</el-dropdown-item>
+          </el-dropdown-menu>
+        </template>
+      </el-dropdown>
+
+      <el-dropdown trigger="click" popper-class="dark-dropdown" @command="(v) => { filterDlc = v; onFilterChange(); }">
+        <el-button class="filter-btn" :class="{ 'has-value': filterDlc !== null }">
+          {{ filterDlc === 0 ? S.base : filterDlc === 1 ? 'DLC1' : S.source }}
+          <el-icon class="el-icon--right">
+            <ArrowDown />
+          </el-icon>
+        </el-button>
+        <template #dropdown>
+          <el-dropdown-menu>
+            <el-dropdown-item :command="null" :class="{ 'is-active-opt': filterDlc === null }">{{ S.all
+            }}</el-dropdown-item>
+            <el-dropdown-item :command="0" :class="{ 'is-active-opt': filterDlc === 0 }">{{ S.baseGame
+            }}</el-dropdown-item>
+            <el-dropdown-item :command="1" :class="{ 'is-active-opt': filterDlc === 1 }">DLC1</el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>
@@ -165,9 +165,9 @@
           <template #dropdown>
             <el-dropdown-menu>
               <el-dropdown-item command="default" :class="{ 'is-active-opt': sortBy === 'default' }">{{ S.default
-                }}</el-dropdown-item>
+              }}</el-dropdown-item>
               <el-dropdown-item command="price" :class="{ 'is-active-opt': sortBy === 'price' }">{{ S.price
-                }}</el-dropdown-item>
+              }}</el-dropdown-item>
             </el-dropdown-menu>
           </template>
         </el-dropdown>
@@ -1946,7 +1946,27 @@ body { background: var(--bg-app); color: var(--text); font-family: 'Segoe UI', s
   box-shadow: var(--btn-shadow-val-hover);
 }
 .sort-btn :deep(.el-icon) { color: inherit; }
-.filter-cluster { display: flex; align-items: center; gap: 10px; margin-left: auto; }
+.filter-cluster {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
+  align-items: center;
+  gap: 10px;
+  margin-left: auto;
+  width: min(100%, 420px);
+}
+.filter-cluster > * {
+  width: 100%;
+  min-width: 0;
+}
+.filter-cluster .sort-dropdown,
+.filter-cluster .sort-dropdown :deep(.el-dropdown__trigger),
+.filter-cluster .sort-dropdown :deep(.el-button),
+.filter-cluster .price-toggle-btn,
+.filter-cluster .frames-toggle-btn {
+  width: 100%;
+  min-width: 0;
+}
+.filter-cluster .sort-dropdown { display: flex; }
 .clear-btn { color: var(--text-faint); padding: 8px !important; min-width: 0; }
 .clear-btn:hover { color: var(--badge-red) !important; border-color: var(--badge-red) !important; }
 
@@ -2312,7 +2332,17 @@ body.light-theme .el-popper .el-popper__arrow::before { background: #fff !import
   .filters { padding: 6px 12px; gap: 6px; }
   .search-input { flex: 0 0 100%; max-width: none; }
   .filter-btn { min-width: 0; flex: 1 1 auto; }
-  .filter-cluster { margin-left: 0 !important; order: 2; flex: 1 1 auto; gap: 6px; }
+  .filter-cluster {
+    margin-left: 0 !important; order: 2; gap: 6px;
+    width: 100%;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .filter-cluster > * { width: 100%; }
+  .filter-cluster .sort-dropdown,
+  .filter-cluster .price-toggle-btn,
+  .filter-cluster .frames-toggle-btn {
+    min-width: 0;
+  }
   .filters::after { content: ""; order: 1; flex-basis: 100%; height: 0; }
   .header { padding: 8px 12px; flex-wrap: wrap; gap: 6px 10px; }
   .header h1 { display: flex; align-items: baseline; flex-wrap: wrap; gap: 2px 8px; min-width: 0; }
