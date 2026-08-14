@@ -321,6 +321,19 @@
               <span class="ws-label">{{ S.projectiles }}</span>
               <span class="ws-val">{{ activeWeaponData.stats.nb_projectiles }}</span>
             </div>
+
+            <div v-if="dpsData" class="weapon-stat-row">
+              <span class="ws-label">{{ S.dps }}</span>
+              <span class="ws-val">{{ dpsData.dmg.toFixed(2) }}</span>
+              <span v-if="dpsData.scaling.length" class="ws-scaling">
+                (<template v-for="(ss, i) in dpsData.scaling" :key="i">
+                  <span v-if="i > 0 && ss[1] > 0">+</span><span class="ws-scaling-pct">{{ ss[1].toFixed(1)
+                  }}%</span>
+                  <img v-if="getStatIcon(ss[0])" :src="getStatIcon(ss[0])" class="stat-inline-icon" />
+                  <span v-else>{{ statTr(ss[0]) }}</span>
+                </template>)/s
+              </span>
+            </div>
           </div>
         </template>
 
@@ -568,16 +581,16 @@ const S = computed(() => isZh.value ? {
   default: '默认', price: '价格', showPrice: '显示价格', on: '开', off: '关',
   damage: '伤害', crit: '暴击', cooldown: '冷却', knockback: '击退',
   range: '范围', accuracy: '命中率', lifesteal: '生命窃取', piercing: '贯通',
-  bounce: '反弹', projectiles: '投射物', dmg: '伤害',
+  bounce: '反弹', projectiles: '投射物', dmg: '伤害', dps: 'DPS',
   basePrice: '基础价格', perWave: '每波', wave: '波次',
   effects: '效果', startingWeapons: '起始武器', preferredTags: '偏好标签',
   unique: '独特', limited: '限制', clickToSee: '点击左侧查看详情',
   belowNightmare: '难5', nightmare: '噩梦', basePriceShort: '价格', 
   belowNightmareShort: '难5', nightmareShort: '噩梦',
   attackSpeedCalc: '攻速计算器', attackSpeed: '攻速', statRange: '范围',
-  curse: '诅咒', clear: '清除筛选', 
+  curse: '诅咒', clear: '清除筛选', effective: '等效',
   tooltipCooldown: '显示冷却', actualCooldown: '实际冷却', tooltip: '显示', actual: '实际',
-  rangeInfo: '玩家范围属性。实际加成减半（如：150基础范围 + 100范围属性 → 200武器范围）'
+  rangeInfo: '玩家范围属性。实际加成减半（例如，150基础范围 + 100范围属性 → 200武器范围）'
 } : {
   weapons: 'Weapons', items: 'Items', characters: 'Characters',
   search: 'Search...', all: 'All', tier: 'Rarity', type: 'Type',
@@ -586,14 +599,14 @@ const S = computed(() => isZh.value ? {
   default: 'Default', price: 'Price', showPrice: 'Show Price', on: 'On', off: 'Off',
   damage: 'Damage', crit: 'Crit', cooldown: 'Cooldown', knockback: 'Knockback',
   range: 'Range', accuracy: 'Accuracy', lifesteal: 'Lifesteal', piercing: 'Piercing',
-  bounce: 'Bounce', projectiles: 'Projectiles', dmg: 'dmg',
+  bounce: 'Bounce', projectiles: 'Projectiles', dmg: 'dmg', dps: 'DPS',
   basePrice: 'Base Price', perWave: '/wave', wave: 'Wave',
   effects: 'Effects', startingWeapons: 'Starting Weapons', preferredTags: 'Preferred Tags',
   unique: 'Unique', limited: 'Limited', clickToSee: 'Click to see details',
   belowNightmare: 'Danger 5', nightmare: 'Nightmare', basePriceShort: 'Price', 
   belowNightmareShort: 'D5', nightmareShort: 'NM',
   attackSpeedCalc: 'Attack Speed Calculator', attackSpeed: 'A.Spd', statRange: 'Range',
-  curse: 'Curse', clear: 'Clear Filters', 
+  curse: 'Curse', clear: 'Clear Filters', effective: 'Effective',
   tooltipCooldown: 'Tooltip Cooldown', actualCooldown: 'Actual Cooldown', tooltip: 'Tooltip', actual: 'Actual',
   rangeInfo: 'Player range stat. Actual bonus is halved (e.g. 150 base range + 100 range stat → 200 weapon range)'
 })
@@ -1285,6 +1298,28 @@ const addlCooldownInfo = computed(() => {
     actualValue: formatCooldown(reload.actual),
     suffix: isZh.value ? ``: ` every ${reload.shots} shots`,
   }
+})
+
+function effectiveCooldown(base, actual, shots) {
+  return base + (actual - base) / shots
+}
+
+// DPS = weapon panel (incl. scaling) divided by the actual attack cooldown.
+// Weapons with a reload use an equivalent per-shot cooldown:
+//   actual cooldown + (actual reload cooldown - actual cooldown) / shots
+const dpsData = computed(() => {
+  if (!displayStats.value) return null
+  const stats = activeWeaponData.value?.stats
+  const base = totalCooldown.value
+  if (!base || base <= 0) return null
+  let cd = base
+  const reload = getReloadCooldowns(stats, 0)
+  if (reload && reload.shots > 0) {
+    cd = effectiveCooldown(base, reload.actual, reload.shots)
+  }
+  const dmg = displayStats.value.damage / cd
+  const scaling = (displayStats.value.scaling_stats || []).map(([k, v]) => [k, (v * 100) / cd])
+  return { dmg, cd, scaling }
 })
 
 // ---- Shared computed: effects source ----
