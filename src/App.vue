@@ -244,7 +244,8 @@
               <span class="ws-val" :class="{ 'curse-modified': curseEnabled }">{{ displayStats.damage }}</span>
               <span v-if="displayStats.scaling_stats?.length" class="ws-scaling">
                 (<template v-for="(ss, i) in displayStats.scaling_stats" :key="i">
-                  <span v-if="i > 0">+</span><span class="ws-scaling-pct">{{ (ss[1] * 100).toFixed(0) }}%</span>
+                  <span v-if="i > 0 && ss[1] > 0">+</span><span class="ws-scaling-pct">{{ (ss[1] * 100).toFixed(0)
+                  }}%</span>
                   <img v-if="getStatIcon(ss[0])" :src="getStatIcon(ss[0])" class="stat-inline-icon" />
                   <span v-else>{{ statTr(ss[0]) }}</span>
                 </template>)
@@ -260,16 +261,22 @@
 
             <div class="weapon-stat-row">
               <span class="ws-label">{{ S.cooldown }}</span>
-              <span class="ws-val">
-                {{ formatCooldown(displayCooldown) }}
-                <span class="ws-attack-type">({{ formatCooldown(displayStats.cooldown / 60) }}+{{
-                  formatCooldown(displayStats.animation_cooldown || 0) }})</span>
-              </span>
+              <span class="ws-val">{{ formatCooldown(displayCooldown) }}</span>
+              <span class="calc-reload">({{ S.tooltip }})</span>
+              <span class="calc-reload-separator">/</span>
+              <span class="ws-val">{{ formatCooldownFixed(totalCooldown) }}</span>
+              <span class="calc-reload">({{ S.actual }})</span>
             </div>
 
             <div v-if="addlCooldownInfo" class="weapon-stat-row">
               <span class="ws-label">{{ S.cooldown }}</span>
-              <span class="ws-val">{{ addlCooldownInfo }}</span>
+              <span class="ws-val">{{ addlCooldownInfo.title }}</span>
+              <span class="ws-val">{{ addlCooldownInfo.tooltipValue }}</span>
+              <span class="calc-reload">({{ S.tooltip }})</span>
+              <span class="calc-reload-separator">/</span>
+              <span class="ws-val">{{ addlCooldownInfo.actualValue }}</span>
+              <span class="calc-reload">({{ S.actual }})</span>
+              <span class="ws-val">{{ addlCooldownInfo.suffix }}</span>
             </div>
 
             <div v-if="displayStats.knockback !== 0" class="weapon-stat-row">
@@ -313,6 +320,19 @@
               class="weapon-stat-row">
               <span class="ws-label">{{ S.projectiles }}</span>
               <span class="ws-val">{{ activeWeaponData.stats.nb_projectiles }}</span>
+            </div>
+
+            <div v-if="dpsData" class="weapon-stat-row">
+              <span class="ws-label">{{ S.dps }}</span>
+              <span class="ws-val">{{ dpsData.dmg.toFixed(2) }}</span>
+              <span v-if="dpsData.scaling.length" class="ws-scaling">
+                (<template v-for="(ss, i) in dpsData.scaling" :key="i">
+                  <span v-if="i > 0 && ss[1] > 0">+</span><span class="ws-scaling-pct">{{ ss[1].toFixed(1)
+                  }}%</span>
+                  <img v-if="getStatIcon(ss[0])" :src="getStatIcon(ss[0])" class="stat-inline-icon" />
+                  <span v-else>{{ statTr(ss[0]) }}</span>
+                </template>)/s
+              </span>
             </div>
           </div>
         </template>
@@ -418,11 +438,24 @@
           </div>
           <div v-if="showAttackSpeedCalc" class="attack-speed-calc">
             <div class="calc-result">
-              <span class="calc-label">{{ S.finalCooldown }}:</span>
-              <span class="calc-value">{{ formatCooldown(calculatedCooldown) }}</span>
-              <span class="calc-pct"
-                :class="cooldownChangePct < 0 ? 'pct-neg' : cooldownChangePct > 0 ? 'pct-pos' : ''">({{
-                  S.attackSpeed }} {{ cooldownChangePct > 0 ? '+' : '' }}{{ cooldownChangePct.toFixed(0) }}%)</span>
+              <div class="calc-line">
+                <span class="calc-label">{{ S.tooltipCooldown }}:</span>
+                <span class="calc-value">{{ formatCooldown(calculatedTooltipCooldown) }}</span>
+                <template v-for="(seg, i) in cooldownSegments('tooltip')" :key="i">
+                  <span :class="seg.cls">{{ seg.text }}</span>
+                </template>
+              </div>
+              <div class="calc-line">
+                <span class="calc-label">{{ S.actualCooldown }}:</span>
+                <span class="calc-value">{{ formatCooldownFixed(calculatedCooldown) }}</span>
+                <template v-for="(seg, i) in cooldownSegments('actual')" :key="i">
+                  <span :class="seg.cls">{{ seg.text }}</span>
+                </template>
+                <span class="calc-pct"
+                  :class="cooldownChangePct < 0 ? 'pct-neg' : cooldownChangePct > 0 ? 'pct-pos' : ''">(DPS
+                  {{
+                    cooldownChangePct >= 0 ? '+' : '' }}{{ cooldownChangePct.toFixed(0) }}%)</span>
+              </div>
             </div>
             <div class="slider-row">
               <label class="slider-label">{{ S.attackSpeed }}</label>
@@ -431,7 +464,7 @@
             </div>
             <div v-if="activeWeaponData.type === 'melee'" class="slider-row">
               <label class="slider-label">{{ S.statRange }}
-                <el-tooltip :content="S.rangeTooltip" placement="top" :show-after="200">
+                <el-tooltip :content="S.rangeInfo" placement="top" :show-after="200">
                   <el-icon class="range-help-icon">
                     <QuestionFilled />
                   </el-icon>
@@ -549,15 +582,16 @@ const S = computed(() => isZh.value ? {
   default: '默认', price: '价格', showPrice: '显示价格', on: '开', off: '关',
   damage: '伤害', crit: '暴击', cooldown: '冷却', knockback: '击退',
   range: '范围', accuracy: '命中率', lifesteal: '生命窃取', piercing: '贯通',
-  bounce: '反弹', projectiles: '投射物', dmg: '伤害',
+  bounce: '反弹', projectiles: '投射物', dmg: '伤害', dps: 'DPS',
   basePrice: '基础价格', perWave: '每波', wave: '波次',
   effects: '效果', startingWeapons: '起始武器', preferredTags: '偏好标签',
   unique: '独特', limited: '限制', clickToSee: '点击左侧查看详情',
-  belowNightmare: '难度0-5', nightmare: '噩梦',
-  basePriceShort: '价格', belowNightmareShort: '难5', nightmareShort: '噩梦',
+  belowNightmare: '难5', nightmare: '噩梦', basePriceShort: '价格', 
+  belowNightmareShort: '难5', nightmareShort: '噩梦',
   attackSpeedCalc: '攻速计算器', attackSpeed: '攻速', statRange: '范围',
-  curse: '诅咒', finalCooldown: '最终冷却', clear: '清除筛选',
-  rangeTooltip: '玩家范围属性，实际作用于近战武器的范围修改需要减半（如150基础范围+100范围属性→200范围）'
+  curse: '诅咒', clear: '清除筛选', effective: '等效',
+  tooltipCooldown: '显示冷却', actualCooldown: '实际冷却', tooltip: '显示', actual: '实际',
+  rangeInfo: '玩家范围属性。实际加成减半（例如，150基础范围 + 100范围属性 → 200武器范围）'
 } : {
   weapons: 'Weapons', items: 'Items', characters: 'Characters',
   search: 'Search...', all: 'All', tier: 'Rarity', type: 'Type',
@@ -566,15 +600,16 @@ const S = computed(() => isZh.value ? {
   default: 'Default', price: 'Price', showPrice: 'Show Price', on: 'On', off: 'Off',
   damage: 'Damage', crit: 'Crit', cooldown: 'Cooldown', knockback: 'Knockback',
   range: 'Range', accuracy: 'Accuracy', lifesteal: 'Lifesteal', piercing: 'Piercing',
-  bounce: 'Bounce', projectiles: 'Projectiles', dmg: 'dmg',
+  bounce: 'Bounce', projectiles: 'Projectiles', dmg: 'dmg', dps: 'DPS',
   basePrice: 'Base Price', perWave: '/wave', wave: 'Wave',
   effects: 'Effects', startingWeapons: 'Starting Weapons', preferredTags: 'Preferred Tags',
   unique: 'Unique', limited: 'Limited', clickToSee: 'Click to see details',
-  belowNightmare: 'Danger 0-5', nightmare: 'Nightmare',
-  basePriceShort: 'Price', belowNightmareShort: 'D5', nightmareShort: 'NM',
+  belowNightmare: 'Danger 5', nightmare: 'Nightmare', basePriceShort: 'Price', 
+  belowNightmareShort: 'D5', nightmareShort: 'NM',
   attackSpeedCalc: 'Attack Speed Calculator', attackSpeed: 'A.Spd', statRange: 'Range',
-  curse: 'Curse', finalCooldown: 'Final Cooldown', clear: 'Clear Filters',
-  rangeTooltip: 'Player Range stat. For melee weapons, the actual range modification is halved (e.g. 150 base range + 100 Range → 200 range)'
+  curse: 'Curse', clear: 'Clear Filters', effective: 'Effective',
+  tooltipCooldown: 'Tooltip Cooldown', actualCooldown: 'Actual Cooldown', tooltip: 'Tooltip', actual: 'Actual',
+  rangeInfo: 'Player range stat. Actual bonus is halved (e.g. 150 base range + 100 range stat → 200 weapon range)'
 })
 
 // ---- Reactivity ----
@@ -701,15 +736,15 @@ const chartData = computed(() => {
   if (!stats) return { datasets: [] }
 
   const minAtkSpd = -100
-  const maxAtkSpd = 200
+  const maxAtkSpd = 202
   const hasRange = activeWeaponData.value?.type === 'melee' && statRangeSlider.value !== 0
   const mainPoints = []
   const basePoints = []
 
   for (let atkSpd = minAtkSpd; atkSpd <= maxAtkSpd; atkSpd += 1) {
-    mainPoints.push({ x: atkSpd, y: calculateCooldownWithAttackSpeed(stats.cooldown, stats.animation_cooldown || 0, atkSpd, statRangeSlider.value) })
+    mainPoints.push({ x: atkSpd, y: calculateCooldownWithAttackSpeed(stats, atkSpd, statRangeSlider.value) })
     if (hasRange) {
-      basePoints.push({ x: atkSpd, y: calculateCooldownWithAttackSpeed(stats.cooldown, stats.animation_cooldown || 0, atkSpd, 0) })
+      basePoints.push({ x: atkSpd, y: calculateCooldownWithAttackSpeed(stats, atkSpd, 0) })
     }
   }
 
@@ -783,7 +818,7 @@ const currentPointPlugin = {
     const ctx = chart.ctx
     ctx.save()
     ctx.beginPath()
-    ctx.arc(x, y, 5, 0, Math.PI * 2)
+    ctx.arc(x, y, 4, 0, Math.PI * 2)
     ctx.fillStyle = isDark.value ? '#f87171' : '#ef4444'
     ctx.fill()
     ctx.restore()
@@ -812,7 +847,7 @@ const chartOptions = computed(() => {
       x: {
         type: 'linear',
         min: -100,
-        max: 200,
+        max: 202,
         grid: { color: dark ? '#333' : '#e5e5e5' },
         ticks: { color: dark ? '#aaa' : '#666', font: { size: 10 }, stepSize: 25 },
       },
@@ -1254,17 +1289,38 @@ const allFourTierSlots = computed(() => {
   return slots
 })
 
-// Additional cooldown every X shots (e.g. revolver, grenade launcher, chain gun)
 const addlCooldownInfo = computed(() => {
+  const reload = getReloadCooldowns(activeWeaponData.value?.stats, 0)
+  if (!reload) return null
+
+  return {
+    title: isZh.value ? `每发射 ${reload.shots} 次冷却为` : 'Cooldown is',
+    tooltipValue: formatCooldown(reload.tooltip),
+    actualValue: formatCooldown(reload.actual),
+    suffix: isZh.value ? ``: ` every ${reload.shots} shots`,
+  }
+})
+
+function effectiveCooldown(base, actual, shots) {
+  return base + (actual - base) / shots
+}
+
+// DPS = weapon panel (incl. scaling) divided by the actual attack cooldown.
+// Weapons with a reload use an equivalent per-shot cooldown:
+//   actual cooldown + (actual reload cooldown - actual cooldown) / shots
+const dpsData = computed(() => {
+  if (!displayStats.value) return null
   const stats = activeWeaponData.value?.stats
-  if (!stats || stats.additional_cooldown_every_x_shots <= 0) return ''
-  const shots = stats.additional_cooldown_every_x_shots
-  const mult = stats.additional_cooldown_multiplier
-  const baseCd = stats.cooldown / 60
-  const effectiveCd = baseCd * mult
-  const cdStr = formatCooldown(effectiveCd)
-  if (isZh.value) return `每发射${shots}次冷却增加至${cdStr}`
-  return `Cooldown is ${cdStr} every ${shots} shots`
+  const base = totalCooldown.value
+  if (!base || base <= 0) return null
+  let cd = base
+  const reload = getReloadCooldowns(stats, 0)
+  if (reload && reload.shots > 0) {
+    cd = effectiveCooldown(base, reload.actual, reload.shots)
+  }
+  const dmg = displayStats.value.damage / cd
+  const scaling = (displayStats.value.scaling_stats || []).map(([k, v]) => [k, (v * 100) / cd])
+  return { dmg, cd, scaling }
 })
 
 // ---- Shared computed: effects source ----
@@ -1283,20 +1339,24 @@ const meleeAttackTypeText = computed(() => {
 })
 
 // ---- Cooldown calculation ----
+const COOLDOWN_FPS = 60
+const MIN_WEAPON_COOLDOWN_FRAMES = 2
+const BASE_MELEE_ATTACK_DURATION = 0.2
+// The reference workbook defaults to six equipped weapons for its cooldown
+// randomization correction. Keep this explicit so a loadout setting can be
+// threaded through later without changing the core formula.
+const DEFAULT_WEAPON_COUNT = 6
+
 const totalCooldown = computed(() => {
   const stats = activeWeaponData.value?.stats
   if (!stats) return 0
-  const attackCooldown = stats.cooldown / 60
-  const animationCooldown = stats.animation_cooldown || 0
-  return attackCooldown + animationCooldown
+  return calculateCooldownWithAttackSpeed(stats, 0, 0)
 })
 
 const displayCooldown = computed(() => {
   const stats = displayStats.value
   if (!stats) return 0
-  const attackCooldown = stats.cooldown / 60
-  const animationCooldown = stats.animation_cooldown || 0
-  return attackCooldown + animationCooldown
+  return calculateTooltipCooldown(stats, 0, 0)
 })
 
 function formatCooldown(seconds) {
@@ -1304,47 +1364,203 @@ function formatCooldown(seconds) {
   return seconds.toFixed(2) + 's'
 }
 
-function calculateCooldownWithAttackSpeed(baseCooldownFrames, animationCooldown, attackSpeed, statRange, rangeOverride) {
-  const atkSpd = attackSpeed / 100
-  const MIN_CD = 2
+function formatCooldownFixed(seconds) {
+  return seconds.toFixed(3) + 's'
+}
 
-  let attackCooldownFrames
-  if (atkSpd < 0) {
-    attackCooldownFrames = Math.trunc(baseCooldownFrames * (1 + Math.abs(atkSpd)))
+function getAttackSpeedFactor(attackSpeed) {
+  const value = Number(attackSpeed)
+  return Number.isFinite(value) ? value / 100 : 0
+}
+
+function getBaseRecoilDuration(stats) {
+  const recoilDuration = Number(stats?.recoil_duration)
+  return Number.isFinite(recoilDuration) ? recoilDuration : 0.1
+}
+
+// Matches DPS Calculator!D31: the game applies attack speed to the weapon
+// cooldown in frames, truncates it, and never lets it go below two frames.
+function getWeaponCooldownFrames(baseCooldownFrames, atkSpd) {
+  const base = Number(baseCooldownFrames)
+  if (!Number.isFinite(base)) return MIN_WEAPON_COOLDOWN_FRAMES
+
+  const modified = atkSpd >= 0
+    ? base / (1 + atkSpd)
+    : base * (1 + Math.abs(atkSpd))
+  return Math.max(MIN_WEAPON_COOLDOWN_FRAMES, Math.floor(modified))
+}
+
+function getRecoilDuration(stats, atkSpd) {
+  const baseRecoil = getBaseRecoilDuration(stats)
+  return atkSpd >= 0
+    ? baseRecoil / (1 + atkSpd)
+    : baseRecoil
+}
+
+// Matches DPS Calculator!U8/V8 for weapons with a reload cooldown.
+function getReloadCooldowns(stats, attackSpeed) {
+  const shots = Number(stats?.additional_cooldown_every_x_shots)
+  const multiplier = Number(stats?.additional_cooldown_multiplier)
+  if (!Number.isFinite(shots) || shots <= 0 || !Number.isFinite(multiplier) || multiplier <= 0) return null
+
+  const atkSpd = getAttackSpeedFactor(attackSpeed)
+  const weaponCooldownFrames = getWeaponCooldownFrames(stats.cooldown, atkSpd)
+  const recoilDuration = getRecoilDuration(stats, atkSpd)
+  const reloadWeaponCooldownFrames = weaponCooldownFrames * multiplier
+  const tooltipRecoilFrames = Math.floor(recoilDuration * COOLDOWN_FPS)
+  const trueRecoilFrames = Math.floor(recoilDuration * COOLDOWN_FPS + 1)
+
+  return {
+    shots,
+    tooltip: reloadWeaponCooldownFrames / COOLDOWN_FPS + (tooltipRecoilFrames / COOLDOWN_FPS) * 2,
+    actual: (reloadWeaponCooldownFrames + 1) / COOLDOWN_FPS + (trueRecoilFrames / COOLDOWN_FPS) * 2,
+  }
+}
+
+// Matches DPS Calculator!F33. Range affects melee animation time only.
+function getMeleeTiming(stats, atkSpd, statRange) {
+  const baseRange = Number(stats?.max_range)
+  const effectiveRange = Math.max(25, (Number.isFinite(baseRange) ? baseRange : 150) + (Number(statRange) || 0) / 2)
+  const rangeDenominator = Math.min(
+    Math.max(70, 70 * (1 + atkSpd / 3)),
+    120,
+  )
+  const rangeFactor = Math.max(0, effectiveRange / rangeDenominator)
+  const attackDuration = Math.max(0.01, BASE_MELEE_ATTACK_DURATION - atkSpd / 10) + rangeFactor * 0.15
+  const backDuration = BASE_MELEE_ATTACK_DURATION / (1 + Math.max(0, atkSpd) * 3)
+  return { attackDuration, backDuration }
+}
+
+function getMeleeAttackType(stats) {
+  if (stats?.alternate_attack_type) return 'Swing/Thrust'
+  if (stats?.attack_type === 1 || stats?.attack_type === 'Swing' || stats?.attack_type === 'sweep') return 'Swing'
+  return 'Thrust'
+}
+
+function getMeleeAttackTypeFrameBonus(stats) {
+  const attackType = getMeleeAttackType(stats)
+  if (attackType === 'Swing') return 1
+  if (attackType === 'Swing/Thrust') return 0.5
+  return 0
+}
+
+// DPS Calculator!W36. This is the workbook's average correction for the
+// randomized starting cooldown of a six-weapon loadout, expressed in frames.
+function getWeaponRandomizationFrames(weaponCooldownFrames, weaponCount = DEFAULT_WEAPON_COUNT) {
+  const count = Math.max(0, Number(weaponCount) || 0)
+  const randomPercent = Math.min(0.2 * count, 1.2)
+  if (randomPercent === 0) return 0
+
+  const frameInterval = Math.min(randomPercent * weaponCooldownFrames, 5 * count)
+  const rangeMin = Math.max(1, weaponCooldownFrames - frameInterval)
+  const rangeMax = weaponCooldownFrames + frameInterval
+  const average = (rangeMin + rangeMax) / 2
+  const averageRounding = 0.5
+  return average + averageRounding - weaponCooldownFrames
+}
+
+// Matches DPS Calculator!N6 (the value shown in the game's tooltip).
+function calculateTooltipCooldown(stats, attackSpeed, statRange = 0) {
+  const atkSpd = getAttackSpeedFactor(attackSpeed)
+  const weaponCooldownFrames = getWeaponCooldownFrames(stats?.cooldown, atkSpd)
+  const recoilDuration = getRecoilDuration(stats, atkSpd)
+  const attackCooldown = weaponCooldownFrames / COOLDOWN_FPS
+
+  if (activeWeaponData.value?.type !== 'melee') {
+    return attackCooldown + recoilDuration * 2
+  }
+
+  const { attackDuration, backDuration } = getMeleeTiming(stats, atkSpd, statRange)
+  return attackCooldown + recoilDuration + attackDuration / 2 + backDuration
+}
+
+// Matches DPS Calculator!M6 (the true, frame-rounded attack cooldown).
+function calculateCooldownWithAttackSpeed(stats, attackSpeed, statRange = 0, weaponCount = DEFAULT_WEAPON_COUNT) {
+  if (!stats) return 0
+
+  const atkSpd = getAttackSpeedFactor(attackSpeed)
+  const weaponCooldownFrames = getWeaponCooldownFrames(stats.cooldown, atkSpd)
+  const recoilFrames = Math.floor(getRecoilDuration(stats, atkSpd) * COOLDOWN_FPS + 1)
+  let trueCooldownFrames
+
+  if (activeWeaponData.value?.type === 'melee') {
+    const { attackDuration, backDuration } = getMeleeTiming(stats, atkSpd, statRange)
+    const attackDurationFrames = Math.floor(attackDuration / 2 * COOLDOWN_FPS + 1)
+    const backDurationFrames = Math.floor(backDuration * COOLDOWN_FPS + 1)
+
+    trueCooldownFrames = Math.floor(
+      (weaponCooldownFrames + 1)
+      + recoilFrames
+      + attackDurationFrames
+      + backDurationFrames
+      + 1,
+    )
+    trueCooldownFrames += getMeleeAttackTypeFrameBonus(stats)
   } else {
-    attackCooldownFrames = Math.trunc(baseCooldownFrames / (1 + atkSpd))
-  }
-  attackCooldownFrames = Math.max(MIN_CD, attackCooldownFrames)
-  const attackCooldown = attackCooldownFrames / 60
-
-  let animCooldown = animationCooldown || 0
-  if (animCooldown > 0) {
-    const BASE_ATK_DURATION = 0.2
-    const stats = activeWeaponData.value?.stats
-    if (stats && activeWeaponData.value?.type === 'melee') {
-      const baseRange = stats.max_range || 150
-      const effectiveRange = rangeOverride !== undefined ? rangeOverride : baseRange + statRange / 2
-      const rangeFactor = Math.max(0, effectiveRange / Math.max(70 * (1 + (atkSpd / 3)), 70))
-      const atkDuration = Math.max(0.01, BASE_ATK_DURATION - (atkSpd / 10)) + rangeFactor * 0.15
-      const backDuration = atkSpd > 0 ? BASE_ATK_DURATION / (1 + (atkSpd * 3)) : BASE_ATK_DURATION
-      const recoilDuration = stats.recoil_duration || 0.1
-      animCooldown = atkDuration / 2 + backDuration + recoilDuration
-    }
+    trueCooldownFrames = (weaponCooldownFrames + 1) + recoilFrames * 2
   }
 
-  return attackCooldown + animCooldown
+  trueCooldownFrames += getWeaponRandomizationFrames(weaponCooldownFrames, weaponCount)
+  return trueCooldownFrames / COOLDOWN_FPS
 }
 
 const calculatedCooldown = computed(() => {
   const stats = activeWeaponData.value?.stats
   if (!stats) return 0
   return calculateCooldownWithAttackSpeed(
-    stats.cooldown,
-    stats.animation_cooldown || 0,
+    stats,
     attackSpeedSlider.value,
     statRangeSlider.value
   )
 })
+
+const calculatedTooltipCooldown = computed(() => {
+  const stats = activeWeaponData.value?.stats
+  if (!stats) return 0
+  return calculateTooltipCooldown(
+    stats,
+    attackSpeedSlider.value,
+    statRangeSlider.value,
+  )
+})
+
+const calculatedReloadCooldowns = computed(() => {
+  const stats = activeWeaponData.value?.stats
+  if (!stats) return null
+  return getReloadCooldowns(stats, attackSpeedSlider.value)
+})
+
+function formatReloadCooldownInfo(seconds, reload = calculatedReloadCooldowns.value) {
+  if (!reload) return ''
+  const formatted = formatCooldown(seconds)
+  return isZh.value ? ` 每发射${reload.shots}次冷却为${formatted}` : ` ${formatted} every ${reload.shots} shots`
+}
+
+// Build the trailing segments for a cooldown line so each piece can be
+// styled independently (mirrors how addlCooldownInfo composes its parts).
+// kind: 'tooltip' | 'actual'. Returns [{ text, cls }, ...] for concatenation.
+function cooldownSegments(kind) {
+  const reload = calculatedReloadCooldowns.value
+  const segs = []
+  if (reload) {
+    segs.push({ text: '/', cls: 'calc-reload-separator' })
+    segs.push({
+      text: isZh.value ? `每发射${reload.shots}次冷却为` : ` every ${reload.shots} shots: `,
+      cls: 'calc-reload',
+    })
+    segs.push({
+      text: formatCooldown(kind === 'tooltip' ? reload.tooltip : reload.actual),
+      cls: 'calc-reload',
+    })
+  }
+  if (kind === 'actual' && reload) {
+    const equiv = calculatedCooldown.value + (reload.actual - calculatedCooldown.value) / reload.shots
+    segs.push({ text: '/', cls: 'calc-reload-separator' })
+    segs.push({ text: isZh.value ? '等效 ' : 'equiv ', cls: 'calc-reload' })
+    segs.push({ text: formatCooldownFixed(equiv), cls: 'calc-value' })
+  }
+  return segs
+}
 
 const cooldownChangePct = computed(() => {
   if (totalCooldown.value === 0 || calculatedCooldown.value === 0) return 0
@@ -1682,7 +1898,7 @@ body { background: #1a1d28; color: #ccc; font-family: 'Segoe UI', system-ui, san
 .curse-section { margin-top: 12px; padding: 12px 16px; background: #22253a; border-radius: 8px; border: 1px solid #2a2d3a; }
 .curse-row { display: flex; align-items: center; gap: 12px; }
 .curse-toggle-btn { 
-  font-size: 13px; font-weight: 600; 
+  font-size: 15px; font-weight: 600; 
   background: #2a2d3a !important; border: 1px solid #3a3d4e !important; color: #888 !important;
   transition: all 0.2s;
 }
@@ -1860,7 +2076,7 @@ body.light-theme .weapon-stat-row:hover { background: #e8eaed; }
 body.light-theme .ws-label { color: #444; }
 body.light-theme .ws-val { color: #111; }
 body.light-theme .curse-section { background: #f0f2f5; border-color: #ccc; }
-body.light-theme .curse-toggle-btn { background: #e8eaed !important; border-color: #ccc !important; color: #777 !important; }
+body.light-theme .curse-toggle-btn { background: #fff7ed !important; border-color: #f59e0b !important; color: #b45309 !important; box-shadow: 0 0 6px rgba(245, 158, 11, 0.2); }
 body.light-theme .curse-toggle-btn.curse-active { background: #ede9fe !important; border-color: #a78bfa !important; color: #7c3aed !important; }
 body.light-theme .curse-modified { color: #7c3aed !important; }
 body.light-theme .price-section { background: #f0f2f5; border-color: #ccc; }
@@ -1964,15 +2180,18 @@ body.light-theme .el-popper .el-popper__arrow::before { background: #fff !import
   border-radius: 6px; border: 1px solid #2a2d3a;
 }
 .calc-result {
-  display: flex; align-items: center; gap: 8px;
+  display: flex; flex-direction: column; gap: 6px;
   margin-bottom: 12px; padding: 8px 12px;
   background: #1e2030; border-radius: 6px;
 }
+.calc-line { display: flex; align-items: center; gap: 8px; }
 .calc-label { font-size: 14px; color: #bbb; }
 .calc-value { font-size: 18px; font-weight: 700; color: #4ade80; }
 .calc-pct { font-size: 14px; font-weight: 600; margin-left: 4px; }
 .pct-pos { color: #4ade80; }
 .pct-neg { color: #f87171; }
+.calc-reload { font-size: 13px; color: #bbb;  }
+.calc-reload-separator { margin: 0 2px; color: #888; }
 .slider-row {
   display: flex; align-items: center; gap: 12px; margin-bottom: 12px;
 }
@@ -2008,6 +2227,7 @@ body.light-theme .slider-row .el-slider :deep(.el-slider__marks-text) { color: #
 body.light-theme .cooldown-chart-wrapper { background: #fff; }
 body.light-theme .pct-pos { color: #16a34a; }
 body.light-theme .pct-neg { color: #dc2626; }
+body.light-theme .calc-reload { color: #666; }
 
 /* Effect text color markers */
 .zvg { color: #22c55e; }
