@@ -323,8 +323,8 @@
             </div>
 
             <div v-if="dpsData" class="weapon-stat-row">
-              <span class="ws-label">{{ S.dps }}</span>
-              <span class="ws-val">{{ dpsData.dmg.toFixed(2) }}</span>
+              <span class="ws-label">DPS</span>
+              <span class="ws-val" :class="{ 'curse-modified': curseEnabled }">{{ dpsData.dmg.toFixed(2) }}</span>
               <span v-if="dpsData.scaling.length" class="ws-scaling">
                 (<template v-for="(ss, i) in dpsData.scaling" :key="i">
                   <span v-if="i > 0 && ss[1] > 0">+</span><span class="ws-scaling-pct">{{ ss[1].toFixed(1)
@@ -589,7 +589,7 @@ const S = computed(() => isZh.value ? {
   belowNightmare: '难5', nightmare: '噩梦', basePriceShort: '价格', 
   belowNightmareShort: '难5', nightmareShort: '噩梦',
   attackSpeedCalc: '攻速计算器', attackSpeed: '攻速', statRange: '范围',
-  curse: '诅咒', clear: '清除筛选', effective: '等效',
+  curse: '诅咒', clear: '清除筛选',
   tooltipCooldown: '显示冷却', actualCooldown: '实际冷却', tooltip: '显示', actual: '实际',
   rangeInfo: '玩家范围属性。实际加成减半（例如，150基础范围 + 100范围属性 → 200武器范围）'
 } : {
@@ -607,7 +607,7 @@ const S = computed(() => isZh.value ? {
   belowNightmare: 'Danger 5', nightmare: 'Nightmare', basePriceShort: 'Price', 
   belowNightmareShort: 'D5', nightmareShort: 'NM',
   attackSpeedCalc: 'Attack Speed Calculator', attackSpeed: 'A.Spd', statRange: 'Range',
-  curse: 'Curse', clear: 'Clear Filters', effective: 'Effective',
+  curse: 'Curse', clear: 'Clear Filters',
   tooltipCooldown: 'Tooltip Cooldown', actualCooldown: 'Actual Cooldown', tooltip: 'Tooltip', actual: 'Actual',
   rangeInfo: 'Player range stat. Actual bonus is halved (e.g. 150 base range + 100 range stat → 200 weapon range)'
 })
@@ -1301,10 +1301,6 @@ const addlCooldownInfo = computed(() => {
   }
 })
 
-function effectiveCooldown(base, actual, shots) {
-  return base + (actual - base) / shots
-}
-
 // DPS = weapon panel (incl. scaling) divided by the actual attack cooldown.
 // Weapons with a reload use an equivalent per-shot cooldown:
 //   actual cooldown + (actual reload cooldown - actual cooldown) / shots
@@ -1316,7 +1312,7 @@ const dpsData = computed(() => {
   let cd = base
   const reload = getReloadCooldowns(stats, 0)
   if (reload && reload.shots > 0) {
-    cd = effectiveCooldown(base, reload.actual, reload.shots)
+    cd = base + (reload.actual - base) / reload.shots
   }
   const dmg = displayStats.value.damage / cd
   const scaling = (displayStats.value.scaling_stats || []).map(([k, v]) => [k, (v * 100) / cd])
@@ -1530,12 +1526,6 @@ const calculatedReloadCooldowns = computed(() => {
   return getReloadCooldowns(stats, attackSpeedSlider.value)
 })
 
-function formatReloadCooldownInfo(seconds, reload = calculatedReloadCooldowns.value) {
-  if (!reload) return ''
-  const formatted = formatCooldown(seconds)
-  return isZh.value ? ` 每发射${reload.shots}次冷却为${formatted}` : ` ${formatted} every ${reload.shots} shots`
-}
-
 // Build the trailing segments for a cooldown line so each piece can be
 // styled independently (mirrors how addlCooldownInfo composes its parts).
 // kind: 'tooltip' | 'actual'. Returns [{ text, cls }, ...] for concatenation.
@@ -1545,7 +1535,7 @@ function cooldownSegments(kind) {
   if (reload) {
     segs.push({ text: '/', cls: 'calc-reload-separator' })
     segs.push({
-      text: isZh.value ? `每发射${reload.shots}次冷却为` : ` every ${reload.shots} shots: `,
+      text: isZh.value ? `每${reload.shots}次冷却为` : ` every ${reload.shots} shots: `,
       cls: 'calc-reload',
     })
     segs.push({
