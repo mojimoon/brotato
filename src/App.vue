@@ -1796,7 +1796,7 @@ onMounted(async () => {
 html { background: var(--bg-app); }
 body { background: var(--bg-app); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; transition: background .2s, color .2s; }
 
-.app-container { max-width: 1400px; margin: 0 auto; min-height: 100vh; display: flex; flex-direction: column; }
+.app-container { max-width: 1400px; margin: 0 auto; height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
 
 /* Header */
 .header { display: flex; align-items: center; justify-content: space-between; padding: 10px 24px; background: var(--bg-header); border-bottom: 2px solid var(--accent); }
@@ -1903,7 +1903,7 @@ body { background: var(--bg-app); color: var(--text); font-family: 'Segoe UI', s
 }
 
 /* Main */
-.main-content { position: relative; height: calc(100vh - 160px); overflow: hidden; }
+.main-content { position: relative; flex: 1 1 auto; min-height: 0; overflow: hidden; }
 
 /* Grid */
 .grid-panel {
@@ -2200,6 +2200,7 @@ body.light-theme .el-popper .el-popper__arrow::before { background: #fff !import
 
 /* ==================== Responsive ==================== */
 @media (max-width: 768px) {
+  .app-container { height: auto; min-height: 100vh; overflow: visible; }
   .main-content {
     position: relative; height: auto; overflow: visible;
     display: flex; flex-direction: column; gap: 0;
