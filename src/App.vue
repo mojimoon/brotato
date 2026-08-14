@@ -441,18 +441,16 @@
               <div class="calc-line">
                 <span class="calc-label">{{ S.tooltipCooldown }}:</span>
                 <span class="calc-value">{{ formatCooldown(calculatedTooltipCooldown) }}</span>
-                <span v-if="calculatedReloadCooldowns" class="calc-reload">
-                  <span class="calc-reload-separator">/</span>{{
-                    formatReloadCooldownInfo(calculatedReloadCooldowns.tooltip) }}
-                </span>
+                <template v-for="(seg, i) in cooldownSegments('tooltip')" :key="i">
+                  <span :class="seg.cls">{{ seg.text }}</span>
+                </template>
               </div>
               <div class="calc-line">
                 <span class="calc-label">{{ S.actualCooldown }}:</span>
                 <span class="calc-value">{{ formatCooldownFixed(calculatedCooldown) }}</span>
-                <span v-if="calculatedReloadCooldowns" class="calc-reload">
-                  <span class="calc-reload-separator">/</span>{{
-                    formatReloadCooldownInfo(calculatedReloadCooldowns.actual) }}
-                </span>
+                <template v-for="(seg, i) in cooldownSegments('actual')" :key="i">
+                  <span :class="seg.cls">{{ seg.text }}</span>
+                </template>
                 <span class="calc-pct"
                   :class="cooldownChangePct < 0 ? 'pct-neg' : cooldownChangePct > 0 ? 'pct-pos' : ''">(DPS
                   {{
@@ -1536,6 +1534,32 @@ function formatReloadCooldownInfo(seconds, reload = calculatedReloadCooldowns.va
   if (!reload) return ''
   const formatted = formatCooldown(seconds)
   return isZh.value ? ` 每发射${reload.shots}次冷却为${formatted}` : ` ${formatted} every ${reload.shots} shots`
+}
+
+// Build the trailing segments for a cooldown line so each piece can be
+// styled independently (mirrors how addlCooldownInfo composes its parts).
+// kind: 'tooltip' | 'actual'. Returns [{ text, cls }, ...] for concatenation.
+function cooldownSegments(kind) {
+  const reload = calculatedReloadCooldowns.value
+  const segs = []
+  if (reload) {
+    segs.push({ text: '/', cls: 'calc-reload-separator' })
+    segs.push({
+      text: isZh.value ? `每发射${reload.shots}次冷却为` : ` every ${reload.shots} shots: `,
+      cls: 'calc-reload',
+    })
+    segs.push({
+      text: formatCooldown(kind === 'tooltip' ? reload.tooltip : reload.actual),
+      cls: 'calc-reload',
+    })
+  }
+  if (kind === 'actual' && reload) {
+    const equiv = calculatedCooldown.value + (reload.actual - calculatedCooldown.value) / reload.shots
+    segs.push({ text: '/', cls: 'calc-reload-separator' })
+    segs.push({ text: isZh.value ? '等效 ' : 'equiv ', cls: 'calc-reload' })
+    segs.push({ text: formatCooldownFixed(equiv), cls: 'calc-value' })
+  }
+  return segs
 }
 
 const cooldownChangePct = computed(() => {
