@@ -421,8 +421,7 @@
               <span class="calc-label">{{ S.finalCooldown }}:</span>
               <span class="calc-value">{{ formatCooldown(calculatedCooldown) }}</span>
               <span class="calc-pct"
-                :class="cooldownChangePct < 0 ? 'pct-neg' : cooldownChangePct > 0 ? 'pct-pos' : ''">({{
-                  S.attackSpeed }} {{ cooldownChangePct > 0 ? '+' : '' }}{{ cooldownChangePct.toFixed(0) }}%)</span>
+                :class="cooldownChangePct < 0 ? 'pct-neg' : cooldownChangePct > 0 ? 'pct-pos' : ''">(DPS {{ cooldownChangePct > 0 ? '+' : '' }}{{ cooldownChangePct.toFixed(0) }}%)</span>
             </div>
             <div class="slider-row">
               <label class="slider-label">{{ S.attackSpeed }}</label>
@@ -553,8 +552,8 @@ const S = computed(() => isZh.value ? {
   basePrice: '基础价格', perWave: '每波', wave: '波次',
   effects: '效果', startingWeapons: '起始武器', preferredTags: '偏好标签',
   unique: '独特', limited: '限制', clickToSee: '点击左侧查看详情',
-  belowNightmare: '难度0-5', nightmare: '噩梦',
-  basePriceShort: '价格', belowNightmareShort: '难5', nightmareShort: '噩梦',
+  belowNightmare: '难5', nightmare: '噩梦', basePriceShort: '价格', 
+  belowNightmareShort: '难5', nightmareShort: '噩梦',
   attackSpeedCalc: '攻速计算器', attackSpeed: '攻速', statRange: '范围',
   curse: '诅咒', finalCooldown: '最终冷却', clear: '清除筛选',
   rangeTooltip: '玩家范围属性，实际作用于近战武器的范围修改需要减半（如150基础范围+100范围属性→200范围）'
@@ -570,8 +569,8 @@ const S = computed(() => isZh.value ? {
   basePrice: 'Base Price', perWave: '/wave', wave: 'Wave',
   effects: 'Effects', startingWeapons: 'Starting Weapons', preferredTags: 'Preferred Tags',
   unique: 'Unique', limited: 'Limited', clickToSee: 'Click to see details',
-  belowNightmare: 'Danger 0-5', nightmare: 'Nightmare',
-  basePriceShort: 'Price', belowNightmareShort: 'D5', nightmareShort: 'NM',
+  belowNightmare: 'Danger 5', nightmare: 'Nightmare', basePriceShort: 'Price', 
+  belowNightmareShort: 'D5', nightmareShort: 'NM',
   attackSpeedCalc: 'Attack Speed Calculator', attackSpeed: 'A.Spd', statRange: 'Range',
   curse: 'Curse', finalCooldown: 'Final Cooldown', clear: 'Clear Filters',
   rangeTooltip: 'Player Range stat. For melee weapons, the actual range modification is halved (e.g. 150 base range + 100 Range → 200 range)'
@@ -701,7 +700,7 @@ const chartData = computed(() => {
   if (!stats) return { datasets: [] }
 
   const minAtkSpd = -100
-  const maxAtkSpd = 200
+  const maxAtkSpd = 202
   const hasRange = activeWeaponData.value?.type === 'melee' && statRangeSlider.value !== 0
   const mainPoints = []
   const basePoints = []
@@ -812,7 +811,7 @@ const chartOptions = computed(() => {
       x: {
         type: 'linear',
         min: -100,
-        max: 200,
+        max: 202,
         grid: { color: dark ? '#333' : '#e5e5e5' },
         ticks: { color: dark ? '#aaa' : '#666', font: { size: 10 }, stepSize: 25 },
       },
