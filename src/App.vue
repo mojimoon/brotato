@@ -269,7 +269,7 @@
               <span class="ws-val">{{ formatCooldown(displayCooldown) }}</span>
               <span class="calc-reload">({{ S.tooltip }})</span>
               <span class="calc-reload-separator">/</span>
-              <span class="ws-val">{{ formatCooldownFixed(totalCooldown, true) }}</span>
+              <span class="ws-val">{{ formatCooldownFixed(totalCooldown) }}</span>
               <span class="calc-reload">({{ S.actual }})</span>
             </div>
 
@@ -448,7 +448,11 @@
               </div>
               <div class="calc-line">
                 <span class="calc-label">{{ S.actualCooldown }}:</span>
-                <span class="calc-value">{{ formatCooldownFixed(calculatedCooldown, true) }}</span>
+                <span class="calc-value">{{ formatCooldownFixed(calculatedCooldown) }}
+                  <span v-if="showFrames">
+                    {{ frameRange() }}
+                  </span>
+                </span>
                 <template v-for="(seg, i) in cooldownSegments('actual')" :key="i">
                   <span :class="seg.cls">{{ seg.text }}</span>
                 </template>
@@ -645,7 +649,7 @@ const showAttackSpeedCalc = ref(lsGet('brotato_showAtkCalc', false))
 const showPriceDetail = ref(lsGet('brotato_showPriceDetail', false))
 const attackSpeedSlider = ref(0)
 const statRangeSlider = ref(0)
-const weaponCountSlider = ref(6)
+const weaponCountSlider = ref(1)
 const showFrames = ref(false)
 
 // ---- Curse System ----
@@ -1373,8 +1377,8 @@ function formatCooldown(seconds) {
   return seconds.toFixed(2) + 's'
 }
 
-function formatCooldownFixed(seconds, frameRange = false) {
-  return seconds.toFixed(3) + 's' + (frameRange ? frameRangeSuffix() : '')
+function formatCooldownFixed(seconds) {
+  return seconds.toFixed(3) + 's'
 }
 
 // Appends a frame-range suffix (e.g. " (7-15f)") to a cooldown value when the
@@ -1382,15 +1386,25 @@ function formatCooldownFixed(seconds, frameRange = false) {
 // from the game's cooldown randomization: rand_range(max(1, base - max_rand),
 // base + max_rand) on the weapon-cooldown frames, plus the deterministic
 // recoil/melee idle frames. max_rand = min(weaponCount * base / 5, weaponCount * 5).
-function frameRangeSuffix() {
+function frameRange() {
   if (!showFrames.value) return ''
-  const wcf = currentWeaponCooldownFrames.value
+  const stats = activeWeaponData.value?.stats
+  if (!stats) return ''
+  const atkSpd = getAttackSpeedFactor(attackSpeedSlider.value)
   const count = weaponCountSlider.value
-  const idle = currentRecoilIdleFrames.value
-  const maxRand = Math.min((count * wcf) / 5.0, count * 5.0)
-  const minF = Math.round(Math.max(1, wcf - maxRand) + idle)
-  const maxF = Math.round(wcf + maxRand + idle)
-  return ` (${minF}-${maxF}f)`
+  if (activeWeaponData.value?.type === 'melee') {
+    // Melee uses its own idle (attack + back frames) centered on wcf + 1.
+    const wcf = currentWeaponCooldownFrames.value
+    const idle = currentRecoilIdleFrames.value
+    const maxRand = Math.min((count * wcf) / 5.0, count * 5.0)
+    const minF = Math.round(Math.max(1, wcf - maxRand) + idle)
+    const maxF = Math.round(wcf + maxRand + idle)
+    return ` (${minF}-${maxF}f)`
+  }
+  // Ranged: use the mod's exact min/max so the suffix matches the displayed
+  // "actual" value (which is the same midpoint).
+  const range = getRangedCooldownRange(stats, atkSpd, count)
+  return ` (${range.min}-${range.max}f)`
 }
 
 function getAttackSpeedFactor(attackSpeed) {
@@ -1502,6 +1516,29 @@ function calculateTooltipCooldown(stats, attackSpeed, statRange = 0) {
   return attackCooldown + recoilDuration + attackDuration / 2 + backDuration
 }
 
+// Mirrors the _wl-ImprovedTooltips mod's ranged cooldown model exactly:
+//   add_cd = 2 * tween_duration(recoil) - 1
+//   spread = min(weaponCount * cd / 5, weaponCount * 5)
+//   min_cd = add_cd + floor(max(1, cd - spread)) + 1
+//   max_cd = add_cd + ceil(cd + spread)
+// (tween_duration is the mod author's empirical tween->frame hack; for the
+// common 0.05s recoil it returns 4, so add_cd = 7.)
+function getTweenDuration(duration) {
+  const d = Number(duration)
+  if (d === 0.05) return 4
+  return Math.floor(d * 60) + 2
+}
+
+function getRangedCooldownRange(stats, atkSpd, weaponCount = DEFAULT_WEAPON_COUNT) {
+  const wcf = getWeaponCooldownFrames(stats.cooldown, atkSpd)
+  const recoil = getRecoilDuration(stats, atkSpd)
+  const add_cd = 2 * getTweenDuration(recoil) - 1
+  const maxRand = Math.min((weaponCount * wcf) / 5.0, weaponCount * 5.0)
+  const min_cd = add_cd + Math.floor(Math.max(1, wcf - maxRand)) + 1
+  const max_cd = add_cd + Math.ceil(wcf + maxRand)
+  return { wcf, add_cd, min: min_cd, max: max_cd, avgFrames: (min_cd + max_cd) / 2 }
+}
+
 // Matches DPS Calculator!M6 (the true, frame-rounded attack cooldown).
 function calculateCooldownWithAttackSpeed(stats, attackSpeed, statRange = 0, weaponCount = DEFAULT_WEAPON_COUNT) {
   if (!stats) return 0
@@ -1532,11 +1569,14 @@ function calculateCooldownWithAttackSpeed(stats, attackSpeed, statRange = 0, wea
       + 1,
     )
     trueCooldownFrames += getMeleeAttackTypeFrameBonus(stats)
+    // Melee keeps the workbook's average-correction randomization.
+    trueCooldownFrames += getWeaponRandomizationFrames(weaponCooldownFrames, weaponCount)
   } else {
-    trueCooldownFrames = (weaponCooldownFrames + 1) + recoilFrames * 2
+    // Ranged: use the exact mod min/max midpoint so the "actual" value and the
+    // frame-range suffix (frameRangeSuffix) stay perfectly consistent.
+    trueCooldownFrames = getRangedCooldownRange(stats, atkSpd, weaponCount).avgFrames
   }
 
-  trueCooldownFrames += getWeaponRandomizationFrames(weaponCooldownFrames, weaponCount)
   return trueCooldownFrames / COOLDOWN_FPS
 }
 
@@ -1606,6 +1646,10 @@ function cooldownSegments(kind) {
       text: formatCooldown(kind === 'tooltip' ? reload.tooltip : reload.actual),
       cls: 'calc-reload',
     })
+    // if (kind === 'actual' && showFrames.value) {
+    //   const actualFrames = Math.round(reload.actual * COOLDOWN_FPS)
+    //   segs.push({ text: `(${actualFrames}f)`, cls: 'calc-reload' })
+    // }
   }
   if (kind === 'actual' && reload) {
     const equiv = calculatedCooldown.value + (reload.actual - calculatedCooldown.value) / reload.shots
