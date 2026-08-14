@@ -658,31 +658,12 @@ const showPriceDetail = ref(lsGet('brotato_showPriceDetail', false))
 const attackSpeedSlider = ref(0)
 const statRangeSlider = ref(0)
 const weaponCountSlider = ref(1)
+// const weaponCountSlider = ref(lsGet('brotato_weaponCount', 1))
 const showFrames = ref(lsGet('brotato_showFrames', false))
 
 // ---- Curse System ----
 const curseEnabled = ref(false)
 const curseSlider = ref(110)
-
-// Persist curse state (similar to other UI state)
-const CURSE_STORAGE_KEY = 'brotato_curse'
-const CURSE_ENABLED_KEY = 'brotato_curse_enabled'
-
-function loadCurseState() {
-  try {
-    const saved = localStorage.getItem(CURSE_STORAGE_KEY)
-    if (saved !== null) curseSlider.value = parseInt(saved) || 110
-    const savedEnabled = localStorage.getItem(CURSE_ENABLED_KEY)
-    if (savedEnabled !== null) curseEnabled.value = savedEnabled === 'true'
-  } catch (e) { /* localStorage not available */ }
-}
-
-watch(curseSlider, (v) => {
-  try { localStorage.setItem(CURSE_STORAGE_KEY, String(v)) } catch (e) {}
-})
-watch(curseEnabled, (v) => {
-  try { localStorage.setItem(CURSE_ENABLED_KEY, String(v)) } catch (e) {}
-})
 
 // Curse value as a fraction: slider value / 100
 const curseFactor = computed(() => curseEnabled.value ? curseSlider.value / 100 : 0)
@@ -895,6 +876,7 @@ watch(isDark, v => localStorage.setItem('brotato_isDark', JSON.stringify(v)))
 watch(showAttackSpeedCalc, v => localStorage.setItem('brotato_showAtkCalc', JSON.stringify(v)))
 watch(showPriceDetail, v => localStorage.setItem('brotato_showPriceDetail', JSON.stringify(v)))
 watch(showFrames, v => localStorage.setItem('brotato_showFrames', JSON.stringify(v)))
+// watch(weaponCountSlider, v => localStorage.setItem('brotato_weaponCount', JSON.stringify(v)))
 
 // ---- Tier colors ----
 const TIER_COLORS = ['#aaaaaa', '#5cc4ff', '#b75cff', '#ff3d3d']
@@ -1753,7 +1735,6 @@ function onTabChange() {
 }
 
 onMounted(async () => {
-  loadCurseState()
   const resp = await fetch(BASE + 'data/brotato_data.json')
   rawData.value = await resp.json()
 })
