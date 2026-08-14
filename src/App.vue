@@ -1535,7 +1535,7 @@ function cooldownSegments(kind) {
   if (reload) {
     segs.push({ text: '/', cls: 'calc-reload-separator' })
     segs.push({
-      text: isZh.value ? `每${reload.shots}次冷却为` : ` every ${reload.shots} shots: `,
+      text: isZh.value ? `每发射${reload.shots}次:` : `every ${reload.shots} shots:`,
       cls: 'calc-reload',
     })
     segs.push({
@@ -1546,7 +1546,7 @@ function cooldownSegments(kind) {
   if (kind === 'actual' && reload) {
     const equiv = calculatedCooldown.value + (reload.actual - calculatedCooldown.value) / reload.shots
     segs.push({ text: '/', cls: 'calc-reload-separator' })
-    segs.push({ text: isZh.value ? '等效 ' : 'equiv ', cls: 'calc-reload' })
+    segs.push({ text: isZh.value ? '等效' : 'equiv', cls: 'calc-reload' })
     segs.push({ text: formatCooldownFixed(equiv), cls: 'calc-value' })
   }
   return segs
