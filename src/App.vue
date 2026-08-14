@@ -110,7 +110,7 @@
 
       <el-dropdown trigger="click" popper-class="dark-dropdown" @command="(v) => { filterDlc = v; onFilterChange(); }">
         <el-button class="filter-btn" :class="{ 'has-value': filterDlc !== null }">
-          {{ filterDlc === 0 ? S.base : filterDlc === 1 ? 'DLC' : S.source }}
+          {{ filterDlc === 0 ? S.base : filterDlc === 1 ? 'DLC1' : S.source }}
           <el-icon class="el-icon--right">
             <ArrowDown />
           </el-icon>
@@ -121,7 +121,7 @@
             }}</el-dropdown-item>
             <el-dropdown-item :command="0" :class="{ 'is-active-opt': filterDlc === 0 }">{{ S.baseGame
             }}</el-dropdown-item>
-            <el-dropdown-item :command="1" :class="{ 'is-active-opt': filterDlc === 1 }">DLC</el-dropdown-item>
+            <el-dropdown-item :command="1" :class="{ 'is-active-opt': filterDlc === 1 }">DLC1</el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>
@@ -150,44 +150,46 @@
         </el-icon>
       </el-button>
 
-      <el-dropdown v-if="activeTab === 'weapons' || activeTab === 'items'" trigger="click" popper-class="dark-dropdown"
-        @command="(v) => { sortBy = v; onFilterChange(); }" class="sort-dropdown">
-        <el-button class="filter-btn sort-btn" :class="{ 'has-value': sortBy !== 'default' }">
+      <div class="filter-cluster">
+        <el-dropdown v-if="activeTab === 'weapons' || activeTab === 'items'" trigger="click"
+          popper-class="dark-dropdown" @command="(v) => { sortBy = v; onFilterChange(); }" class="sort-dropdown">
+          <el-button class="filter-btn sort-btn" :class="{ 'has-value': sortBy !== 'default' }">
+            <el-icon style="margin-right:4px">
+              <Sort />
+            </el-icon>
+            {{ sortBy === 'price' ? S.price : S.default }}
+            <el-icon class="el-icon--right">
+              <ArrowDown />
+            </el-icon>
+          </el-button>
+          <template #dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item command="default" :class="{ 'is-active-opt': sortBy === 'default' }">{{ S.default
+                }}</el-dropdown-item>
+              <el-dropdown-item command="price" :class="{ 'is-active-opt': sortBy === 'price' }">{{ S.price
+                }}</el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
+
+        <el-button v-if="activeTab === 'weapons' || activeTab === 'items'" class="filter-btn price-toggle-btn"
+          :class="{ 'has-value': showingPrice }" @click="showingPrice = !showingPrice">
           <el-icon style="margin-right:4px">
-            <Sort />
+            <View v-if="showingPrice" />
+            <Hide v-else />
           </el-icon>
-          {{ sortBy === 'price' ? S.price : S.default }}
-          <el-icon class="el-icon--right">
-            <ArrowDown />
-          </el-icon>
+          {{ S.price }}
         </el-button>
-        <template #dropdown>
-          <el-dropdown-menu>
-            <el-dropdown-item command="default" :class="{ 'is-active-opt': sortBy === 'default' }">{{ S.default
-            }}</el-dropdown-item>
-            <el-dropdown-item command="price" :class="{ 'is-active-opt': sortBy === 'price' }">{{ S.price
-            }}</el-dropdown-item>
-          </el-dropdown-menu>
-        </template>
-      </el-dropdown>
 
-      <el-button v-if="activeTab === 'weapons' || activeTab === 'items'" class="filter-btn price-toggle-btn"
-        :class="{ 'has-value': showingPrice }" @click="showingPrice = !showingPrice">
-        <el-icon style="margin-right:4px">
-          <View v-if="showingPrice" />
-          <Hide v-else />
-        </el-icon>
-        {{ S.price }}
-      </el-button>
-
-      <el-button v-if="activeTab === 'weapons'" class="filter-btn price-toggle-btn frames-toggle-btn"
-        :class="{ 'has-value': showFrames }" @click="showFrames = !showFrames">
-        <el-icon style="margin-right:4px">
-          <MoreFilled v-if="showFrames" />
-          <More v-else />
-        </el-icon>
-        {{ S.frames }}
-      </el-button>
+        <el-button v-if="activeTab === 'weapons'" class="filter-btn price-toggle-btn frames-toggle-btn"
+          :class="{ 'has-value': showFrames }" @click="showFrames = !showFrames">
+          <el-icon style="margin-right:4px">
+            <MoreFilled v-if="showFrames" />
+            <More v-else />
+          </el-icon>
+          {{ S.frames }}
+        </el-button>
+      </div>
     </div>
 
     <!-- Main Content -->
@@ -203,7 +205,7 @@
             <img :src="getIconSrc(item.icon)" />
           </div>
           <div class="item-name-text">{{ itemName(item) }}</div>
-          <div v-if="item.dlc" class="item-dlc-badge">DLC</div>
+          <div v-if="item.dlc" class="item-dlc-badge">DLC1</div>
         </div>
       </div>
 
@@ -1816,6 +1818,11 @@ onMounted(async () => {
   --curse: #c084fc;
   --curse-deep: #7b3fa3;
   --nightmare: #ff3d3d;
+  /* frames toggle (blue) */
+  --frames-active-bg: rgba(59, 130, 246, 0.16);
+  --frames-active-fg: #60a5fa;
+  --frames-active-border: #3b82f6;
+  --frames-active-shadow: rgba(59, 130, 246, 0.3);
   --price-final: #f39c12;
   --badge-red: #c0392b;
   --badge-orange: #d35400;
@@ -1939,7 +1946,7 @@ body { background: var(--bg-app); color: var(--text); font-family: 'Segoe UI', s
   box-shadow: var(--btn-shadow-val-hover);
 }
 .sort-btn :deep(.el-icon) { color: inherit; }
-.sort-dropdown { margin-left: auto; }
+.filter-cluster { display: flex; align-items: center; gap: 10px; margin-left: auto; }
 .clear-btn { color: var(--text-faint); padding: 8px !important; min-width: 0; }
 .clear-btn:hover { color: var(--badge-red) !important; border-color: var(--badge-red) !important; }
 
@@ -2069,20 +2076,16 @@ body { background: var(--bg-app); color: var(--text); font-family: 'Segoe UI', s
 .curse-slider :deep(.el-slider__button) { width: 14px; height: 14px; border-color: var(--curse-deep); }
 .curse-slider :deep(.el-input-number) { width: 80px; }
 
+/* Frames toggle reuses the price-toggle-btn chrome; only the active color (blue) differs. */
 .frames-toggle-btn :deep(.el-icon) { color: inherit; }
 .frames-toggle-btn.has-value {
-  background: rgba(34, 197, 94, 0.15) !important;
-  border-color: #22c55e !important; color: #22c55e !important;
-  box-shadow: 0 0 8px rgba(34, 197, 94, 0.3);
+  background: var(--frames-active-bg) !important;
+  border-color: var(--frames-active-border) !important;
+  color: var(--frames-active-fg) !important;
+  box-shadow: 0 0 8px var(--frames-active-shadow);
 }
 .frames-toggle-btn.has-value:hover {
-  color: #22c55e !important; border-color: #22c55e !important;
-}
-body.light-theme .frames-toggle-btn.has-value {
-  background: #ecfdf3 !important; color: #15803d !important; border-color: #16a34a !important;
-}
-body.light-theme .frames-toggle-btn.has-value:hover {
-  color: #15803d !important; border-color: #16a34a !important;
+  color: var(--frames-active-fg) !important; border-color: var(--frames-active-border) !important;
 }
 
 /* Price Section */
@@ -2235,6 +2238,11 @@ html.light-theme, body.light-theme {
   --accent-red: #dc2626;
   --accent-blue: #2980b9;
   --accent-purple: #9333ea;
+  /* frames toggle (blue) */
+  --frames-active-bg: #e8f1fb;
+  --frames-active-fg: #1d4ed8;
+  --frames-active-border: #2563eb;
+  --frames-active-shadow: rgba(37, 99, 235, 0.25);
   --curse: #7c3aed;
   --curse-deep: #a78bfa;
   --nightmare: #e53935;
@@ -2304,8 +2312,7 @@ body.light-theme .el-popper .el-popper__arrow::before { background: #fff !import
   .filters { padding: 6px 12px; gap: 6px; }
   .search-input { flex: 0 0 100%; max-width: none; }
   .filter-btn { min-width: 0; flex: 1 1 auto; }
-  .sort-dropdown { margin-left: 0 !important; order: 2; flex: 1 1 auto; }
-  .price-toggle-btn { order: 2; flex: 1 1 auto; }
+  .filter-cluster { margin-left: 0 !important; order: 2; flex: 1 1 auto; gap: 6px; }
   .filters::after { content: ""; order: 1; flex-basis: 100%; height: 0; }
   .header { padding: 8px 12px; flex-wrap: wrap; gap: 6px 10px; }
   .header h1 { display: flex; align-items: baseline; flex-wrap: wrap; gap: 2px 8px; min-width: 0; }
