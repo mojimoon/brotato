@@ -244,7 +244,8 @@
               <span class="ws-val" :class="{ 'curse-modified': curseEnabled }">{{ displayStats.damage }}</span>
               <span v-if="displayStats.scaling_stats?.length" class="ws-scaling">
                 (<template v-for="(ss, i) in displayStats.scaling_stats" :key="i">
-                  <span v-if="i > 0">+</span><span class="ws-scaling-pct">{{ (ss[1] * 100).toFixed(0) }}%</span>
+                  <span v-if="i > 0 && ss[1] > 0">+</span><span class="ws-scaling-pct">{{ (ss[1] * 100).toFixed(0)
+                  }}%</span>
                   <img v-if="getStatIcon(ss[0])" :src="getStatIcon(ss[0])" class="stat-inline-icon" />
                   <span v-else>{{ statTr(ss[0]) }}</span>
                 </template>)
@@ -418,10 +419,11 @@
           </div>
           <div v-if="showAttackSpeedCalc" class="attack-speed-calc">
             <div class="calc-result">
-              <span class="calc-label">{{ S.finalCooldown }}:</span>
-              <span class="calc-value">{{ formatCooldown(calculatedCooldown) }}</span>
+              <span class="calc-label">{{ S.actualCooldown }}:</span>
+              <span class="calc-value">{{ formatCooldownFixed(calculatedCooldown) }}</span>
               <span class="calc-pct"
-                :class="cooldownChangePct < 0 ? 'pct-neg' : cooldownChangePct > 0 ? 'pct-pos' : ''">(DPS {{ cooldownChangePct > 0 ? '+' : '' }}{{ cooldownChangePct.toFixed(0) }}%)</span>
+                :class="cooldownChangePct < 0 ? 'pct-neg' : cooldownChangePct > 0 ? 'pct-pos' : ''">(DPS {{
+                  cooldownChangePct >= 0 ? '+' : '' }}{{ cooldownChangePct.toFixed(0) }}%)</span>
             </div>
             <div class="slider-row">
               <label class="slider-label">{{ S.attackSpeed }}</label>
@@ -555,7 +557,8 @@ const S = computed(() => isZh.value ? {
   belowNightmare: '难5', nightmare: '噩梦', basePriceShort: '价格', 
   belowNightmareShort: '难5', nightmareShort: '噩梦',
   attackSpeedCalc: '攻速计算器', attackSpeed: '攻速', statRange: '范围',
-  curse: '诅咒', finalCooldown: '最终冷却', clear: '清除筛选',
+  curse: '诅咒', clear: '清除筛选', 
+  tooltipCooldown: '显示冷却', actualCooldown: '实际冷却',
   rangeTooltip: '玩家范围属性，实际作用于近战武器的范围修改需要减半（如150基础范围+100范围属性→200范围）'
 } : {
   weapons: 'Weapons', items: 'Items', characters: 'Characters',
@@ -572,7 +575,8 @@ const S = computed(() => isZh.value ? {
   belowNightmare: 'Danger 5', nightmare: 'Nightmare', basePriceShort: 'Price', 
   belowNightmareShort: 'D5', nightmareShort: 'NM',
   attackSpeedCalc: 'Attack Speed Calculator', attackSpeed: 'A.Spd', statRange: 'Range',
-  curse: 'Curse', finalCooldown: 'Final Cooldown', clear: 'Clear Filters',
+  curse: 'Curse', clear: 'Clear Filters', 
+  tooltipCooldown: 'Tooltip Cooldown', actualCooldown: 'Actual Cooldown',
   rangeTooltip: 'Player Range stat. For melee weapons, the actual range modification is halved (e.g. 150 base range + 100 Range → 200 range)'
 })
 
@@ -782,7 +786,7 @@ const currentPointPlugin = {
     const ctx = chart.ctx
     ctx.save()
     ctx.beginPath()
-    ctx.arc(x, y, 5, 0, Math.PI * 2)
+    ctx.arc(x, y, 4, 0, Math.PI * 2)
     ctx.fillStyle = isDark.value ? '#f87171' : '#ef4444'
     ctx.fill()
     ctx.restore()
@@ -1303,8 +1307,12 @@ const displayCooldown = computed(() => {
 })
 
 function formatCooldown(seconds) {
-  if (seconds < 0.1) return seconds.toFixed(3) + 's'
+  if (seconds < 1) return seconds.toFixed(3) + 's'
   return seconds.toFixed(2) + 's'
+}
+
+function formatCooldownFixed(seconds) {
+  return seconds.toFixed(3) + 's'
 }
 
 function getAttackSpeedFactor(attackSpeed) {
