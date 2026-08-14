@@ -1738,70 +1738,64 @@ body { background: #1a1d28; color: #ccc; font-family: 'Segoe UI', system-ui, san
   border-color: #d2a64a !important;
   box-shadow: 0 0 0 1px rgba(255, 196, 74, 0.12);
 }
-.sort-btn {
-  gap: 8px;
-  min-width: 122px;
-  border-style: solid !important;
-  border-color: #43485b !important;
-  background: linear-gradient(180deg, #25283a 0%, #1e2131 100%) !important;
-  color: #cfd5e3 !important;
-  font-weight: 700;
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.03), 0 6px 14px rgba(0, 0, 0, 0.16);
-  position: relative;
+/* Fancy action buttons (sort / price toggle) — shared layout, colors via vars */
+.sort-btn, .price-toggle-btn {
+  gap: 8px; min-width: 122px; border-style: solid !important; font-weight: 700; position: relative;
+  color: var(--btn-text) !important;
+  border-color: var(--btn-border) !important;
+  background: var(--btn-bg) !important;
+  box-shadow: var(--btn-shadow);
 }
-.sort-btn:not(.has-value) {
-  color: #9da5b7 !important;
-  border-color: #363b4d !important;
-  background: linear-gradient(180deg, #1f2230 0%, #181b28 100%) !important;
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.02), 0 4px 10px rgba(0, 0, 0, 0.14);
+.sort-btn:not(.has-value), .price-toggle-btn:not(.has-value) {
+  color: var(--btn-text-off) !important;
+  border-color: var(--btn-border-off) !important;
+  background: var(--btn-bg-off) !important;
+  box-shadow: var(--btn-shadow-off);
 }
-.sort-btn.has-value {
-  color: #fff4cf !important;
-  border-color: #d2a64a !important;
-  box-shadow: 0 0 0 1px rgba(255, 196, 74, 0.12), 0 0 0 1px rgba(255, 196, 74, 0.08) inset;
+.sort-btn.has-value, .price-toggle-btn.has-value {
+  color: var(--btn-text-val) !important;
+  border-color: var(--btn-border-val) !important;
+  box-shadow: var(--btn-shadow-val);
 }
-.sort-btn:hover { border-color: #8f97ad !important; }
-.sort-btn:not(.has-value):hover {
-  background: linear-gradient(180deg, #262b3b 0%, #1e2230 100%) !important;
-  color: #c5ccda !important;
+.sort-btn:hover, .price-toggle-btn:hover { border-color: var(--btn-border-hover) !important; }
+.sort-btn:not(.has-value):hover, .price-toggle-btn:not(.has-value):hover {
+  background: var(--btn-bg-hover) !important; color: var(--btn-text-hover) !important;
 }
-.sort-btn.has-value:hover {
-  color: #fff7dd !important;
-  border-color: #e0b152 !important;
-  box-shadow: 0 0 0 1px rgba(255, 196, 74, 0.16), 0 0 0 1px rgba(255, 196, 74, 0.12) inset;
+.sort-btn.has-value:hover, .price-toggle-btn.has-value:hover {
+  color: var(--btn-text-val-hover) !important;
+  border-color: var(--btn-border-val-hover) !important;
+  box-shadow: var(--btn-shadow-val-hover);
 }
 .sort-btn :deep(.el-icon) { color: inherit; }
 .sort-dropdown { margin-left: auto; }
 .clear-btn { color: #888; padding: 8px !important; min-width: 0; }
 .clear-btn:hover { color: #f39c12 !important; border-color: #f39c12 !important; }
+
+/* Sort button — amber/gold palette */
+.sort-btn {
+  --btn-text: #cfd5e3; --btn-border: #43485b; --btn-bg: linear-gradient(180deg,#25283a 0%,#1e2131 100%);
+  --btn-shadow: 0 0 0 1px rgba(255,255,255,.03), 0 6px 14px rgba(0,0,0,.16);
+  --btn-text-off: #9da5b7; --btn-border-off: #363b4d; --btn-bg-off: linear-gradient(180deg,#1f2230 0%,#181b28 100%);
+  --btn-shadow-off: 0 0 0 1px rgba(255,255,255,.02), 0 4px 10px rgba(0,0,0,.14);
+  --btn-border-hover: #8f97ad;
+  --btn-bg-hover: linear-gradient(180deg,#262b3b 0%,#1e2230 100%); --btn-text-hover: #c5ccda;
+  --btn-text-val: #fff4cf; --btn-border-val: #d2a64a;
+  --btn-shadow-val: 0 0 0 1px rgba(255,196,74,.12), 0 0 0 1px rgba(255,196,74,.08) inset;
+  --btn-text-val-hover: #fff7dd; --btn-border-val-hover: #e0b152;
+  --btn-shadow-val-hover: 0 0 0 1px rgba(255,196,74,.16), 0 0 0 1px rgba(255,196,74,.12) inset;
+}
+/* Price toggle button — green palette */
 .price-toggle-btn {
-  gap: 8px;
-  min-width: 124px;
-  border-style: solid !important;
-  border-color: #4a4f63 !important;
-  font-weight: 700;
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.04), 0 6px 14px rgba(0, 0, 0, 0.18);
-}
-.price-toggle-btn.has-value {
-  color: #e8ffd1 !important;
-  border-color: #5d8a4b !important;
-  box-shadow: 0 0 0 1px rgba(110, 255, 130, 0.12), 0 0 0 1px rgba(110, 255, 130, 0.08) inset;
-}
-.price-toggle-btn:not(.has-value) {
-  background: linear-gradient(180deg, #1c1e28 0%, #161821 100%) !important;
-  color: #9197aa !important;
-  border-color: #2f3445 !important;
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.02), 0 4px 10px rgba(0, 0, 0, 0.14);
-}
-.price-toggle-btn:hover { border-color: #7a8099 !important; }
-.price-toggle-btn.has-value:hover {
-  color: #f5ffd8 !important;
-  border-color: #6ea054 !important;
-  box-shadow: 0 0 0 1px rgba(110, 255, 130, 0.16), 0 0 0 1px rgba(110, 255, 130, 0.1) inset;
-}
-.price-toggle-btn:not(.has-value):hover {
-  background: linear-gradient(180deg, #242838 0%, #1b1e2b 100%) !important;
-  color: #c1c7d8 !important;
+  --btn-text: #cfd5e3; --btn-border: #4a4f63; --btn-bg: linear-gradient(180deg,#25283a 0%,#1e2131 100%);
+  --btn-shadow: 0 0 0 1px rgba(255,255,255,.04), 0 6px 14px rgba(0,0,0,.18);
+  --btn-text-off: #9197aa; --btn-border-off: #2f3445; --btn-bg-off: linear-gradient(180deg,#1c1e28 0%,#161821 100%);
+  --btn-shadow-off: 0 0 0 1px rgba(255,255,255,.02), 0 4px 10px rgba(0,0,0,.14);
+  --btn-border-hover: #7a8099;
+  --btn-bg-hover: linear-gradient(180deg,#242838 0%,#1b1e2b 100%); --btn-text-hover: #c1c7d8;
+  --btn-text-val: #e8ffd1; --btn-border-val: #5d8a4b;
+  --btn-shadow-val: 0 0 0 1px rgba(110,255,130,.12), 0 0 0 1px rgba(110,255,130,.08) inset;
+  --btn-text-val-hover: #f5ffd8; --btn-border-val-hover: #6ea054;
+  --btn-shadow-val-hover: 0 0 0 1px rgba(110,255,130,.16), 0 0 0 1px rgba(110,255,130,.1) inset;
 }
 
 /* Main */
@@ -2029,19 +2023,32 @@ body.light-theme .filter-btn.has-value {
   border-color: #c59c43 !important;
   box-shadow: 0 0 0 1px rgba(205, 155, 44, 0.14);
 }
-body.light-theme .sort-btn { border-color: #c3c8d4 !important; }
-body.light-theme .sort-btn:not(.has-value) { background: linear-gradient(180deg, #eef2f7 0%, #dfe4ec 100%) !important; color: #697080 !important; box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.03), 0 4px 10px rgba(0, 0, 0, 0.08); }
-body.light-theme .sort-btn.has-value { border-color: #c59c43 !important; color: #755200 !important; box-shadow: 0 0 0 1px rgba(205, 155, 44, 0.1), 0 0 0 1px rgba(205, 155, 44, 0.08) inset; }
-body.light-theme .sort-btn:hover { border-color: #9ca3b4 !important; }
-body.light-theme .sort-btn:not(.has-value):hover { background: linear-gradient(180deg, #e6ebf2 0%, #d6dce7 100%) !important; color: #4b5568 !important; }
-body.light-theme .sort-btn.has-value:hover { color: #5e4100 !important; border-color: #b88b2d !important; box-shadow: 0 0 0 1px rgba(205, 155, 44, 0.14), 0 0 0 1px rgba(205, 155, 44, 0.1) inset; }
+body.light-theme .sort-btn {
+  --btn-text: #444; --btn-border: #c3c8d4; --btn-bg: #fff;
+  --btn-shadow: 0 0 0 1px rgba(0,0,0,.03), 0 4px 10px rgba(0,0,0,.08);
+  --btn-text-off: #697080; --btn-border-off: #c3c8d4; --btn-bg-off: linear-gradient(180deg,#eef2f7 0%,#dfe4ec 100%);
+  --btn-shadow-off: 0 0 0 1px rgba(0,0,0,.03), 0 4px 10px rgba(0,0,0,.08);
+  --btn-border-hover: #9ca3b4;
+  --btn-bg-hover: linear-gradient(180deg,#e6ebf2 0%,#d6dce7 100%); --btn-text-hover: #4b5568;
+  --btn-text-val: #755200; --btn-border-val: #c59c43;
+  --btn-shadow-val: 0 0 0 1px rgba(205,155,44,.1), 0 0 0 1px rgba(205,155,44,.08) inset;
+  --btn-text-val-hover: #5e4100; --btn-border-val-hover: #b88b2d;
+  --btn-shadow-val-hover: 0 0 0 1px rgba(205,155,44,.14), 0 0 0 1px rgba(205,155,44,.1) inset;
+}
 body.light-theme .clear-btn { color: #999; }
 body.light-theme .clear-btn:hover { color: #c0392b !important; border-color: #c0392b !important; }
-body.light-theme .price-toggle-btn { border-color: #b5b9c7 !important; }
-body.light-theme .price-toggle-btn.has-value { border-color: #7aa95d !important; color: #214010 !important; box-shadow: 0 0 0 1px rgba(93, 168, 75, 0.12), 0 0 0 1px rgba(93, 168, 75, 0.08) inset; }
-body.light-theme .price-toggle-btn:not(.has-value) { background: linear-gradient(180deg, #eef1f5 0%, #dde2ea 100%) !important; border-color: #b4bac5 !important; color: #6b7280 !important; }
-body.light-theme .price-toggle-btn.has-value:hover { color: #17330a !important; border-color: #6f9f56 !important; box-shadow: 0 0 0 1px rgba(93, 168, 75, 0.16), 0 0 0 1px rgba(93, 168, 75, 0.1) inset; }
-body.light-theme .price-toggle-btn:not(.has-value):hover { background: linear-gradient(180deg, #e6ebf1 0%, #d8dfe8 100%) !important; color: #4f5664 !important; }
+body.light-theme .price-toggle-btn {
+  --btn-text: #444; --btn-border: #b5b9c7; --btn-bg: #fff;
+  --btn-shadow: 0 0 0 1px rgba(0,0,0,.03), 0 4px 10px rgba(0,0,0,.08);
+  --btn-text-off: #6b7280; --btn-border-off: #b4bac5; --btn-bg-off: linear-gradient(180deg,#eef1f5 0%,#dde2ea 100%);
+  --btn-shadow-off: 0 0 0 1px rgba(0,0,0,.03), 0 4px 10px rgba(0,0,0,.08);
+  --btn-border-hover: #7a8099;
+  --btn-bg-hover: linear-gradient(180deg,#e6ebf1 0%,#d8dfe8 100%); --btn-text-hover: #4f5664;
+  --btn-text-val: #214010; --btn-border-val: #7aa95d;
+  --btn-shadow-val: 0 0 0 1px rgba(93,168,75,.12), 0 0 0 1px rgba(93,168,75,.08) inset;
+  --btn-text-val-hover: #17330a; --btn-border-val-hover: #6f9f56;
+  --btn-shadow-val-hover: 0 0 0 1px rgba(93,168,75,.16), 0 0 0 1px rgba(93,168,75,.1) inset;
+}
 body.light-theme .item-price-badge { box-shadow: 0 1px 3px rgba(0,0,0,.15); background: #ddd; color: #000; }
 body.light-theme .el-input__wrapper { background-color: #fff !important; border-color: #bbb !important; }
 body.light-theme .el-input__wrapper:hover { border-color: #999 !important; }
