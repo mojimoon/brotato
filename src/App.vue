@@ -261,16 +261,22 @@
 
             <div class="weapon-stat-row">
               <span class="ws-label">{{ S.cooldown }}</span>
-              <span class="ws-val">
-                {{ formatCooldown(displayCooldown) }}
-                <span class="ws-attack-type">({{ formatCooldown(displayStats.cooldown / 60) }}+{{
-                  formatCooldown(displayStats.animation_cooldown || 0) }})</span>
-              </span>
+              <span class="ws-val">{{ formatCooldown(displayCooldown) }}</span>
+              <span class="calc-reload">({{ S.tooltipShort }})</span>
+              <span class="calc-reload-separator">/</span>
+              <span class="ws-val">{{ formatCooldownFixed(totalCooldown) }}</span>
+              <span class="calc-reload">({{ S.actualShort }})</span>
             </div>
 
             <div v-if="addlCooldownInfo" class="weapon-stat-row">
               <span class="ws-label">{{ S.cooldown }}</span>
-              <span class="ws-val">{{ addlCooldownInfo }}</span>
+              <span class="ws-val">{{ addlCooldownInfo.title }}</span>
+              <span class="ws-val">{{ addlCooldownInfo.tooltipValue }}</span>
+              <span class="calc-reload">({{ S.tooltipShort }})</span>
+              <span class="calc-reload-separator">/</span>
+              <span class="ws-val">{{ addlCooldownInfo.actualValue }}</span>
+              <span class="calc-reload">({{ S.actualShort }})</span>
+              <span class="ws-val">{{ addlCooldownInfo.suffix }}</span>
             </div>
 
             <div v-if="displayStats.knockback !== 0" class="weapon-stat-row">
@@ -570,7 +576,7 @@ const S = computed(() => isZh.value ? {
   belowNightmareShort: '难5', nightmareShort: '噩梦',
   attackSpeedCalc: '攻速计算器', attackSpeed: '攻速', statRange: '范围',
   curse: '诅咒', clear: '清除筛选', 
-  tooltipCooldown: '显示冷却', actualCooldown: '实际冷却',
+  tooltipCooldown: '显示冷却', actualCooldown: '实际冷却', tooltipShort: '显示', actualShort: '实际',
   rangeTooltip: '玩家范围属性，实际作用于近战武器的范围修改需要减半（如150基础范围+100范围属性→200范围）'
 } : {
   weapons: 'Weapons', items: 'Items', characters: 'Characters',
@@ -588,7 +594,7 @@ const S = computed(() => isZh.value ? {
   belowNightmareShort: 'D5', nightmareShort: 'NM',
   attackSpeedCalc: 'Attack Speed Calculator', attackSpeed: 'A.Spd', statRange: 'Range',
   curse: 'Curse', clear: 'Clear Filters', 
-  tooltipCooldown: 'Tooltip Cooldown', actualCooldown: 'Actual Cooldown',
+  tooltipCooldown: 'Tooltip Cooldown', actualCooldown: 'Actual Cooldown', tooltipShort: 'Tooltip', actualShort: 'Actual',
   rangeTooltip: 'Player Range stat. For melee weapons, the actual range modification is halved (e.g. 150 base range + 100 Range → 200 range)'
 })
 
@@ -1269,6 +1275,18 @@ const allFourTierSlots = computed(() => {
   return slots
 })
 
+const addlCooldownInfo = computed(() => {
+  const reload = getReloadCooldowns(activeWeaponData.value?.stats, 0)
+  if (!reload) return null
+
+  return {
+    title: isZh.value ? `每发射 ${reload.shots} 次冷却为` : 'Cooldown is',
+    tooltipValue: formatCooldown(reload.tooltip),
+    actualValue: formatCooldown(reload.actual),
+    suffix: isZh.value ? ``: ` every ${reload.shots} shots`,
+  }
+})
+
 // ---- Shared computed: effects source ----
 const currentEffects = computed(() => {
   if (activeTab.value === 'weapons') return activeWeaponData.value?.effects
@@ -1476,12 +1494,10 @@ const calculatedReloadCooldowns = computed(() => {
   return getReloadCooldowns(stats, attackSpeedSlider.value)
 })
 
-function formatReloadCooldownInfo(seconds) {
-  const reload = calculatedReloadCooldowns.value
+function formatReloadCooldownInfo(seconds, reload = calculatedReloadCooldowns.value) {
   if (!reload) return ''
   const formatted = formatCooldown(seconds)
-  if (isZh.value) return `每发射${reload.shots}次冷却增加到${formatted}`
-  return `Cooldown becomes ${formatted} every ${reload.shots} shots`
+  return isZh.value ? `每发射${reload.shots}次冷却为${formatted}` : `${formatted} every ${reload.shots} shots`
 }
 
 const cooldownChangePct = computed(() => {
@@ -2111,8 +2127,8 @@ body.light-theme .el-popper .el-popper__arrow::before { background: #fff !import
 .calc-pct { font-size: 14px; font-weight: 600; margin-left: 4px; }
 .pct-pos { color: #4ade80; }
 .pct-neg { color: #f87171; }
-.calc-reload { font-size: 13px; color: #bbb; }
-.calc-reload-separator { margin: 0 4px; color: #888; }
+.calc-reload { font-size: 13px; color: #bbb;  }
+.calc-reload-separator { margin: 0 2px; color: #888; }
 .slider-row {
   display: flex; align-items: center; gap: 12px; margin-bottom: 12px;
 }
@@ -2148,6 +2164,7 @@ body.light-theme .slider-row .el-slider :deep(.el-slider__marks-text) { color: #
 body.light-theme .cooldown-chart-wrapper { background: #fff; }
 body.light-theme .pct-pos { color: #16a34a; }
 body.light-theme .pct-neg { color: #dc2626; }
+body.light-theme .calc-reload { color: #666; }
 
 /* Effect text color markers */
 .zvg { color: #22c55e; }
