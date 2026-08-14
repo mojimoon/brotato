@@ -1196,12 +1196,13 @@ def _build_curse_types(eff, args, arg_signs, parent_id='', is_weapon=False):
             c(2, type='negative', no_min=True, decimalPlaces=1)
         return curse
 
-    # 26-28. Linked effects: value2 follows value with linked_mult ratio (parent=curseArgs[0])
+    # 26. consumable_stats_while_max (not linked)
     if custom_key == 'consumable_stats_while_max':
-        # dlc_1_data.gd: both value (per-consumable stat) and value2 (max) are boosted
         c(0, type='default')
-        c(2, type='default')  # value2 = max per wave (e.g. extra_stomach value2=8)
+        c(2, type='default')
         return curse
+    
+    # 27-28. Linked effects: value2 follows value with linked_mult ratio (parent=curseArgs[0])
     if key == 'remove_speed':
         c(0, type='default')
         c(2, type='linked', linked_mult=4.0)
