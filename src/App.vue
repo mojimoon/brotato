@@ -2135,6 +2135,7 @@ body.light-theme .el-popper .el-popper__arrow::before { background: #fff !import
   }
   .grid-panel {
     position: static; width: 100%; height: 40vh; overflow-y: auto;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     border-right: none; border-bottom: 2px solid #2a2d3a;
   }
   .detail-panel {
@@ -2145,13 +2146,14 @@ body.light-theme .el-popper .el-popper__arrow::before { background: #fff !import
   body.light-theme .detail-panel { border-left: none; }
   .empty-panel { min-height: 20vh; }
   .filters { padding: 6px 12px; gap: 6px; }
-  .sort-dropdown { margin-left: 0 !important; order: 2; }
-  .price-toggle-btn { order: 2; }
+  .search-input { flex: 0 0 100%; max-width: none; }
+  .filter-btn { min-width: 0; flex: 1 1 auto; }
+  .sort-dropdown { margin-left: 0 !important; order: 2; flex: 1 1 auto; }
+  .price-toggle-btn { order: 2; flex: 1 1 auto; }
   .filters::after { content: ""; order: 1; flex-basis: 100%; height: 0; }
-  .filter-select { width: 110px; }
-  .sort-select { width: 100px; }
-  .search-input { max-width: 200px; }
-  .header { padding: 8px 12px; }
+  .header { padding: 8px 12px; flex-wrap: wrap; gap: 6px 10px; }
+  .header h1 { display: flex; align-items: baseline; flex-wrap: wrap; gap: 2px 8px; min-width: 0; }
+  .header-actions { flex-wrap: wrap; margin-left: auto; }
   .title { font-size: 18px; }
   .main-tabs { padding: 0 12px; }
   .main-tabs :deep(.el-tabs__item) { padding: 0 12px; font-size: 13px; }
