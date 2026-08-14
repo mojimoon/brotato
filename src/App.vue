@@ -438,23 +438,26 @@
           </div>
           <div v-if="showAttackSpeedCalc" class="attack-speed-calc">
             <div class="calc-result">
-              <span class="calc-label">{{ S.tooltipCooldown }}:</span>
-              <span class="calc-value">{{ formatCooldown(calculatedTooltipCooldown) }}</span>
-              <span v-if="calculatedReloadCooldowns" class="calc-reload">
-                <span class="calc-reload-separator">/</span>{{
-                  formatReloadCooldownInfo(calculatedReloadCooldowns.tooltip) }}
-              </span>
-            </div>
-            <div class="calc-result">
-              <span class="calc-label">{{ S.actualCooldown }}:</span>
-              <span class="calc-value">{{ formatCooldownFixed(calculatedCooldown) }}</span>
-              <span v-if="calculatedReloadCooldowns" class="calc-reload">
-                <span class="calc-reload-separator">/</span>{{
-                  formatReloadCooldownInfo(calculatedReloadCooldowns.actual) }}
-              </span>
-              <span class="calc-pct"
-                :class="cooldownChangePct < 0 ? 'pct-neg' : cooldownChangePct > 0 ? 'pct-pos' : ''">(DPS {{
-                  cooldownChangePct >= 0 ? '+' : '' }}{{ cooldownChangePct.toFixed(0) }}%)</span>
+              <div class="calc-line">
+                <span class="calc-label">{{ S.tooltipCooldown }}:</span>
+                <span class="calc-value">{{ formatCooldown(calculatedTooltipCooldown) }}</span>
+                <span v-if="calculatedReloadCooldowns" class="calc-reload">
+                  <span class="calc-reload-separator">/</span>{{
+                    formatReloadCooldownInfo(calculatedReloadCooldowns.tooltip) }}
+                </span>
+              </div>
+              <div class="calc-line">
+                <span class="calc-label">{{ S.actualCooldown }}:</span>
+                <span class="calc-value">{{ formatCooldownFixed(calculatedCooldown) }}</span>
+                <span v-if="calculatedReloadCooldowns" class="calc-reload">
+                  <span class="calc-reload-separator">/</span>{{
+                    formatReloadCooldownInfo(calculatedReloadCooldowns.actual) }}
+                </span>
+                <span class="calc-pct"
+                  :class="cooldownChangePct < 0 ? 'pct-neg' : cooldownChangePct > 0 ? 'pct-pos' : ''">(DPS
+                  {{
+                    cooldownChangePct >= 0 ? '+' : '' }}{{ cooldownChangePct.toFixed(0) }}%)</span>
+              </div>
             </div>
             <div class="slider-row">
               <label class="slider-label">{{ S.attackSpeed }}</label>
@@ -1871,7 +1874,7 @@ body { background: #1a1d28; color: #ccc; font-family: 'Segoe UI', system-ui, san
 .curse-section { margin-top: 12px; padding: 12px 16px; background: #22253a; border-radius: 8px; border: 1px solid #2a2d3a; }
 .curse-row { display: flex; align-items: center; gap: 12px; }
 .curse-toggle-btn { 
-  font-size: 13px; font-weight: 600; 
+  font-size: 15px; font-weight: 600; 
   background: #2a2d3a !important; border: 1px solid #3a3d4e !important; color: #888 !important;
   transition: all 0.2s;
 }
@@ -2049,7 +2052,7 @@ body.light-theme .weapon-stat-row:hover { background: #e8eaed; }
 body.light-theme .ws-label { color: #444; }
 body.light-theme .ws-val { color: #111; }
 body.light-theme .curse-section { background: #f0f2f5; border-color: #ccc; }
-body.light-theme .curse-toggle-btn { background: #e8eaed !important; border-color: #ccc !important; color: #777 !important; }
+body.light-theme .curse-toggle-btn { background: #fff7ed !important; border-color: #f59e0b !important; color: #b45309 !important; box-shadow: 0 0 6px rgba(245, 158, 11, 0.2); }
 body.light-theme .curse-toggle-btn.curse-active { background: #ede9fe !important; border-color: #a78bfa !important; color: #7c3aed !important; }
 body.light-theme .curse-modified { color: #7c3aed !important; }
 body.light-theme .price-section { background: #f0f2f5; border-color: #ccc; }
@@ -2153,10 +2156,11 @@ body.light-theme .el-popper .el-popper__arrow::before { background: #fff !import
   border-radius: 6px; border: 1px solid #2a2d3a;
 }
 .calc-result {
-  display: flex; align-items: center; gap: 8px;
+  display: flex; flex-direction: column; gap: 6px;
   margin-bottom: 12px; padding: 8px 12px;
   background: #1e2030; border-radius: 6px;
 }
+.calc-line { display: flex; align-items: center; gap: 8px; }
 .calc-label { font-size: 14px; color: #bbb; }
 .calc-value { font-size: 18px; font-weight: 700; color: #4ade80; }
 .calc-pct { font-size: 14px; font-weight: 600; margin-left: 4px; }
