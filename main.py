@@ -1092,9 +1092,10 @@ def _build_curse_types(eff, args, arg_signs, parent_id='', is_weapon=False):
         c(0, type='random', curse_min=72, curse_max=76)
         return curse
 
-    # 11. will_o_the_wisp stat_elemental_damage: random 16-25
+    # 11. will_o_the_wisp stat_elemental_damage: random 16-25 (kills), random 5-7 (max value3)
     if parent_id == 'item_will_o_the_wisp' and key == 'stat_elemental_damage':
         c(0, type='random', curse_min=16, curse_max=25)
+        c(3, type='random', curse_min=5, curse_max=7)
         return curse
 
     # 12. candy_bag extra_elite_next_wave_chance: none
@@ -1197,8 +1198,9 @@ def _build_curse_types(eff, args, arg_signs, parent_id='', is_weapon=False):
 
     # 26-28. Linked effects: value2 follows value with linked_mult ratio (parent=curseArgs[0])
     if custom_key == 'consumable_stats_while_max':
+        # dlc_1_data.gd: both value (per-consumable stat) and value2 (max) are boosted
         c(0, type='default')
-        c(1, type='linked', linked_mult=1.0)
+        c(2, type='default')  # value2 = max per wave (e.g. extra_stomach value2=8)
         return curse
     if key == 'remove_speed':
         c(0, type='default')
@@ -2524,12 +2526,12 @@ def render_effect_text(eff, lang, parent_id='', is_weapon=False):
             args[2] = str(int(v)) if v else ''
 
         elif tk_upper == 'EFFECT_GAIN_STAT_FOR_KILLED_ENEMIES_WHILE_BURNING':
-            kc = extra.get('stat_nb', extra.get('nb_stat_scaled', 5))
-            args[0] = str(int(kc)) if kc else ''
+            # GainStatForKilledEnemiesWhileBurning.get_args(): [value, tr(key), value2, value3]
+            # value = kills needed, value2 = stat gained per kill, value3 = max per wave
+            args[0] = str(value)
             args[1] = stat_display_name(key, lang)
-            args[2] = str(value)
-            mv = extra.get('max_stacks', 0)
-            args[3] = str(int(mv)) if mv else ''
+            args[2] = str(int(extra.get('value2', 0))) if extra.get('value2') else ''
+            args[3] = str(int(extra.get('value3', 0))) if extra.get('value3') else ''
 
         elif tk_upper == 'EFFECT_ENEMY_PERCENT_DAMAGE_TAKEN_ONCE':
             args[0] = f'{value}%'
