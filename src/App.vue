@@ -268,15 +268,11 @@
               <span class="calc-reload">({{ S.actual }})</span>
             </div>
 
-            <div v-if="addlCooldownInfo" class="weapon-stat-row">
+            <div v-if="addlCooldownInfo" class="weapon-stat-row cooldown-row">
               <span class="ws-label">{{ S.cooldown }}</span>
-              <span class="ws-val">{{ addlCooldownInfo.title }}</span>
-              <span class="ws-val">{{ addlCooldownInfo.tooltipValue }}</span>
-              <span class="calc-reload">({{ S.tooltip }})</span>
-              <span class="calc-reload-separator">/</span>
-              <span class="ws-val">{{ addlCooldownInfo.actualValue }}</span>
-              <span class="calc-reload">({{ S.actual }})</span>
-              <span class="ws-val">{{ addlCooldownInfo.suffix }}</span>
+              <template v-for="(seg, i) in addlCooldownInfo" :key="i">
+                <span :class="seg.cls">{{ seg.text }}</span>
+              </template>
             </div>
 
             <div v-if="displayStats.knockback !== 0" class="weapon-stat-row">
@@ -1289,16 +1285,22 @@ const allFourTierSlots = computed(() => {
   return slots
 })
 
+// Additional cooldown info for weapons with a reload, shown in the weapon
+// panel's stats list. Composed as styled segments (mirrors cooldownSegments)
+// so the parts break to a new line instead of squeezing on narrow screens.
 const addlCooldownInfo = computed(() => {
   const reload = getReloadCooldowns(activeWeaponData.value?.stats, 0)
   if (!reload) return null
 
-  return {
-    title: isZh.value ? `每发射 ${reload.shots} 次冷却为` : 'Cooldown is',
-    tooltipValue: formatCooldown(reload.tooltip),
-    actualValue: formatCooldown(reload.actual),
-    suffix: isZh.value ? ``: ` every ${reload.shots} shots`,
-  }
+  const segs = []
+  segs.push({ text: isZh.value ? `每发射 ${reload.shots} 次冷却为` : 'Cooldown is', cls: 'calc-reload' })
+  segs.push({ text: formatCooldown(reload.tooltip), cls: 'ws-val' })
+  segs.push({ text: `(${S.value.tooltip})`, cls: 'calc-reload' })
+  segs.push({ text: '/', cls: 'calc-reload-separator' })
+  segs.push({ text: formatCooldown(reload.actual), cls: 'ws-val' })
+  segs.push({ text: `(${S.value.actual})`, cls: 'calc-reload' })
+  if (!isZh.value) segs.push({ text: ` every ${reload.shots} shots`, cls: 'calc-reload' })
+  return segs
 })
 
 // DPS = weapon panel (incl. scaling) divided by the actual attack cooldown.
@@ -1866,7 +1868,8 @@ body { background: #1a1d28; color: #ccc; font-family: 'Segoe UI', system-ui, san
 /* Weapon Stat Rows */
 .detail-section { margin-top: 10px; }
 .section-title { font-size: 12px; color: #ff3d3d; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; }
-.weapon-stat-row { display: flex; align-items: center; gap: 8px; padding: 7px 12px; background: #22253a; border-radius: 6px; margin-bottom: 4px; transition: background .15s; }
+.weapon-stat-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 7px 12px; background: #22253a; border-radius: 6px; margin-bottom: 4px; transition: background .15s; }
+.cooldown-row { gap: 6px; }
 .weapon-stat-row:hover { background: #282c44; }
 .ws-label { font-size: 14px; color: #bbb; min-width: 70px; }
 .ws-val { font-size: 15px; color: #eee; font-weight: 600; }
