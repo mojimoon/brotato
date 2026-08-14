@@ -1931,7 +1931,7 @@ body { background: var(--bg-app); color: var(--text); font-family: 'Segoe UI', s
   background: var(--badge-bg); color: var(--badge-fg);
   box-shadow: 0 1px 3px rgba(0,0,0,.35); pointer-events: none;
 }
-.item-dlc-badge { position: absolute; top: 3px; right: 3px; font-size: 11px; padding: 1px 3px; border-radius: 3px; background: var(--accent-purple); color: var(--text-bright); font-weight: 500; }
+.item-dlc-badge { position: absolute; top: 3px; right: 3px; font-size: 11px; padding: 1px 3px; border-radius: 3px; background: var(--accent-purple); color: #fff; font-weight: 500; }
 
 /* Detail Panel */
 .detail-panel {
@@ -1948,10 +1948,10 @@ body { background: var(--bg-app); color: var(--text); font-family: 'Segoe UI', s
 .detail-title-wrap { flex: 1; min-width: 0; }
 .detail-title-wrap h2 { font-size: 20px; margin-bottom: 4px; }
 .detail-badges { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; margin-bottom: 2px; }
-.type-badge { font-size: 11px; padding: 3px 8px; border-radius: 4px; color: var(--text-bright); line-height: 1.4; font-weight: 600; }
+.type-badge { font-size: 11px; padding: 3px 8px; border-radius: 4px; color: #fff; line-height: 1.4; font-weight: 600; }
 .type-badge.melee { background: var(--badge-red); }
 .type-badge.ranged { background: var(--accent-blue); }
-.dlc-badge { font-size: 11px; padding: 3px 8px; border-radius: 4px; background: var(--accent-purple); color: var(--text-bright); font-weight: 600; }
+.dlc-badge { font-size: 11px; padding: 3px 8px; border-radius: 4px; background: var(--accent-purple); color: #fff; font-weight: 600; }
 .set-badge { font-size: 11px; padding: 3px 8px; border-radius: 4px; background: var(--badge-bg); color: var(--set-badge-fg); cursor: help; font-weight: 600; transition: background .15s; }
 .set-badge:hover { background: var(--set-badge-hover-bg); }
 
@@ -2044,7 +2044,7 @@ body { background: var(--bg-app); color: var(--text); font-family: 'Segoe UI', s
 .tag-badge { font-size: 11px; padding: 4px 10px; border-radius: 4px; background: var(--bg-tag); color: var(--tag-fg); font-weight: 600; line-height: 1.4; display: inline-block; transition: all .15s; }
 .tag-badge.clickable { cursor: pointer; }
 .tag-badge.clickable:hover { background: var(--bg-tag-hover); color: var(--text-bright); }
-.limit-badge { font-size: 11px; padding: 4px 10px; border-radius: 4px; color: var(--text-bright); font-weight: 600; line-height: 1.4; }
+.limit-badge { font-size: 11px; padding: 4px 10px; border-radius: 4px; color: #fff; font-weight: 600; line-height: 1.4; }
 .limit-badge.unique { background: var(--badge-red); }
 .limit-badge.limited { background: var(--badge-orange); }
 .tag-pet { background: var(--tag-pet-bg); color: var(--tag-pet-fg); }
@@ -2277,4 +2277,3 @@ body.light-theme .el-popper .el-popper__arrow::before { background: #fff !import
 .zvr { color: var(--mark-red); }
 .zvp { color: var(--mark-purple); }
 </style>
-
