@@ -453,6 +453,9 @@
                     cooldownChangePct >= 0 ? '+' : '' }}{{ cooldownChangePct.toFixed(0) }}%)</span>
               </div>
             </div>
+            <div class="cooldown-chart-wrapper">
+              <Line :data="chartData" :options="chartOptions" :plugins="[baseCooldownLinePlugin, currentPointPlugin]" />
+            </div>
             <div class="slider-row">
               <label class="slider-label">{{ S.attackSpeed }}</label>
               <el-slider v-model="attackSpeedSlider" :min="-200" :max="500" :step="1" :marks="atkSpeedMarks"
@@ -468,8 +471,9 @@
               </label>
               <el-slider v-model="statRangeSlider" :min="-200" :max="200" :step="1" :marks="rangeMarks" show-input />
             </div>
-            <div class="cooldown-chart-wrapper">
-              <Line :data="chartData" :options="chartOptions" :plugins="[baseCooldownLinePlugin, currentPointPlugin]" />
+            <div class="slider-row">
+              <label class="slider-label">{{ S.weaponCount }}</label>
+              <el-slider v-model="weaponCountSlider" :min="1" :max="6" :step="1" :marks="weaponCountMarks" show-input />
             </div>
           </div>
         </div>
@@ -584,7 +588,7 @@ const S = computed(() => isZh.value ? {
   unique: '独特', limited: '限制', clickToSee: '点击左侧查看详情',
   belowNightmare: '难5', nightmare: '噩梦', basePriceShort: '价格', 
   belowNightmareShort: '难5', nightmareShort: '噩梦',
-  attackSpeedCalc: '攻速计算器', attackSpeed: '攻速', statRange: '范围',
+  attackSpeedCalc: '攻速计算器', attackSpeed: '攻速', statRange: '范围', weaponCount: '武器数量',
   curse: '诅咒', clear: '清除筛选',
   tooltipCooldown: '显示冷却', actualCooldown: '实际冷却', tooltip: '显示', actual: '实际',
   rangeInfo: '玩家范围属性。实际加成减半（例如，150基础范围 + 100范围属性 → 200武器范围）'
@@ -602,7 +606,7 @@ const S = computed(() => isZh.value ? {
   unique: 'Unique', limited: 'Limited', clickToSee: 'Click to see details',
   belowNightmare: 'Danger 5', nightmare: 'Nightmare', basePriceShort: 'Price', 
   belowNightmareShort: 'D5', nightmareShort: 'NM',
-  attackSpeedCalc: 'Attack Speed Calculator', attackSpeed: 'A.Spd', statRange: 'Range',
+  attackSpeedCalc: 'Attack Speed Calculator', attackSpeed: 'A.Spd', statRange: 'Range', weaponCount: 'Weapon Count',
   curse: 'Curse', clear: 'Clear Filters',
   tooltipCooldown: 'Tooltip Cooldown', actualCooldown: 'Actual Cooldown', tooltip: 'Tooltip', actual: 'Actual',
   rangeInfo: 'Player range stat. Actual bonus is halved (e.g. 150 base range + 100 range stat → 200 weapon range)'
@@ -636,6 +640,7 @@ const showAttackSpeedCalc = ref(lsGet('brotato_showAtkCalc', false))
 const showPriceDetail = ref(lsGet('brotato_showPriceDetail', false))
 const attackSpeedSlider = ref(0)
 const statRangeSlider = ref(0)
+const weaponCountSlider = ref(6)
 
 // ---- Curse System ----
 const curseEnabled = ref(false)
@@ -738,7 +743,7 @@ const chartData = computed(() => {
   const basePoints = []
 
   for (let atkSpd = minAtkSpd; atkSpd <= maxAtkSpd; atkSpd += 1) {
-    mainPoints.push({ x: atkSpd, y: calculateCooldownWithAttackSpeed(stats, atkSpd, statRangeSlider.value) })
+    mainPoints.push({ x: atkSpd, y: calculateCooldownWithAttackSpeed(stats, atkSpd, statRangeSlider.value, weaponCountSlider.value) })
     if (hasRange) {
       basePoints.push({ x: atkSpd, y: calculateCooldownWithAttackSpeed(stats, atkSpd, 0) })
     }
@@ -856,7 +861,7 @@ const chartOptions = computed(() => {
   }
 })
 
-watch([showAttackSpeedCalc, attackSpeedSlider, statRangeSlider, isDark], () => {
+watch([showAttackSpeedCalc, attackSpeedSlider, statRangeSlider, weaponCountSlider, isDark], () => {
   // Chart.js is reactive via computed, no manual redraw needed
 })
 
@@ -1406,7 +1411,10 @@ function getReloadCooldowns(stats, attackSpeed) {
   const recoilDuration = getRecoilDuration(stats, atkSpd)
   const reloadWeaponCooldownFrames = weaponCooldownFrames * multiplier
   const tooltipRecoilFrames = Math.floor(recoilDuration * COOLDOWN_FPS)
-  const trueRecoilFrames = Math.floor(recoilDuration * COOLDOWN_FPS + 1)
+  // ROUND here to match calculateCooldownWithAttackSpeed: the old
+  // Math.floor(x * 60 + 1) over-counted exactly-integer recoil and skewed the
+  // reload breakpoint the same way the main cooldown did.
+  const trueRecoilFrames = Math.round(recoilDuration * COOLDOWN_FPS)
 
   return {
     shots,
@@ -1478,7 +1486,12 @@ function calculateCooldownWithAttackSpeed(stats, attackSpeed, statRange = 0, wea
 
   const atkSpd = getAttackSpeedFactor(attackSpeed)
   const weaponCooldownFrames = getWeaponCooldownFrames(stats.cooldown, atkSpd)
-  const recoilFrames = Math.floor(getRecoilDuration(stats, atkSpd) * COOLDOWN_FPS + 1)
+  // Recoil frames are ROUNDED, not floored after adding 1. The old
+  // Math.floor(x * 60 + 1) added the buffer before rounding, which
+  // over-counts exactly-integer recoil (0.05s -> 3.0 frames becomes 4) and
+  // makes a 1% attack-speed gain look like a 3-frame breakpoint on SMG
+  // instead of the true 1 frame (0.0495s -> 2.97 rounds back to 3).
+  const recoilFrames = Math.round(getRecoilDuration(stats, atkSpd) * COOLDOWN_FPS)
   let trueCooldownFrames
 
   if (activeWeaponData.value?.type === 'melee') {
@@ -1508,7 +1521,8 @@ const calculatedCooldown = computed(() => {
   return calculateCooldownWithAttackSpeed(
     stats,
     attackSpeedSlider.value,
-    statRangeSlider.value
+    statRangeSlider.value,
+    weaponCountSlider.value
   )
 })
 
@@ -1562,6 +1576,7 @@ const cooldownChangePct = computed(() => {
 // const atkSpeedMarks = { [-200]: '-200', [-100]: '-100', [0]: '0', [100]: '100', [200]: '200', [300]: '300', [400]: '400', [500]: '500' }
 const atkSpeedMarks = computed(() => isMobile.value ? { [-200]: '-200', [0]: '0', [100]: '100', [300]: '300', [500]: '500' } : { [-200]: '-200', [-100]: '-100', [0]: '0', [100]: '100', [200]: '200', [300]: '300', [400]: '400', [500]: '500' })
 const rangeMarks = { [-200]: '-200', [-100]: '-100', [0]: '0', [100]: '100', [200]: '200' }
+const weaponCountMarks = { 1: '1', 2: '2', 3: '3', 4: '4', 5: '5', 6: '6' }
 
 // ---- Price calculation ----
 function getBasePrice() {
