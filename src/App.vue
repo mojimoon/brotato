@@ -262,20 +262,20 @@
             <div class="weapon-stat-row">
               <span class="ws-label">{{ S.cooldown }}</span>
               <span class="ws-val">{{ formatCooldown(displayCooldown) }}</span>
-              <span class="calc-reload">({{ S.tooltipShort }})</span>
+              <span class="calc-reload">({{ S.tooltip }})</span>
               <span class="calc-reload-separator">/</span>
               <span class="ws-val">{{ formatCooldownFixed(totalCooldown) }}</span>
-              <span class="calc-reload">({{ S.actualShort }})</span>
+              <span class="calc-reload">({{ S.actual }})</span>
             </div>
 
             <div v-if="addlCooldownInfo" class="weapon-stat-row">
               <span class="ws-label">{{ S.cooldown }}</span>
               <span class="ws-val">{{ addlCooldownInfo.title }}</span>
               <span class="ws-val">{{ addlCooldownInfo.tooltipValue }}</span>
-              <span class="calc-reload">({{ S.tooltipShort }})</span>
+              <span class="calc-reload">({{ S.tooltip }})</span>
               <span class="calc-reload-separator">/</span>
               <span class="ws-val">{{ addlCooldownInfo.actualValue }}</span>
-              <span class="calc-reload">({{ S.actualShort }})</span>
+              <span class="calc-reload">({{ S.actual }})</span>
               <span class="ws-val">{{ addlCooldownInfo.suffix }}</span>
             </div>
 
@@ -450,7 +450,7 @@
             </div>
             <div v-if="activeWeaponData.type === 'melee'" class="slider-row">
               <label class="slider-label">{{ S.statRange }}
-                <el-tooltip :content="S.rangeTooltip" placement="top" :show-after="200">
+                <el-tooltip :content="S.rangeInfo" placement="top" :show-after="200">
                   <el-icon class="range-help-icon">
                     <QuestionFilled />
                   </el-icon>
@@ -576,8 +576,8 @@ const S = computed(() => isZh.value ? {
   belowNightmareShort: '难5', nightmareShort: '噩梦',
   attackSpeedCalc: '攻速计算器', attackSpeed: '攻速', statRange: '范围',
   curse: '诅咒', clear: '清除筛选', 
-  tooltipCooldown: '显示冷却', actualCooldown: '实际冷却', tooltipShort: '显示', actualShort: '实际',
-  rangeTooltip: '玩家范围属性，实际作用于近战武器的范围修改需要减半（如150基础范围+100范围属性→200范围）'
+  tooltipCooldown: '显示冷却', actualCooldown: '实际冷却', tooltip: '显示', actual: '实际',
+  rangeInfo: '玩家范围属性。实际加成减半（如：150基础范围 + 100范围属性 → 200武器范围）'
 } : {
   weapons: 'Weapons', items: 'Items', characters: 'Characters',
   search: 'Search...', all: 'All', tier: 'Rarity', type: 'Type',
@@ -594,8 +594,8 @@ const S = computed(() => isZh.value ? {
   belowNightmareShort: 'D5', nightmareShort: 'NM',
   attackSpeedCalc: 'Attack Speed Calculator', attackSpeed: 'A.Spd', statRange: 'Range',
   curse: 'Curse', clear: 'Clear Filters', 
-  tooltipCooldown: 'Tooltip Cooldown', actualCooldown: 'Actual Cooldown', tooltipShort: 'Tooltip', actualShort: 'Actual',
-  rangeTooltip: 'Player Range stat. For melee weapons, the actual range modification is halved (e.g. 150 base range + 100 Range → 200 range)'
+  tooltipCooldown: 'Tooltip Cooldown', actualCooldown: 'Actual Cooldown', tooltip: 'Tooltip', actual: 'Actual',
+  rangeInfo: 'Player range stat. Actual bonus is halved (e.g. 150 base range + 100 range stat → 200 weapon range)'
 })
 
 // ---- Reactivity ----
@@ -1497,7 +1497,7 @@ const calculatedReloadCooldowns = computed(() => {
 function formatReloadCooldownInfo(seconds, reload = calculatedReloadCooldowns.value) {
   if (!reload) return ''
   const formatted = formatCooldown(seconds)
-  return isZh.value ? `每发射${reload.shots}次冷却为${formatted}` : `${formatted} every ${reload.shots} shots`
+  return isZh.value ? ` 每发射${reload.shots}次冷却为${formatted}` : ` ${formatted} every ${reload.shots} shots`
 }
 
 const cooldownChangePct = computed(() => {
