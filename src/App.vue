@@ -707,9 +707,9 @@ const chartData = computed(() => {
   const basePoints = []
 
   for (let atkSpd = minAtkSpd; atkSpd <= maxAtkSpd; atkSpd += 1) {
-    mainPoints.push({ x: atkSpd, y: calculateCooldownWithAttackSpeed(stats.cooldown, stats.animation_cooldown || 0, atkSpd, statRangeSlider.value) })
+    mainPoints.push({ x: atkSpd, y: calculateCooldownWithAttackSpeed(stats, atkSpd, statRangeSlider.value) })
     if (hasRange) {
-      basePoints.push({ x: atkSpd, y: calculateCooldownWithAttackSpeed(stats.cooldown, stats.animation_cooldown || 0, atkSpd, 0) })
+      basePoints.push({ x: atkSpd, y: calculateCooldownWithAttackSpeed(stats, atkSpd, 0) })
     }
   }
 
@@ -1283,20 +1283,24 @@ const meleeAttackTypeText = computed(() => {
 })
 
 // ---- Cooldown calculation ----
+const COOLDOWN_FPS = 60
+const MIN_WEAPON_COOLDOWN_FRAMES = 2
+const BASE_MELEE_ATTACK_DURATION = 0.2
+// The reference workbook defaults to six equipped weapons for its cooldown
+// randomization correction. Keep this explicit so a loadout setting can be
+// threaded through later without changing the core formula.
+const DEFAULT_WEAPON_COUNT = 6
+
 const totalCooldown = computed(() => {
   const stats = activeWeaponData.value?.stats
   if (!stats) return 0
-  const attackCooldown = stats.cooldown / 60
-  const animationCooldown = stats.animation_cooldown || 0
-  return attackCooldown + animationCooldown
+  return calculateCooldownWithAttackSpeed(stats, 0, 0)
 })
 
 const displayCooldown = computed(() => {
   const stats = displayStats.value
   if (!stats) return 0
-  const attackCooldown = stats.cooldown / 60
-  const animationCooldown = stats.animation_cooldown || 0
-  return attackCooldown + animationCooldown
+  return calculateTooltipCooldown(stats, 0, 0)
 })
 
 function formatCooldown(seconds) {
@@ -1304,43 +1308,127 @@ function formatCooldown(seconds) {
   return seconds.toFixed(2) + 's'
 }
 
-function calculateCooldownWithAttackSpeed(baseCooldownFrames, animationCooldown, attackSpeed, statRange, rangeOverride) {
-  const atkSpd = attackSpeed / 100
-  const MIN_CD = 2
+function getAttackSpeedFactor(attackSpeed) {
+  const value = Number(attackSpeed)
+  return Number.isFinite(value) ? value / 100 : 0
+}
 
-  let attackCooldownFrames
-  if (atkSpd < 0) {
-    attackCooldownFrames = Math.trunc(baseCooldownFrames * (1 + Math.abs(atkSpd)))
+function getBaseRecoilDuration(stats) {
+  const recoilDuration = Number(stats?.recoil_duration)
+  return Number.isFinite(recoilDuration) ? recoilDuration : 0.1
+}
+
+// Matches DPS Calculator!D31: the game applies attack speed to the weapon
+// cooldown in frames, truncates it, and never lets it go below two frames.
+function getWeaponCooldownFrames(baseCooldownFrames, atkSpd) {
+  const base = Number(baseCooldownFrames)
+  if (!Number.isFinite(base)) return MIN_WEAPON_COOLDOWN_FRAMES
+
+  const modified = atkSpd >= 0
+    ? base / (1 + atkSpd)
+    : base * (1 + Math.abs(atkSpd))
+  return Math.max(MIN_WEAPON_COOLDOWN_FRAMES, Math.floor(modified))
+}
+
+function getRecoilDuration(stats, atkSpd) {
+  const baseRecoil = getBaseRecoilDuration(stats)
+  return atkSpd >= 0
+    ? baseRecoil / (1 + atkSpd)
+    : baseRecoil
+}
+
+// Matches DPS Calculator!F33. Range affects melee animation time only.
+function getMeleeTiming(stats, atkSpd, statRange) {
+  const baseRange = Number(stats?.max_range)
+  const effectiveRange = Math.max(25, (Number.isFinite(baseRange) ? baseRange : 150) + (Number(statRange) || 0) / 2)
+  const rangeDenominator = Math.min(
+    Math.max(70, 70 * (1 + atkSpd / 3)),
+    120,
+  )
+  const rangeFactor = Math.max(0, effectiveRange / rangeDenominator)
+  const attackDuration = Math.max(0.01, BASE_MELEE_ATTACK_DURATION - atkSpd / 10) + rangeFactor * 0.15
+  const backDuration = BASE_MELEE_ATTACK_DURATION / (1 + Math.max(0, atkSpd) * 3)
+  return { attackDuration, backDuration }
+}
+
+function getMeleeAttackType(stats) {
+  if (stats?.alternate_attack_type) return 'Swing/Thrust'
+  if (stats?.attack_type === 1 || stats?.attack_type === 'Swing' || stats?.attack_type === 'sweep') return 'Swing'
+  return 'Thrust'
+}
+
+function getMeleeAttackTypeFrameBonus(stats) {
+  const attackType = getMeleeAttackType(stats)
+  if (attackType === 'Swing') return 1
+  if (attackType === 'Swing/Thrust') return 0.5
+  return 0
+}
+
+// DPS Calculator!W36. This is the workbook's average correction for the
+// randomized starting cooldown of a six-weapon loadout, expressed in frames.
+function getWeaponRandomizationFrames(weaponCooldownFrames, weaponCount = DEFAULT_WEAPON_COUNT) {
+  const count = Math.max(0, Number(weaponCount) || 0)
+  const randomPercent = Math.min(0.2 * count, 1.2)
+  if (randomPercent === 0) return 0
+
+  const frameInterval = Math.min(randomPercent * weaponCooldownFrames, 5 * count)
+  const rangeMin = Math.max(1, weaponCooldownFrames - frameInterval)
+  const rangeMax = weaponCooldownFrames + frameInterval
+  const average = (rangeMin + rangeMax) / 2
+  const averageRounding = 0.5
+  return average + averageRounding - weaponCooldownFrames
+}
+
+// Matches DPS Calculator!N6 (the value shown in the game's tooltip).
+function calculateTooltipCooldown(stats, attackSpeed, statRange = 0) {
+  const atkSpd = getAttackSpeedFactor(attackSpeed)
+  const weaponCooldownFrames = getWeaponCooldownFrames(stats?.cooldown, atkSpd)
+  const recoilDuration = getRecoilDuration(stats, atkSpd)
+  const attackCooldown = weaponCooldownFrames / COOLDOWN_FPS
+
+  if (activeWeaponData.value?.type !== 'melee') {
+    return attackCooldown + recoilDuration * 2
+  }
+
+  const { attackDuration, backDuration } = getMeleeTiming(stats, atkSpd, statRange)
+  return attackCooldown + recoilDuration + attackDuration / 2 + backDuration
+}
+
+// Matches DPS Calculator!M6 (the true, frame-rounded attack cooldown).
+function calculateCooldownWithAttackSpeed(stats, attackSpeed, statRange = 0, weaponCount = DEFAULT_WEAPON_COUNT) {
+  if (!stats) return 0
+
+  const atkSpd = getAttackSpeedFactor(attackSpeed)
+  const weaponCooldownFrames = getWeaponCooldownFrames(stats.cooldown, atkSpd)
+  const recoilFrames = Math.floor(getRecoilDuration(stats, atkSpd) * COOLDOWN_FPS + 1)
+  let trueCooldownFrames
+
+  if (activeWeaponData.value?.type === 'melee') {
+    const { attackDuration, backDuration } = getMeleeTiming(stats, atkSpd, statRange)
+    const attackDurationFrames = Math.floor(attackDuration / 2 * COOLDOWN_FPS + 1)
+    const backDurationFrames = Math.floor(backDuration * COOLDOWN_FPS + 1)
+
+    trueCooldownFrames = Math.floor(
+      (weaponCooldownFrames + 1)
+      + recoilFrames
+      + attackDurationFrames
+      + backDurationFrames
+      + 1,
+    )
+    trueCooldownFrames += getMeleeAttackTypeFrameBonus(stats)
   } else {
-    attackCooldownFrames = Math.trunc(baseCooldownFrames / (1 + atkSpd))
-  }
-  attackCooldownFrames = Math.max(MIN_CD, attackCooldownFrames)
-  const attackCooldown = attackCooldownFrames / 60
-
-  let animCooldown = animationCooldown || 0
-  if (animCooldown > 0) {
-    const BASE_ATK_DURATION = 0.2
-    const stats = activeWeaponData.value?.stats
-    if (stats && activeWeaponData.value?.type === 'melee') {
-      const baseRange = stats.max_range || 150
-      const effectiveRange = rangeOverride !== undefined ? rangeOverride : baseRange + statRange / 2
-      const rangeFactor = Math.max(0, effectiveRange / Math.max(70 * (1 + (atkSpd / 3)), 70))
-      const atkDuration = Math.max(0.01, BASE_ATK_DURATION - (atkSpd / 10)) + rangeFactor * 0.15
-      const backDuration = atkSpd > 0 ? BASE_ATK_DURATION / (1 + (atkSpd * 3)) : BASE_ATK_DURATION
-      const recoilDuration = stats.recoil_duration || 0.1
-      animCooldown = atkDuration / 2 + backDuration + recoilDuration
-    }
+    trueCooldownFrames = (weaponCooldownFrames + 1) + recoilFrames * 2
   }
 
-  return attackCooldown + animCooldown
+  trueCooldownFrames += getWeaponRandomizationFrames(weaponCooldownFrames, weaponCount)
+  return trueCooldownFrames / COOLDOWN_FPS
 }
 
 const calculatedCooldown = computed(() => {
   const stats = activeWeaponData.value?.stats
   if (!stats) return 0
   return calculateCooldownWithAttackSpeed(
-    stats.cooldown,
-    stats.animation_cooldown || 0,
+    stats,
     attackSpeedSlider.value,
     statRangeSlider.value
   )
