@@ -3049,196 +3049,6 @@ def build_effect_text_dict(eff):
 # Set bonuses
 # ====================================================================
 
-SET_EFFECTS_MANUAL = {
-    # key: name_key -> {en_desc, zh_desc} for each tier
-    'WEAPON_CLASS_BLADE': {
-        'name_en': 'Blade',
-        'name_zh': '利器',
-        'effects': [
-            {'en': '+1 Melee Damage, +1% Lifesteal', 'zh': '+1 近战伤害，+1% 生命窃取'},
-            {'en': '+2 Melee Damage, +2% Lifesteal', 'zh': '+2 近战伤害，+2% 生命窃取'},
-            {'en': '+3 Melee Damage, +3% Lifesteal', 'zh': '+3 近战伤害，+3% 生命窃取'},
-            {'en': '+4 Melee Damage, +4% Lifesteal', 'zh': '+4 近战伤害，+4% 生命窃取'},
-            {'en': '+5 Melee Damage, +5% Lifesteal', 'zh': '+5 近战伤害，+5% 生命窃取'},
-        ]
-    },
-    'WEAPON_CLASS_BLUNT': {
-        'name_en': 'Blunt',
-        'name_zh': '钝器',
-        'effects': [
-            {'en': '+1 Armor, +0 Max HP, -2% Speed', 'zh': '+1 护甲，-2% 速度'},
-            {'en': '+1 Armor, +3 Max HP, -4% Speed', 'zh': '+1 护甲，+3 最大生命值，-4% 速度'},
-            {'en': '+2 Armor, +3 Max HP, -6% Speed', 'zh': '+2 护甲，+3 最大生命值，-6% 速度'},
-            {'en': '+2 Armor, +6 Max HP, -8% Speed', 'zh': '+2 护甲，+6 最大生命值，-8% 速度'},
-            {'en': '+3 Armor, +6 Max HP, -10% Speed', 'zh': '+3 护甲，+6 最大生命值，-10% 速度'},
-        ]
-    },
-    'WEAPON_CLASS_ELEMENTAL': {
-        'name_en': 'Elemental',
-        'name_zh': '元素',
-        'effects': [
-            {'en': '+1 Elemental Damage', 'zh': '+1 元素伤害'},
-            {'en': '+2 Elemental Damage', 'zh': '+2 元素伤害'},
-            {'en': '+3 Elemental Damage', 'zh': '+3 元素伤害'},
-            {'en': '+4 Elemental Damage', 'zh': '+4 元素伤害'},
-            {'en': '+5 Elemental Damage', 'zh': '+5 元素伤害'},
-        ]
-    },
-    'WEAPON_CLASS_ETHEREAL': {
-        'name_en': 'Ethereal',
-        'name_zh': '虚灵',
-        'effects': [
-            {'en': '+6% Dodge, -1 Armor', 'zh': '+6% 闪避，-1 护甲'},
-            {'en': '+12% Dodge, -2 Armor', 'zh': '+12% 闪避，-2 护甲'},
-            {'en': '+18% Dodge, -3 Armor', 'zh': '+18% 闪避，-3 护甲'},
-            {'en': '+24% Dodge, -4 Armor', 'zh': '+24% 闪避，-4 护甲'},
-            {'en': '+30% Dodge, -5 Armor', 'zh': '+30% 闪避，-5 护甲'},
-        ]
-    },
-    'WEAPON_CLASS_EXPLOSIVE': {
-        'name_en': 'Explosive',
-        'name_zh': '爆炸',
-        'effects': [
-            {'en': '+5% Explosive Size', 'zh': '+5% 爆炸范围'},
-            {'en': '+10% Explosive Size', 'zh': '+10% 爆炸范围'},
-            {'en': '+15% Explosive Size', 'zh': '+15% 爆炸范围'},
-            {'en': '+20% Explosive Size', 'zh': '+20% 爆炸范围'},
-            {'en': '+25% Explosive Size', 'zh': '+25% 爆炸范围'},
-        ]
-    },
-    'WEAPON_CLASS_GUN': {
-        'name_en': 'Gun',
-        'name_zh': '枪械',
-        'effects': [
-            {'en': '+10 Range', 'zh': '+10 范围'},
-            {'en': '+20 Range', 'zh': '+20 范围'},
-            {'en': '+30 Range', 'zh': '+30 范围'},
-            {'en': '+40 Range', 'zh': '+40 范围'},
-            {'en': '+50 Range', 'zh': '+50 范围'},
-        ]
-    },
-    'WEAPON_CLASS_HEAVY': {
-        'name_en': 'Heavy',
-        'name_zh': '重型',
-        'effects': [
-            {'en': '+5% Damage', 'zh': '+5% 伤害'},
-            {'en': '+10% Damage', 'zh': '+10% 伤害'},
-            {'en': '+15% Damage', 'zh': '+15% 伤害'},
-            {'en': '+20% Damage', 'zh': '+20% 伤害'},
-            {'en': '+25% Damage', 'zh': '+25% 伤害'},
-        ]
-    },
-    'WEAPON_CLASS_LEGENDARY': {
-        'name_en': 'Legendary',
-        'name_zh': '传奇',
-        'effects': [
-            {'en': '-20 Max HP', 'zh': '-20 最大生命值'},
-            {'en': '-40 Max HP', 'zh': '-40 最大生命值'},
-            {'en': '-60 Max HP', 'zh': '-60 最大生命值'},
-            {'en': '-80 Max HP', 'zh': '-80 最大生命值'},
-            {'en': '-100 Max HP', 'zh': '-100 最大生命值'},
-        ]
-    },
-    'WEAPON_CLASS_MEDICAL': {
-        'name_en': 'Medical',
-        'name_zh': '医疗',
-        'effects': [
-            {'en': '+1 HP Regeneration', 'zh': '+1 生命再生'},
-            {'en': '+2 HP Regeneration', 'zh': '+2 生命再生'},
-            {'en': '+3 HP Regeneration', 'zh': '+3 生命再生'},
-            {'en': '+4 HP Regeneration', 'zh': '+4 生命再生'},
-            {'en': '+5 HP Regeneration', 'zh': '+5 生命再生'},
-        ]
-    },
-    'WEAPON_CLASS_MEDIEVAL': {
-        'name_en': 'Medieval',
-        'name_zh': '中世纪',
-        'effects': [
-            {'en': '+1 Armor, +0% Dodge', 'zh': '+1 护甲'},
-            {'en': '+1 Armor, +3% Dodge', 'zh': '+1 护甲，+3% 闪避'},
-            {'en': '+2 Armor, +3% Dodge', 'zh': '+2 护甲，+3% 闪避'},
-            {'en': '+2 Armor, +6% Dodge', 'zh': '+2 护甲，+6% 闪避'},
-            {'en': '+3 Armor, +6% Dodge', 'zh': '+3 护甲，+6% 闪避'},
-        ]
-    },
-    'WEAPON_CLASS_MUSIC': {
-        'name_en': 'Music',
-        'name_zh': '音乐',
-        'effects': [
-            {'en': '+5 Luck', 'zh': '+5 幸运'},
-            {'en': '+10 Luck', 'zh': '+10 幸运'},
-            {'en': '+15 Luck', 'zh': '+15 幸运'},
-            {'en': '+20 Luck', 'zh': '+20 幸运'},
-            {'en': '+25 Luck', 'zh': '+25 幸运'},
-        ]
-    },
-    'WEAPON_CLASS_NAVAL': {
-        'name_en': 'Naval',
-        'name_zh': '海军',
-        'effects': [
-            {'en': '+1 Curse', 'zh': '+1 诅咒'},
-            {'en': '+2 Curse', 'zh': '+2 诅咒'},
-            {'en': '+3 Curse', 'zh': '+3 诅咒'},
-            {'en': '+4 Curse', 'zh': '+4 诅咒'},
-            {'en': '+5 Curse', 'zh': '+5 诅咒'},
-        ]
-    },
-    'WEAPON_CLASS_PRECISE': {
-        'name_en': 'Precise',
-        'name_zh': '精准',
-        'effects': [
-            {'en': '+3% Crit Chance', 'zh': '+3% 暴击率'},
-            {'en': '+6% Crit Chance', 'zh': '+6% 暴击率'},
-            {'en': '+9% Crit Chance', 'zh': '+9% 暴击率'},
-            {'en': '+12% Crit Chance', 'zh': '+12% 暴击率'},
-            {'en': '+15% Crit Chance', 'zh': '+15% 暴击率'},
-        ]
-    },
-    'WEAPON_CLASS_PRIMITIVE': {
-        'name_en': 'Primitive',
-        'name_zh': '原始',
-        'effects': [
-            {'en': '+3 Max HP', 'zh': '+3 最大生命值'},
-            {'en': '+6 Max HP', 'zh': '+6 最大生命值'},
-            {'en': '+9 Max HP', 'zh': '+9 最大生命值'},
-            {'en': '+12 Max HP', 'zh': '+12 最大生命值'},
-            {'en': '+15 Max HP', 'zh': '+15 最大生命值'},
-        ]
-    },
-    'WEAPON_CLASS_SUPPORT': {
-        'name_en': 'Support',
-        'name_zh': '辅助',
-        'effects': [
-            {'en': '+5 Harvesting', 'zh': '+5 收获'},
-            {'en': '+10 Harvesting', 'zh': '+10 收获'},
-            {'en': '+15 Harvesting', 'zh': '+15 收获'},
-            {'en': '+20 Harvesting', 'zh': '+20 收获'},
-            {'en': '+25 Harvesting', 'zh': '+25 收获'},
-        ]
-    },
-    'WEAPON_CLASS_TOOL': {
-        'name_en': 'Tool',
-        'name_zh': '工具',
-        'effects': [
-            {'en': '+1 Engineering', 'zh': '+1 工程学'},
-            {'en': '+2 Engineering', 'zh': '+2 工程学'},
-            {'en': '+3 Engineering', 'zh': '+3 工程学'},
-            {'en': '+4 Engineering', 'zh': '+4 工程学'},
-            {'en': '+5 Engineering', 'zh': '+5 工程学'},
-        ]
-    },
-    'WEAPON_CLASS_UNARMED': {
-        'name_en': 'Unarmed',
-        'name_zh': '徒手',
-        'effects': [
-            {'en': '+3% Dodge', 'zh': '+3% 闪避'},
-            {'en': '+6% Dodge', 'zh': '+6% 闪避'},
-            {'en': '+9% Dodge', 'zh': '+9% 闪避'},
-            {'en': '+12% Dodge', 'zh': '+12% 闪避'},
-            {'en': '+15% Dodge', 'zh': '+15% 闪避'},
-        ]
-    },
-}
 
 def build_sets_data():
     """Build set bonuses from game data + manual fallback"""
@@ -3285,6 +3095,17 @@ def build_sets_data():
                         if not text_dict:
                             continue
                         eff_data['text'] = text_dict
+                        # Set-bonus templates already carry their own +/- sign
+                        # (e.g. "+{0}" / "-{0}"), so the raw game value's sign is
+                        # redundant and would render a double sign like "--2".
+                        # Strip the value's sign only when the template's {0} is
+                        # already prefixed with + or -, keeping the magnitude.
+                        _tpl = (text_dict.get('en') or text_dict.get('zh') or '')
+                        _tpl_plain = re.sub(r'</?span[^>]*>', '', _tpl)
+                        if re.search(r'[+\-−]\s*\{0\}', _tpl_plain):
+                            _v = eff_data.get('value')
+                            if isinstance(_v, (int, float)):
+                                eff_data['value'] = abs(_v)
                         # Add stat icon prefix
                         eff_key = eff_data.get('key', '')
                         if eff_key.startswith('stat_') or eff_key in ('xp_gain', 'explosion_size', 'explosion_damage'):
@@ -3293,17 +3114,7 @@ def build_sets_data():
                         rendered_tier.append(eff_data)
                     rendered_bonuses.append(rendered_tier)
                 sets_data[name_key] = rendered_bonuses
-    
-    # Apply manual overrides
-    for key, manual in SET_EFFECTS_MANUAL.items():
-        if key not in sets_data or not sets_data[key]:
-            sets_data[key] = {
-                '_manual': True,
-                'name_en': manual['name_en'],
-                'name_zh': manual['name_zh'],
-                'tiers': manual['effects'],
-            }
-    
+
     return sets_data
 
 # ====================================================================
@@ -3316,6 +3127,7 @@ def get_effects(parsed, parent_id='', is_weapon=False):
     effects_raw = data.get('effects', [])
     effects = []
     if isinstance(effects_raw, list):
+
         for eff in effects_raw:
             if isinstance(eff, dict) and '_ext' in eff:
                 ext_id = eff['_ext']
