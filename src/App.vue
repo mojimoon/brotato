@@ -230,7 +230,8 @@
               <img :src="getIconSrc(selectedItem.icon)" />
             </div>
             <div class="detail-title-wrap">
-              <h2 :style="{ color: tierColor(activeWeaponTier) }">{{ itemName(selectedItem) }}</h2>
+              <h2 :style="{ color: tierColor(activeWeaponTier) }">{{ itemName(selectedItem) }}
+                {{ tierSuffix(activeWeaponTier) }}</h2>
               <div class="detail-badges">
                 <span class="type-badge" :class="selectedItem.type">{{ S[selectedItem.type] }}</span>
                 <span v-if="selectedItem.dlc" class="dlc-badge">DLC</span>
@@ -2482,14 +2483,14 @@ body.light-theme .el-popper .el-popper__arrow::before { background: #fff !import
 }
 .calc-line { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
 .calc-label { font-size: 14px; color: var(--text-muted); }
-.calc-value { font-size: 18px; font-weight: 700; color: var(--accent-green); }
-.calc-pct { font-size: 14px; font-weight: 600; margin-left: 4px; }
+.calc-value { font-size: 18px; font-weight: 700; color: var(--accent-gold); }
+.calc-pct { font-size: 14px; font-weight: 600; }
 .pct-pos { color: var(--accent-green); }
 .pct-neg { color: var(--accent-red); }
 .calc-reload { font-size: 13px; color: var(--text-muted);  }
 .calc-reload-separator { margin: 0 2px; color: var(--text-faint); }
 .breakpoint-line { align-items: flex-start; }
-.breakpoint-list { font-size: 14px; font-weight: 600; color: var(--accent-blue); line-height: 1.6; }
+.breakpoint-list { font-size: 14px; font-weight: 600; color: var(--mark-green); line-height: 1.6; }
 .bp-sep { margin: 0 2px; }
 .bp-item { white-space: nowrap; }
 .slider-row {
