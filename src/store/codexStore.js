@@ -639,8 +639,10 @@ export const dpsData = computed(() => {
   const base = totalCooldown.value
   if (!base || base <= 0) return null
   const cd = effectiveCooldown(base, getReloadCooldowns(stats, 0))
-  const dmg = displayStats.value.damage / cd
-  const scaling = (displayStats.value.scaling_stats || []).map(([k, v]) => [k, (v * 100) / cd])
+  // 多射弹武器（双管霰弹枪 / 电击枪 / 链枪等）：DPS 与 scaling 均乘以 nb_projectiles
+  const nbProj = (displayStats.value.nb_projectiles || 1) > 1 ? displayStats.value.nb_projectiles : 1
+  const dmg = (displayStats.value.damage * nbProj) / cd
+  const scaling = (displayStats.value.scaling_stats || []).map(([k, v]) => [k, (v * 100 * nbProj) / cd])
   return { dmg, cd, scaling }
 })
 

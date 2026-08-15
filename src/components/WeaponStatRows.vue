@@ -11,6 +11,7 @@
           <span v-else>{{ statTr(ss[0]) }}</span>
         </template>)
       </span>
+      <span v-if="displayStats.nb_projectiles > 1" class="ws-projectiles">x{{ displayStats.nb_projectiles }}</span>
     </div>
 
     <div class="weapon-stat-row">
@@ -71,12 +72,6 @@
     <div v-if="activeWeaponData.type === 'ranged' && displayStats.bounce > 0" class="weapon-stat-row">
       <span class="ws-label">{{ S.bounce }}</span>
       <span class="ws-val" :class="{ 'curse-modified': curseEnabled }">{{ displayStats.bounce }}</span>
-    </div>
-
-    <div v-if="activeWeaponData.type === 'ranged' && activeWeaponData.stats.nb_projectiles > 1"
-      class="weapon-stat-row">
-      <span class="ws-label">{{ S.projectiles }}</span>
-      <span class="ws-val">{{ activeWeaponData.stats.nb_projectiles }}</span>
     </div>
 
     <div v-if="dpsData" class="weapon-stat-row">

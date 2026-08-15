@@ -173,6 +173,7 @@
 .crit-dmg { color: var(--accent-gold); font-size: 14px; }
 .ws-scaling { font-size: 15px; color: var(--scaling); }
 .ws-scaling-pct { color: var(--scaling-pct); }
+.ws-projectiles { font-size: 15px; color: var(--text-strong); font-weight: 600; }
 .ws-attack-type { font-size: 13px; color: var(--attack-type-fg); margin-left: 4px; }
 .stat-inline-icon { width: 16px; height: 16px; vertical-align: middle; image-rendering: pixelated; margin: 0 1px; }
 .stat-prefix-icon { width: 13px; height: 13px; vertical-align: middle; image-rendering: pixelated; }
