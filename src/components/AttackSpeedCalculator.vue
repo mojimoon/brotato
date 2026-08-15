@@ -44,7 +44,7 @@
       <div class="slider-row">
         <label class="slider-label">{{ S.attackSpeed }}</label>
         <el-slider v-model="attackSpeedSlider" :min="-200" :max="500" :step="1" :marks="atkSpeedMarks" show-input
-          size="small" />
+          size="small" input-size="small" />
       </div>
       <div v-if="activeWeaponData.type === 'melee'" class="slider-row">
         <label class="slider-label">
@@ -56,12 +56,12 @@
           {{ S.statRange }}
         </label>
         <el-slider v-model="statRangeSlider" :min="-200" :max="200" :step="1" :marks="rangeMarks" show-input
-          size="small" />
+          size="small" input-size="small" />
       </div>
       <div class="slider-row">
         <label class="slider-label">{{ S.weaponCount }}</label>
         <el-slider v-model="weaponCountSlider" :min="1" :max="6" :step="1" :marks="weaponCountMarks" show-input
-          size="small" />
+          size="small" input-size="small" />
       </div>
     </div>
   </div>

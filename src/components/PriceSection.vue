@@ -48,7 +48,7 @@
       <div class="price-slider-row">
         <span class="wave-label">{{ S.wave }}</span>
         <el-slider v-model="waveSlider" :min="0" :max="19" :step="1" :marks="waveSliderMarks" class="price-slider"
-          placement="bottom" size="small" show-input />
+          placement="bottom" size="small" show-input input-size="small" />
       </div>
     </div>
   </div>

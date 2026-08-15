@@ -57,6 +57,10 @@
   --frames-active-fg: #60a5fa;
   --frames-active-border: #3b82f6;
   --frames-active-shadow: rgba(59, 130, 246, 0.3);
+  /* frames-style "off" state — shared by frames toggle button & main tabs */
+  --btn-bg-off: linear-gradient(180deg,#1c1e28 0%,#161821 100%);
+  --btn-text-off: #9197aa;
+  --btn-border-off: #2f3445;
   --price-final: #f39c12;
   --badge-red: #c0392b;
   --badge-orange: #d35400;
@@ -112,15 +116,16 @@ body { background: var(--bg-app); color: var(--text); font-family: 'Segoe UI', s
 .el-tabs--card > .el-tabs__header { border-bottom: 1px solid var(--border-subtle); background: var(--bg-header); }
 .el-tabs--card > .el-tabs__header .el-tabs__nav { border: none; }
 .el-tabs--card > .el-tabs__header .el-tabs__item {
-  color: var(--text-muted) !important; height: 42px; line-height: 42px; font-size: 14px;
-  background: var(--bg-card); border: 1px solid var(--border); border-bottom: none;
+  margin-top: 0 !important;
+  color: var(--btn-text-off) !important; height: 42px; line-height: 42px; font-size: 14px; font-weight: 600;
+  background: var(--btn-bg-off); border: 1px solid var(--btn-border-off); border-bottom: none;
   margin-right: 2px; border-radius: 8px 8px 0 0; padding: 0 18px;
   transition: background .15s, color .15s, border-color .15s;
 }
-.el-tabs--card > .el-tabs__header .el-tabs__item:first-child { border-left: 1px solid var(--border) !important; }
-.el-tabs--card > .el-tabs__header .el-tabs__item:hover { color: var(--text-strong) !important; background: var(--bg-tabs-hover); border-color: var(--border-tabs-hover); }
-.el-tabs--card > .el-tabs__header .el-tabs__item.is-active { color: #fff !important; background: var(--accent-blue) !important; border-color: var(--accent-blue) !important; font-weight: 700; }
-.el-tabs--card > .el-tabs__header .el-tabs__active-bar { background: var(--accent-blue); }
+.el-tabs--card > .el-tabs__header .el-tabs__item:first-child { border-left: 1px solid var(--btn-border-off) !important; }
+.el-tabs--card > .el-tabs__header .el-tabs__item:hover { color: var(--frames-active-fg) !important; background: rgba(59, 130, 246, 0.10); border-color: var(--frames-active-border); }
+.el-tabs--card > .el-tabs__header .el-tabs__item.is-active { color: var(--frames-active-fg) !important; background: var(--frames-active-bg) !important; border-color: var(--frames-active-border) !important; font-weight: 700; box-shadow: var(--frames-active-shadow); }
+.el-tabs--card > .el-tabs__header .el-tabs__active-bar { background: var(--frames-active-border); }
 .main-tabs .el-tabs__item { padding: 0 12px; font-size: 14px; }
 
 /* ============ Element Plus Dark Overrides ============ */
@@ -175,6 +180,19 @@ body { background: var(--bg-app); color: var(--text); font-family: 'Segoe UI', s
 ::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--scrollbar-thumb-hover); }
 
+/* Dark theme — slider input-number +/- controls: blue, not white */
+html:not(.light-theme) .el-slider__input .el-input-number__increase,
+html:not(.light-theme) .el-slider__input .el-input-number__decrease {
+  background: var(--frames-active-bg);
+  color: var(--frames-active-fg);
+  border-color: var(--frames-active-border);
+}
+html:not(.light-theme) .el-slider__input .el-input-number__increase:hover,
+html:not(.light-theme) .el-slider__input .el-input-number__decrease:hover {
+  background: var(--frames-active-border);
+  color: #fff;
+}
+
 /* ==================== Light Theme ==================== */
 html.light-theme, body.light-theme {
   --bg-app: #f0f2f5;
@@ -224,6 +242,10 @@ html.light-theme, body.light-theme {
   --frames-active-fg: #1d4ed8;
   --frames-active-border: #2563eb;
   --frames-active-shadow: rgba(37, 99, 235, 0.25);
+  /* frames-style "off" state — shared by frames toggle button & main tabs */
+  --btn-bg-off: #f0f2f5;
+  --btn-text-off: #777;
+  --btn-border-off: #ccc;
   --curse: #7c3aed;
   --curse-deep: #a78bfa;
   --nightmare: #e53935;
@@ -285,7 +307,6 @@ body.light-theme .price-toggle-btn {
 body.light-theme .el-slider__tooltip { background: #fff !important; border: 1px solid #ddd !important; color: #222 !important; }
 body.light-theme .el-slider__tooltip::after { border-top-color: #fff !important; }
 body.light-theme .el-popper .el-popper__arrow::before { background: #fff !important; border-color: #ccc !important; }
-.el-slider__marks-text { font-size: 13px !important; margin-top: 12px !important; }
 
 /* Effect text color markers */
 .zvg { color: var(--mark-green); }

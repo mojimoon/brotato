@@ -27,9 +27,9 @@
   border-color: var(--val-border) !important;
   box-shadow: var(--val-shadow);
 }
-/* Fancy action buttons (sort / price toggle) — shared layout, colors via vars */
+/* Fancy action buttons (sort / price toggle) */
 .sort-btn, .price-toggle-btn {
-  gap: 8px; min-width: 122px; border-style: solid !important; font-weight: 700; position: relative;
+  gap: 8px; min-width: 96px; border-style: solid !important; font-weight: 700; position: relative;
   color: var(--btn-text) !important;
   border-color: var(--btn-border) !important;
   background: var(--btn-bg) !important;
@@ -82,6 +82,7 @@
 }
 /* Price toggle button — green palette */
 .price-toggle-btn {
+  min-width: 96px;
   --btn-text: #cfd5e3; --btn-border: #4a4f63; --btn-bg: linear-gradient(180deg,#25283a 0%,#1e2131 100%);
   --btn-shadow: 0 0 0 1px rgba(255,255,255,.04), 0 6px 14px rgba(0,0,0,.18);
   --btn-text-off: #9197aa; --btn-border-off: #2f3445; --btn-bg-off: linear-gradient(180deg,#1c1e28 0%,#161821 100%);
@@ -93,6 +94,7 @@
   --btn-text-val-hover: #f5ffd8; --btn-border-val-hover: #6ea054;
   --btn-shadow-val-hover: 0 0 0 1px rgba(110,255,130,.16), 0 0 0 1px rgba(110,255,130,.1) inset;
 }
+.el-button+.el-button { margin-left: 0px !important; }
 
 /* Main */
 .main-content { position: relative; flex: 1 1 auto; min-height: 0; overflow: hidden; }
@@ -191,7 +193,7 @@
 .curse-slider .el-slider__runway { background: var(--curse-off-bg); }
 .curse-slider .el-slider__bar { background: var(--curse-deep); }
 .curse-slider .el-slider__button { width: 14px; height: 14px; border-color: var(--curse-deep); }
-.curse-slider .el-input-number { width: 80px; }
+.el-slider__input .el-input-number { width: 100%; }
 
 /* Frames toggle reuses the price-toggle-btn chrome; only the active color (blue) differs. */
 .frames-toggle-btn .el-icon { color: inherit; }
@@ -223,7 +225,6 @@
 .price-slider-row { display: flex; align-items: center; gap: 12px; }
 .wave-label { flex-shrink: 0; white-space: nowrap; font-size: 13px; color: var(--text-muted); margin-right: 8px; }
 .price-slider { --el-slider-height: 4px; flex: 1; min-width: 0; }
-.price-slider .el-slider__input { display: none; }
 
 /* Effects */
 .effects-list { display: flex; flex-direction: column; gap: 4px; }
@@ -284,13 +285,14 @@
 .bp-sep { margin: 0 2px; }
 .bp-item { white-space: nowrap; }
 .slider-row {
-  display: flex; align-items: center; gap: 12px; margin-bottom: 12px;
+  display: flex; align-items: center; gap: 10px; margin: 12px 0;
 }
 .slider-label {
   flex-shrink: 0; width: 60px; font-size: 13px; color: var(--text-muted); text-align: right;
 }
 .range-help-icon { margin-left: 4px; font-size: 14px; color: var(--range-icon); cursor: help; vertical-align: middle; }
 .slider-row .el-slider { flex: 1; --el-slider-height: 4px; --el-slider-button-size: 14px; }
+.el-slider__marks-text { font-size: 13px !important; margin-top: 12px !important; }
 .cooldown-chart-wrapper {
   margin-top: 12px; background: var(--bg-inset); border-radius: 6px; padding: 8px;
 }
@@ -330,4 +332,5 @@
   .header-actions { flex-wrap: wrap; margin-left: auto; }
   .title { font-size: 18px; }
   .main-tabs { padding: 0 12px; }
+  /* .el-slider__marks-text { font-size: 11px !important; margin-top: 10px !important; } */
 }
