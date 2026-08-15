@@ -3095,6 +3095,17 @@ def build_sets_data():
                         if not text_dict:
                             continue
                         eff_data['text'] = text_dict
+                        # Set-bonus templates already carry their own +/- sign
+                        # (e.g. "+{0}" / "-{0}"), so the raw game value's sign is
+                        # redundant and would render a double sign like "--2".
+                        # Strip the value's sign only when the template's {0} is
+                        # already prefixed with + or -, keeping the magnitude.
+                        _tpl = (text_dict.get('en') or text_dict.get('zh') or '')
+                        _tpl_plain = re.sub(r'</?span[^>]*>', '', _tpl)
+                        if re.search(r'[+\-−]\s*\{0\}', _tpl_plain):
+                            _v = eff_data.get('value')
+                            if isinstance(_v, (int, float)):
+                                eff_data['value'] = abs(_v)
                         # Add stat icon prefix
                         eff_key = eff_data.get('key', '')
                         if eff_key.startswith('stat_') or eff_key in ('xp_gain', 'explosion_size', 'explosion_damage'):
