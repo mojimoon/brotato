@@ -1,9 +1,3 @@
-/* ============================================================================
-   theme.css — 主题变量、暗/亮色覆盖、Element Plus 全局覆盖、滚动条、颜色标记
-   （从原 App.vue 的 <style> 抽取；所有 :deep() 已还原为普通后代选择器，
-    因为本文件是全局样式，不需要 scoped 语法）
-   ============================================================================ */
-
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 :root {
@@ -125,8 +119,8 @@ body { background: var(--bg-app); color: var(--text); font-family: 'Segoe UI', s
 }
 .el-tabs--card > .el-tabs__header .el-tabs__item:first-child { border-left: 1px solid var(--border) !important; }
 .el-tabs--card > .el-tabs__header .el-tabs__item:hover { color: var(--text-strong) !important; background: var(--bg-tabs-hover); border-color: var(--border-tabs-hover); }
-.el-tabs--card > .el-tabs__header .el-tabs__item.is-active { color: #fff !important; background: var(--accent) !important; border-color: var(--accent) !important; font-weight: 700; }
-.el-tabs--card > .el-tabs__header .el-tabs__active-bar { background: var(--accent); }
+.el-tabs--card > .el-tabs__header .el-tabs__item.is-active { color: #fff !important; background: var(--accent-blue) !important; border-color: var(--accent-blue) !important; font-weight: 700; }
+.el-tabs--card > .el-tabs__header .el-tabs__active-bar { background: var(--accent-blue); }
 .main-tabs .el-tabs__item { padding: 0 12px; font-size: 14px; }
 
 /* ============ Element Plus Dark Overrides ============ */
@@ -291,6 +285,7 @@ body.light-theme .price-toggle-btn {
 body.light-theme .el-slider__tooltip { background: #fff !important; border: 1px solid #ddd !important; color: #222 !important; }
 body.light-theme .el-slider__tooltip::after { border-top-color: #fff !important; }
 body.light-theme .el-popper .el-popper__arrow::before { background: #fff !important; border-color: #ccc !important; }
+.el-slider__marks-text { font-size: 13px !important; margin-top: 12px !important; }
 
 /* Effect text color markers */
 .zvg { color: var(--mark-green); }

@@ -1,9 +1,3 @@
-/* ============================================================================
-   app.css — 布局与区块样式
-   （从原 App.vue 的 <style> 抽取；除主题变量/Element 全局覆盖外的所有规则。
-    所有 :deep(X) 已还原为普通后代选择器 X）
-   ============================================================================ */
-
 .app-container { max-width: none; margin: 0 auto; height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
 
 /* Header */
@@ -279,7 +273,7 @@
 }
 .calc-line { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
 .calc-label { font-size: 14px; color: var(--text-muted); }
-.calc-value { font-size: 18px; font-weight: 700; color: var(--accent-gold); }
+.calc-value { font-size: 18px; font-weight: 700; color: var(--price-final); }
 .calc-pct { font-size: 14px; font-weight: 600; }
 .pct-pos { color: var(--accent-green); }
 .pct-neg { color: var(--accent-red); }

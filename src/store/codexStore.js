@@ -76,7 +76,7 @@ export const showPriceDetail = ref(lsGet('brotato_showPriceDetail', false))
 export const attackSpeedSlider = ref(0)
 export const statRangeSlider = ref(0)
 export const weaponCountSlider = ref(lsGet('brotato_weaponCount', 1))
-export const showFrames = ref(lsGet('brotato_showFrames', false))
+export const showFrames = ref(lsGet('brotato_showFrames', true))
 export const curseEnabled = ref(false)
 export const curseSlider = ref(110)
 export const pendingNavigate = ref(false)
@@ -991,7 +991,7 @@ export function showPriceCell(wave) {
   return true
 }
 
-export const waveSliderMarks = computed(() => ({ 1: '1', 4: '4', 8: '8', 14: '14', 19: '19' }))
+export const waveSliderMarks = computed(() => ({ 1: '1', 5: '5', 10: '10', 15: '15', 19: '19' }))
 
 export function formatIncr(v) {
   return v.toFixed(2).replace(/\.?0+$/, '')
