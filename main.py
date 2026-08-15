@@ -2578,10 +2578,10 @@ def render_effect_text(eff, lang, parent_id='', is_weapon=False):
         elif tk_upper in ('EFFECT_CHARM_BELOW_HP', 'EFFECT_CHARM_BELOW_HP_NO_SCALING'):
             val2 = extra.get('value2', 25)
             # Game (charm_effect.gd): chance = ((value/100.0) * stat) as int → 0 at base stat=0;
-            # scaling_text = "value%[stat]" is shown in parentheses.
+            # scaling_text = "value%[stat]" → render via <scaling> tag (curse-aware, no brackets).
             args[0] = str(int(val2))            # HP threshold
             args[1] = '0'                        # charm chance at base (stat == 0)
-            args[2] = f'{int(value)}%{tr(key.upper(), lang)}' if key else ''
+            args[2] = build_scaling_text([[key, value / 100.0 if value else 0]], lang) if key else ''
             args[3] = '8'  # CHARM_DURATION
 
         # --- Enemy percent damage taken ---
@@ -2733,10 +2733,11 @@ def render_effect_text(eff, lang, parent_id='', is_weapon=False):
     # --- Charm below HP ---
     elif tk_upper in ('EFFECT_CHARM_BELOW_HP', 'EFFECT_CHARM_BELOW_HP_NO_SCALING'):
         # Translation: "击中生命值低于{0}%的敌人时，有{1}%（{2}%最大生命值）的几率使其在{3}秒内受到魅惑"
+        # scaling_text = "value%[stat]" → render via <scaling> tag (curse-aware, no brackets).
         val2 = extra.get('value2', 25)
         args[0] = str(int(val2))            # HP threshold
         args[1] = '0'                        # charm chance at base (stat == 0)
-        args[2] = f'{int(value)}%{tr(key.upper(), lang)}' if key else ''
+        args[2] = build_scaling_text([[key, value / 100.0 if value else 0]], lang) if key else ''
         args[3] = '8'  # CHARM_DURATION
         args_built = True
 

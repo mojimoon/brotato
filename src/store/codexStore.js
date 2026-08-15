@@ -125,9 +125,10 @@ watch(isDark, (v) => {
 // 诅咒系统
 // =============================================================================
 export function applyCurse(curseArg, effectSign, originalValue) {
-  // curseArg: {value, type, mult?, ceil?, curse_value?, curse_min?, curse_max?, linked_mult?, max_val?}
+  // curseArg: {value, type, mult?, ceil?, curse_value?, curse_min?, curse_max?, linked_mult?, max_val?, decimalPlaces?}
   // type: default|positive|negative|random|fixed|linked|none
   const cv = curseFactor.value
+  const dp = curseArg.decimalPlaces
   if (cv <= 0) return Math.round(curseArg.value)
 
   const type = curseArg.type || 'default'
@@ -136,6 +137,11 @@ export function applyCurse(curseArg, effectSign, originalValue) {
   const mult = curseArg.mult ?? 1.0
   const useCeil = curseArg.ceil ?? true
   const effMod = cv * mult
+
+  if (dp != null) {
+    const scaled = type === 'negative' ? absV / (1 + effMod) : absV * (1 + effMod)
+    return sign * scaled
+  }
 
   switch (type) {
     case 'positive':
