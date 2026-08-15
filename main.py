@@ -1224,6 +1224,18 @@ def _build_curse_types(eff, args, arg_signs, parent_id='', is_weapon=False):
         c(1, type='default')
         return curse
 
+    # 31. StatGainsModificationEffect: the percentage value (args[1]) is cursed
+    #     (args[0] is the stat name, non-numeric → untouched)
+    if key in ('effect_increase_stat_gains', 'effect_reduce_stat_gains'):
+        c(1, type='default')
+        return curse
+
+    # 32. Pacifist: per-enemy material/XP = value/100 (game: pacifist_effect / 100.0);
+    #     2 decimals so 0.65 is shown verbatim, not rounded to 1
+    if key == 'pacifist':
+        c(0, type='default', decimalPlaces=2)
+        return curse
+
     # 31a. ProjectilesOnHitEffect / SlowProjectilesOnHitEffect: curse damage (arg[1]), not projectile count (arg[0])
     if key in ('EFFECT_PROJECTILES_ON_HIT', 'EFFECT_SLOW_PROJECTILES_ON_HIT'):
         c(1, type='default')
@@ -2565,9 +2577,11 @@ def render_effect_text(eff, lang, parent_id='', is_weapon=False):
         # --- Charm below HP ---
         elif tk_upper in ('EFFECT_CHARM_BELOW_HP', 'EFFECT_CHARM_BELOW_HP_NO_SCALING'):
             val2 = extra.get('value2', 25)
-            args[0] = str(int(val2))
-            args[1] = str(int(value))
-            args[2] = str(int(val2))
+            # Game (charm_effect.gd): chance = ((value/100.0) * stat) as int → 0 at base stat=0;
+            # scaling_text = "value%[stat]" is shown in parentheses.
+            args[0] = str(int(val2))            # HP threshold
+            args[1] = '0'                        # charm chance at base (stat == 0)
+            args[2] = f'{int(value)}%{tr(key.upper(), lang)}' if key else ''
             args[3] = '8'  # CHARM_DURATION
 
         # --- Enemy percent damage taken ---
@@ -2720,9 +2734,9 @@ def render_effect_text(eff, lang, parent_id='', is_weapon=False):
     elif tk_upper in ('EFFECT_CHARM_BELOW_HP', 'EFFECT_CHARM_BELOW_HP_NO_SCALING'):
         # Translation: "击中生命值低于{0}%的敌人时，有{1}%（{2}%最大生命值）的几率使其在{3}秒内受到魅惑"
         val2 = extra.get('value2', 25)
-        args[0] = str(int(val2))
-        args[1] = str(int(value))
-        args[2] = str(int(val2))
+        args[0] = str(int(val2))            # HP threshold
+        args[1] = '0'                        # charm chance at base (stat == 0)
+        args[2] = f'{int(value)}%{tr(key.upper(), lang)}' if key else ''
         args[3] = '8'  # CHARM_DURATION
         args_built = True
 
@@ -2783,6 +2797,13 @@ def render_effect_text(eff, lang, parent_id='', is_weapon=False):
         # {1} is a runtime value (RunData.nb_of_waves), hardcode as 20
         args[0] = f'{value}%'
         args[1] = '20'  # Default number of waves
+        args_built = True
+
+    # --- Pacifist: per-enemy material/XP equals value/100 (game: pacifist_effect / 100.0) ---
+    elif key == 'pacifist':
+        v = value / 100.0
+        # '%g' keeps 0.65 as "0.65" and 1.0 as "1" (no trailing zeros)
+        args[0] = ('%g' % v)
         args_built = True
 
     # --- Generic with format string ---

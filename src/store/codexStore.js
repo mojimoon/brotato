@@ -346,6 +346,14 @@ export function renderEffectPrefix(eff) {
   return '·'
 }
 
+// Format a number with up to `dp` decimals, stripping trailing zeros
+// (0.65 -> "0.65", 1.0 -> "1", 12.0 -> "12") — used for decimal-aware args.
+function fmtDec(v, dp) {
+  const n = parseFloat(v)
+  if (!isFinite(n)) return String(v)
+  return parseFloat(n.toFixed(dp)).toString()
+}
+
 export function renderEffectText(eff) {
   const lang = isZh.value ? 'zh' : 'en'
   let text, curseArgs, useCurseData
@@ -390,13 +398,14 @@ export function renderEffectText(eff) {
         if (arg.type === 'linked') {
           const val = linkedParentVal * (arg.linked_mult ?? 1)
           const dp = arg.decimalPlaces
-          return dp != null ? val.toFixed(dp) : String(Math.round(val))
+          return dp != null ? fmtDec(val, dp) : String(Math.round(val))
         }
-        let rawValue = curseEnabled.value
-          ? applyCurse(arg, effectSign, origValue)
-          : (arg.decimalPlaces != null ? arg.value.toFixed(arg.decimalPlaces) : Math.round(arg.value))
-        if (arg.decimalPlaces != null && curseEnabled.value) {
-          rawValue = parseFloat(rawValue).toFixed(arg.decimalPlaces)
+        let rawValue
+        if (curseEnabled.value) {
+          rawValue = applyCurse(arg, effectSign, origValue)
+          if (arg.decimalPlaces != null) rawValue = fmtDec(rawValue, arg.decimalPlaces)
+        } else {
+          rawValue = arg.decimalPlaces != null ? fmtDec(arg.value, arg.decimalPlaces) : Math.round(arg.value)
         }
         return String(rawValue)
       }
