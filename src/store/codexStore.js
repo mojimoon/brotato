@@ -239,7 +239,10 @@ export function setBonusText(bonus) {
   if (bonus.en || bonus.zh) return isZh.value ? (bonus.zh || bonus.en) : (bonus.en || bonus.zh)
   if (!Array.isArray(bonus)) return ''
   const lang = isZh.value ? 'zh' : 'en'
-  return bonus.map(e => (e.text && e.text[lang]) || '').join(' / ')
+  return bonus.map(e => {
+    const t = (e && e.text && e.text[lang]) || ''
+    return t.replace(/\{0\}/g, String(e && e.value != null ? e.value : ''))
+  }).join(' / ')
 }
 
 export function getStatIcon(statKey) {
