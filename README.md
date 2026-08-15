@@ -2,13 +2,27 @@
 
 [English](README.md) | [中文](README.zh.md)
 
-## [Try it online](https://mojimoon.github.io/brotato/)
+## [Try it online](https://brotato.mojimoon.top/)
 
 A web-based codex for [Brotato](https://store.steampowered.com/app/1942280/Brotato/), built from decompiled game data.
 
-**Features: price / attack speed / curse calculator, multiple language support, and more QoL features.**
-
 ![](images/screenshot.png)
+
+I started working on this project because the wiki was outdated since the Paws and Claws update, and in addition I would like to preview the cursed effects easily.
+
+So that's it. You've got a new codex that incorporates **price, curse, and 99.99% accurate attack speed calculators** (and of course you can easily search, filter, and sort the items). I really enjoy it, and I hope you will too. 
+
+In addition, you can find links to my mods and other useful resources in the "Resources" section. (Why not try [Cursed & Double Sided Upgrades](https://steamcommunity.com/sharedfiles/filedetails/?id=3671945570) and [One Item to Rule Them All](https://steamcommunity.com/sharedfiles/filedetails/?id=3757246252)?)
+
+I would like to express my sincere gratitude to WL (the author of [Improved Tooltips](https://steamcommunity.com/sharedfiles/filedetails/?id=3019195689)) and AroRising (the author of [Brotato MultiTool](https://docs.google.com/spreadsheets/d/1qi_KWBH_fQlrXJioDGJQScuRbwfndHzLu4Zj5Ek0Aso/edit?gid=1374380662)) who provided me with information and inspiration for this project.
+
+**If you find it helpful, please consider giving it a star on [GitHub](https://github.com/mojimoon/brotato)!** If you would like to contribute or have any suggestions, please feel free to open an issue or a pull request.
+
+## Future Plans
+
+* Add enemy information and per-wave stats.
+* Add more localization support (currently supports English and Chinese).
+* Add more calculators and tools.
 
 ## Tech Stack
 

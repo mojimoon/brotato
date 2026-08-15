@@ -2,7 +2,7 @@
 
 [English](README.md) | [中文](README.zh.md)
 
-## [在线使用](https://mojimoon.github.io/brotato/)
+## [在线使用](https://brotato.mojimoon.top/)
 
 基于反编译游戏数据构建的 [Brotato](https://store.steampowered.com/app/1942280/Brotato/)（土豆兄弟）网页图鉴。
 
