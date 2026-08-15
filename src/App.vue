@@ -691,8 +691,7 @@ const showAttackSpeedCalc = ref(lsGet('brotato_showAtkCalc', false))
 const showPriceDetail = ref(lsGet('brotato_showPriceDetail', false))
 const attackSpeedSlider = ref(0)
 const statRangeSlider = ref(0)
-const weaponCountSlider = ref(1)
-// const weaponCountSlider = ref(lsGet('brotato_weaponCount', 1))
+const weaponCountSlider = ref(lsGet('brotato_weaponCount', 1))
 const showFrames = ref(lsGet('brotato_showFrames', false))
 
 // ---- Curse System ----
@@ -904,16 +903,12 @@ watch(isDark, (v) => {
 }, { immediate: true })
 
 watch(isZh, v => localStorage.setItem('brotato_isZh', JSON.stringify(v)))
-watch([sortByWeapons, sortByItems], () => {
-  localStorage.setItem('brotato_sortBy_weapons', JSON.stringify(sortByWeapons.value))
-  localStorage.setItem('brotato_sortBy_items', JSON.stringify(sortByItems.value))
-})
 watch(showingPrice, v => localStorage.setItem('brotato_showingPrice', JSON.stringify(v)))
 watch(isDark, v => localStorage.setItem('brotato_isDark', JSON.stringify(v)))
 watch(showAttackSpeedCalc, v => localStorage.setItem('brotato_showAtkCalc', JSON.stringify(v)))
 watch(showPriceDetail, v => localStorage.setItem('brotato_showPriceDetail', JSON.stringify(v)))
 watch(showFrames, v => localStorage.setItem('brotato_showFrames', JSON.stringify(v)))
-// watch(weaponCountSlider, v => localStorage.setItem('brotato_weaponCount', JSON.stringify(v)))
+watch(weaponCountSlider, v => localStorage.setItem('brotato_weaponCount', JSON.stringify(v)))
 
 // ---- Tier colors ----
 const TIER_COLORS = ['#aaaaaa', '#5cc4ff', '#b75cff', '#ff3d3d']
