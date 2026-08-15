@@ -4,7 +4,7 @@
       <template #content>
         <div class="tag-tooltip-content">
           <div class="tag-tooltip-name">{{ tagTr(tag) }}</div>
-          <div v-if="tagItems(tag).length" class="tag-tooltip-line">{{ S.items }}：{{ tagItems(tag).join(' ,') }}</div>
+          <div v-if="tagItems(tag).length" class="tag-tooltip-line">{{ S.items }}：{{ tagItems(tag).join(', ') }}</div>
           <div v-if="tagCharacters(tag).length" class="tag-tooltip-line">{{ S.characters }}：{{
             tagCharacters(tag).join(', ') }}</div>
         </div>
