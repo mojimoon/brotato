@@ -1,5 +1,5 @@
 <template>
-  <div class="detail-section">
+  <div class="detail-section" v-if="currentEffects.length">
     <h3 class="section-title">{{ S.effects }}</h3>
     <div class="effects-list">
       <template v-for="(eff, idx) in currentEffects" :key="idx">

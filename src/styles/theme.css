@@ -145,7 +145,7 @@ body { background: var(--bg-app); color: var(--text); font-family: 'Segoe UI', s
 /* Dropdown popper */
 .dark-dropdown, .dark-dropdown.el-popper { background-color: var(--bg-card) !important; border: 1px solid var(--border-input) !important; border-radius: 6px !important; box-shadow: var(--dropdown-shadow) !important; }
 .dark-dropdown .el-select-dropdown, .dark-dropdown .el-scrollbar, .dark-dropdown .el-scrollbar__wrap, .dark-dropdown .el-scrollbar__view,
-.dark-dropdown .el-select-dropdown__list, .dark-dropdown .el-dropdown-menu { background-color: var(--bg-card) !important; max-height: 540px; overflow-y: auto; }
+.dark-dropdown .el-select-dropdown__list, .dark-dropdown .el-dropdown-menu { background-color: var(--bg-card) !important; max-height: min(75vh, 540px); overflow-y: auto; }
 .dark-dropdown .el-popper__arrow::before { background: var(--bg-card) !important; border-color: var(--border-input) !important; }
 .dark-dropdown .el-select-dropdown__item { color: var(--dropdown-item-fg) !important; padding: 8px 14px !important; font-size: 13px; transition: background .12s, color .12s; display: flex; align-items: center; min-height: 32px; line-height: 1.2; }
 .dark-dropdown .el-select-dropdown__item:hover { background-color: var(--bg-dropdown-hover) !important; color: var(--text-bright) !important; }

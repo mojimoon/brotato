@@ -237,7 +237,7 @@
 .eff-text { flex: 1; min-width: 0; }
 
 /* Starting Weapons Grid */
-.starting-weapons-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 5px; }
+.starting-weapons-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); gap: 5px; }
 .starting-weapon-card { cursor: pointer; }
 
 /* Tags */
