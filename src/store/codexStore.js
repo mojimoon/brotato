@@ -219,8 +219,6 @@ export function statTr(key) {
 
 export function setTr(key) {
   if (!key) return ''
-  const sets = rawData.value.sets || {}
-  if (sets[key] && sets[key]._manual) return isZh.value ? sets[key].name_zh : sets[key].name_en
   const trans = rawData.value.translations || {}
   if (trans[key]) return isZh.value ? (trans[key].zh || key) : (trans[key].en || key)
   return key.replace('WEAPON_CLASS_', '').replace(/_/g, ' ')
@@ -230,7 +228,7 @@ export function getSetBonuses(key) {
   const sets = rawData.value.sets || {}
   const sd = sets[key]
   if (!sd) return []
-  return sd._manual ? sd.tiers : sd
+  return sd
 }
 
 export function setBonusText(bonus) {
