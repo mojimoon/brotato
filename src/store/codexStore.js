@@ -2,7 +2,7 @@ import { ref, computed, watch, nextTick } from 'vue'
 
 // ---- 数据基准地址 ----
 export const BASE = import.meta.env.MODE === 'production'
-  ? 'https://cdn.jsdmirror.com/gh/mojimoon/brotato@v1.7.1/public/'
+  ? 'https://cdn.jsdmirror.com/gh/mojimoon/brotato@v1.8.0/public/'
   : import.meta.env.BASE_URL
 
 // ---- 共享字符串字典 ----
