@@ -1,0 +1,283 @@
+/* ============================================================================
+   theme.css — 主题变量、暗/亮色覆盖、Element Plus 全局覆盖、滚动条、颜色标记
+   （从原 App.vue 的 <style> 抽取；所有 :deep() 已还原为普通后代选择器，
+    因为本文件是全局样式，不需要 scoped 语法）
+   ============================================================================ */
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  /* page & layout */
+  --bg-app: #1a1d28;
+  --bg-header: #151822;
+  /* surfaces */
+  --bg-card: #22253a;
+  --bg-row: #22253a;
+  --bg-alt: #22253a;
+  --bg-inset: #1e2030;
+  --bg-icon: #1e2030;
+  --bg-table-head: #1e2030;
+  --bg-hover: #282c44;
+  --bg-alt-hover: #282c44;
+  --bg-dropdown-hover: #2e3148;
+  --bg-tabs-hover: #393d58;
+  --bg-filter-hover: #2a2d3a;
+  --bg-btn: #252836;
+  --bg-btn-hover: #333648;
+  --bg-tag: #2a2d44;
+  --bg-tag-hover: #3a3d58;
+  --bg-tier: #22253a;
+  --bg-tier-disabled: #22253a;
+  /* badges */
+  --badge-bg: #3a3d4e;
+  --badge-fg: #fff;
+  /* borders */
+  --border: #3a3d4e;
+  --border-input: #3a3d4e;
+  --border-subtle: #2a2d3a;
+  --border-soft: #2a2d3a;
+  --border-strong: #444;
+  --border-hover: #5a5d6e;
+  --border-tabs-hover: #4a4d5e;
+  --border-active: #5a5d6e;
+  /* text */
+  --text: #ccc;
+  --text-strong: #eee;
+  --text-muted: #bbb;
+  --text-faint: #888;
+  --text-fainter: #777;
+  --text-bright: #fff;
+  --text-btn: #ccc;
+  /* accents (same in both themes unless noted) */
+  --accent: #ff3d3d;
+  --accent-gold: #f39c12;
+  --accent-green: #4ade80;
+  --accent-red: #f87171;
+  --accent-blue: #2980b9;
+  --accent-purple: #a855f7;
+  --curse: #c084fc;
+  --curse-deep: #7b3fa3;
+  --nightmare: #ff3d3d;
+  /* frames toggle (blue) */
+  --frames-active-bg: rgba(59, 130, 246, 0.16);
+  --frames-active-fg: #60a5fa;
+  --frames-active-border: #3b82f6;
+  --frames-active-shadow: rgba(59, 130, 246, 0.3);
+  --price-final: #f39c12;
+  --badge-red: #c0392b;
+  --badge-orange: #d35400;
+  /* value-state (gold) shared by filter/sort buttons */
+  --val-text: #fff4cf;
+  --val-border: #d2a64a;
+  --val-shadow: 0 0 0 1px rgba(255, 196, 74, 0.12);
+  /* misc semantic text */
+  --tag-fg: #bbb;
+  --tag-tooltip-line: #aaa;
+  --set-tooltip-line: #ccc;
+  --set-badge-fg: #ccc;
+  --set-badge-hover-bg: #4a4d5e;
+  --attack-type-fg: #bbb;
+  --tier-fg: #888;
+  --tier-hover-bg: transparent;
+  --tier-hover-fg: #fff;
+  --tier-hover-border: #555;
+  --tier-active-fg: #fff;
+  --eff-prefix: #777;
+  --marks-text: #888;
+  --slider-marks: #888;
+  --stop-bg: #5a5d6e;
+  --scrollbar-thumb: #3a3d4e;
+  --scrollbar-thumb-hover: #5a5d6e;
+  --caret: #888;
+  --range-icon: #888;
+  --dropdown-empty: #777;
+  --dropdown-item-fg: #bbb;
+  --el-tag-bg: #2a2d3a;
+  --dropdown-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  /* tags (pet / structure) */
+  --tag-pet-bg: #1e3a1e; --tag-pet-fg: #6ee76e;
+  --tag-pet-bg-hover: #2a4a2a; --tag-pet-fg-hover: #9ef79e;
+  --tag-struct-bg: #3a2a1a; --tag-struct-fg: #ffb74d;
+  --tag-struct-bg-hover: #4a3520; --tag-struct-fg-hover: #ffcc80;
+  /* effect markers */
+  --mark-green: #22c55e; --mark-red: #ef4444; --mark-purple: #a855f7;
+  /* weapon scaling text */
+  --scaling: #eae2b0; --scaling-pct: #ddd;
+  /* curse toggle (off / active) */
+  --curse-off-bg: #2a2d3a; --curse-off-border: #3a3d4e; --curse-off-fg: #888;
+  --curse-active-bg: #3d1f5e; --curse-active-border: #7b3fa3; --curse-active-fg: #c084fc;
+}
+
+html { background: var(--bg-app); }
+body { background: var(--bg-app); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; transition: background .2s, color .2s; }
+
+/* ---- Tabs — card style (Element Plus 覆盖) ---- */
+.main-tabs { background: var(--bg-header); padding: 0 24px; }
+.main-tabs .el-tabs__header { margin: 0; }
+.main-tabs .el-tabs__nav-wrap::after { display: none; }
+.el-tabs--card > .el-tabs__header { border-bottom: 1px solid var(--border-subtle); background: var(--bg-header); }
+.el-tabs--card > .el-tabs__header .el-tabs__nav { border: none; }
+.el-tabs--card > .el-tabs__header .el-tabs__item {
+  color: var(--text-muted) !important; height: 42px; line-height: 42px; font-size: 14px;
+  background: var(--bg-card); border: 1px solid var(--border); border-bottom: none;
+  margin-right: 2px; border-radius: 8px 8px 0 0; padding: 0 18px;
+  transition: background .15s, color .15s, border-color .15s;
+}
+.el-tabs--card > .el-tabs__header .el-tabs__item:first-child { border-left: 1px solid var(--border) !important; }
+.el-tabs--card > .el-tabs__header .el-tabs__item:hover { color: var(--text-strong) !important; background: var(--bg-tabs-hover); border-color: var(--border-tabs-hover); }
+.el-tabs--card > .el-tabs__header .el-tabs__item.is-active { color: var(--accent) !important; background: var(--bg-app); border-color: var(--border-active); }
+.el-tabs--card > .el-tabs__header .el-tabs__active-bar { background: var(--accent); }
+.main-tabs .el-tabs__item { padding: 0 12px; font-size: 14px; }
+
+/* ============ Element Plus Dark Overrides ============ */
+.el-input__wrapper { background-color: var(--bg-card) !important; border-color: var(--border-input) !important; box-shadow: none !important; }
+.el-input__wrapper:hover { border-color: var(--border-hover) !important; }
+.el-input.is-focus .el-input__wrapper { border-color: var(--accent) !important; box-shadow: 0 0 0 1px var(--accent) inset !important; }
+.el-input__inner { color: var(--text) !important; }
+.el-input__inner::placeholder { color: var(--text-fainter) !important; }
+.el-select .el-select__caret { color: var(--caret) !important; }
+.el-select .el-input .el-input__suffix .el-icon { color: var(--caret) !important; }
+.el-select .el-input__wrapper { background-color: var(--bg-card) !important; border-color: var(--border-input) !important; }
+.el-select .el-tag { background-color: var(--el-tag-bg) !important; border-color: var(--border) !important; color: var(--text-muted) !important; }
+.el-input__inner:-webkit-autofill,
+.el-input__inner:-webkit-autofill:hover,
+.el-input__inner:-webkit-autofill:focus { -webkit-box-shadow: 0 0 0 30px var(--bg-card) inset !important; -webkit-text-fill-color: var(--text) !important; transition: background-color 5000s ease-in-out 0s; }
+
+/* Dropdown popper */
+.dark-dropdown, .dark-dropdown.el-popper { background-color: var(--bg-card) !important; border: 1px solid var(--border-input) !important; border-radius: 6px !important; box-shadow: var(--dropdown-shadow) !important; }
+.dark-dropdown .el-select-dropdown, .dark-dropdown .el-scrollbar, .dark-dropdown .el-scrollbar__wrap, .dark-dropdown .el-scrollbar__view,
+.dark-dropdown .el-select-dropdown__list, .dark-dropdown .el-dropdown-menu { background-color: var(--bg-card) !important; max-height: 540px; overflow-y: auto; }
+.dark-dropdown .el-popper__arrow::before { background: var(--bg-card) !important; border-color: var(--border-input) !important; }
+.dark-dropdown .el-select-dropdown__item { color: var(--dropdown-item-fg) !important; padding: 8px 14px !important; font-size: 13px; transition: background .12s, color .12s; display: flex; align-items: center; min-height: 32px; line-height: 1.2; }
+.dark-dropdown .el-select-dropdown__item:hover { background-color: var(--bg-dropdown-hover) !important; color: var(--text-bright) !important; }
+.dark-dropdown .el-select-dropdown__item.is-selected, .dark-dropdown .el-select-dropdown__item.selected { color: var(--accent) !important; font-weight: 600; }
+.dark-dropdown .el-select-dropdown__item.is-hovering { background-color: var(--bg-dropdown-hover) !important; }
+.dark-dropdown .el-select-dropdown__empty { color: var(--dropdown-empty) !important; padding: 10px; }
+.dark-dropdown .el-dropdown-menu__item {
+  color: var(--dropdown-item-fg) !important;
+  padding: 8px 14px !important;
+  font-size: 13px;
+  background-color: transparent !important;
+  transition: background-color .18s ease, color .18s ease, box-shadow .18s ease, transform .18s ease;
+  line-height: 1.2;
+}
+.dark-dropdown .el-dropdown-menu__item:hover,
+.dark-dropdown .el-dropdown-menu__item:focus,
+.dark-dropdown .el-dropdown-menu__item:active {
+  background-color: var(--bg-dropdown-hover) !important;
+  color: var(--text-bright) !important;
+}
+.dark-dropdown .el-dropdown-menu__item.is-active-opt {
+  background-color: rgba(255, 61, 61, 0.08) !important;
+  color: var(--accent) !important;
+  font-weight: 600;
+}
+.el-popper.is-dark { background: var(--bg-card) !important; border: 1px solid var(--border-input) !important; color: var(--text) !important; }
+.is-active-lang { color: var(--accent) !important; font-weight: 600; }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-app); }
+::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--scrollbar-thumb-hover); }
+
+/* ==================== Light Theme ==================== */
+html.light-theme, body.light-theme {
+  --bg-app: #f0f2f5;
+  --bg-header: #fff;
+  --bg-card: #fff;
+  --bg-row: #f0f2f5;
+  --bg-alt: #f5f5f5;
+  --bg-inset: #fff;
+  --bg-icon: #f5f6f8;
+  --bg-table-head: #e8eaed;
+  --bg-hover: #e8eaed;
+  --bg-alt-hover: #e8e8e8;
+  --bg-dropdown-hover: #f0f2f5;
+  --bg-tabs-hover: #d5d8de;
+  --bg-filter-hover: #f0f2f5;
+  --bg-btn: #e8eaed;
+  --bg-btn-hover: #d8dade;
+  --bg-tag: #ddd;
+  --bg-tag-hover: #ccc;
+  --bg-tier: #e2e4e8;
+  --bg-tier-disabled: #eee;
+  --badge-bg: #ddd;
+  --badge-fg: #000;
+  --border: #ccc;
+  --border-input: #bbb;
+  --border-subtle: #ccc;
+  --border-soft: #ddd;
+  --border-strong: #bbb;
+  --border-hover: #999;
+  --border-tabs-hover: #aaa;
+  --border-active: #bbb;
+  --text: #222;
+  --text-strong: #111;
+  --text-muted: #444;
+  --text-faint: #777;
+  --text-fainter: #666;
+  --text-bright: #111;
+  --text-btn: #333;
+  --accent: #ff3d3d;
+  --accent-gold: #c0392b;
+  --accent-green: #107535;
+  --accent-red: #dc2626;
+  --accent-blue: #2980b9;
+  --accent-purple: #9333ea;
+  /* frames toggle (blue) */
+  --frames-active-bg: #e8f1fb;
+  --frames-active-fg: #1d4ed8;
+  --frames-active-border: #2563eb;
+  --frames-active-shadow: rgba(37, 99, 235, 0.25);
+  --curse: #7c3aed;
+  --curse-deep: #a78bfa;
+  --nightmare: #e53935;
+  --price-final: #1e88e5;
+  --badge-red: #c0392b;
+  --badge-orange: #e65100;
+  --val-text: #7c5a06;
+  --val-border: #c59c43;
+  --val-shadow: 0 0 0 1px rgba(205, 155, 44, 0.14);
+  --tag-fg: #333;
+  --tag-tooltip-line: #555;
+  --set-tooltip-line: #555;
+  --set-badge-fg: #333;
+  --set-badge-hover-bg: #ccc;
+  --attack-type-fg: #666;
+  --tier-fg: #666;
+  --tier-hover-bg: #d5d8de;
+  --tier-hover-fg: #333;
+  --tier-hover-border: #aaa;
+  --tier-active-fg: #fff;
+  --eff-prefix: #777;
+  --marks-text: #888;
+  --slider-marks: #999;
+  --stop-bg: #aaa;
+  --scrollbar-thumb: #bbb;
+  --scrollbar-thumb-hover: #999;
+  --caret: #555;
+  --range-icon: #aaa;
+  --dropdown-empty: #777;
+  --dropdown-item-fg: #222;
+  --el-tag-bg: #e8eaed;
+  --dropdown-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --tag-pet-bg: #c8e6c9; --tag-pet-fg: #1b5e20;
+  --tag-pet-bg-hover: #a5d6a7; --tag-pet-fg-hover: #0d3b0d;
+  --tag-struct-bg: #fff3e0; --tag-struct-fg: #e65100;
+  --tag-struct-bg-hover: #ffe0b2; --tag-struct-fg-hover: #bf360c;
+  --mark-green: #107535; --mark-red: #dc2626; --mark-purple: #9333ea;
+  --scaling: #333; --scaling-pct: #333;
+  --curse-off-bg: #fff7ed; --curse-off-border: #f59e0b; --curse-off-fg: #b45309;
+  --curse-active-bg: #ede9fe; --curse-active-border: #a78bfa; --curse-active-fg: #7c3aed;
+  --curse-active-shadow: 0 0 6px rgba(245, 158, 11, 0.2);
+}
+/* a few Element-internal light overrides whose dark side is Element's default */
+body.light-theme .el-slider__tooltip { background: #fff !important; border: 1px solid #ddd !important; color: #222 !important; }
+body.light-theme .el-slider__tooltip::after { border-top-color: #fff !important; }
+body.light-theme .el-popper .el-popper__arrow::before { background: #fff !important; border-color: #ccc !important; }
+
+/* Effect text color markers */
+.zvg { color: var(--mark-green); }
+.zvr { color: var(--mark-red); }
+.zvp { color: var(--mark-purple); }
