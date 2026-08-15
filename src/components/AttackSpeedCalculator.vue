@@ -88,15 +88,19 @@ const chartData = computed(() => {
   if (!stats) return { datasets: [] }
 
   const minAtkSpd = -100
-  const maxAtkSpd = 202
+  const maxAtkSpd = 200
   const hasRange = activeWeaponData.value?.type === 'melee' && statRangeSlider.value !== 0
-  const mainPoints = []
   const basePoints = []
+  const extraPoints = []
 
   for (let atkSpd = minAtkSpd; atkSpd <= maxAtkSpd; atkSpd += 1) {
-    mainPoints.push({ x: atkSpd, y: calculateCooldownWithAttackSpeed(stats, atkSpd, statRangeSlider.value, weaponCountSlider.value) })
+    const curVal = calculateCooldownWithAttackSpeed(stats, atkSpd, statRangeSlider.value, weaponCountSlider.value)
+
     if (hasRange) {
+      extraPoints.push({ x: atkSpd, y: curVal })
       basePoints.push({ x: atkSpd, y: calculateCooldownWithAttackSpeed(stats, atkSpd, 0) })
+    } else {
+      basePoints.push({ x: atkSpd, y: curVal })
     }
   }
 
@@ -104,15 +108,15 @@ const chartData = computed(() => {
   const datasets = []
   if (hasRange) {
     datasets.push({
-      data: basePoints,
-      borderColor: dark ? '#888' : '#bbb',
-      borderWidth: 1.5,
+      data: extraPoints,
+      borderColor: dark ? '#f39c12' : '#c0392b',
+      borderWidth: 2,
       pointRadius: 0,
       tension: 0.3,
     })
   }
   datasets.push({
-    data: mainPoints,
+    data: basePoints,
     borderColor: dark ? '#4ade80' : '#22c55e',
     borderWidth: 2,
     pointRadius: 0,
@@ -154,7 +158,12 @@ const currentPointPlugin = {
     const datasets = chart.data.datasets
     if (!datasets.length) return
 
-    const lastDs = datasets[datasets.length - 1].data
+    // hasRange 时 datasets[0] 是当前 range 下的实际曲线 (extraPoints)，
+    // datasets[末尾] 是 range=0 的参考基线 (basePoints)；
+    // 当前点应跟随实际曲线，而非参考基线。
+    const hasRange = activeWeaponData.value?.type === 'melee' && statRangeSlider.value !== 0
+    const dsIndex = hasRange ? 0 : datasets.length - 1
+    const lastDs = datasets[dsIndex]?.data
     if (!lastDs || !lastDs.length) return
 
     let closest = lastDs[0]
@@ -199,7 +208,7 @@ const chartOptions = computed(() => {
       x: {
         type: 'linear',
         min: -100,
-        max: 202,
+        max: 200,
         grid: { color: dark ? '#333' : '#e5e5e5' },
         ticks: { color: dark ? '#aaa' : '#666', font: { size: 10 }, stepSize: 25 },
       },
