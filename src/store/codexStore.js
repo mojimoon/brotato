@@ -1054,9 +1054,11 @@ export function onTabChange() {
   sortBy.value = 'default'; searchText.value = ''; filterTier.value = null; filterDlc.value = null
   if (!pendingNavigate.value) {
     selectedItem.value = null
-    setTimeout(() => {
-      if (currentDisplayList.value.length > 0) selectItem(currentDisplayList.value[0])
-    }, 50)
+    if (activeTab.value !== 'resources') {
+      setTimeout(() => {
+        if (currentDisplayList.value.length > 0) selectItem(currentDisplayList.value[0])
+      }, 50)
+    }
   }
   pendingNavigate.value = false
 }
