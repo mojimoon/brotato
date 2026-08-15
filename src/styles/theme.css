@@ -112,7 +112,7 @@ html { background: var(--bg-app); }
 body { background: var(--bg-app); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; transition: background .2s, color .2s; }
 
 /* ---- Tabs — card style (Element Plus 覆盖) ---- */
-.main-tabs { background: var(--bg-header); padding: 0 24px; }
+.main-tabs { background: var(--bg-header); padding: 8px 24px 0; }
 .main-tabs .el-tabs__header { margin: 0; }
 .main-tabs .el-tabs__nav-wrap::after { display: none; }
 .el-tabs--card > .el-tabs__header { border-bottom: 1px solid var(--border-subtle); background: var(--bg-header); }
@@ -125,7 +125,7 @@ body { background: var(--bg-app); color: var(--text); font-family: 'Segoe UI', s
 }
 .el-tabs--card > .el-tabs__header .el-tabs__item:first-child { border-left: 1px solid var(--border) !important; }
 .el-tabs--card > .el-tabs__header .el-tabs__item:hover { color: var(--text-strong) !important; background: var(--bg-tabs-hover); border-color: var(--border-tabs-hover); }
-.el-tabs--card > .el-tabs__header .el-tabs__item.is-active { color: var(--accent) !important; background: var(--bg-app); border-color: var(--border-active); }
+.el-tabs--card > .el-tabs__header .el-tabs__item.is-active { color: #fff !important; background: var(--accent) !important; border-color: var(--accent) !important; font-weight: 700; }
 .el-tabs--card > .el-tabs__header .el-tabs__active-bar { background: var(--accent); }
 .main-tabs .el-tabs__item { padding: 0 12px; font-size: 14px; }
 
@@ -268,10 +268,25 @@ html.light-theme, body.light-theme {
   --tag-struct-bg-hover: #ffe0b2; --tag-struct-fg-hover: #bf360c;
   --mark-green: #107535; --mark-red: #dc2626; --mark-purple: #9333ea;
   --scaling: #333; --scaling-pct: #333;
-  --curse-off-bg: #fff7ed; --curse-off-border: #f59e0b; --curse-off-fg: #b45309;
+  --curse-off-bg: #f0f0f0; --curse-off-border: #ccc; --curse-off-fg: #888;
   --curse-active-bg: #ede9fe; --curse-active-border: #a78bfa; --curse-active-fg: #7c3aed;
-  --curse-active-shadow: 0 0 6px rgba(245, 158, 11, 0.2);
+  --curse-active-shadow: 0 0 6px rgba(167, 139, 250, 0.3);
 }
+/* Light theme — sort / price / frames buttons: use light surfaces, not dark gradients */
+body.light-theme .sort-btn,
+body.light-theme .price-toggle-btn {
+  --btn-text: #333; --btn-border: #ccc; --btn-bg: #fff;
+  --btn-shadow: 0 1px 3px rgba(0, 0, 0, .08);
+  --btn-text-off: #777; --btn-border-off: #ccc; --btn-bg-off: #f0f2f5;
+  --btn-shadow-off: none;
+  --btn-border-hover: #999;
+  --btn-bg-hover: #e8eaed; --btn-text-hover: #333;
+  --btn-text-val: #7c5a06; --btn-border-val: #c59c43;
+  --btn-shadow-val: var(--val-shadow);
+  --btn-text-val-hover: #7c5a06; --btn-border-val-hover: #c59c43;
+  --btn-shadow-val-hover: var(--val-shadow);
+}
+
 /* a few Element-internal light overrides whose dark side is Element's default */
 body.light-theme .el-slider__tooltip { background: #fff !important; border: 1px solid #ddd !important; color: #222 !important; }
 body.light-theme .el-slider__tooltip::after { border-top-color: #fff !important; }
