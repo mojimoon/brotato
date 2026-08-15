@@ -157,7 +157,7 @@
             <el-icon style="margin-right:4px">
               <Sort />
             </el-icon>
-            {{ sortBy === 'price' ? S.price : S.default }}
+            {{ currentSortLabel }}
             <el-icon class="el-icon--right">
               <ArrowDown />
             </el-icon>
@@ -168,6 +168,17 @@
               }}</el-dropdown-item>
               <el-dropdown-item command="price" :class="{ 'is-active-opt': sortBy === 'price' }">{{ S.price
               }}</el-dropdown-item>
+              <template v-if="activeTab === 'weapons'">
+                <el-dropdown-item command="damage" :class="{ 'is-active-opt': sortBy === 'damage' }">{{ S.sortDamage
+                }}</el-dropdown-item>
+                <el-dropdown-item command="crit" :class="{ 'is-active-opt': sortBy === 'crit' }">{{ S.sortCrit
+                }}</el-dropdown-item>
+                <el-dropdown-item command="cooldown" :class="{ 'is-active-opt': sortBy === 'cooldown' }">{{
+                  S.sortCooldown
+                }}</el-dropdown-item>
+                <el-dropdown-item command="range" :class="{ 'is-active-opt': sortBy === 'range' }">{{ S.sortRange
+                }}</el-dropdown-item>
+              </template>
             </el-dropdown-menu>
           </template>
         </el-dropdown>
@@ -597,6 +608,7 @@ const S = computed(() => isZh.value ? {
   melee: '近战', ranged: '远战', set: '武器类别', source: '来源',
   base: '本体', baseGame: '本体', tag: '道具标签', sort: '排序',
   default: '默认', price: '价格', showPrice: '显示价格', on: '开', off: '关',
+  sortDamage: '伤害', sortCrit: '暴击', sortCooldown: '冷却', sortRange: '范围',
   damage: '伤害', crit: '暴击', cooldown: '冷却', knockback: '击退',
   range: '范围', accuracy: '命中率', lifesteal: '生命窃取', piercing: '贯通',
   bounce: '反弹', projectiles: '投射物', dmg: '伤害', dps: 'DPS',
@@ -615,6 +627,7 @@ const S = computed(() => isZh.value ? {
   melee: 'Melee', ranged: 'Ranged', set: 'Set', source: 'Source',
   base: 'Base', baseGame: 'Base Game', tag: 'Tag', sort: 'Sort',
   default: 'Default', price: 'Price', showPrice: 'Show Price', on: 'On', off: 'Off',
+  sortDamage: 'Damage', sortCrit: 'Crit', sortCooldown: 'Cooldown', sortRange: 'Range',
   damage: 'Damage', crit: 'Crit', cooldown: 'Cooldown', knockback: 'Knockback',
   range: 'Range', accuracy: 'Accuracy', lifesteal: 'Lifesteal', piercing: 'Piercing',
   bounce: 'Bounce', projectiles: 'Projectiles', dmg: 'dmg', dps: 'DPS',
@@ -646,7 +659,28 @@ const currentTierIndex = ref(0)
 const waveSlider = ref(0)
 const stickyTierIndex = ref(0)
 const filterTag = ref(null)
-const sortBy = ref(lsGet('brotato_sortBy', 'default'))
+const sortByWeapons = ref(lsGet('brotato_sortBy_weapons', 'default'))
+const sortByItems = ref(lsGet('brotato_sortBy_items', 'default'))
+// Weapon and item lists keep independent sort states so switching the sort in
+// one tab does not affect the other. sortBy mirrors the active tab's value.
+const sortBy = computed({
+  get: () => activeTab.value === 'items' ? sortByItems.value : sortByWeapons.value,
+  set: (v) => {
+    if (activeTab.value === 'items') sortByItems.value = v
+    else sortByWeapons.value = v
+  }
+})
+// Label shown on the sort button for the active tab's current sort.
+const currentSortLabel = computed(() => {
+  switch (sortBy.value) {
+    case 'price': return S.value.price
+    case 'damage': return S.value.sortDamage
+    case 'crit': return S.value.sortCrit
+    case 'cooldown': return S.value.sortCooldown
+    case 'range': return S.value.sortRange
+    default: return S.value.default
+  }
+})
 const showingPrice = ref(lsGet('brotato_showingPrice', true))
 const isDark = ref(lsGet('brotato_isDark', true))
 const isMobile = ref(window.innerWidth < 768)
@@ -870,7 +904,10 @@ watch(isDark, (v) => {
 }, { immediate: true })
 
 watch(isZh, v => localStorage.setItem('brotato_isZh', JSON.stringify(v)))
-watch(sortBy, v => localStorage.setItem('brotato_sortBy', JSON.stringify(v)))
+watch([sortByWeapons, sortByItems], () => {
+  localStorage.setItem('brotato_sortBy_weapons', JSON.stringify(sortByWeapons.value))
+  localStorage.setItem('brotato_sortBy_items', JSON.stringify(sortByItems.value))
+})
 watch(showingPrice, v => localStorage.setItem('brotato_showingPrice', JSON.stringify(v)))
 watch(isDark, v => localStorage.setItem('brotato_isDark', JSON.stringify(v)))
 watch(showAttackSpeedCalc, v => localStorage.setItem('brotato_showAtkCalc', JSON.stringify(v)))
@@ -1219,8 +1256,24 @@ const currentDisplayList = computed(() => {
   }
 
   const byTierThenName = (a, b) => a.tier - b.tier || (a.name_en || '').localeCompare(b.name_en || '')
-  if (sortBy.value === 'price') list.sort((a, b) => (a.value || 0) - (b.value || 0))
-  else if (activeTab.value === 'weapons' || activeTab.value === 'items') list.sort(byTierThenName)
+  // Base-tier stats of a weapon family (lowest tier == tiers[0]) drive the
+  // weapon sorts, matching the values shown in the weapon detail panel.
+  const baseStats = (f) => (f.tiers && f.tiers.length ? f.tiers[0].stats : {})
+  const sortKey = sortBy.value
+  if (activeTab.value === 'weapons') {
+    if (sortKey === 'price') list.sort((a, b) => (a.value - b.value))
+    else if (sortKey === 'damage') list.sort((a, b) => (baseStats(a).damage - baseStats(b).damage))
+    else if (sortKey === 'crit') list.sort((a, b) => {
+      const sa = baseStats(a), sb = baseStats(b)
+      return (sa.crit_chance - sb.crit_chance) || (sa.crit_damage - sb.crit_damage)
+    })
+    else if (sortKey === 'cooldown') list.sort((a, b) => weaponSortCooldown(a) - weaponSortCooldown(b))
+    else if (sortKey === 'range') list.sort((a, b) => baseStats(a).max_range- baseStats(b).max_range)
+    else list.sort(byTierThenName)
+  } else if (activeTab.value === 'items') {
+    if (sortKey === 'price') list.sort((a, b) => (a.value || 0) - (b.value || 0))
+    else list.sort(byTierThenName)
+  }
   return list
 })
 
@@ -1470,6 +1523,24 @@ function calculateTooltipCooldown(stats, attackSpeed, statRange = 0) {
   }
 
   const { attackDuration, backDuration } = getMeleeTiming(stats, atkSpd, statRange)
+  return attackCooldown + recoilDuration + attackDuration / 2 + backDuration
+}
+
+// Standalone tooltip-cooldown for an arbitrary weapon family, used for the
+// "cooldown (shown)" list sort. Mirrors calculateTooltipCooldown(stats, 0, 0)
+// but reads the family's own type instead of the active weapon.
+function weaponSortCooldown(family) {
+  const w = family.tiers && family.tiers.length ? family.tiers[0] : null
+  const stats = w ? w.stats : null
+  if (!stats) return Infinity
+  const atkSpd = getAttackSpeedFactor(0)
+  const weaponCooldownFrames = getWeaponCooldownFrames(stats.cooldown, atkSpd)
+  const recoilDuration = getRecoilDuration(stats, atkSpd)
+  const attackCooldown = weaponCooldownFrames / COOLDOWN_FPS
+  if (family.type !== 'melee') {
+    return attackCooldown + recoilDuration * 2
+  }
+  const { attackDuration, backDuration } = getMeleeTiming(stats, atkSpd, 0)
   return attackCooldown + recoilDuration + attackDuration / 2 + backDuration
 }
 
