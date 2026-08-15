@@ -7,7 +7,7 @@ export const BASE = import.meta.env.MODE === 'production'
 
 // ---- 共享字符串字典 ----
 export const S = computed(() => isZh.value ? {
-  weapons: '武器', items: '道具', characters: '角色',
+  weapons: '武器', items: '道具', characters: '角色', resources: '资源',
   search: '搜索...', all: '全部', tier: '稀有度', type: '类型',
   melee: '近战', ranged: '远战', set: '武器类别', source: '来源',
   base: '本体', baseGame: '本体', tag: '道具标签', sort: '排序',
@@ -27,7 +27,7 @@ export const S = computed(() => isZh.value ? {
   tooltipCooldown: '显示冷却', actualCooldown: '实际冷却', tooltip: '显示', actual: '实际',
   rangeInfo: '玩家范围属性。实际加成减半（例如，150基础范围 + 100范围属性 → 200武器范围）'
 } : {
-  weapons: 'Weapons', items: 'Items', characters: 'Characters',
+  weapons: 'Weapons', items: 'Items', characters: 'Characters', resources: 'Resources',
   search: 'Search...', all: 'All', tier: 'Rarity', type: 'Type',
   melee: 'Melee', ranged: 'Ranged', set: 'Set', source: 'Source',
   base: 'Base', baseGame: 'Base Game', tag: 'Tag', sort: 'Sort',
