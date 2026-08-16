@@ -18,6 +18,8 @@ I would like to express my sincere gratitude to WL (the author of [Improved Tool
 
 **If you find it helpful, please consider giving it a star on [GitHub](https://github.com/mojimoon/brotato)!** If you would like to contribute or have any suggestions, please feel free to open an issue or a pull request.
 
+**We recommend reading the detailed explanation of Brotato's weapon cooldown mechanics for accurate calculations [here](docs/Brotato-weapon-cooldown-en.md).**
+
 ## Future Plans
 
 * Add enemy information and per-wave stats.

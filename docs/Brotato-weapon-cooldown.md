@@ -1,4 +1,4 @@
-# Brotato 武器冷却机制（简化版）
+# Brotato 武器冷却机制（99% 准确）的详解
 
 **推荐使用土豆兄弟图鉴 - [mojimoon.top](https://brotato.mojimoon.top/) 进行准确的冷却计算。**
 
@@ -84,7 +84,7 @@ $$\boxed{f = \text{tween}(r) + \text{tween}(t_\text{back}) - 1 + \begin{cases} \
 
 $$\boxed{t_\text{tooltip} = r + t_\text{back} + \frac{t_\text{atk}}{2} + \frac{w}{60}}$$
 
-## 3. 随机延迟帧
+## 4. 随机延迟帧
 
 随机延迟帧 (f) 是在 $\max(1, w - \Delta)$ 到 $w + \Delta$ 之间均匀分布的整数，其中 $\Delta = \min\Big(\frac{nw}{5},5n\Big)$，$n$ 为武器数量，最多取 6。
 
@@ -124,11 +124,11 @@ $$\boxed{C_\text{min} = \lfloor\max(1, w - \Delta)\rfloor + 1}$$
 
 $$\boxed{C_\text{max} = \lceil w + \Delta\rceil}$$
 
-从上述计算中可以知道，由于 (i) 动画占用的时间 $\text{tween}(f)$ 总是比 tooltip 使用的时长 $\frac{f}{60}$ 多 1-2 帧，(ii) 随机冷却帧的均值总是略高于 tooltip 使用的 $\frac{w}{60}$，因此 tooltip 显示的冷却时间存在低估。通常远程武器相差 1-3 帧，近战武器相差 2-5 帧，随机帧相差的近似值约 0.5-3.5 帧 (0.0833-0.5833 秒，但可能随其他变量进一步变化)。
+从上述计算中可以知道，由于 (i) 动画占用的时间 $\text{tween}(f)$ 总是比 tooltip 使用的时长 $\frac{f}{60}$ 多 1-2 帧，(ii) 随机冷却帧的均值总是略高于 tooltip 使用的 $\frac{w}{60}$，因此 tooltip 显示的冷却时间存在低估。通常远程武器相差 1-3 帧，近战武器相差 2-5 帧，随机帧相差的近似值约 0.5-3.5 帧 (0.0833-0.5833 秒，见下图)，但可能随其他变量进一步变化。
 
 ![](../misc/cooldown_deviation.png)
 
-## 4. 示例计算
+## 5. 示例计算
 
 以下全部假设 6 把武器的情况。
 

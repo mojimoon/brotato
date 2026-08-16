@@ -22,6 +22,8 @@
 
 希望对你有所帮助！也请记得帮我点个 Star ⭐️。
 
+**我们推荐 [在此](docs/Brotato-weapon-cooldown.md) 阅读 Brotato 武器冷却机制的详解，以便进行准确的计算。**
+
 ## 技术栈
 
 - **数据管线**：Python 3 — 解析 Godot `.tres` 资源文件，翻译效果文本，生成 JSON + 图标资源
