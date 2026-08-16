@@ -1,6 +1,8 @@
 # Brotato 武器冷却机制（99% 准确）的详解
 
-**推荐使用土豆兄弟图鉴 - [mojimoon.top](https://brotato.mojimoon.top/) 进行准确的冷却计算。**
+**推荐使用 [Brotato Codex](https://brotato.mojimoon.top/) 进行准确的冷却计算。**
+
+请考虑在 GitHub 上给我点个 star ⭐：[mojimoon/brotato](https://github.com/mojimoon/brotato)，谢谢！
 
 ## 0. 总览
 
@@ -245,4 +247,6 @@ $$\boxed{C_\text{max} = \lceil w + \Delta\rceil}$$
 
 至于范围对近战武器的影响，+200 范围属性的 DPS 变化在 -4% ~ -14% 之间，-200 范围属性的 DPS 收益在 +5% ~ +20% 之间。
 
-**推荐使用土豆兄弟图鉴 - [mojimoon.top](https://brotato.mojimoon.top/) 进行准确的冷却计算。**
+**推荐使用 [Brotato Codex](https://brotato.mojimoon.top/) 进行准确的冷却计算。**
+
+请考虑在 GitHub 上给我点个 star ⭐：[mojimoon/brotato](https://github.com/mojimoon/brotato)，谢谢！

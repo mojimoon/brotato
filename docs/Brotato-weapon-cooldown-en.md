@@ -1,6 +1,8 @@
 # A (99% Accurate) Detailed Explanation of Brotato's Weapon Cooldown Mechanics
 
-**For precise cooldown calculations, we recommend using the Brotato Codex — [mojimoon.top](https://brotato.mojimoon.top/).**
+**For precise cooldown calculations, we recommend using the [Brotato Codex](https://brotato.mojimoon.top/).**
+
+Please consider giving me a star ⭐ on GitHub: [mojimoon/brotato](https://github.com/mojimoon/brotato) and thank you!
 
 ## 0. Overview
 
@@ -245,4 +247,6 @@ The benefit of attack speed is hard to analyze qualitatively, but for the vast m
 
 As for the effect of range on melee weapons, a +200 range stat leads to a DPS change of -4% ~ -14%, while a -200 range stat yields a +5% ~ +20% DPS gain.
 
-**For precise cooldown calculations, we recommend using the Brotato Codex — [mojimoon.top](https://brotato.mojimoon.top/).**
+**For precise cooldown calculations, we recommend using the [Brotato Codex](https://brotato.mojimoon.top/).**
+
+Please consider giving me a star ⭐ on GitHub: [mojimoon/brotato](https://github.com/mojimoon/brotato) and thank you!
