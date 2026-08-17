@@ -43,7 +43,7 @@
       </div>
       <div class="slider-row">
         <label class="slider-label">{{ S.attackSpeed }}</label>
-        <el-slider v-model="attackSpeedSlider" :min="-200" :max="500" :step="1" :marks="atkSpeedMarks" show-input
+        <el-slider v-model="attackSpeedSlider" :min="-100" :max="600" :step="1" :marks="atkSpeedMarks" show-input
           size="small" input-size="small" />
       </div>
       <div v-if="activeWeaponData.type === 'melee'" class="slider-row">
@@ -88,7 +88,7 @@ const chartData = computed(() => {
   if (!stats) return { datasets: [] }
 
   const minAtkSpd = -100
-  const maxAtkSpd = 200
+  const maxAtkSpd = 300
   const hasRange = activeWeaponData.value?.type === 'melee' && statRangeSlider.value !== 0
   const basePoints = []
   const extraPoints = []
@@ -208,7 +208,7 @@ const chartOptions = computed(() => {
       x: {
         type: 'linear',
         min: -100,
-        max: 200,
+        max: 300,
         grid: { color: dark ? '#333' : '#e5e5e5' },
         ticks: { color: dark ? '#aaa' : '#666', font: { size: 10 }, stepSize: 25 },
       },
