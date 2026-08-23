@@ -449,7 +449,8 @@ export const weaponFamilies = computed(() => {
       tier: t0.tier, value: t0.value, icon: t0.icon, type: t0.type, dlc: t0.dlc, sets: t0.sets
     })
   }
-  return Object.values(map).sort((a, b) => a.tier - b.tier || (a.name || '').localeCompare(b.name || ''))
+  // 保留 JSON 插入顺序（后端已按 tier + 英文名排序），不按当前语言名重排
+  return Object.values(map)
 })
 
 export const allItemsRaw = computed(() => rawData.value.items)
@@ -498,7 +499,6 @@ export const currentDisplayList = computed(() => {
     list = list.filter(i => (i.tags || []).includes(filterTag.value) || (i.wanted_tags || []).includes(filterTag.value))
   }
 
-  const byTierThenName = (a, b) => a.tier - b.tier || (a.name || '').localeCompare(b.name || '')
   const baseStats = (f) => (f.tiers && f.tiers.length ? f.tiers[0].stats : {})
   const sortKey = sortBy.value
   if (activeTab.value === 'weapons') {
@@ -510,10 +510,10 @@ export const currentDisplayList = computed(() => {
     })
     else if (sortKey === 'cooldown') list.sort((a, b) => weaponSortCooldown(a) - weaponSortCooldown(b))
     else if (sortKey === 'range') list.sort((a, b) => baseStats(a).max_range - baseStats(b).max_range)
-    else list.sort(byTierThenName)
+    // 默认（default）保留 JSON 原顺序（后端已按 tier + 英文名排序），不按当前语言重排
   } else if (activeTab.value === 'items') {
     if (sortKey === 'price') list.sort((a, b) => (a.value || 0) - (b.value || 0))
-    else list.sort(byTierThenName)
+    // 默认（default）保留 JSON 原顺序
   }
   return list
 })
