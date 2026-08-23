@@ -6,47 +6,24 @@ export const BASE = import.meta.env.MODE === 'production'
   : import.meta.env.BASE_URL
 
 // ---- 共享字符串字典 ----
-export const S = computed(() => isZh.value ? {
-  weapons: '武器', items: '道具', characters: '角色', resources: '资源',
-  search: '搜索...', all: '全部', tier: '稀有度', type: '类型',
-  melee: '近战', ranged: '远战', set: '武器类别', source: '来源',
-  base: '本体', baseGame: '本体', tag: '道具标签', sort: '排序',
-  default: '默认', price: '价格', showPrice: '显示价格', on: '开', off: '关',
-  sortDamage: '伤害', sortCrit: '暴击', sortCooldown: '冷却', sortRange: '范围',
-  damage: '伤害', crit: '暴击', cooldown: '冷却', knockback: '击退',
-  range: '范围', accuracy: '命中率', lifesteal: '生命窃取', piercing: '贯通',
-  bounce: '反弹', projectiles: '投射物', dmg: '伤害', dps: 'DPS',
-  basePrice: '基础价格', perWave: '每波', wave: '波次',
-  effects: '效果', startingWeapons: '起始武器', preferredTags: '偏好标签',
-  unique: '独特', limited: '限制', clickToSee: '点击左侧查看详情',
-  belowNightmare: '难5', nightmare: '噩梦', basePriceShort: '价格',
-  belowNightmareShort: '难5', nightmareShort: '噩梦',
-  attackSpeedCalc: '攻速计算器', attackSpeed: '攻速', statRange: '范围',
-  attackSpeedBreakpoints: '攻速断点',
-  curse: '诅咒', clear: '清除筛选', weaponCount: '武器数量', frames: '帧数',
-  tooltipCooldown: '显示冷却', actualCooldown: '实际冷却', tooltip: '显示', actual: '实际',
-  rangeInfo: '玩家范围属性。实际加成减半（例如，150基础范围 + 100范围属性 → 200武器范围）'
-} : {
-  weapons: 'Weapons', items: 'Items', characters: 'Characters', resources: 'Resources',
-  search: 'Search...', all: 'All', tier: 'Rarity', type: 'Type',
-  melee: 'Melee', ranged: 'Ranged', set: 'Set', source: 'Source',
-  base: 'Base', baseGame: 'Base Game', tag: 'Tag', sort: 'Sort',
-  default: 'Default', price: 'Price', showPrice: 'Show Price', on: 'On', off: 'Off',
-  sortDamage: 'Damage', sortCrit: 'Crit', sortCooldown: 'Cooldown', sortRange: 'Range',
-  damage: 'Damage', crit: 'Crit', cooldown: 'Cooldown', knockback: 'Knockback',
-  range: 'Range', accuracy: 'Accuracy', lifesteal: 'Lifesteal', piercing: 'Piercing',
-  bounce: 'Bounce', projectiles: 'Projectiles', dmg: 'dmg', dps: 'DPS',
-  basePrice: 'Base Price', perWave: '/wave', wave: 'Wave',
-  effects: 'Effects', startingWeapons: 'Starting Weapons', preferredTags: 'Preferred Tags',
-  unique: 'Unique', limited: 'Limited', clickToSee: 'Click to see details',
-  belowNightmare: 'Danger 5', nightmare: 'Nightmare', basePriceShort: 'Price',
-  belowNightmareShort: 'D5', nightmareShort: 'NM',
-  attackSpeedCalc: 'Attack Speed Calculator', attackSpeed: 'A.Spd', statRange: 'Range',
-  attackSpeedBreakpoints: 'A.Spd Breakpoints',
-  curse: 'Curse', clear: 'Clear Filters', weaponCount: '#Weapon', frames: 'Frames',
-  tooltipCooldown: 'Tooltip Cooldown', actualCooldown: 'Actual Cooldown', tooltip: 'Tooltip', actual: 'Actual',
-  rangeInfo: 'Player range stat. Actual bonus is halved (e.g. 150 base range + 100 range stat → 200 weapon range)'
-})
+// UI strings are embedded per-language inside rawData.ui (see main.py /
+// build_ui_strings.py / ui_strings.json). Each per-language JSON carries only
+// its own language's strings, so S automatically reflects the active language.
+export const S = computed(() => rawData.value.ui || {})
+
+// Map the browser locale to one of the supported Brotato languages.
+function detectLang() {
+  const nav = (navigator.language || 'en').toLowerCase()
+  if (nav.startsWith('zh')) {
+    if (nav.includes('tw') || nav.includes('hk') || nav.includes('mo')) return 'zh_TW'
+    return 'zh'
+  }
+  const map = {
+    'fr': 'fr', 'ja': 'ja', 'ko': 'ko', 'ru': 'ru', 'pl': 'pl',
+    'es': 'es', 'pt': 'pt', 'de': 'de', 'tr': 'tr', 'it': 'it',
+  }
+  return map[nav.split('-')[0]] || 'en'
+}
 
 // ---- 响应式状态 ----
 const lsGet = (k, d) => { try { const v = localStorage.getItem(k); return v !== null ? JSON.parse(v) : d } catch { return d } }
@@ -55,7 +32,7 @@ export const rawData = ref({ weapons: [], items: [], characters: [], translation
 export const mainContentRef = ref(null)
 export const gridItemRefs = ref({})
 export const activeTab = ref('weapons')
-export const isZh = ref(lsGet('brotato_isZh', navigator.language.startsWith('zh')))
+export const currentLang = ref(lsGet('brotato_lang', detectLang()))
 export const searchText = ref('')
 export const filterTier = ref(null)
 export const filterType = ref(null)
@@ -108,7 +85,7 @@ export const priceIconSrc = computed(() => `${BASE}icons/items/materials/harvest
 export const curseFactor = computed(() => curseEnabled.value ? curseSlider.value / 100 : 0)
 
 // ---- 监听器：持久化与主题 ----
-watch(isZh, v => localStorage.setItem('brotato_isZh', JSON.stringify(v)))
+watch(currentLang, v => localStorage.setItem('brotato_lang', v))
 watch(showingPrice, v => localStorage.setItem('brotato_showingPrice', JSON.stringify(v)))
 watch(isDark, v => localStorage.setItem('brotato_isDark', JSON.stringify(v)))
 watch(showAttackSpeedCalc, v => localStorage.setItem('brotato_showAtkCalc', JSON.stringify(v)))
@@ -210,24 +187,22 @@ export function itemName(item, showWeaponTier = false) {
   if (showWeaponTier) {
     const tier = activeWeaponData.value?.tier ?? 0
     const suffix = tierSuffix(tier)
-    return isZh.value ? `${item.name_zh}${suffix}` : `${item.name_en}${suffix}`
+    return `${item.name}${suffix}`
   }
-  return isZh.value ? item.name_zh : item.name_en
+  return item.name
 }
 export function getIconSrc(p) { return p ? `${BASE}icons/${p}` : '' }
 
 export function statTr(key) {
   const trans = rawData.value.translations || {}
   const uk = key.toUpperCase()
-  if (trans[uk]) return isZh.value ? (trans[uk].zh || key) : (trans[uk].en || key)
-  return key.replace('stat_', '').replace(/_/g, ' ')
+  return trans[uk] || key.replace('stat_', '').replace(/_/g, ' ')
 }
 
 export function setTr(key) {
   if (!key) return ''
   const trans = rawData.value.translations || {}
-  if (trans[key]) return isZh.value ? (trans[key].zh || key) : (trans[key].en || key)
-  return key.replace('WEAPON_CLASS_', '').replace(/_/g, ' ')
+  return trans[key] || key.replace('WEAPON_CLASS_', '').replace(/_/g, ' ')
 }
 
 export function getSetBonuses(key) {
@@ -240,9 +215,8 @@ export function getSetBonuses(key) {
 export function setBonusText(bonus) {
   if (!bonus) return ''
   if (typeof bonus === 'string') return bonus
-  if (bonus.en || bonus.zh) return isZh.value ? (bonus.zh || bonus.en) : (bonus.en || bonus.zh)
   if (!Array.isArray(bonus)) return ''
-  const lang = isZh.value ? 'zh' : 'en'
+  const lang = currentLang.value
   return bonus.map(e => {
     const t = (e && e.text && e.text[lang]) || ''
     return t.replace(/\{0\}/g, String(e && e.value != null ? e.value : ''))
@@ -256,30 +230,47 @@ export function getStatIcon(statKey) {
 
 export function getWeaponById(wid) { return rawData.value.weapons.find(x => x.id === wid) || null }
 
-// ---- 标签翻译 ----
+// ---- 标签翻译（13 语言：en, fr, zh, ja, ko, zh_TW, ru, pl, es, pt, de, tr, it）----
 const TAG_TRANSLATIONS = {
-  consumable: { en: 'Consumable', zh: '消耗品' }, economy: { en: 'Economy', zh: '经济' },
-  exploration: { en: 'Exploration', zh: '探索' }, explosive: { en: 'Explosive', zh: '爆炸' },
-  knockback: { en: 'Knockback', zh: '击退' }, less_enemies: { en: 'Less Enemies', zh: '减少敌人' },
-  less_enemy_speed: { en: 'Less Enemy Speed', zh: '减少敌人速度' }, lock: { en: 'Lock', zh: '锁定' },
-  more_enemies: { en: 'More Enemies', zh: '更多敌人' }, number_of_enemies: { en: 'Enemy Count', zh: '敌人数量' },
-  pet: { en: 'Pet', zh: '宠物' }, pickup: { en: 'Pickup', zh: '拾取' },
-  stand_still: { en: 'Stand Still', zh: '静止' }, stat_armor: { en: 'Armor', zh: '护甲' },
-  stat_attack_speed: { en: 'Attack Speed', zh: '攻击速度' }, stat_crit_chance: { en: 'Crit Chance', zh: '暴击率' },
-  stat_curse: { en: 'Curse', zh: '诅咒' }, stat_dodge: { en: 'Dodge', zh: '闪避' },
-  stat_elemental_damage: { en: 'Elemental Damage', zh: '元素伤害' }, stat_engineering: { en: 'Engineering', zh: '工程学' },
-  stat_harvesting: { en: 'Harvesting', zh: '收获' }, stat_hp_regeneration: { en: 'HP Regen', zh: '生命再生' },
-  stat_lifesteal: { en: 'Lifesteal', zh: '生命窃取' }, stat_luck: { en: 'Luck', zh: '幸运' },
-  stat_max_hp: { en: 'Max HP', zh: '最大生命' }, stat_melee_damage: { en: 'Melee Damage', zh: '近战伤害' },
-  stat_percent_damage: { en: '% Damage', zh: '%伤害' }, stat_range: { en: 'Range', zh: '范围' },
-  stat_ranged_damage: { en: 'Ranged Damage', zh: '远程伤害' }, stat_speed: { en: 'Speed', zh: '速度' },
-  structure: { en: 'Structure (Preference)', zh: '构筑物(偏好)' }, structure_real: { en: 'Structure', zh: '构筑物' }, xp_gain: { en: 'XP Gain', zh: '经验获取' },
+  consumable:        { en: 'Consumable', fr: 'Consommable', zh: '消耗品', ja: '消耗品', ko: '소모품', zh_TW: '消耗品', ru: 'Расходуемое', pl: 'Przedmiot jednorazowy', es: 'Consumible', pt: 'Consumível', de: 'Verbrauchsgegenstand', tr: 'Tüketilebilir', it: 'Consumabile' },
+  economy:           { en: 'Economy', fr: 'Économie', zh: '经济', ja: '経済', ko: '경제', zh_TW: '經濟', ru: 'Экономика', pl: 'Ekonomia', es: 'Economía', pt: 'Economia', de: 'Wirtschaft', tr: 'Ekonomi', it: 'Economia' },
+  exploration:       { en: 'Exploration', fr: 'Exploration', zh: '探索', ja: '探索', ko: '탐험', zh_TW: '探索', ru: 'Исследование', pl: 'Eksploracja', es: 'Exploración', pt: 'Exploração', de: 'Erkundung', tr: 'Keşif', it: 'Esplorazione' },
+  explosive:         { en: 'Explosive', fr: 'Explosif', zh: '爆炸', ja: '爆発', ko: '폭발', zh_TW: '爆炸', ru: 'Взрывчатый', pl: 'Wybuchowy', es: 'Explosivo', pt: 'Explosivo', de: 'Sprengstoff', tr: 'Patlayıcı', it: 'Esplosivo' },
+  knockback:         { en: 'Knockback', fr: 'Recul', zh: '击退', ja: 'ノックバック', ko: '넉백', zh_TW: '擊退', ru: 'Отбрасывание', pl: 'Odrzut', es: 'Empuje', pt: 'Recuo', de: 'Rückstoß', tr: 'Geri itme', it: 'Respingimento' },
+  less_enemies:      { en: 'Less Enemies', fr: "Moins d'ennemis", zh: '减少敌人', ja: '敵が少ない', ko: '적 감소', zh_TW: '減少敵人', ru: 'Меньше врагов', pl: 'Mniej wrogów', es: 'Menos enemigos', pt: 'Menos inimigos', de: 'Weniger Feinde', tr: 'Daha az düşman', it: 'Meno nemici' },
+  less_enemy_speed:  { en: 'Less Enemy Speed', fr: 'Vitesse ennemie réduite', zh: '减少敌人速度', ja: '敵の速度低下', ko: '적 속도 감소', zh_TW: '減少敵人速度', ru: 'Снижение скорости врагов', pl: 'Mniejsza prędkość wrogów', es: 'Menor velocidad enemiga', pt: 'Velocidade inimiga reduzida', de: 'Geringere Feindgeschwindigkeit', tr: 'Düşman hızı azaltma', it: 'Velocità nemica ridotta' },
+  lock:              { en: 'Lock', fr: 'Verrou', zh: '锁定', ja: 'ロック', ko: '잠금', zh_TW: '鎖定', ru: 'Замок', pl: 'Blokada', es: 'Bloqueo', pt: 'Bloqueio', de: 'Sperre', tr: 'Kilit', it: 'Blocco' },
+  more_enemies:      { en: 'More Enemies', fr: "Plus d'ennemis", zh: '更多敌人', ja: '敵が多い', ko: '적 증가', zh_TW: '更多敵人', ru: 'Больше врагов', pl: 'Więcej wrogów', es: 'Más enemigos', pt: 'Mais inimigos', de: 'Mehr Feinde', tr: 'Daha fazla düşman', it: 'Più nemici' },
+  number_of_enemies: { en: 'Enemy Count', fr: "Nombre d'ennemis", zh: '敌人数量', ja: '敵の数', ko: '적 수', zh_TW: '敵人數量', ru: 'Количество врагов', pl: 'Liczba wrogów', es: 'Número de enemigos', pt: 'Número de inimigos', de: 'Feindezahl', tr: 'Düşman sayısı', it: 'Numero di nemici' },
+  pet:               { en: 'Pet', fr: 'Animal', zh: '宠物', ja: 'ペット', ko: '애완동물', zh_TW: '寵物', ru: 'Питомец', pl: 'Zwierzę', es: 'Mascota', pt: 'Animal de estimação', de: 'Haustier', tr: 'Evcil hayvan', it: 'Animale domestico' },
+  pickup:            { en: 'Pickup', fr: 'Ramassable', zh: '拾取', ja: '拾得', ko: '픽업', zh_TW: '拾取', ru: 'Подбираемое', pl: 'Podnoszone', es: 'Recogible', pt: 'Coletável', de: 'Aufhebbar', tr: 'Toplanabilir', it: 'Raccoglibile' },
+  stand_still:       { en: 'Stand Still', fr: 'Immobile', zh: '静止', ja: 'その場に留まる', ko: '제자리 정지', zh_TW: '靜止', ru: 'Стоять на месте', pl: 'Stać w miejscu', es: 'Quieto', pt: 'Ficar parado', de: 'Stillstehen', tr: 'Olduğu yerde dur', it: 'Stare fermo' },
+  stat_armor:        { en: 'Armor', fr: 'Armure', zh: '护甲', ja: 'アーマー', ko: '방어구', zh_TW: '護甲', ru: 'Броня', pl: 'Pancerz', es: 'Armadura', pt: 'Armadura', de: 'Rüstung', tr: 'Zırh', it: 'Armatura' },
+  stat_attack_speed: { en: 'Attack Speed', fr: 'Vitesse d\'attaque', zh: '攻击速度', ja: '攻撃速度', ko: '공격 속도', zh_TW: '攻擊速度', ru: 'Скорость атаки', pl: 'Szybkość ataku', es: 'Velocidad de ataque', pt: 'Velocidade de ataque', de: 'Angriffsgeschwindigkeit', tr: 'Saldırı hızı', it: 'Velocità d\'attacco' },
+  stat_crit_chance:  { en: 'Crit Chance', fr: 'Chance de crit', zh: '暴击率', ja: 'クリティカル率', ko: '치명타 확률', zh_TW: '暴擊率', ru: 'Шанс крита', pl: 'Szansa na crit', es: 'Probabilidad de crítico', pt: 'Chance de crítico', de: 'Crit-Chance', tr: 'Eleştiri şansı', it: 'Probabilità critico' },
+  stat_curse:        { en: 'Curse', fr: 'Malédiction', zh: '诅咒', ja: '呪い', ko: '저주', zh_TW: '詛咒', ru: 'Проклятие', pl: 'Klątwa', es: 'Maldición', pt: 'Maldição', de: 'Fluch', tr: 'Lanet', it: 'Maledizione' },
+  stat_dodge:        { en: 'Dodge', fr: 'Esquive', zh: '闪避', ja: '回避', ko: '회피', zh_TW: '閃避', ru: 'Уклонение', pl: 'Unik', es: 'Esquiva', pt: 'Esquiva', de: 'Ausweichen', tr: 'Kaçınma', it: 'Schivata' },
+  stat_elemental_damage: { en: 'Elemental Damage', fr: 'Dégâts élémentaires', zh: '元素伤害', ja: '属性ダメージ', ko: '원소 피해', zh_TW: '元素傷害', ru: 'Стихийный урон', pl: 'Obrażenia żywiołów', es: 'Daño elemental', pt: 'Dano elemental', de: 'Elementarschaden', tr: 'Elementel hasar', it: 'Danno elementale' },
+  stat_engineering:  { en: 'Engineering', fr: 'Ingénierie', zh: '工程学', ja: 'エンジニアリング', ko: '공학', zh_TW: '工程學', ru: 'Инженерия', pl: 'Inżynieria', es: 'Ingeniería', pt: 'Engenharia', de: 'Technik', tr: 'Mühendislik', it: 'Ingegneria' },
+  stat_harvesting:   { en: 'Harvesting', fr: 'Récolte', zh: '收获', ja: '収穫', ko: '수확', zh_TW: '收穫', ru: 'Сбор', pl: 'Zbiory', es: 'Cosecha', pt: 'Colheita', de: 'Ernte', tr: 'Hasat', it: 'Raccolto' },
+  stat_hp_regeneration: { en: 'HP Regen', fr: 'Régen de PV', zh: '生命再生', ja: 'HP再生', ko: 'HP 회복', zh_TW: '生命再生', ru: 'Регенерация HP', pl: 'Regeneracja HP', es: 'Regeneración de PV', pt: 'Regeneração de HP', de: 'HP-Regeneration', tr: 'HP yenilenmesi', it: 'Rigenerazione HP' },
+  stat_lifesteal:    { en: 'Lifesteal', fr: 'Vol de vie', zh: '生命窃取', ja: 'ライフスティール', ko: '생명력 흡수', zh_TW: '生命竊取', ru: 'Кража жизни', pl: 'Kradzież życia', es: 'Robo de vida', pt: 'Roubo de vida', de: 'Lebensdiebstahl', tr: 'Can çalma', it: 'Rubavita' },
+  stat_luck:         { en: 'Luck', fr: 'Chance', zh: '幸运', ja: '運', ko: '행운', zh_TW: '幸運', ru: 'Удача', pl: 'Szczęście', es: 'Suerte', pt: 'Sorte', de: 'Glück', tr: 'Şans', it: 'Fortuna' },
+  stat_max_hp:       { en: 'Max HP', fr: 'PV max', zh: '最大生命', ja: '最大HP', ko: '최대 HP', zh_TW: '最大生命', ru: 'Макс. HP', pl: 'Max HP', es: 'PV máx.', pt: 'HP máx.', de: 'Max. HP', tr: 'Maks. HP', it: 'HP max' },
+  stat_melee_damage: { en: 'Melee Damage', fr: 'Dégâts de mêlée', zh: '近战伤害', ja: '近接ダメージ', ko: '근접 피해', zh_TW: '近戰傷害', ru: 'Урон в ближнем бою', pl: 'Obrażenia wręcz', es: 'Daño cuerpo a cuerpo', pt: 'Dano corpo a corpo', de: 'Nahkampfschaden', tr: 'Yakın dövüş hasarı', it: 'Danno corpo a corpo' },
+  stat_percent_damage: { en: '% Damage', fr: '% Dégâts', zh: '%伤害', ja: '%ダメージ', ko: '% 피해', zh_TW: '%傷害', ru: '% урона', pl: '% obrażeń', es: '% Daño', pt: '% Dano', de: '% Schaden', tr: '% Hasar', it: '% Danni' },
+  stat_range:        { en: 'Range', fr: 'Portée', zh: '范围', ja: '射程', ko: '사거리', zh_TW: '範圍', ru: 'Дальность', pl: 'Zasięg', es: 'Alcance', pt: 'Alcance', de: 'Reichweite', tr: 'Atış menzili', it: 'Gittata' },
+  stat_ranged_damage: { en: 'Ranged Damage', fr: 'Dégâts à distance', zh: '远程伤害', ja: '遠隔ダメージ', ko: '원거리 피해', zh_TW: '遠程傷害', ru: 'Дальний урон', pl: 'Obrażenia dystansowe', es: 'Daño a distancia', pt: 'Dano à distância', de: 'Fernkampfschaden', tr: 'Menzilli hasar', it: 'Danno a distanza' },
+  stat_speed:        { en: 'Speed', fr: 'Vitesse', zh: '速度', ja: '速度', ko: '속도', zh_TW: '速度', ru: 'Скорость', pl: 'Prędkość', es: 'Velocidad', pt: 'Velocidade', de: 'Geschwindigkeit', tr: 'Hız', it: 'Velocità' },
+  structure:         { en: 'Structure (Preference)', fr: 'Structure (Préférence)', zh: '构筑物(偏好)', ja: '構造物(好み)', ko: '구조물(선호)', zh_TW: '構築物(偏好)', ru: 'Структура (предпочтение)', pl: 'Struktura (preferencja)', es: 'Estructura (Preferencia)', pt: 'Estrutura (Preferência)', de: 'Struktur (Präferenz)', tr: 'Yapı (Tercih)', it: 'Struttura (Preferenza)' },
+  structure_real:    { en: 'Structure', fr: 'Structure', zh: '构筑物', ja: '構造物', ko: '구조물', zh_TW: '構築物', ru: 'Структура', pl: 'Struktura', es: 'Estructura', pt: 'Estrutura', de: 'Struktur', tr: 'Yapı', it: 'Struttura' },
+  xp_gain:           { en: 'XP Gain', fr: 'Gain d\'XP', zh: '经验获取', ja: 'XP獲得', ko: 'XP 획득', zh_TW: '經驗獲取', ru: 'Получение опыта', pl: 'Zysk XP', es: 'Ganancia de XP', pt: 'Ganho de XP', de: 'XP-Gewinn', tr: 'XP kazanımı', it: 'Guadagno XP' },
 }
 
 export function tagTr(tag) {
   const t = TAG_TRANSLATIONS[tag]
   if (!t) return tag.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())
-  return isZh.value ? t.zh : t.en
+  return t[currentLang.value] || t.en || tag
 }
 
 const SPECIAL_TAGS = ['pet', 'structure_real']
@@ -361,7 +352,7 @@ function fmtDec(v, dp) {
 }
 
 export function renderEffectText(eff) {
-  const lang = isZh.value ? 'zh' : 'en'
+  const lang = currentLang.value
   let text, curseArgs, useCurseData
 
   // Choose text source: cursed or normal
@@ -485,11 +476,11 @@ export const weaponFamilies = computed(() => {
     map[key].tiers.sort((a, b) => a.tier - b.tier)
     const t0 = map[key].tiers[0]
     Object.assign(map[key], {
-      name_key: t0.name_key, name_en: t0.name_en, name_zh: t0.name_zh,
+      name_key: t0.name_key, name: t0.name,
       tier: t0.tier, value: t0.value, icon: t0.icon, type: t0.type, dlc: t0.dlc, sets: t0.sets
     })
   }
-  return Object.values(map).sort((a, b) => a.tier - b.tier || a.name_en.localeCompare(b.name_en))
+  return Object.values(map).sort((a, b) => a.tier - b.tier || (a.name || '').localeCompare(b.name || ''))
 })
 
 export const allItemsRaw = computed(() => rawData.value.items)
@@ -528,7 +519,7 @@ export const currentDisplayList = computed(() => {
 
   if (searchText.value) {
     const q = searchText.value.toLowerCase()
-    list = list.filter(i => (i.name_en || '').toLowerCase().includes(q) || (i.name_zh || '').includes(q) || (i.id || '').toLowerCase().includes(q))
+    list = list.filter(i => (i.name || '').toLowerCase().includes(q) || (i.id || '').toLowerCase().includes(q))
   }
   if (filterTier.value != null && filterTier.value !== '' && activeTab.value !== 'characters') list = list.filter(i => i.tier === filterTier.value)
   if (filterDlc.value != null && filterDlc.value !== '') list = list.filter(i => i.dlc === filterDlc.value)
@@ -538,7 +529,7 @@ export const currentDisplayList = computed(() => {
     list = list.filter(i => (i.tags || []).includes(filterTag.value) || (i.wanted_tags || []).includes(filterTag.value))
   }
 
-  const byTierThenName = (a, b) => a.tier - b.tier || (a.name_en || '').localeCompare(b.name_en || '')
+  const byTierThenName = (a, b) => a.tier - b.tier || (a.name || '').localeCompare(b.name || '')
   const baseStats = (f) => (f.tiers && f.tiers.length ? f.tiers[0].stats : {})
   const sortKey = sortBy.value
   if (activeTab.value === 'weapons') {
@@ -631,13 +622,15 @@ export const addlCooldownInfo = computed(() => {
   if (!reload) return null
 
   const segs = []
-  segs.push({ text: isZh.value ? `每发射${reload.shots}次冷却为` : 'Cooldown is', cls: 'calc-reload' })
+  const shots = reload.shots
+  segs.push({ text: (S.value.cooldownIs || 'Cooldown is').replace(/\{shots\}/g, shots), cls: 'calc-reload' })
   segs.push({ text: formatCooldown(reload.tooltip), cls: 'ws-val' })
   segs.push({ text: `(${S.value.tooltip})`, cls: 'calc-reload' })
   segs.push({ text: '/', cls: 'calc-reload-separator' })
   segs.push({ text: formatCooldown(reload.actual), cls: 'ws-val' })
   segs.push({ text: `(${S.value.actual})`, cls: 'calc-reload' })
-  if (!isZh.value) segs.push({ text: ` every ${reload.shots} shots`, cls: 'calc-reload' })
+  const cooldownEvery = S.value.cooldownEvery
+  if (cooldownEvery) segs.push({ text: cooldownEvery.replace(/\{shots\}/g, shots), cls: 'calc-reload' })
   return segs
 })
 
@@ -671,8 +664,8 @@ export const currentEffects = computed(() => {
 export const meleeAttackTypeText = computed(() => {
   const stats = activeWeaponData.value?.stats
   if (!stats || activeWeaponData.value?.type !== 'melee') return ''
-  if (stats.attack_type === 0) return isZh.value ? '(突刺)' : '(Thrust)'
-  if (stats.attack_type === 1) return isZh.value ? '(横扫)' : '(Sweep)'
+  if (stats.attack_type === 0) return S.value.attackThrust || '(Thrust)'
+  if (stats.attack_type === 1) return S.value.attackSweep || '(Sweep)'
   return ''
 })
 
@@ -903,7 +896,7 @@ export function cooldownSegments(kind) {
   if (reload) {
     segs.push({ text: '/', cls: 'calc-reload-separator' })
     segs.push({
-      text: isZh.value ? `每发射${reload.shots}次:` : `every ${reload.shots} shots:`,
+      text: (S.value.everyShotsColon || 'every {shots} shots:').replace(/\{shots\}/g, reload.shots),
       cls: 'calc-reload',
     })
     segs.push({
@@ -914,7 +907,7 @@ export function cooldownSegments(kind) {
   if (kind === 'actual' && reload) {
     const equiv = effectiveCooldown(calculatedCooldown.value, reload)
     segs.push({ text: '/', cls: 'calc-reload-separator' })
-    segs.push({ text: isZh.value ? '等效' : 'equiv', cls: 'calc-reload' })
+    segs.push({ text: S.value.equiv || 'equiv', cls: 'calc-reload' })
     segs.push({ text: formatCooldownFixed(equiv), cls: 'calc-value' })
   }
   return segs
@@ -1082,9 +1075,35 @@ export function onTabChange() {
 }
 
 // =============================================================================
-// 数据加载
+// 数据加载（按语言加载对应的 brotato_data.<lang>.json）
 // =============================================================================
-export async function initCodex() {
-  const resp = await fetch(BASE + 'data/brotato_data.json')
-  rawData.value = await resp.json()
+export const availableLangs = ref([])
+
+async function loadLangData(lang) {
+  const prevId = selectedItem.value?.id
+  const resp = await fetch(`${BASE}data/brotato_data.${lang}.json`)
+  const data = await resp.json()
+  rawData.value = data
+  // Re-point the currently selected entry to the same id in the new language.
+  if (prevId != null) {
+    nextTick(() => {
+      const refind = weaponFamilies.value.find(f => f.id === prevId)
+        || (rawData.value.items || []).find(x => x.id === prevId)
+        || (rawData.value.characters || []).find(x => x.id === prevId)
+      if (refind) selectedItem.value = refind
+    })
+  }
 }
+
+export async function initCodex() {
+  try {
+    const lr = await fetch(`${BASE}data/languages.json`)
+    availableLangs.value = await lr.json()
+  } catch (e) {
+    availableLangs.value = []
+  }
+  await loadLangData(currentLang.value)
+}
+
+// Reload the per-language data file whenever the language changes.
+watch(currentLang, (lang) => { loadLangData(lang) })

@@ -1,10 +1,10 @@
 {
   "label": "merged",
-  "exported_at": "2026-06-26T03:48:50.255Z",
+  "exported_at": "2026-08-23T02:37:16.152Z",
   "total": 100,
   "matched": 97,
-  "manual": 1,
-  "skipped": 2,
+  "manual": 0,
+  "skipped": 3,
   "unmatched": 0,
   "entries": [
     {
@@ -424,10 +424,10 @@
       "sources": [
         "base"
       ],
-      "status": "manual",
+      "status": "skipped",
       "matched_missing_key_id": null,
-      "en": "Spawns a Doc Moth pet that flies around the map. When the player is inside its aura, their HP regeneration and Life Steal are doubled",
-      "zh": "生成一个蛾医生宠物，绕着地图飞行。当玩家处于其光环内时，玩家的生命再生和生命窃取属性翻倍。",
+      "en": "",
+      "zh": "",
       "source_names": [
         "doc_moth"
       ],

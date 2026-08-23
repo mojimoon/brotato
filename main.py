@@ -23,6 +23,42 @@ OUTPUT_ICONS = OUTPUT_DIR / "icons"
 # ====================================================================
 TR = {}
 
+# All supported languages (matching the game's translations.csv columns).
+# Order matters: 'en' is the canonical fallback.
+LANGS = ['en', 'fr', 'zh', 'ja', 'ko', 'zh_TW', 'ru', 'pl', 'es', 'pt', 'de', 'tr', 'it']
+
+# Native language names (language-neutral) for the frontend language switcher.
+LANG_META = [
+    {'code': 'en', 'name': 'English'},
+    {'code': 'fr', 'name': 'Français'},
+    {'code': 'zh', 'name': '中文'},
+    {'code': 'ja', 'name': '日本語'},
+    {'code': 'ko', 'name': '한국어'},
+    {'code': 'zh_TW', 'name': '繁體中文'},
+    {'code': 'ru', 'name': 'Русский'},
+    {'code': 'pl', 'name': 'Polski'},
+    {'code': 'es', 'name': 'Español'},
+    {'code': 'pt', 'name': 'Português'},
+    {'code': 'de', 'name': 'Deutsch'},
+    {'code': 'tr', 'name': 'Türkçe'},
+    {'code': 'it', 'name': 'Italiano'},
+]
+
+
+def load_ui_strings():
+    """Load frontend UI strings (authored per language) for embedding into
+    each per-language data file under the `ui` key."""
+    path = CODEX_DIR / 'ui_strings.json'
+    if not path.exists():
+        log.warning("ui_strings.json not found, UI text will be empty")
+        return {'strings': {}, 'sections': {}}
+    with open(path, encoding='utf-8') as f:
+        data = json.load(f)
+    return {
+        'strings': data.get('strings', {}),
+        'sections': data.get('sections', {}),
+    }
+
 # Global index for reverse lookup: English text -> translation key
 TR_BY_EN = {}
 
@@ -50,10 +86,7 @@ def load_translations():
                     else:
                         continue
                 en_text = row.get('en', '')
-                translations[key] = {
-                    'en': en_text,
-                    'zh': row.get('zh', ''),
-                }
+                translations[key] = {lang: (row.get(lang, '') or '') for lang in LANGS}
                 # Index by English text for reverse lookup
                 if en_text and en_text not in TR_BY_EN:
                     TR_BY_EN[en_text] = key
@@ -66,16 +99,45 @@ def load_translations():
 
 def tr(key, lang='en'):
     if key in TR:
-        return TR[key].get(lang, key)
+        d = TR[key]
+        return d.get(lang) or d.get('en') or key
     return key
+
+def _build_missing_key_candidates():
+    """Map (source, N) -> {lang: text} for every <!MissingKey:N:..> row.
+
+    These rows in the game's translations.csv are the candidate strings the
+    user manually matched effect keys against. Each carries ALL languages, so
+    a matched key can be localized into every language at once.
+    """
+    candidates = {}
+    sources = [
+        ('base', BASE_DIR / ".assets" / "resources" / "translations" / "translations.csv"),
+        ('dlc1', BASE_DIR / ".assets" / "dlcs" / "dlc_1" / "translations" / "translations.csv"),
+    ]
+    for source, path in sources:
+        if not path.exists():
+            continue
+        with open(path, encoding='utf-8-sig') as f:
+            for row in csv.DictReader(f):
+                key = row.get('key', '')
+                if not key or not key.startswith('<!MissingKey:'):
+                    continue
+                m = re.match(r'<!MissingKey:(\d+):', key)
+                if not m:
+                    continue
+                n = int(m.group(1))
+                candidates[(source, n)] = {lang: (row.get(lang, '') or '') for lang in LANGS}
+    return candidates
+
 
 def load_merged_translations():
     """Load manually-fixed translation entries from translations_merged.json.
-    
-    This file contains en/zh templates for keys that were missing from the
-    original translations.csv (identified via the <!MissingKey:N:text> entries).
-    Each entry has a 'key' (uppercase), 'status' (matched/manual/skipped), 
-    and 'en'/'zh' template strings.
+
+    For `matched` entries we pull ALL languages from the corresponding
+    <!MissingKey:N:..> candidate row in the game translations CSV (the row the
+    user matched the key against). For `manual` entries only en/zh are present.
+    Each entry has a 'key' (uppercase) and 'status' (matched/manual/skipped).
     """
     merged_path = CODEX_DIR / "data" / "translations_merged.json"
     if not merged_path.exists():
@@ -85,33 +147,57 @@ def load_merged_translations():
     if not merged_path.exists():
         log.warning("translations_merged.json not found, skipping")
         return 0
-    
+
     with open(merged_path, encoding='utf-8') as f:
         merged = json.load(f)
-    
+
+    candidates = _build_missing_key_candidates()
+
     count = 0
     for entry in merged.get('entries', []):
-        if entry.get('status') not in ('matched', 'manual'):
+        status = entry.get('status')
+        if status not in ('matched', 'manual'):
             continue
         key = entry.get('key', '')
-        en = entry.get('en', '')
-        zh = entry.get('zh', '')
-        if not key or not en:
+        if not key:
             continue
         key_upper = key.upper()
+
+        langs = None
+        if status == 'matched':
+            mid = entry.get('matched_missing_key_id', '') or ''
+            m = re.match(r'^([BD])_(\d+)$', mid)
+            if m:
+                source = 'base' if m.group(1) == 'B' else 'dlc1'
+                cand = candidates.get((source, int(m.group(2))))
+                if cand:
+                    langs = {lang: (cand.get(lang, '') or '') for lang in LANGS}
+
+        if langs is None:
+            # manual entry (or unmatched candidate): only en/zh available
+            en = entry.get('en', '')
+            zh = entry.get('zh', '')
+            if not en:
+                continue
+            langs = {lang: '' for lang in LANGS}
+            langs['en'] = en
+            langs['zh'] = zh
+
         if key_upper not in TR:
-            TR[key_upper] = {'en': en, 'zh': zh}
-            if en and en not in TR_BY_EN:
-                TR_BY_EN[en] = key_upper
+            TR[key_upper] = dict(langs)
+            if langs.get('en') and langs['en'] not in TR_BY_EN:
+                TR_BY_EN[langs['en']] = key_upper
             count += 1
         else:
             existing = TR[key_upper]
-            if not existing.get('en') or existing['en'] == key_upper:
-                TR[key_upper] = {'en': en, 'zh': zh}
-                if en and en not in TR_BY_EN:
-                    TR_BY_EN[en] = key_upper
+            changed = False
+            for lang in LANGS:
+                if not existing.get(lang) and langs.get(lang):
+                    existing[lang] = langs[lang]
+                    changed = True
+            if changed:
                 count += 1
-    
+
     log.info(f"  Loaded {count} merged translation entries")
     return count
 
@@ -1308,11 +1394,10 @@ def _build_cursed_extra_effects(eff, parent_id=''):
     # Build text dicts for each extra effect (basic stat effects)
     for item in items:
         if item.get('key') == '__text__':
-            # Pure text entry: just use the translation
+            # Pure text entry: just use the translation (all languages)
             if item.get('text_key'):
-                tr_en = tr(item['text_key'], 'en')
-                tr_zh = tr(item['text_key'], 'zh')
-                item['text'] = {'en': tr_en, 'zh': tr_zh, 'args': []}
+                item['text'] = {lang: tr(item['text_key'], lang) for lang in LANGS}
+                item['text']['args'] = []
             continue
         fake_eff = {
             'key': item['key'],
@@ -1370,7 +1455,7 @@ def _get_cursed_special(eff, parent_id='', is_weapon=False):
         chance = extra.get('chance', 0)
         if 0 < chance < 1.0:
             return {'special': 'weapon_explode', 'base_chance': chance,
-                    'cursed_text': {'en': tr('EFFECT_EXPLODE', 'en'), 'zh': tr('EFFECT_EXPLODE', 'zh')}}
+                    'cursed_text': {lang: tr('EFFECT_EXPLODE', lang) for lang in LANGS}}
     if key == 'modify_every_x_projectile':
         # Pre-render sub-effect text from the parent effect's rendered template.
         # The parent template is like "Every {0}th projectile has <span>...</span> Crit Chance"
@@ -1392,9 +1477,11 @@ def _get_cursed_special(eff, parent_id='', is_weapon=False):
             for val, tk_key in [(1, 'EFFECT_WEAPON_MODIFY_EVERY_X_PROJECTILE_FIRST'),
                                 (2, 'EFFECT_WEAPON_MODIFY_EVERY_X_PROJECTILE_SECOND'),
                                 (3, 'EFFECT_WEAPON_MODIFY_EVERY_X_PROJECTILE_THIRD')]:
-                en_tpl = tr(tk_key, 'en').replace('{2} {3}', sub_en) if sub_en else tr(tk_key, 'en')
-                zh_tpl = tr(tk_key, 'zh').replace('{2}{3}', sub_zh) if sub_zh else tr(tk_key, 'zh')
-                base_text[val] = {'en': en_tpl, 'zh': zh_tpl}
+                base_text[val] = {lang: tr(tk_key, lang) for lang in LANGS}
+                if sub_en:
+                    base_text[val]['en'] = base_text[val]['en'].replace('{2} {3}', sub_en)
+                if sub_zh:
+                    base_text[val]['zh'] = base_text[val]['zh'].replace('{2}{3}', sub_zh)
             return {'special': 'modify_projectile_weapon', 'base_value': value,
                     'text_keys': {1: 'effect_weapon_modify_every_x_projectile_first',
                                   2: 'effect_weapon_modify_every_x_projectile_second',
@@ -1405,9 +1492,11 @@ def _get_cursed_special(eff, parent_id='', is_weapon=False):
             for val, tk_key in [(1, 'EFFECT_MODIFY_EVERY_X_PROJECTILE_FIRST'),
                                 (2, 'EFFECT_MODIFY_EVERY_X_PROJECTILE_SECOND'),
                                 (3, 'EFFECT_MODIFY_EVERY_X_PROJECTILE_THIRD')]:
-                en_tpl = tr(tk_key, 'en').replace('{2} {3}', sub_en) if sub_en else tr(tk_key, 'en')
-                zh_tpl = tr(tk_key, 'zh').replace('{2}{3}', sub_zh) if sub_zh else tr(tk_key, 'zh')
-                base_text[val] = {'en': en_tpl, 'zh': zh_tpl}
+                base_text[val] = {lang: tr(tk_key, lang) for lang in LANGS}
+                if sub_en:
+                    base_text[val]['en'] = base_text[val]['en'].replace('{2} {3}', sub_en)
+                if sub_zh:
+                    base_text[val]['zh'] = base_text[val]['zh'].replace('{2}{3}', sub_zh)
             return {'special': 'modify_projectile', 'base_value': value,
                     'text_keys': {1: 'effect_modify_every_x_projectile_first',
                                   2: 'effect_modify_every_x_projectile_second',
@@ -2989,28 +3078,32 @@ def render_effect_text_zh(eff):
 
 def build_effect_text_dict(eff):
     """Build the combined 'text' dict for an effect, with templates and curse args.
-    
-    Returns dict: {'en': template_en, 'zh': template_zh, 'args': curse_args}
-    or None if neither language produces text.
+
+    Returns a dict keyed by EVERY language in LANGS (each -> rendered template),
+    plus 'args' (curse args), optional 'cursed_text_key', 'text_cursed',
+    'special' and 'extra_effects'. Returns None if no language produces text.
     """
     parent_id = eff.pop('_parent_id', '')
     is_weapon = eff.pop('_is_weapon', False)
-    
-    template_en, args_en = render_effect_text(eff, 'en', parent_id, is_weapon)
-    template_zh, args_zh = render_effect_text(eff, 'zh', parent_id, is_weapon)
-    
-    if not template_en and not template_zh:
+
+    texts = {}
+    args_by_lang = {}
+    for lang in LANGS:
+        t, args = render_effect_text(eff, lang, parent_id, is_weapon)
+        texts[lang] = t
+        args_by_lang[lang] = args
+
+    if not any(texts.values()):
+        eff['_parent_id'] = parent_id
+        eff['_is_weapon'] = is_weapon
         return None
-    
+
     # Merge args: use whichever produced curse args (should be identical)
-    curse_args = args_en if args_en else args_zh
-    
-    result = {
-        'en': template_en,
-        'zh': template_zh,
-        'args': curse_args,
-    }
-    
+    curse_args = args_by_lang.get('en') or next((a for a in args_by_lang.values() if a), [])
+
+    result = {lang: texts[lang] for lang in LANGS}
+    result['args'] = curse_args
+
     # Add cursed text_key (if this effect changes text when cursed)
     cursed_tk = _get_cursed_text_key(eff, parent_id, is_weapon)
     if cursed_tk:
@@ -3018,53 +3111,59 @@ def build_effect_text_dict(eff):
         # Also generate cursed template from the cursed text_key
         cursed_eff = dict(eff)
         cursed_eff['text_key'] = cursed_tk
-        ct_en, ct_args_en = render_effect_text(cursed_eff, 'en', parent_id, is_weapon)
-        ct_zh, ct_args_zh = render_effect_text(cursed_eff, 'zh', parent_id, is_weapon)
-        if ct_en or ct_zh:
-            result['text_cursed'] = {'en': ct_en, 'zh': ct_zh, 'args': ct_args_en or ct_args_zh}
-    
+        ct_texts = {}
+        ct_args = {}
+        for lang in LANGS:
+            ct, ca = render_effect_text(cursed_eff, lang, parent_id, is_weapon)
+            ct_texts[lang] = ct
+            ct_args[lang] = ca
+        if any(ct_texts.values()):
+            result['text_cursed'] = {lang: ct_texts[lang] for lang in LANGS}
+            result['text_cursed']['args'] = ct_args.get('en') or next((a for a in ct_args.values() if a), [])
+
     # Add special-case metadata
     special = _get_cursed_special(eff, parent_id, is_weapon)
     if special:
         result['special'] = special
-    
+
     # Add cursed extra effects (only for cursed items)
     extra_effects = _build_cursed_extra_effects(eff, parent_id)
     if extra_effects:
         result['extra_effects'] = extra_effects
-    
+
     # ---- Hardcoded pet second-damage injection ----
     # Pets have sub-weapon stats not captured by the normal rendering pipeline.
     # The game's format strings omit these damage values; we inject them here.
     tk = (eff.get('text_key','')).upper()
-    
+
     if tk == 'EFFECT_PET_BLAZEMANDER':
-        # Hardcoded: ranged_weapon_stats damage=1, scaling=1% elemental_damage
-        result['en'] = result['en'].replace('each dealing damage',
-            'each dealing <span class="zvg">1</span> (<span class="zvg"><scaling type="elemental_damage" value="0.01" /></span>) damage')
-        result['zh'] = result['zh'].replace('每发造成伤害',
-            '每发造成<span class="zvg">1</span>（<span class="zvg"><scaling type="elemental_damage" value="0.01" /></span>）伤害')
-    
+        if 'en' in result:
+            result['en'] = result['en'].replace('each dealing damage',
+                'each dealing <span class="zvg">1</span> (<span class="zvg"><scaling type="elemental_damage" value="0.01" /></span>) damage')
+        if 'zh' in result:
+            result['zh'] = result['zh'].replace('每发造成伤害',
+                '每发造成<span class="zvg">1</span>（<span class="zvg"><scaling type="elemental_damage" value="0.01" /></span>）伤害')
     if tk == 'EFFECT_PET_BONK_DOG':
-        # Hardcoded: explosion_effect.stats damage=8, scaling=40% melee_damage
-        result['en'] = result['en'].replace('deals explosive damage in an area',
-            'deals <span class="zvg">8</span> (<span class="zvg"><scaling type="melee_damage" value="0.4" /></span>) explosive damage in an area')
-        result['zh'] = result['zh'].replace('在范围内造成爆炸伤害',
-            '在范围内造成<span class="zvg">8</span>（<span class="zvg"><scaling type="melee_damage" value="0.4" /></span>）爆炸伤害')
-    
+        if 'en' in result:
+            result['en'] = result['en'].replace('deals explosive damage in an area',
+                'deals <span class="zvg">8</span> (<span class="zvg"><scaling type="melee_damage" value="0.4" /></span>) explosive damage in an area')
+        if 'zh' in result:
+            result['zh'] = result['zh'].replace('在范围内造成爆炸伤害',
+                '在范围内造成<span class="zvg">8</span>（<span class="zvg"><scaling type="melee_damage" value="0.4" /></span>）爆炸伤害')
     if tk == 'EFFECT_PET_BOT_O_MINE':
-        # Hardcoded: landmine_effect_stat.stats damage=10, scaling=100% engineering
-        result['en'] = result['en'].replace('dealing damage in an area',
-            'dealing <span class="zvg">10</span> (<span class="zvg"><scaling type="engineering" value="1.0" /></span>) damage in an area')
-        result['zh'] = result['zh'].replace('在范围内造成伤害',
-            '在范围内造成<span class="zvg">10</span>（<span class="zvg"><scaling type="engineering" value="1.0" /></span>）伤害')
-    
+        if 'en' in result:
+            result['en'] = result['en'].replace('dealing damage in an area',
+                'dealing <span class="zvg">10</span> (<span class="zvg"><scaling type="engineering" value="1.0" /></span>) damage in an area')
+        if 'zh' in result:
+            result['zh'] = result['zh'].replace('在范围内造成伤害',
+                '在范围内造成<span class="zvg">10</span>（<span class="zvg"><scaling type="engineering" value="1.0" /></span>）伤害')
+
     # ---- End hardcoded pet fix ----
-    
+
     # Put back popped keys
     eff['_parent_id'] = parent_id
     eff['_is_weapon'] = is_weapon
-    
+
     return result
 
 # ====================================================================
@@ -3273,8 +3372,7 @@ def collect_weapons(search_dir, dlc=0):
         weapon = {
             'id': my_id,
             'name_key': name_key,
-            'name_en': tr(name_key, 'en'),
-            'name_zh': tr(name_key, 'zh'),
+            **{f'name_{lang}': tr(name_key, lang) for lang in LANGS},
             'tier': data.get('tier', 0),
             'tier_name': TIER_NAMES.get(data.get('tier', 0), 'common'),
             'value': data.get('value', 0),
@@ -3329,8 +3427,7 @@ def _parse_item_file(data_file, dlc, parsed=None):
     return {
         'id': my_id,
         'name_key': name_key,
-        'name_en': tr(name_key, 'en'),
-        'name_zh': tr(name_key, 'zh'),
+        **{f'name_{lang}': tr(name_key, lang) for lang in LANGS},
         'tier': data.get('tier', 0),
         'tier_name': TIER_NAMES.get(data.get('tier', 0), 'common'),
         'value': data.get('value', 0),
@@ -3396,8 +3493,7 @@ def collect_characters(search_dir, dlc=0):
         character = {
             'id': my_id,
             'name_key': name_key,
-            'name_en': tr(name_key, 'en'),
-            'name_zh': tr(name_key, 'zh'),
+            **{f'name_{lang}': tr(name_key, lang) for lang in LANGS},
             'tier': data.get('tier', 0),
             'tier_name': TIER_NAMES.get(data.get('tier', 0), 'common'),
             'value': data.get('value', 0),
@@ -3516,6 +3612,111 @@ def clean_arrays_for_json(obj):
     if isinstance(obj, dict):
         return {k: clean_arrays_for_json(v) for k, v in obj.items()}
     return obj
+
+# ====================================================================
+# Per-language pruning
+# ====================================================================
+def _prune_special(special, L):
+    """Keep only language L inside a `special` metadata dict."""
+    out = dict(special)
+    if isinstance(out.get('cursed_text'), dict):
+        out['cursed_text'] = {L: out['cursed_text'].get(L) or out['cursed_text'].get('en') or ''}
+    if isinstance(out.get('base_text'), dict):
+        bt = {}
+        for val, d in out['base_text'].items():
+            bt[val] = {L: (d.get(L) or d.get('en') or '')}
+        out['base_text'] = bt
+    return out
+
+
+def _prune_text_dict(t, L):
+    """Prune an effect `text` dict (all languages + meta) down to a single lang L.
+
+    Keeps only the language-L entry for every multilingual sub-key (text,
+    text_cursed, extra_effects), plus non-language meta keys (args, special,
+    cursed_text_key, ...).
+    """
+    if not isinstance(t, dict):
+        return t
+    out = {}
+    for k, v in t.items():
+        if k in LANGS:
+            if k == L:
+                out[L] = v
+        elif k == 'text_cursed' and isinstance(v, dict):
+            tc = {}
+            for kk, vv in v.items():
+                if kk in LANGS:
+                    if kk == L:
+                        tc[L] = vv
+                else:
+                    tc[kk] = vv  # 'args'
+            out['text_cursed'] = tc
+        elif k == 'special' and isinstance(v, dict):
+            out['special'] = _prune_special(v, L)
+        elif k == 'extra_effects' and isinstance(v, list):
+            out['extra_effects'] = [_prune_text_dict(eff, L) for eff in v]
+        else:
+            out[k] = v
+    return out
+
+
+def _prune_effect_entry(eff, L):
+    """Prune an effect entry: keep everything, but prune eff['text'] to lang L."""
+    if not isinstance(eff, dict):
+        return eff
+    ne = dict(eff)
+    if isinstance(ne.get('text'), dict):
+        ne['text'] = _prune_text_dict(ne['text'], L)
+    return ne
+
+
+def _prune_entry(e, L):
+    """Prune a weapon/item/character entry to language L."""
+    ne = {}
+    for k, v in e.items():
+        if k.startswith('name_') and k != 'name_key':
+            if k == f'name_{L}':
+                ne['name'] = v
+            continue
+        if k == 'effects':
+            ne['effects'] = [_prune_effect_entry(eff, L) for eff in v]
+        else:
+            ne[k] = v
+    if 'name' not in ne:
+        ne['name'] = e.get('name_en') or e.get('name_key') or ''
+    return ne
+
+
+def _prune_sets(sets, L):
+    out = {}
+    for cls, tiers in sets.items():
+        out[cls] = [[_prune_effect_entry(eff, L) for eff in tier] for tier in tiers]
+    return out
+
+
+def prune_data_for_lang(data, L, ui_strings):
+    """Build a per-language data dict: only language L's text + UI strings."""
+    strings = ui_strings.get('strings', {})
+    sections = ui_strings.get('sections', {})
+    # Honor a present-but-empty value for language L (e.g. cooldownEvery === ''
+    # for languages whose cooldownIs already embeds {shots}); only fall back to
+    # English when the language key is genuinely absent.
+    def _ui_val(v):
+        return v[L] if L in v else v.get('en', '')
+    ui = {k: _ui_val(strings.get(k, {})) for k in strings}
+    ui['sections'] = sections.get(L) or sections.get('en') or []
+    return {
+        'meta': {**data['meta'], 'lang': L},
+        'stat_icons': data['stat_icons'],
+        'weapons': [_prune_entry(w, L) for w in data['weapons']],
+        'items': [_prune_entry(i, L) for i in data['items']],
+        'characters': [_prune_entry(c, L) for c in data['characters']],
+        'translations': {k: (v.get(L) or v.get('en') or k) for k, v in data['translations'].items()},
+        'sets': _prune_sets(data['sets'], L),
+        'ui': ui,
+    }
+
 
 # ====================================================================
 # Main
@@ -3638,11 +3839,22 @@ def main():
     }
     
     data = clean_arrays_for_json(data)
-    
-    log.debug("=== Writing JSON ===")
-    with open(OUTPUT_JSON, 'w', encoding='utf-8') as f:
-        json.dump(data, f, ensure_ascii=False, separators=(',', ':'))
-    log.info(f"  Written to {OUTPUT_JSON}")
+
+    ui_strings = load_ui_strings()
+
+    log.debug("=== Writing per-language JSON ===")
+    for lang in LANGS:
+        lang_data = prune_data_for_lang(data, lang, ui_strings)
+        lang_data = clean_arrays_for_json(lang_data)
+        out_path = OUTPUT_DIR / "data" / f"brotato_data.{lang}.json"
+        with open(out_path, 'w', encoding='utf-8') as f:
+            json.dump(lang_data, f, ensure_ascii=False, separators=(',', ':'))
+        log.info(f"  Written {lang}: {out_path.name}")
+
+    languages_path = OUTPUT_DIR / "data" / "languages.json"
+    with open(languages_path, 'w', encoding='utf-8') as f:
+        json.dump(LANG_META, f, ensure_ascii=False, separators=(',', ':'))
+    log.info(f"  Written {languages_path.name}")
     
     log.debug("=== Copying Icons ===")
     all_entries = all_weapons + all_items + all_characters
@@ -3660,7 +3872,8 @@ def main():
     log.info(f"  Total weapons: {len(all_weapons)} (base: {len(base_weapons)}, dlc: {len(dlc_weapons)})")
     log.info(f"  Total items: {len(all_items)} (base: {len(base_items)}, dlc: {len(dlc_items)})")
     log.info(f"  Total characters: {len(all_characters)} (base: {len(base_characters)}, dlc: {len(dlc_characters)})")
-    log.info(f"  JSON size: {OUTPUT_JSON.stat().st_size / 1024:.1f} KB")
+    en_size = (OUTPUT_DIR / "data" / "brotato_data.en.json").stat().st_size
+    log.info(f"  Per-language JSON size (en): {en_size / 1024:.1f} KB x {len(LANGS)} langs")
     
     # Output report table
     # print(f"\n=== Effect Text Report ===")

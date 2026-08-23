@@ -14,12 +14,12 @@
       <a href="https://brotato.wiki.spellsandguns.com/" target="_blank" rel="noopener noreferrer">
         <el-button class="header-btn" circle>Wiki</el-button>
       </a>
-      <el-dropdown @command="(cmd) => { isZh = cmd === 'zh' }" trigger="click">
-        <el-button class="header-btn lang-btn" circle>{{ isZh ? '中' : 'EN' }}</el-button>
+      <el-dropdown @command="(cmd) => { currentLang = cmd }" trigger="click">
+        <el-button class="header-btn lang-btn" circle>{{ currentLangName }}</el-button>
         <template #dropdown>
           <el-dropdown-menu>
-            <el-dropdown-item :command="'zh'" :class="{ 'is-active-lang': isZh }">中文</el-dropdown-item>
-            <el-dropdown-item :command="'en'" :class="{ 'is-active-lang': !isZh }">English</el-dropdown-item>
+            <el-dropdown-item v-for="l in availableLangs" :key="l.code" :command="l.code"
+              :class="{ 'is-active-lang': currentLang === l.code }">{{ l.name }}</el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>
@@ -29,8 +29,14 @@
 </template>
 
 <script setup>
+import { computed } from 'vue'
 import { Moon, Sunny } from '@element-plus/icons-vue'
-import { isZh, isDark } from '../store/codexStore'
+import { currentLang, availableLangs, isDark } from '../store/codexStore'
+
+const currentLangName = computed(() => {
+  const found = availableLangs.value.find(l => l.code === currentLang.value)
+  return found ? found.name : currentLang.value
+})
 </script>
 
 <style scoped>
