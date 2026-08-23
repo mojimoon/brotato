@@ -11,31 +11,41 @@
           style="height: 20px;" />
       </a>
       <span>V 1.1.15.4</span>
-      <a href="https://brotato.wiki.spellsandguns.com/" target="_blank" rel="noopener noreferrer">
-        <el-button class="header-btn" circle>Wiki</el-button>
-      </a>
-      <el-dropdown @command="(cmd) => { isZh = cmd === 'zh' }" trigger="click">
-        <el-button class="header-btn lang-btn" circle>{{ isZh ? '中' : 'EN' }}</el-button>
+      <el-dropdown @command="(cmd) => { currentLang = cmd }" trigger="click" popper-class="dark-dropdown">
+        <el-button class="header-btn lang-btn" round>{{ currentLangName }}</el-button>
         <template #dropdown>
           <el-dropdown-menu>
-            <el-dropdown-item :command="'zh'" :class="{ 'is-active-lang': isZh }">中文</el-dropdown-item>
-            <el-dropdown-item :command="'en'" :class="{ 'is-active-lang': !isZh }">English</el-dropdown-item>
+            <el-dropdown-item v-for="l in availableLangs" :key="l.code" :command="l.code"
+              :class="{ 'is-active-lang': currentLang === l.code }">{{ l.name }}</el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>
-      <el-button class="header-btn" :icon="isDark ? Moon : Sunny" circle @click="isDark = !isDark" />
+      <el-button class="header-btn" :icon="isDark ? Moon : Sunny" round @click="isDark = !isDark" />
     </div>
   </header>
 </template>
 
 <script setup>
+import { computed } from 'vue'
 import { Moon, Sunny } from '@element-plus/icons-vue'
-import { isZh, isDark } from '../store/codexStore'
+import { currentLang, availableLangs, isDark } from '../store/codexStore'
+
+const currentLangName = computed(() => {
+  const found = availableLangs.value.find(l => l.code === currentLang.value)
+  return found ? found.name : currentLang.value
+})
 </script>
 
 <style scoped>
 .header-logo {
   height: 24px; width: 24px; object-fit: contain; border-radius: 4px; flex-shrink: 0; margin-right: 8px;
+}
+.header-btn {
+  border-radius: 999px;
+}
+.lang-btn {
+  min-width: 64px;
+  justify-content: center;
 }
 @media (max-width: 768px) {
   .header-logo { margin-right: 0; }
