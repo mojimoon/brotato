@@ -2,7 +2,7 @@
   <header class="header">
     <h1>
       <img src="/brotato_icon.ico" class="header-logo" alt="Brotato" />
-      <span class="title">Brotato Codex</span>
+      <span class="title">Brotato Codex+</span>
       <a href="https://github.com/mojimoon/" target="_blank" rel="noopener noreferrer" class="author-link">@mojimoon</a>
     </h1>
     <div class="header-actions">
