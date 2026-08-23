@@ -51,12 +51,13 @@ def load_ui_strings():
     path = CODEX_DIR / 'ui_strings.json'
     if not path.exists():
         log.warning("ui_strings.json not found, UI text will be empty")
-        return {'strings': {}, 'sections': {}}
+        return {'strings': {}, 'sections': {}, 'tag_translations': {}}
     with open(path, encoding='utf-8') as f:
         data = json.load(f)
     return {
         'strings': data.get('strings', {}),
         'sections': data.get('sections', {}),
+        'tag_translations': data.get('tag_translations', {}),
     }
 
 # Global index for reverse lookup: English text -> translation key
@@ -3699,6 +3700,7 @@ def prune_data_for_lang(data, L, ui_strings):
     """Build a per-language data dict: only language L's text + UI strings."""
     strings = ui_strings.get('strings', {})
     sections = ui_strings.get('sections', {})
+    tag_trans = ui_strings.get('tag_translations', {})
     # Honor a present-but-empty value for language L (e.g. cooldownEvery === ''
     # for languages whose cooldownIs already embeds {shots}); only fall back to
     # English when the language key is genuinely absent.
@@ -3706,6 +3708,11 @@ def prune_data_for_lang(data, L, ui_strings):
         return v[L] if L in v else v.get('en', '')
     ui = {k: _ui_val(strings.get(k, {})) for k in strings}
     ui['sections'] = sections.get(L) or sections.get('en') or []
+    # tag_translations: each tag -> {lang: text}; prune to single lang for L.
+    ui['tag_translations'] = {
+        tag: (_ui_val(d) if isinstance(d, dict) else d)
+        for tag, d in tag_trans.items()
+    }
     return {
         'meta': {**data['meta'], 'lang': L},
         'stat_icons': data['stat_icons'],

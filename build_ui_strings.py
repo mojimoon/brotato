@@ -86,7 +86,7 @@ strings = {
     "curse":              T("Curse", "Malédiction", "诅咒", "呪い", "저주", "詛咒", "Проклятие", "Klątwa", "Maldición", "Maldição", "Fluch", "Lanet", "Maledizione"),
     "clear":              T("Clear Filters", "Effacer les filtres", "清除筛选", "フィルターをクリア", "필터 지우기", "清除篩選", "Очистить фильтры", "Wyczyść filtry", "Borrar filtros", "Limpar filtros", "Filter löschen", "Filtreleri temizle", "Cancella filtri"),
     "weaponCount":        T("#Weapon", "#Arme", "武器数量", "武器数", "무기 수", "武器數量", "№ Оружие", "#Bronie", "#Arma", "#Arma", "#Waffe", "#Silah", "#Arma"),
-    "frames":             T("Frames", "Images", "帧数", "フレーム", "프레임", "幀數", "Кадры", "Klatki", "Fotogramas", "Quadros", "Frames", "Kare", "Frame"),
+    "frames":             T("Frames", "Frames", "帧数", "フレーム", "프레임", "幀數", "Кадры", "Klatki", "Fotogramas", "Quadros", "Frames", "Kareler", "Fotogrammi"),
     "tooltipCooldown":    T("Tooltip Cooldown", "Récupération (info)", "显示冷却", "ツールチップクールダウン", "툴팁 재사용", "顯示冷卻", "Перезарядка (подсказка)", "Odstęp (podpowiedź)", "Enfriamiento (información)", "Recarga (dica)", "Abklingzeit (Tooltip)", "İpucu bekleme", "Ricarica (tooltip)"),
     "actualCooldown":     T("Actual Cooldown", "Récupération (réelle)", "实际冷却", "実際のクールダウン", "실제 재사용", "實際冷卻", "Фактическая перезарядка", "Odstęp (rzeczywisty)", "Enfriamiento real", "Recarga real", "Tatsächliche Abklingzeit", "Gerçek bekleme", "Ricarica reale"),
     "tooltip":            T("Tooltip", "Info", "显示", "ツールチップ", "툴팁", "顯示", "Подсказка", "Podpowiedź", "Información", "Dica", "Tooltip", "İpucu", "Tooltip"),
@@ -135,6 +135,49 @@ strings = {
     "equiv":              T("equiv", "équiv", "等效", "相当", "상당", "等效", "экв", "odpow", "equiv", "equiv", "äquiv", "eşdeğ", "equiv"),
     "attackThrust":       T("(Thrust)", "(Estoc)", "(突刺)", "(突き)", "(찌르기)", "(突刺)", "(Выпад)", "(Pchnięcie)", "(Embestida)", "(Estocada)", "(Stich)", "(Saplama)", "(Spinta)"),
     "attackSweep":        T("(Sweep)", "(Fauchage)", "(横扫)", "(薙ぎ)", "(휩쓸기)", "(橫掃)", "(Размаx)", "(Zamiatanie)", "(Barrido)", "(Varredura)", "(Schwung)", "(Süpürme)", "(Falcio)"),
+}
+
+# ---------------------------------------------------------------------------
+# Item tag translations (the TAG_TRANSLATIONS map in codexStore.js).
+# Sourced from the game's translation CSV where a key exists
+# (WEAPON_CLASS_EXPLOSIVE, KNOCKBACK, MENU_LOCK, PET, STRUCTURE, STAT_*,
+# NUMBER_OF_ENEMIES, XP_GAIN); tags without a game string keep sensible
+# English/Chinese defaults.
+# ---------------------------------------------------------------------------
+tag_translations = {
+    "consumable":        T("Consumable", "Consommable", "消耗品", "消耗品", "소모품", "消耗品", "Расходуемое", "Przedmiot jednorazowy", "Consumible", "Consumível", "Verbrauchsgegenstand", "Tüketilebilir", "Consumabile"),
+    "economy":           T("Economy", "Économie", "经济", "経済", "경제", "經濟", "Экономика", "Ekonomia", "Economía", "Economia", "Wirtschaft", "Ekonomi", "Economia"),
+    "exploration":       T("Exploration", "Exploration", "探索", "探索", "탐험", "探索", "Исследование", "Eksploracja", "Exploración", "Exploração", "Erkundung", "Keşif", "Esplorazione"),
+    "explosive":         T("Explosive", "Explosif", "爆炸", "爆発", "폭발성", "爆炸", "Разрывное", "Wybuchowa", "Explosiva", "Explosiva", "Explosiv", "Patlayıcı", "Arma esplosiva"),
+    "knockback":         T("Knockback", "Poussée", "击退", "ノックバック", "넉백", "擊退", "Отталкивание", "Odrzut", "Derribo", "Empurrão", "Rückstoß", "İtme", "Respinta"),
+    "less_enemies":      T("Less Enemies", "Moins d'ennemis", "减少敌人", "敵が少ない", "적 감소", "減少敵人", "Меньше врагов", "Mniej wrogów", "Menos enemigos", "Menos inimigos", "Weniger Feinde", "Daha az düşman", "Meno nemici"),
+    "less_enemy_speed":  T("Less Enemy Speed", "Vitesse ennemie réduite", "减少敌人速度", "敵の速度低下", "적 속도 감소", "減少敵人速度", "Снижение скорости врагов", "Mniejsza prędkość wrogów", "Menor velocidad enemiga", "Velocidade inimiga reduzida", "Geringere Feindgeschwindigkeit", "Düşman hızı azaltma", "Velocità nemica ridotta"),
+    "lock":              T("Lock", "Verrouiller", "锁定", "ロック", "잠금", "上鎖", "Закрепить", "Zablokuj", "Bloquear", "Travar", "Sperren", "Kilitle", "Blocca"),
+    "more_enemies":      T("More Enemies", "Plus d'ennemis", "更多敌人", "敵が多い", "적 증가", "更多敵人", "Больше врагов", "Więcej wrogów", "Más enemigos", "Mais inimigos", "Mehr Feinde", "Daha fazla düşman", "Più nemici"),
+    "number_of_enemies": T("Enemies", "Ennemis", "敌人", "敵", "적", "敵人", "Враги", "Wrogowie", "Enemigos", "Inimigos", "Gegner", "Düşmanlar", "Nemici"),
+    "pet":               T("Pet", "Familier", "宠物", "ペット", "펫", "寵物", "Питомец", "Zwierzak", "Mascota", "Mascote", "Haustier", "Evcil Hayvan", "Mascotte"),
+    "pickup":            T("Pickup", "Ramassable", "拾取", "拾得", "픽업", "拾取", "Подбираемое", "Podnoszone", "Recogible", "Coletável", "Aufhebbar", "Toplanabilir", "Raccoglibile"),
+    "stand_still":       T("Stand Still", "Immobile", "静止", "その場に留まる", "제자리 정지", "靜止", "Стоять на месте", "Stać w miejscu", "Quieto", "Ficar parado", "Stillstehen", "Olduğu yerde dur", "Stare fermo"),
+    "stat_armor":        T("Armor", "Armure", "护甲", "防御力", "방어구", "盔甲", "Броня", "Pancerz", "Armadura", "Armadura", "Rüstung", "Zırh", "Corazza"),
+    "stat_attack_speed": T("% Attack Speed", "% Vitesse d'Attaque", "%攻击速度", "攻撃速度(%)", "% 공격 속도", "%攻擊速度", "% скорости атаки", "% prędkości ataku", "% de vel. ataque", "% de velocidade de ataque", "% Angriffstempo", "% Saldırı Hızı", "% di velocità attacco"),
+    "stat_crit_chance":  T("% Crit Chance", "% Chance Critique", "%暴击率", "クリティカル率(%)", "% 치명타율", "%爆擊機率", "% вероятности крит. удара", "% szans na traf. kryt.", "% de prob. crít.", "% de chance crítica", "% Krit-Chance", "% Kritik Hasar Olasılığı", "% di prob. critica"),
+    "stat_curse":        T("Curse", "Malédiction", "诅咒", "呪い", "저주", "詛咒", "Проклятие", "Klątwa", "Maldición", "Maldição", "Fluch", "Lanet", "Maledizione"),
+    "stat_dodge":        T("% Dodge", "% Esquive", "%闪避", "回避率(%)", "% 회피", "%迴避", "Уклонение", "% szans na unik", "% de agilidad", "% de esquiva", "% Ausweichen", "% Kaçınma", "% di schivata"),
+    "stat_elemental_damage": T("Elemental Damage", "Dégâts Élémentaires", "元素伤害", "元素ダメージ", "원소 대미지", "屬性傷害", "Стихийный урон", "Obrażenia od żywiołów", "Daño elemental", "Dano elemental", "Elementarschaden", "Element Hasarı", "Danni elementali"),
+    "stat_engineering":  T("Engineering", "Ingénierie", "工程学", "エンジニアリング", "엔지니어링", "工程學", "Инженерия", "Inżynieria", "Ingeniería", "Engenharia", "Technik", "Mühendislik", "Ingegneria"),
+    "stat_harvesting":   T("Harvesting", "Récolte", "收获", "収穫", "수확", "收穫結算", "Сбор", "Zbieranie", "Recolección", "Coleta", "Ernte", "Toplama", "Raccolto"),
+    "stat_hp_regeneration": T("HP Regeneration", "Régénération de PV", "生命再生", "HP再生", "HP 재생", "HP再生", "Восстановление ОЗ", "Regeneracja PZ", "Recuperación de PS", "Recuperação de PV", "HP-Regeneration", "Sağlık Yenileme", "Recupero salute"),
+    "stat_lifesteal":    T("% Life Steal", "% Vol de Vie", "%生命窃取", "ライフスティール(%)", "% 생명 훔침", "%生命竊取", "% кражи жизни", "% wysysanego życia", "% de robo de salud", "% de roubo de vida", "% Lebensraub", "% Can Çalma", "% di furto vita"),
+    "stat_luck":         T("Luck", "Chance", "幸运", "運", "행운", "運氣", "Удача", "Szczęście", "Suerte", "Sorte", "Glück", "Şans", "Fortuna"),
+    "stat_max_hp":       T("Max HP", "PV Max", "最大生命值", "最大HP", "최대 HP", "最大HP", "Макс. ОЗ", "Maks. PZ", "PS máximos", "PV máximo", "Max. HP", "Maks. Sağlık", "PS massimi"),
+    "stat_melee_damage": T("Melee Damage", "Dégâts en Mêlée", "近战伤害", "近接ダメージ", "근거리 대미지", "近距離傷害", "Урон в ближнем бою", "Obr. w walce wręcz", "Daño cuerpo a cuerpo", "Dano corpo a corpo", "Nahkampfschaden", "Yakın Saldırı Hasarı", "Danni da mischia"),
+    "stat_percent_damage": T("% Damage", "% Dégâts", "%伤害", "ダメージ(%)", "% 대미지", "%傷害", "% урона", "% obrażeń", "% de daño", "% de dano", "% Schaden", "% Hasar", "% di danni"),
+    "stat_range":        T("Range", "Portée", "范围", "射程", "범위", "範圍", "Дальность", "Zasięg", "Alcance", "Alcance", "Reichweite", "Menzil", "Portata"),
+    "stat_ranged_damage": T("Ranged Damage", "Dégâts à Distance", "远程伤害", "遠距離ダメージ", "원거리 대미지", "範圍傷害", "Урон в дальнем бою", "Obrażenia dystansowe", "Daño a distancia", "Dano de longo alcance", "Fernkampfschaden", "Menzilli Saldırı Hasarı", "Danni da distanza"),
+    "stat_speed":        T("% Speed", "% Vitesse", "%速度", "移動速度(%)", "% 속도", "%速度", "% скорости", "% szybkości", "% de velocidad", "% de velocidade", "% Tempo", "% Hız", "% di velocità"),
+    "structure":         T("Structure (Preference)", "Structure (Préférence)", "构筑物(偏好)", "構造物(好み)", "구조물(선호)", "構築物(偏好)", "Структура (предпочтение)", "Struktura (preferencja)", "Estructura (Preferencia)", "Estrutura (Preferência)", "Struktur (Präferenz)", "Yapı (Tercih)", "Struttura (Preferenza)"),
+    "structure_real":    T("Structure", "Structure", "构筑物", "建造物", "구조", "結構物", "Постройка", "Struktura", "Estructura", "Estrutura", "Konstruktion", "Yapı", "Struttura"),
+    "xp_gain":           T("% XP Gain", "% Gain d'XP", "获得%经验", "経験値の獲得量(%)", "% XP 획득", "獲得%XP", "% бонусного опыта", "Zdobywany % PD", "% de XP recibida", "% de EXP ganha", "% XP-Gewinn", "% TP Kazanımı", "% di guadagno PE"),
 }
 
 # ---------------------------------------------------------------------------
@@ -215,7 +258,7 @@ def build_sections(lang):
 
 sections = {lang: build_sections(lang) for lang in LANGS}
 
-out = {"strings": strings, "sections": sections}
+out = {"strings": strings, "sections": sections, "tag_translations": tag_translations}
 
 CODEX_DIR = Path(__file__).resolve().parent
 out_path = CODEX_DIR / "ui_strings.json"
@@ -225,3 +268,4 @@ with open(out_path, "w", encoding="utf-8") as f:
 print(f"Wrote {out_path}")
 print(f"  strings: {len(strings)} keys x {len(LANGS)} langs")
 print(f"  sections: {len(sections)} langs")
+print(f"  tag_translations: {len(tag_translations)} tags x {len(LANGS)} langs")
