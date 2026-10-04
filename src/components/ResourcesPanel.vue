@@ -30,6 +30,11 @@
             <span class="res-link-label">{{ S.modOneItem }}</span>
             <el-icon class="res-link-ext"><TopRight /></el-icon>
           </a>
+          <a class="res-link" :href="modAutoAnthonyUrl" target="_blank" rel="noopener noreferrer">
+            <BrandIcon name="steam" class="res-link-icon" />
+            <span class="res-link-label">{{ S.modAutoAnthony }}</span>
+            <el-icon class="res-link-ext"><TopRight /></el-icon>
+          </a>
         </section>
 
         <!-- Left dynamic sections (Special Thanks) -->
@@ -94,7 +99,8 @@ import BrandIcon from './BrandIcon.vue'
 
 const githubUrl = 'https://github.com/mojimoon/brotato'
 const modCurseUrl = 'https://steamcommunity.com/sharedfiles/filedetails/?id=3671945570'
-const modOneItemUrl = 'https://steamcommunity.com/sharedfiles/filedetails/?id=3757246252'
+const modOneItemUrl = 'https://steamcommunity.com/sharedfiles/filedetails/?id=3808935337'
+const modAutoAnthonyUrl = 'https://steamcommunity.com/sharedfiles/filedetails/?id=3811213360'
 
 const sheetsBase = 'https://docs.google.com/spreadsheets/d/1qi_KWBH_fQlrXJioDGJQScuRbwfndHzLu4Zj5Ek0Aso/edit'
 const wikiBase = 'https://brotato.wiki.spellsandguns.com'
