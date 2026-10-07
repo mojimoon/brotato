@@ -1436,10 +1436,12 @@ def _get_cursed_text_key(eff, parent_id='', is_weapon=False):
         'trees': 'effect_trees_plural',
     }
     if key in m: return m[key]
-    # Also check by text_key (for effects with empty key like doc_moth)
-    tk = eff.get('text_key', '').upper()
-    for k, v in m.items():
-        if k.upper() in tk: return v
+    # Also check by text_key, only for effects with empty key like doc_moth
+    # (game matches exact key_hash; substring on text_key would hit e.g. piercing_damage)
+    if not key:
+        tk = eff.get('text_key', '').upper()
+        for k, v in m.items():
+            if k.upper() in tk: return v
     if custom_key == 'increase_tier_on_reroll': return 'effect_increase_tier_on_reroll_plural'
     if key == 'knockback_aura' and value <= 1: return 'effect_knockback_aura'
     if parent_id == 'item_tardigrade' and key == 'hit_protection': return 'effect_hit_protection_plural'
