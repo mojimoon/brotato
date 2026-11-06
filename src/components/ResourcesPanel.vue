@@ -35,6 +35,11 @@
             <span class="res-link-label">{{ S.modAutoAnthony }}</span>
             <el-icon class="res-link-ext"><TopRight /></el-icon>
           </a>
+          <a class="res-link" :href="modBroEditorUrl" target="_blank" rel="noopener noreferrer">
+            <BrandIcon name="steam" class="res-link-icon" />
+            <span class="res-link-label">{{ S.modBroEditor }}</span>
+            <el-icon class="res-link-ext"><TopRight /></el-icon>
+          </a>
         </section>
 
         <!-- Left dynamic sections (Special Thanks) -->
@@ -101,6 +106,7 @@ const githubUrl = 'https://github.com/mojimoon/brotato'
 const modCurseUrl = 'https://steamcommunity.com/sharedfiles/filedetails/?id=3671945570'
 const modOneItemUrl = 'https://steamcommunity.com/sharedfiles/filedetails/?id=3808935337'
 const modAutoAnthonyUrl = 'https://steamcommunity.com/sharedfiles/filedetails/?id=3811213360'
+const modBroEditorUrl = 'https://steamcommunity.com/sharedfiles/filedetails/?id=3817655214'
 
 const sheetsBase = 'https://docs.google.com/spreadsheets/d/1qi_KWBH_fQlrXJioDGJQScuRbwfndHzLu4Zj5Ek0Aso/edit'
 const wikiBase = 'https://brotato.wiki.spellsandguns.com'
@@ -114,7 +120,7 @@ const sectionStructure = [
     items: [
       {
         brand: 'sheets', subBrand: 'sheets',
-        by: 'AroRIsing',
+        by: 'ArosRising',
         url: `${sheetsBase}?gid=1643867668`,
         sub: [
           { icon: 'sheets', url: `${sheetsBase}?gid=1374380662` },

@@ -31,7 +31,7 @@
     </div>
 
     <div v-if="addlCooldownInfo" class="weapon-stat-row cooldown-row">
-      <span class="ws-label">{{ S.cooldown }}</span>
+      <span class="ws-label">{{ S.reload }}</span>
       <template v-for="(seg, i) in addlCooldownInfo" :key="i">
         <span :class="seg.cls">{{ seg.text }}</span>
       </template>
@@ -44,9 +44,8 @@
 
     <div class="weapon-stat-row">
       <span class="ws-label">{{ S.range }}</span>
-      <span class="ws-val">{{ displayStats.max_range }}
-        <span v-if="activeWeaponData.type === 'melee'" class="ws-attack-type">{{ meleeAttackTypeText }}</span>
-      </span>
+      <span class="ws-val">{{ displayStats.max_range }}</span>
+      <span v-if="activeWeaponData.type === 'melee'" class="ws-attack-type">{{ meleeAttackTypeText }}</span>
     </div>
 
     <div v-if="(displayStats.accuracy * 100) < 100" class="weapon-stat-row">

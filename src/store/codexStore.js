@@ -49,6 +49,10 @@ export const sortByItems = ref(lsGet('brotato_sortBy_items', 'default'))
 export const showingPrice = ref(lsGet('brotato_showingPrice', true))
 export const isDark = ref(lsGet('brotato_isDark', true))
 export const isMobile = ref(window.innerWidth < 768)
+window.addEventListener('resize', () => { isMobile.value = window.innerWidth < 768 })
+// 移动端：整页是列表，点击后详情在底部抽屉中打开
+export const mobileDetailOpen = ref(false)
+watch(isMobile, v => { if (!v) mobileDetailOpen.value = false })
 export const showAttackSpeedCalc = ref(lsGet('brotato_showAtkCalc', false))
 export const showPriceDetail = ref(lsGet('brotato_showPriceDetail', false))
 export const attackSpeedSlider = ref(0)
@@ -326,6 +330,7 @@ export function tagCharacters(tag) {
   return (rawData.value.characters || []).filter(c => (c.wanted_tags || []).includes(tag) || (c.tags || []).includes(tag)).map(c => itemName(c))
 }
 export function onTagClick(tag) {
+  mobileDetailOpen.value = false
   if (activeTab.value === 'characters') { pendingNavigate.value = true; activeTab.value = 'items'; filterTag.value = tag }
   else { filterTag.value = tag; selectedItem.value = null }
 }
@@ -648,7 +653,7 @@ export const addlCooldownInfo = computed(() => {
 
   const segs = []
   const shots = reload.shots
-  segs.push({ text: (S.value.cooldownIs || 'Cooldown is').replace(/\{shots\}/g, shots), cls: 'calc-reload' })
+  if (S.value.cooldownIs) segs.push({ text: S.value.cooldownIs.replace(/\{shots\}/g, shots), cls: 'calc-reload' })
   segs.push({ text: formatCooldown(reload.tooltip), cls: 'ws-val' })
   segs.push({ text: `(${S.value.tooltip})`, cls: 'calc-reload' })
   segs.push({ text: '/', cls: 'calc-reload-separator' })
@@ -1059,6 +1064,12 @@ export function formatIncr(v) {
 // =============================================================================
 // 选择与键盘导航
 // =============================================================================
+// 网格点击：移动端额外打开详情抽屉（键盘 / 切换标签页的自动选择不打开）
+export function openItem(item) {
+  selectItem(item)
+  if (isMobile.value) mobileDetailOpen.value = true
+}
+
 export function selectItem(item) {
   selectedItem.value = item
   if (activeTab.value === 'weapons') {

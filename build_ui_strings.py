@@ -130,8 +130,10 @@ strings = {
     "modCurse":           T("Cursed & Double Sided Upgrades", "Cursed & Double Sided Upgrades", "诅咒和双面升级 / Cursed & Double Sided Upgrades", "Cursed & Double Sided Upgrades", "Cursed & Double Sided Upgrades", "詛咒和雙面升級 / Cursed & Double Sided Upgrades", "Cursed & Double Sided Upgrades", "Cursed & Double Sided Upgrades", "Cursed & Double Sided Upgrades", "Cursed & Double Sided Upgrades", "Cursed & Double Sided Upgrades", "Cursed & Double Sided Upgrades", "Cursed & Double Sided Upgrades"),
     "modOneItem":         T("One Item to Rule Them All v2", "One Item to Rule Them All v2", "假如所有道具变成 / One Item to Rule Them All v2", "One Item to Rule Them All v2", "One Item to Rule Them All v2", "假如所有道具變成 / One Item to Rule Them All v2", "One Item to Rule Them All v2", "One Item to Rule Them All v2", "One Item to Rule Them All v2", "One Item to Rule Them All v2", "One Item to Rule Them All v2", "One Item to Rule Them All v2", "One Item to Rule Them All v2"),
     "modAutoAnthony":     T("Auto-Anthonyology", "Auto-Anthonyology", "东尼算法 / Auto-Anthonyology", "Auto-Anthonyology", "Auto-Anthonyology", "東尼算法 / Auto-Anthonyology", "Auto-Anthonyology", "Auto-Anthonyology", "Auto-Anthonyology", "Auto-Anthonyology", "Auto-Anthonyology", "Auto-Anthonyology", "Auto-Anthonyology"),
+    "modBroEditor":       T("BroEditor", "BroEditor", "万能可视化编辑器 / BroEditor", "BroEditor", "BroEditor", "万能可视化编辑器 / BroEditor", "BroEditor", "BroEditor", "BroEditor", "BroEditor", "BroEditor", "BroEditor", "BroEditor"),
     # cooldown / reload calculator strings
-    "cooldownIs":         T("Cooldown is", "Temps de recharge", "每发射{shots}次冷却为", "リロード毎{shots}回のクールダウン", "장전 {shots}회마다 쿨타임", "每發射{shots}次冷卻為", "Перезарядка", "Odstęp przeładowania", "Enfriamiento", "Recarga", "Abklingzeit", "Bekleme süresi", "Ricarica"),
+    "reload":             T("Reload", "Rechargement", "换弹", "リロード", "재장전", "換彈", "Смена магазина", "Przeładowanie", "Recarga", "Recarregamento", "Nachladen", "Yeniden doldurma", "Ricaricamento"),
+    "cooldownIs":         T("", "", "每发射{shots}次", "{shots}回毎", "{shots}회마다", "每發射{shots}次", "", "", "", "", "", "", ""),
     # cooldownEvery is the TRAILING "every N shots" phrase. For languages whose
     # cooldownIs already embeds {shots} at the front (zh/ja/ko/zh_TW) this is empty.
     "cooldownEvery":      T(" every {shots} shots", " toutes les {shots} attaques", "", "", "", "", " каждые {shots} выстрелов", " co {shots} strzałów", " cada {shots} disparos", " a cada {shots} tiros", " alle {shots} Schüsse", " her {shots} atışta", " ogni {shots} colpi"),
@@ -213,7 +215,7 @@ def build_sections(lang):
             "key": "thanks", "icon": "Star", "title": L("Special Thanks"),
             "items": [
                 {
-                    "brand": "sheets", "subBrand": "sheets", "label": "Brotato MultiTool", "by": "AroRIsing",
+                    "brand": "sheets", "subBrand": "sheets", "label": "Brotato MultiTool", "by": "ArosRising",
                     "url": "https://docs.google.com/spreadsheets/d/1qi_KWBH_fQlrXJioDGJQScuRbwfndHzLu4Zj5Ek0Aso/edit?gid=1643867668",
                     "sub": [
                         {"icon": "sheets", "label": L("DPS Calculator"), "url": "https://docs.google.com/spreadsheets/d/1qi_KWBH_fQlrXJioDGJQScuRbwfndHzLu4Zj5Ek0Aso/edit?gid=1374380662"},

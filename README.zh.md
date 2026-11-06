@@ -16,7 +16,7 @@
 * 移动端适配
 * 相关社区资源的收集
 
-特别鸣谢 WL 的 Improved Tooltips 和 AroRising 的 Brotato MultiTool，我在 dc 上和这两位大佬深入交流了一些关于攻速等游戏机制的细节，才有了这个项目。
+特别鸣谢 WL 的 Improved Tooltips 和 ArosRising 的 Brotato MultiTool，我在 dc 上和这两位大佬深入交流了一些关于攻速等游戏机制的细节，才有了这个项目。
 
 如果你有发现任何过时或错误的信息，或者有任何建议，欢迎随时联系我。之后主要会更新敌人和波次信息以及一些其他的计算器。
 

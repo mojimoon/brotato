@@ -14,7 +14,7 @@ So that's it. You've got a new codex that incorporates **price, curse, and 99.99
 
 In addition, you can find links to my mods and other useful resources in the "Resources" section. (Why not try [Cursed & Double Sided Upgrades](https://steamcommunity.com/sharedfiles/filedetails/?id=3671945570) and [One Item to Rule Them All](https://steamcommunity.com/sharedfiles/filedetails/?id=3757246252)?)
 
-I would like to express my sincere gratitude to WL (the author of [Improved Tooltips](https://steamcommunity.com/sharedfiles/filedetails/?id=3019195689)) and AroRising (the author of [Brotato MultiTool](https://docs.google.com/spreadsheets/d/1qi_KWBH_fQlrXJioDGJQScuRbwfndHzLu4Zj5Ek0Aso/edit?gid=1374380662)) who provided me with information and inspiration for this project.
+I would like to express my sincere gratitude to WL (the author of [Improved Tooltips](https://steamcommunity.com/sharedfiles/filedetails/?id=3019195689)) and ArosRising (the author of [Brotato MultiTool](https://docs.google.com/spreadsheets/d/1qi_KWBH_fQlrXJioDGJQScuRbwfndHzLu4Zj5Ek0Aso/edit?gid=1374380662)) who provided me with information and inspiration for this project.
 
 **If you find it helpful, please consider giving it a star on [GitHub](https://github.com/mojimoon/brotato)!** If you would like to contribute or have any suggestions, please feel free to open an issue or a pull request.
 
