@@ -152,15 +152,6 @@
         </template>
       </el-dropdown>
 
-      <el-button v-if="activeTab === 'weapons' || activeTab === 'items'" class="filter-btn price-toggle-btn"
-        :class="{ 'has-value': showingPrice }" @click="showingPrice = !showingPrice">
-        <el-icon style="margin-right:4px">
-          <View v-if="showingPrice" />
-          <Hide v-else />
-        </el-icon>
-        {{ S.price }}
-      </el-button>
-
       <el-button v-if="activeTab === 'weapons'" class="filter-btn price-toggle-btn frames-toggle-btn"
         :class="{ 'has-value': showFrames }" @click="showFrames = !showFrames">
         <el-icon style="margin-right:4px">
@@ -168,6 +159,15 @@
           <More v-else />
         </el-icon>
         {{ S.frames }}
+      </el-button>
+
+      <el-button v-if="activeTab === 'weapons' || activeTab === 'items'" class="filter-btn price-toggle-btn"
+        :class="{ 'has-value': showingPrice }" @click="showingPrice = !showingPrice">
+        <el-icon style="margin-right:4px">
+          <View v-if="showingPrice" />
+          <Hide v-else />
+        </el-icon>
+        {{ S.price }}
       </el-button>
     </div>
   </div>
