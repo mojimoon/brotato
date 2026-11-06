@@ -13,7 +13,9 @@ logging.basicConfig(
 log = logging.getLogger(__name__)
 
 CODEX_DIR = Path(__file__).resolve().parent            # codex/
-BASE_DIR = CODEX_DIR.parent                           # decompiled game root
+# decompiled 1.2 game root: $BROTATO_GAME, else codex/.. if it is a Godot project, else ../1.2
+BASE_DIR = Path(os.environ.get('BROTATO_GAME') or (
+    CODEX_DIR.parent if (CODEX_DIR.parent / 'project.godot').exists() else CODEX_DIR.parent / '1.2'))
 OUTPUT_DIR = CODEX_DIR / "public"
 OUTPUT_JSON = OUTPUT_DIR / "data" / "brotato_data.json"
 OUTPUT_ICONS = OUTPUT_DIR / "icons"
@@ -93,8 +95,7 @@ def load_translations():
                     TR_BY_EN[en_text] = key
     
     log.info("Loading translations...")
-    load_csv(BASE_DIR / ".assets" / "resources" / "translations" / "translations.csv")
-    load_csv(BASE_DIR / ".assets" / "dlcs" / "dlc_1" / "translations" / "translations.csv")
+    load_csv(BASE_DIR / "resources" / "translations" / "translations.csv")  # 1.2: single table incl. DLCs
     log.info(f"  Loaded {len(translations)} translation keys")
     return translations
 
@@ -104,40 +105,12 @@ def tr(key, lang='en'):
         return d.get(lang) or d.get('en') or key
     return key
 
-def _build_missing_key_candidates():
-    """Map (source, N) -> {lang: text} for every <!MissingKey:N:..> row.
-
-    These rows in the game's translations.csv are the candidate strings the
-    user manually matched effect keys against. Each carries ALL languages, so
-    a matched key can be localized into every language at once.
-    """
-    candidates = {}
-    sources = [
-        ('base', BASE_DIR / ".assets" / "resources" / "translations" / "translations.csv"),
-        ('dlc1', BASE_DIR / ".assets" / "dlcs" / "dlc_1" / "translations" / "translations.csv"),
-    ]
-    for source, path in sources:
-        if not path.exists():
-            continue
-        with open(path, encoding='utf-8-sig') as f:
-            for row in csv.DictReader(f):
-                key = row.get('key', '')
-                if not key or not key.startswith('<!MissingKey:'):
-                    continue
-                m = re.match(r'<!MissingKey:(\d+):', key)
-                if not m:
-                    continue
-                n = int(m.group(1))
-                candidates[(source, n)] = {lang: (row.get(lang, '') or '') for lang in LANGS}
-    return candidates
-
-
 def load_merged_translations():
     """Load manually-fixed translation entries from translations_merged.json.
 
-    For `matched` entries we pull ALL languages from the corresponding
-    <!MissingKey:N:..> candidate row in the game translations CSV (the row the
-    user matched the key against). For `manual` entries only en/zh are present.
+    For `matched` entries we pull ALL languages from the <!MissingKey:N:..> row
+    whose English text equals the entry's `en` (load_translations keys those
+    rows by that text; the N ids changed in 1.2). For `manual` entries only en/zh are present.
     Each entry has a 'key' (uppercase) and 'status' (matched/manual/skipped).
     """
     merged_path = CODEX_DIR / "data" / "translations_merged.json"
@@ -152,8 +125,6 @@ def load_merged_translations():
     with open(merged_path, encoding='utf-8') as f:
         merged = json.load(f)
 
-    candidates = _build_missing_key_candidates()
-
     count = 0
     for entry in merged.get('entries', []):
         status = entry.get('status')
@@ -165,14 +136,8 @@ def load_merged_translations():
         key_upper = key.upper()
 
         langs = None
-        if status == 'matched':
-            mid = entry.get('matched_missing_key_id', '') or ''
-            m = re.match(r'^([BD])_(\d+)$', mid)
-            if m:
-                source = 'base' if m.group(1) == 'B' else 'dlc1'
-                cand = candidates.get((source, int(m.group(2))))
-                if cand:
-                    langs = {lang: (cand.get(lang, '') or '') for lang in LANGS}
+        if status == 'matched' and entry.get('en') in TR:
+            langs = dict(TR[entry['en']])
 
         if langs is None:
             # manual entry (or unmatched candidate): only en/zh available
@@ -211,6 +176,8 @@ def parse_tres_value(val_str):
     if val_str == 'false': return False
     m = re.match(r'^ExtResource\(\s*(\d+)\s*\)$', val_str)
     if m: return {'_ext': int(m.group(1))}
+    m = re.match(r'^SubResource\(\s*(\d+)\s*\)$', val_str)
+    if m: return {'_sub': int(m.group(1))}
     if val_str == 'null' or val_str == '': return None
     if re.match(r'^-?\d+\.\d+$', val_str): return float(val_str)
     if re.match(r'^-?\d+$', val_str): return int(val_str)
@@ -268,9 +235,16 @@ def parse_tres_file(filepath):
         if path.startswith('res://'): path = path[6:]
         ext_resources[int(m.group(3))] = {'path': path, 'type': m.group(2)}
     
+    # Inline sub-resources (1.2 writes custom_args this way); single-line fields only.
+    sub_resources = {}
+    for m in re.finditer(r'\[sub_resource[^\]]*\bid=(\d+)\]\s*\n(.*?)(?=\n\[|\Z)', content, re.DOTALL):
+        sub_resources[int(m.group(1))] = {
+            k.strip(): parse_tres_value(v) for k, v in
+            (ln.split('=', 1) for ln in m.group(2).split('\n') if '=' in ln)}
+
     res_match = re.search(r'\[resource\]\s*\n(.*)', content, re.DOTALL)
     if not res_match:
-        return {'ext_resources': ext_resources, 'data': {}}
+        return {'ext_resources': ext_resources, 'sub_resources': sub_resources, 'data': {}}
     
     res_content = res_match.group(1)
     lines = res_content.split('\n')
@@ -313,7 +287,7 @@ def parse_tres_file(filepath):
             if bracket_balance == 0 and brace_balance == 0:
                 flush()
     flush()
-    return {'ext_resources': ext_resources, 'data': data}
+    return {'ext_resources': ext_resources, 'sub_resources': sub_resources, 'data': data}
 
 # ====================================================================
 # Data collection helpers
@@ -321,21 +295,7 @@ def parse_tres_file(filepath):
 TIER_NAMES = {0: 'common', 1: 'uncommon', 2: 'rare', 3: 'legendary'}
 WEAPON_TYPE_NAMES = {0: 'melee', 1: 'ranged'}
 
-def find_icon_file(tres_path, parsed_data):
-    ext = parsed_data.get('ext_resources', {})
-    icon_val = parsed_data.get('data', {}).get('icon')
-    if isinstance(icon_val, dict) and '_ext' in icon_val:
-        ext_id = icon_val['_ext']
-        if ext_id in ext:
-            return ext[ext_id]['path']
-    parent = tres_path.parent
-    for pattern in ['*_icon.png', 'icon.png']:
-        matches = list(parent.glob(pattern))
-        if matches:
-            return str(matches[0].relative_to(BASE_DIR))
-    return None
-
-def find_icon_for_dlc(tres_path, parsed_data):
+def find_icon(tres_path, parsed_data):
     ext = parsed_data.get('ext_resources', {})
     icon_val = parsed_data.get('data', {}).get('icon')
     if isinstance(icon_val, dict) and '_ext' in icon_val:
@@ -393,6 +353,8 @@ def parse_weapon_stats(filepath):
             'attack_type': data.get('attack_type', 0),
             'deal_dmg_on_return': data.get('deal_dmg_on_return', False),
             'alternate_attack_type': data.get('alternate_attack_type', False),
+            # 1.2 animation-driven melee (whip, flail...): fixed-length swing animation
+            'attack_duration': data.get('attack_duration', 0.0),
         })
     
     # Calculate animation cooldown based on weapon type
@@ -434,7 +396,10 @@ def parse_effect_file(filepath):
         'storage_method': data.get('storage_method', 0),
         'effect_sign': data.get('effect_sign', 3),
     }
-    
+    script = data.get('script')
+    if isinstance(script, dict) and script.get('_ext') in ext:
+        result['script'] = Path(ext[script['_ext']]['path']).stem
+
     # Extract set_id for ClassBonusEffect (weapon class bonus)
     if 'set_id' in data:
         result['set_id'] = data['set_id']
@@ -448,7 +413,10 @@ def parse_effect_file(filepath):
     for field_name in ['value2', 'value3', 'interval', 'chance', 'max_stacks',
                          'nb_stat_scaled', 'duration_secs', 'scale',
                          'sound_db_mod', 'base_smoke_amount',
-                         'for_every_health_percent', 'stat_nb', 'double_chance']:
+                         'for_every_health_percent', 'stat_nb', 'double_chance',
+                         # 1.2 / DLC2 effect scripts
+                         'duration', 'radius', 'fuse_duration', 'puddle_lifetime',
+                         'hp_threshold', 'bonus_damage_per_fruit']:
         if field_name in data:
             extra_numerics[field_name] = data[field_name]
     if extra_numerics:
@@ -459,13 +427,14 @@ def parse_effect_file(filepath):
     if isinstance(custom_args_raw, list) and custom_args_raw:
         custom_args = []
         for ca in custom_args_raw:
-            if isinstance(ca, dict) and '_ext' in ca:
-                ext_id = ca['_ext']
-                if ext_id in ext:
-                    ca_path = BASE_DIR / ext[ext_id]['path']
-                    if ca_path.exists():
-                        ca_parsed = parse_tres_file(ca_path)
-                        ca_data = ca_parsed['data']
+            ca_data = None
+            if isinstance(ca, dict) and '_sub' in ca:
+                ca_data = parsed['sub_resources'].get(ca['_sub'])
+            elif isinstance(ca, dict) and '_ext' in ca and ca['_ext'] in ext:
+                ca_path = BASE_DIR / ext[ca['_ext']]['path']
+                if ca_path.exists():
+                    ca_data = parse_tres_file(ca_path)['data']
+            if ca_data:
                         custom_args.append({
                             'arg_index': ca_data.get('arg_index', 0),
                             'arg_sign': ca_data.get('arg_sign', 4),
@@ -477,7 +446,11 @@ def parse_effect_file(filepath):
             result['custom_args'] = custom_args
     
     # Parse boolean fields
-    for bool_field in ['auto_target_enemy', 'reset_on_hit', 'perm_stats_only', 'is_spawning']:
+    si = data.get('scaling_icon')
+    if isinstance(si, dict) and si.get('_ext') in ext:
+        result['icon_path'] = ext[si['_ext']]['path']
+    for bool_field in ['auto_target_enemy', 'reset_on_hit', 'perm_stats_only', 'is_spawning',
+                       'hides_damage_scaling']:
         if bool_field in data:
             result[bool_field] = data[bool_field]
     
@@ -547,6 +520,11 @@ def parse_effect_file(filepath):
                 if ws:
                     result['structure_stats'] = ws
     
+    # SpawnStructureEveryKilledEnemiesEffect / CarbonBowStatEffect: nested structure effect
+    se_raw = data.get('structure_effect')
+    if isinstance(se_raw, dict) and se_raw.get('_ext') in ext:
+        result['structure_effect'] = parse_effect_file(BASE_DIR / ext[se_raw['_ext']]['path'])
+
     # Parse effects array (StructureEffect: sub-effects for structures)
     effects_raw = data.get('effects')
     if isinstance(effects_raw, list) and effects_raw:
@@ -703,6 +681,8 @@ def sign_color(eff):
         elif value < 0: return 'zvr'
         return ''
     elif sign == 5: return 'zvp'  # OVERRIDE (curse) -> purple
+    elif sign == 6: return 'zvm'  # EVOLUTION_MECA
+    elif sign == 7: return 'zvu'  # EVOLUTION_MUTANT
     return ''
 
 def wrap_color(text, color):
@@ -1015,6 +995,20 @@ KEYS_NEEDING_PERCENT = {
     'info_pos_stat_curse': [0, 1],
 }
 
+
+def _merge_game_key_tables():
+    """Union the tables above with the game's own Text.keys_needing_operator /
+    keys_needing_percent (singletons/text.gd), so new game keys work without
+    hand-copying."""
+    src = (BASE_DIR / 'singletons' / 'text.gd').read_text(encoding='utf-8')
+    for var, table in (('keys_needing_operator', KEYS_NEEDING_OPERATOR), ('keys_needing_percent', KEYS_NEEDING_PERCENT)):
+        block = re.search(r'var ' + var + r'[^{]*\{(.*?)\n\}', src, re.DOTALL).group(1)
+        for k, idx in re.findall(r'"(\w+)":\s*\[([\d,\s]*)\]', block):
+            table[k] = sorted(set(table.get(k, [])) | {int(i) for i in idx.split(',') if i.strip()})
+
+
+_merge_game_key_tables()
+
 # Sign constants (from Effect.Sign enum)
 SIGN_POSITIVE = 0
 SIGN_NEGATIVE = 1
@@ -1061,6 +1055,8 @@ def _sign_to_color(sign):
     if sign == SIGN_POSITIVE: return 'zvg'
     elif sign == SIGN_NEGATIVE: return 'zvr'
     elif sign == SIGN_OVERRIDE: return 'zvp'
+    elif sign == 6: return 'zvm'
+    elif sign == 7: return 'zvu'
     return ''
 
 
@@ -1080,13 +1076,7 @@ def _get_formatted_value(value_str, arg_format, base_arg_value):
 
 def _sign_to_color(sign):
     """Map sign constant to CSS color class."""
-    if sign == 'zvg':
-        return 'zvg'
-    elif sign == 'zvr':
-        return 'zvr'
-    elif sign == 'zvp':
-        return 'zvp'
-    return ''
+    return sign if sign in ('zvg', 'zvr', 'zvp', 'zvm', 'zvu') else ''
 
 SIGN_NEUTRAL = ''
 
@@ -1110,6 +1100,25 @@ def _try_parse_val(raw):
     except (ValueError, TypeError):
         return None
 
+# Effects whose displayed numbers don't change when cursed (the game only boosts a hidden `value`).
+_CURSE_NO_VISIBLE_CHANGE = {
+    'deflect_projectiles_effect', 'fire_puddle_on_hit_effect', 'fire_trail_effect',
+    'fire_puddle_on_burning_death_effect', 'delayed_exploding_effect',
+}
+
+
+def scaling_cursed(eff):
+    """Does the game boost this effect's scaling stats when cursed? (curse_item)"""
+    script = eff.get('script', '')
+    if script in _CURSE_NO_VISIBLE_CHANGE or script == 'carbon_bow_stat_effect':
+        return False
+    if eff.get('key') in ('effect_burning', 'burn_chance', 'effect_burn_chance'):
+        return False   # BurningEffect / BurnChanceEffect: only damage & duration
+    if script in ('structure_effect', 'turret_effect') and eff.get('extra', {}).get('spawn_cooldown', 0) > 0:
+        return False   # only the spawn cooldown shrinks
+    return True
+
+
 def _build_curse_types(eff, args, arg_signs, parent_id='', is_weapon=False):
     """Build structured curse arg dicts for each arg index.
     
@@ -1128,6 +1137,64 @@ def _build_curse_types(eff, args, arg_signs, parent_id='', is_weapon=False):
             val = _try_parse_val(args[i])
             if val is not None:
                 curse[i] = _curse_entry(val, **kw)
+
+    # 0. 1.2 / DLC2 scripts (dlc_1_data.gd curse_item). NullEffect subclasses fall into its
+    #    generic branch: only `value` is boosted, so only the arg showing `value` changes.
+    script = eff.get('script', '')
+    if script == 'multiply_value_effect':           # value + 1
+        for i in range(n):
+            c(i, type='fixed', curse_value=eff.get('value', 0) + 1)
+        return curse
+    if key == 'stat_evolution':                      # override POSITIVE: |value| grows, sign kept
+        c(0, type='positive')
+        return curse
+    if key == 'fossil_count':                        # cursed text "Counts as 2 fossils" (fixed)
+        c(0, type='none')
+        return curse
+    if key == 'charm_evolved_on_hit':                # DoubleValueEffect: chance {0}; HP {2} fixed
+        c(0, type='positive')
+        return curse
+    if key == 'dig_sites_every_x_waves':             # value2 (waves) = 2
+        c(2, type='fixed', curse_value=2)
+        return curse
+    if key == 'bonus_crit_damage':                   # shown as value/100
+        c(0, type='positive', decimalPlaces=2)
+        return curse
+    if script == 'crate_dig_chance_effect':          # shown as value/100
+        c(0, type='positive', decimalPlaces=2)
+        return curse
+    if script == 'slow_area_on_hit_effect':          # [radius, value, duration]
+        c(1, type='positive')
+        return curse
+    if script in ('weapon_timed_slow_on_hit_effect',):
+        c(0, type='positive')
+        return curse
+    if script == 'weapon_damage_multiplier_if_stat_effect':  # stat threshold is `value`
+        c(1, type='positive')
+        return curse
+    if script == 'carbon_bow_stat_effect':           # burning line shows burning_data (unchanged)
+        if not eff.get('burning_data'):
+            c(0, type='positive')
+        return curse
+    if script == 'slow_time_when_below_hp_effect':   # duration_secs = ceil(d * (1+m))
+        c(1, type='positive')
+        return curse
+    if script == 'spines_on_hit_effect':             # weapon_stats boosted
+        c(2, type='positive')
+        return curse
+    if script in ('mosquitor_effect', 'hungry_hungry_dinosaur_effect',
+                  'spawn_structure_every_killed_enemies_effect'):
+        c(0, type='positive')
+        return curse
+    if script == 'turret_effect' and tk == 'EFFECT_TURRET_DAMAGE_TAKEN':
+        c(0, type='positive')
+        return curse
+    if script in ('structure_effect', 'turret_effect') and extra.get('spawn_cooldown', 0) > 0 \
+            and tk == 'EFFECT_DART_TRAP':            # only spawn cooldown shrinks
+        c(1, type='negative')
+        return curse
+    if script in _CURSE_NO_VISIBLE_CHANGE:
+        return curse
 
     # 1. effect_no_hit_boost: positive, no ceil (int truncation in Godot)
     if key == 'effect_no_hit_boost' or tk == 'EFFECT_NO_HIT_BOOST':
@@ -1392,6 +1459,12 @@ def _build_cursed_extra_effects(eff, parent_id=''):
         items.append({'key': 'items_price', 'value': -10, 'effect_sign': 0})
         items.append({'key': '__text__', 'value': 0, 'effect_sign': 0, 'text_key': 'EFFECT_CURSED_MIRROR'})
 
+    # plastic boots / failsafe core -> armor; pyromaniac / magma boots -> elemental (2, or 3 if modifier >= 0.5)
+    if key in ('has_plastic_boots', 'damage_taken_on_materials'):
+        items.append({'key': 'stat_armor', 'value': 2, 'effect_sign': 0, 'threshold': True})
+    if key in ('burning_stacks', 'fire_trail'):
+        items.append({'key': 'stat_elemental_damage', 'value': 2, 'effect_sign': 0, 'threshold': True})
+
     # Build text dicts for each extra effect (basic stat effects)
     for item in items:
         if item.get('key') == '__text__':
@@ -1410,6 +1483,8 @@ def _build_cursed_extra_effects(eff, parent_id=''):
         }
         text_dict = build_effect_text_dict(fake_eff)
         if text_dict:
+            if item.pop('threshold', False) and text_dict.get('args'):
+                text_dict['args'][0] = _curse_entry(2, 'threshold', lo=2, hi=3, at=0.5)
             item['text'] = text_dict
         # Add icon for stat prefix display
         eff_key = item.get('key', '')
@@ -1445,6 +1520,9 @@ def _get_cursed_text_key(eff, parent_id='', is_weapon=False):
     if custom_key == 'increase_tier_on_reroll': return 'effect_increase_tier_on_reroll_plural'
     if key == 'knockback_aura' and value <= 1: return 'effect_knockback_aura'
     if parent_id == 'item_tardigrade' and key == 'hit_protection': return 'effect_hit_protection_plural'
+    if key == 'fossil_count' and eff.get('text_key', '') != '[EMPTY]': return 'EFFECT_MUTATION_COUNTS_AS_FOSSILS'
+    if parent_id == 'item_ammosaurus' and eff.get('script') == 'pet_effect': return 'EFFECT_PET_AMMOSAURUS_CURSED'
+    if parent_id == 'item_dino_egg' and eff.get('script') == 'pet_effect': return 'EFFECT_DINO_EGG_2'
     return None
 
 
@@ -2181,6 +2259,81 @@ def _text_render_template(fmt_key, fmt, args, arg_signs, curse_types, lang):
     return result, curse_args
 
 
+def _g(v):
+    """Number -> str without trailing zeros (game's str(float) at display)."""
+    return ('%g' % v) if isinstance(v, (int, float)) else str(v)
+
+
+def _percent_damage_args(effects):
+    """TurretEffect.get_percent_damage_args(): [value, duration_secs, max_stacks*value]."""
+    for e in effects or []:
+        if e.get('script') == 'percent_damage_effect' or e.get('custom_key') == 'enemy_percent_damage_taken':
+            ex = e.get('extra', {})
+            return [_g(e['value']), _g(ex.get('duration_secs', 0)), _g(ex.get('max_stacks', 1) * e['value'])]
+    return []
+
+
+def _dlc2_effect_args(eff, lang):
+    """Args for effect scripts added in 1.2 (DLC2), or None if not one of them."""
+    script = eff.get('script', '')
+    value = eff.get('value', 0)
+    ex = eff.get('extra', {})
+    ws = eff.get('weapon_stats') or {}
+    bd = eff.get('burning_data') or {}
+    se = eff.get('structure_effect') or {}
+    sc = lambda stats: build_scaling_text(stats or [], lang)
+    tk = (eff.get('text_key') or '').lower()
+    if script == 'structure_effect' and tk == 'effect_dart_trap':
+        st = eff.get('structure_stats') or {}
+        return [_g(value), _g(ex.get('spawn_cooldown', 0)), _g(st.get('damage', 0)), sc(st.get('scaling_stats'))]
+    if script == 'turret_effect' and tk == 'effect_turret_damage_taken':
+        st = eff.get('structure_stats') or {}
+        return [_g(st.get('damage', 0)), sc(st.get('scaling_stats')), _g(st.get('nb_projectiles', 1)),
+                _g(st.get('bounce', 0)), tr(eff.get('key', '').upper(), lang)] + _percent_damage_args(eff.get('structure_effects'))
+    if script == 'fire_trail_effect':
+        return [_g(bd.get('damage', 0)), _g(bd.get('duration', 0)), sc(bd.get('scaling_stats'))]
+    if script == 'fire_puddle_on_burning_death_effect':
+        return [_g(ex.get('chance', 50)), _g(bd.get('damage', 0)), _g(bd.get('duration', 0)), sc(bd.get('scaling_stats'))]
+    if script in ('mosquitor_effect', 'deflect_projectiles_effect'):
+        return [_g(ws.get('damage', 0)), sc(ws.get('scaling_stats'))]
+    if script == 'hungry_hungry_dinosaur_effect':
+        return [_g(ws.get('damage', 0)), sc(ws.get('scaling_stats')), _g(ex.get('bonus_damage_per_fruit', 2))]
+    if script == 'slow_time_when_below_hp_effect':
+        return [_g(value), _g(ex.get('duration_secs', 5.0)), _g(ex.get('hp_threshold', 40))]
+    if script == 'spines_on_hit_effect':
+        return [_g(ex.get('chance', 0.33) * 100), _g(value), _g(ws.get('damage', 0)), sc(ws.get('scaling_stats'))]
+    if script == 'fire_puddle_on_hit_effect':
+        return [_g(bd.get('duration', 0)), _g(bd.get('damage', 0)), sc(bd.get('scaling_stats')), _g(ex.get('puddle_lifetime', 3.0))]
+    if script == 'slow_area_on_hit_effect':
+        return [_g(ex.get('radius', 100.0)), _g(value), _g(ex.get('duration', 2.0))]
+    if script == 'weapon_timed_slow_on_hit_effect':
+        return [_g(value), _g(ex.get('duration', 1.0))]
+    if script == 'weapon_damage_multiplier_if_stat_effect':
+        return [tr((eff.get('stat_name') or 'knockback').upper(), lang), _g(value)]
+    if script == 'crate_dig_chance_effect':
+        return [_g(value / 100.0)]
+    if script == 'percent_damage_effect':          # [value, key, duration, max_stacks*value, chance]
+        return [_g(value), tr(eff.get('key', '').upper(), lang), _g(ex.get('duration_secs', 3)),
+                _g(ex.get('max_stacks', 1) * value), _g(ex.get('chance', 100))]
+    if script == 'multiply_value_effect':          # "{0} gets multiplied by {1}"
+        return [tr(eff.get('key', '').upper(), lang), _g(value)]
+    if eff.get('key') == 'charm_evolved_on_hit':   # DoubleValueEffect
+        return [_g(value), tr('CHARM_EVOLVED_ON_HIT', lang), _g(ex.get('value2', 0))]
+    if script == 'delayed_exploding_effect':
+        return [_g(ex.get('fuse_duration', 0.75))]
+    if script == 'carbon_bow_stat_effect':
+        if bd:
+            return [_g(bd.get('duration', 0)), _g(bd.get('damage', 0)), sc(bd.get('scaling_stats'))]
+        if se.get('structure_stats'):
+            st = se['structure_stats']
+            return [_g(value), _g(st.get('damage', 0)), sc(st.get('scaling_stats'))]
+        return [_g(value), _g(ex.get('duration', 0.0))]
+    if script == 'spawn_structure_every_killed_enemies_effect':
+        st = se.get('structure_stats') or {}
+        return [_g(st.get('damage', 0)), sc(st.get('scaling_stats')), _g(value)] + _percent_damage_args(se.get('structure_effects'))
+    return None
+
+
 def render_effect_text(eff, lang, parent_id='', is_weapon=False):
     """Render an effect to human-readable text following Godot's rendering pipeline.
 
@@ -2228,8 +2381,23 @@ def render_effect_text(eff, lang, parent_id='', is_weapon=False):
     arg_signs = [base_color] * 10
     args_built = False
 
+    # --- BuilderTurretUpgradeEffect: next level at structure range 30/150/300 (builder_turret.gd) ---
+    if text_key.lower() == 'effect_builder_turret_upgrade':
+        m = re.search(r'_(\d)$', parent_id or '')
+        args[0] = str(value)
+        args[1] = tr(key.upper(), lang)
+        args[2] = str([30, 150, 300][int(m.group(1))]) if m and int(m.group(1)) < 3 else '-'
+        args[3] = tr('STRUCTURE_RANGE', lang)
+        args_built = True
+
+    # --- 1.2 / DLC2 effect scripts: mirror each script's get_args() at base stats ---
+    elif _dlc2_effect_args(eff, lang) is not None:
+        for i, a in enumerate(_dlc2_effect_args(eff, lang)):
+            args[i] = a
+        args_built = True
+
     # --- ExplodingEffect ---
-    if key in ('effect_explode', 'effect_explode_melee', 'effect_explode_custom'):
+    elif key in ('effect_explode', 'effect_explode_melee', 'effect_explode_custom'):
         args[0] = str(int(round(extra.get('chance', 1.0) * 100)))
         args_built = True
 
@@ -2894,9 +3062,7 @@ def render_effect_text(eff, lang, parent_id='', is_weapon=False):
 
     # --- Pacifist: per-enemy material/XP equals value/100 (game: pacifist_effect / 100.0) ---
     elif key == 'pacifist':
-        v = value / 100.0
-        # '%g' keeps 0.65 as "0.65" and 1.0 as "1" (no trailing zeros)
-        args[0] = ('%g' % v)
+        args[0] = str(value)   # custom arg PERCENT format divides by 100
         args_built = True
 
     # --- Generic with format string ---
@@ -2957,32 +3123,37 @@ def render_effect_text(eff, lang, parent_id='', is_weapon=False):
             raw = args[idx]
 
         # Apply format
-        if af == 1 and raw and not raw.endswith('%'):
-            raw = raw + '%'
+        if af == 1 and raw:   # PERCENT: game divides by 100, adds no '%'
+            try:
+                raw = _g(float(str(raw).lstrip('+')) / 100.0)
+            except ValueError:
+                pass
         elif af == 3 and raw:
             raw = raw.lstrip('+')
 
         # Determine sign
         if arg_sign == 0:
-            sign = 'g'
+            sign = 'zvg'
         elif arg_sign == 1:
-            sign = 'r'
+            sign = 'zvr'
         elif arg_sign == 2:
             sign = ''
         elif arg_sign == 3:  # FROM_VALUE
             try:
                 v = float(str(raw).lstrip('+').rstrip('%'))
-                sign = 'g' if v > 0 else ('r' if v < 0 else '')
+                sign = 'zvg' if v > 0 else ('zvr' if v < 0 else '')
             except (ValueError, TypeError):
                 sign = base_color
         elif arg_sign == 4:  # FROM_ARG
             try:
                 v = float(str(raw).lstrip('+').rstrip('%'))
-                sign = 'g' if v > 0 else ('r' if v < 0 else '')
+                sign = 'zvg' if v > 0 else ('zvr' if v < 0 else '')
             except (ValueError, TypeError):
                 sign = base_color
         elif arg_sign == 5:
-            sign = 'p'
+            sign = 'zvp'
+        elif arg_sign in (6, 7):
+            sign = 'zvm' if arg_sign == 6 else 'zvu'
         else:
             sign = base_color
 
@@ -3104,6 +3275,8 @@ def build_effect_text_dict(eff):
     # Merge args: use whichever produced curse args (should be identical)
     curse_args = args_by_lang.get('en') or next((a for a in args_by_lang.values() if a), [])
 
+    if not scaling_cursed(eff):   # frontend boosts <scaling> under curse unless marked fixed
+        texts = {lang: (t or '').replace('<scaling ', '<scaling fixed="1" ') for lang, t in texts.items()}
     result = {lang: texts[lang] for lang in LANGS}
     result['args'] = curse_args
 
@@ -3114,6 +3287,8 @@ def build_effect_text_dict(eff):
         # Also generate cursed template from the cursed text_key
         cursed_eff = dict(eff)
         cursed_eff['text_key'] = cursed_tk
+        if eff.get('key') == 'fossil_count':
+            cursed_eff['value'] = 2   # curse_item: counts as 2 fossils
         ct_texts = {}
         ct_args = {}
         for lang in LANGS:
@@ -3272,6 +3447,8 @@ def get_effects(parsed, parent_id='', is_weapon=False):
                         if eff_key.startswith('stat_') or eff_key in ('xp_gain', 'explosion_size', 'explosion_damage'):
                             ic_key = eff_key.replace('stat_', '', 1) if eff_key.startswith('stat_') else eff_key
                             eff_data['icon'] = ic_key
+                        if eff_data.get('script') == 'carbon_bow_stat_effect' and eff_data.get('stat_name'):
+                            eff_data['icon'] = eff_data['stat_name'].replace('stat_', '', 1)  # CarbonBowStatEffect.get_icon
                         effects.append(eff_data)
     return effects
 
@@ -3335,98 +3512,38 @@ def get_starting_weapon_ids(parsed):
                             result.append(my_id)
     return result
 
-# Weapons to exclude (废案)
-EXCLUDED_WEAPONS = {
-    'weapon_knuckles',  # 黄铜指虎 (not 烈焰黄铜指虎 flaming_brass_knuckles)
-}
+# Item sets (1.2 "物品套组"): the game builds its content lists and shop pools
+# from these, so they are also our source of truth for what exists and where
+# it comes from. Order = in-game order (base set, then ItemService.update_data_list).
+ITEM_SETS = [
+    ('base', 'updates/item_sets/base_game_set.tres'),
+    ('new_dawn', 'updates/item_sets/u13_new_dawn_set.tres'),
+    ('paws_n_claws', 'updates/item_sets/u14_paws_n_claws_set.tres'),
+    ('abyssal_terrors', 'updates/item_sets/dlc1_abyssal_terrors_set.tres'),
+    ('primal_dread', 'updates/item_sets/dlc2_primal_dread_set.tres'),
+]
+# DLC2 evolution items are injected into the shop by evolution value, not pooled.
+SET_ITEM_FIELDS = ['items', 'meca_items', 'mutant_items', 'evolution_items']
 
-def collect_weapons(search_dir, dlc=0):
-    weapons = []
-    for data_file in search_dir.rglob('*_data*.tres'):
-        if 'stats' in data_file.name or 'effect' in data_file.name.lower():
-            continue
-        if 'appearance' in data_file.name.lower():
-            continue
-        # Skip burning data files (torch etc.)
-        if 'burning' in data_file.name.lower():
-            continue
-        
-        relative = data_file.relative_to(BASE_DIR)
-        log.debug(f"Parsing weapon: {relative}")
-        
-        parsed = parse_tres_file(data_file)
-        data = parsed['data']
-        
-        if 'weapon_id' not in data:
-            continue
-        
-        my_id = data.get('my_id', '')
-        
-        # Skip excluded weapons (废案)
-        if my_id in EXCLUDED_WEAPONS:
-            log.debug(f"  SKIPPING (excluded): {my_id}")
-            continue
-        
-        name_key = data.get('name', '')
-        icon = find_icon_for_dlc(data_file, parsed) if dlc else find_icon_file(data_file, parsed)
-        
-        effects = get_effects(parsed, parent_id=my_id, is_weapon=True)
-        
-        weapon = {
-            'id': my_id,
-            'name_key': name_key,
-            **{f'name_{lang}': tr(name_key, lang) for lang in LANGS},
-            'tier': data.get('tier', 0),
-            'tier_name': TIER_NAMES.get(data.get('tier', 0), 'common'),
-            'value': data.get('value', 0),
-            'type': WEAPON_TYPE_NAMES.get(data.get('type', 0), 'melee'),
-            'weapon_id': data.get('weapon_id', ''),
-            'sets': get_sets_for_weapon(parsed),
-            'icon': icon,
-            'dlc': dlc,
-            'effects': effects,
-            'stats': extract_stats_from_tres(data_file, parsed),
-            'upgrades_into': get_upgrades_into(parsed),
-            'unlocked_by_default': data.get('unlocked_by_default', False),
-            'is_cursed': data.get('is_cursed', False),
-        }
-        weapons.append(weapon)
-    
-    return weapons
 
-def _parse_item_file(data_file, dlc, parsed=None):
-    """Parse a single item .tres file and return item dict or None if invalid."""
-    if parsed is None:
-        parsed = parse_tres_file(data_file)
+def load_item_sets():
+    """-> {'items'|'weapons'|'characters': [(Path, set_id, field), ...]} in set order."""
+    out = {'items': [], 'weapons': [], 'characters': []}
+    for set_id, rel in ITEM_SETS:
+        parsed = parse_tres_file(BASE_DIR / rel)
+        ext, data = parsed['ext_resources'], parsed['data']
+        for kind, fields in (('items', SET_ITEM_FIELDS), ('weapons', ['weapons']), ('characters', ['characters'])):
+            for field in fields:
+                for ref in data.get(field) or []:
+                    if isinstance(ref, dict) and ref.get('_ext') in ext:
+                        out[kind].append((BASE_DIR / ext[ref['_ext']]['path'], set_id, field))
+    return out
+
+
+def _base_entry(data_file, parsed, set_id, is_weapon=False):
     data = parsed['data']
     my_id = data.get('my_id', '')
-    if not my_id.startswith('item_'):
-        return None
-    relative = data_file.relative_to(BASE_DIR)
-    if 'appearance' in data_file.name.lower():
-        return None
-    if 'character' in str(relative).lower():
-        return None
-    # Validate directory name matches item id
-    if data_file.parent.name != my_id.replace('item_', ''):
-        parent_name = data_file.parent.name
-        if parent_name not in my_id:
-            return None
-    
-    log.debug(f"Parsing item: {relative}")
-    
     name_key = data.get('name', '')
-    icon = find_icon_for_dlc(data_file, parsed) if dlc else find_icon_file(data_file, parsed)
-    
-    # All items (including pets) use their own icons from items/ directory
-    # The stray robot (Wandering Bot) already has its icon at items/all/wandering_bot/
-    # Other pets previously used entities/units/pet/ icons which was incorrect
-    tags = data.get('tags', [])
-    if 'structure' in tags and my_id not in ('item_clockwork_wasp', 'item_improved_tools'):
-        tags.append('structure_real')
-    
-    effects = get_effects(parsed, parent_id=my_id, is_weapon=False)
-    
     return {
         'id': my_id,
         'name_key': name_key,
@@ -3434,87 +3551,68 @@ def _parse_item_file(data_file, dlc, parsed=None):
         'tier': data.get('tier', 0),
         'tier_name': TIER_NAMES.get(data.get('tier', 0), 'common'),
         'value': data.get('value', 0),
-        'max_nb': data.get('max_nb', -1),
-        'tags': tags,
-        'icon': icon,
-        'dlc': dlc,
-        'effects': effects,
+        'icon': find_icon(data_file, parsed),
+        'set': set_id,
+        'effects': get_effects(parsed, parent_id=my_id, is_weapon=is_weapon),
         'unlocked_by_default': data.get('unlocked_by_default', False),
-        'is_cursed': data.get('is_cursed', False),
     }
 
-def collect_items(search_dir, dlc=0):
-    items = []
-    seen_ids = set()
-    
-    # First pass: standard *_data.tres files
-    for data_file in search_dir.rglob('*_data.tres'):
-        item = _parse_item_file(data_file, dlc)
-        if item:
-            items.append(item)
-            seen_ids.add(item['id'])
-    
-    # Second pass: items where the main file is {dirname}.tres (not _data.tres)
-    for data_file in search_dir.rglob('*.tres'):
-        if data_file.name.endswith('_data.tres'):
-            continue  # already handled above
-        # Only consider files where name == parent_dir.tres (e.g. scapegoat/scapegoat.tres)
-        if data_file.name != data_file.parent.name + '.tres':
-            continue
-        parsed = parse_tres_file(data_file)
-        my_id = parsed['data'].get('my_id', '')
-        if not my_id.startswith('item_'):
-            continue
-        if my_id in seen_ids:
-            continue
-        item = _parse_item_file(data_file, dlc, parsed=parsed)
-        if item:
-            items.append(item)
-            seen_ids.add(item['id'])
-    
-    return items
 
-def collect_characters(search_dir, dlc=0):
-    characters = []
-    for data_file in search_dir.rglob('*_data.tres'):
-        relative = data_file.relative_to(BASE_DIR)
-        parsed = parse_tres_file(data_file)
-        data = parsed['data']
-        my_id = data.get('my_id', '')
-        if not my_id.startswith('character_'):
-            continue
-        if 'appearance' in data_file.name.lower() or 'effect' in data_file.name.lower():
-            continue
-        
-        log.debug(f"Parsing character: {relative}")
-        
-        name_key = data.get('name', '')
-        icon = find_icon_for_dlc(data_file, parsed) if dlc else find_icon_file(data_file, parsed)
-        
-        effects = get_effects(parsed, parent_id=my_id, is_weapon=False)
-        
-        character = {
-            'id': my_id,
-            'name_key': name_key,
-            **{f'name_{lang}': tr(name_key, lang) for lang in LANGS},
-            'tier': data.get('tier', 0),
-            'tier_name': TIER_NAMES.get(data.get('tier', 0), 'common'),
-            'value': data.get('value', 0),
-            'wanted_tags': data.get('wanted_tags', []),
-            'banned_item_groups': data.get('banned_item_groups', []),
-            'banned_items': data.get('banned_items', []),
-            'banned_upgrades': data.get('banned_upgrades', []),
-            'starting_weapons': get_starting_weapon_ids(parsed),
-            'icon': icon,
-            'dlc': dlc,
-            'effects': effects,
-            'unlocked_by_default': data.get('unlocked_by_default', False),
-            'max_nb': data.get('max_nb', -1),
-            'tags': data.get('tags', []),
-        }
-        characters.append(character)
-    
-    return characters
+def parse_weapon(data_file, set_id):
+    parsed = parse_tres_file(data_file)
+    data = parsed['data']
+    base = _base_entry(data_file, parsed, set_id, is_weapon=True)
+    effects = base['effects']
+    return {
+        **base,
+        'type': WEAPON_TYPE_NAMES.get(data.get('type', 0), 'melee'),
+        'weapon_id': data.get('weapon_id', ''),
+        'sets': get_sets_for_weapon(parsed),
+        'stats': extract_stats_from_tres(data_file, parsed),
+        'upgrades_into': get_upgrades_into(parsed),
+        'scaling_icon': next((e['icon_path'] for e in effects if e.get('hides_damage_scaling') and e.get('icon_path')), None),
+    }
+
+
+# badge icons for DLC2 evolution items: mecha parts / mutation fruit
+EVOLUTION_ICONS = {'meca': 'items/consumables/meca_parts/meca_parts.png',
+                   'mutant': 'items/consumables/mutation_fruit/mutation_fruit.png'}
+EVOLUTION_FIELDS = {'meca_items': 'meca', 'mutant_items': 'mutant', 'evolution_items': 'both'}
+
+
+def parse_item(data_file, set_id, field='items'):
+    parsed = parse_tres_file(data_file)
+    data = parsed['data']
+    tags = data.get('tags', [])
+    if 'structure' in tags and data.get('my_id') not in ('item_clockwork_wasp', 'item_improved_tools'):
+        tags.append('structure_real')
+    entry = _base_entry(data_file, parsed, set_id)
+    # ItemService.init_unlocked_pool skips these: never sold in the shop
+    if data.get('can_be_looted', True) is False or data.get('max_nb', -1) == 0:
+        entry['value'] = 0
+    if entry['id'].startswith('item_fossil_'):   # all fossils (their fossil_count lines are hidden)
+        entry['fossil'] = True
+    return {
+        **entry,
+        'max_nb': data.get('max_nb', -1),
+        'tags': tags,
+        **({'evolution': EVOLUTION_FIELDS[field]} if field in EVOLUTION_FIELDS else {}),
+    }
+
+
+def parse_character(data_file, set_id):
+    parsed = parse_tres_file(data_file)
+    data = parsed['data']
+    return {
+        **_base_entry(data_file, parsed, set_id),
+        'wanted_tags': data.get('wanted_tags', []),
+        'banned_item_groups': data.get('banned_item_groups', []),
+        'banned_items': data.get('banned_items', []),
+        'banned_upgrades': data.get('banned_upgrades', []),
+        'starting_weapons': get_starting_weapon_ids(parsed),
+        'max_nb': data.get('max_nb', -1),
+        'tags': data.get('tags', []),
+    }
 
 # ====================================================================
 # Icon copy
@@ -3595,8 +3693,9 @@ def get_relevant_translations():
             effect_keys.add(tk.upper())
             effect_keys.add(tk)
     
+    ui_keys = {'MENU_ITEMSET', 'MECA_ITEMS', 'MECA_ITEMS_DESCRIPTION', 'MUTANT_ITEMS', 'MUTANT_ITEMS_DESCRIPTION'}
     for key, trans in TR.items():
-        if (key.upper() in effect_keys or
+        if (key.upper() in effect_keys or key in ui_keys or
             any(key.startswith(p) for p in [
                 'EFFECT_', 'STAT_', 'ITEM_', 'WEAPON_', 'CHARACTER_',
                 'TIER_', 'CATEGORY_', 'WEAPON_CLASS_', 'SET_',
@@ -3738,53 +3837,15 @@ def main():
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
     OUTPUT_ICONS.mkdir(parents=True, exist_ok=True)
     
-    log.debug("=== Collecting Base Game Weapons ===")
-    base_weapons = (
-        collect_weapons(BASE_DIR / "weapons" / "melee", dlc=0) +
-        collect_weapons(BASE_DIR / "weapons" / "ranged", dlc=0)
-    )
-    log.debug(f"  Found {len(base_weapons)} base weapons")
-    
-    log.debug("=== Collecting DLC Weapons ===")
-    dlc_weapons = []
-    dlc_weapons_dir = BASE_DIR / "dlcs" / "dlc_1" / "weapons"
-    if dlc_weapons_dir.exists():
-        dlc_weapons = (
-            collect_weapons(dlc_weapons_dir / "melee", dlc=1) +
-            collect_weapons(dlc_weapons_dir / "ranged", dlc=1)
-        )
-    log.debug(f"  Found {len(dlc_weapons)} DLC weapons")
-    
-    log.debug("=== Collecting Base Game Items ===")
-    base_items = collect_items(BASE_DIR / "items" / "all", dlc=0)
-    log.debug(f"  Found {len(base_items)} base items")
-    
-    log.debug("=== Collecting DLC Items ===")
-    dlc_items = []
-    dlc_items_dir = BASE_DIR / "dlcs" / "dlc_1" / "items"
-    if dlc_items_dir.exists():
-        dlc_items = collect_items(dlc_items_dir, dlc=1)
-    log.debug(f"  Found {len(dlc_items)} DLC items")
-    
-    log.debug("=== Collecting Base Game Characters ===")
-    base_characters = collect_characters(BASE_DIR / "items" / "characters", dlc=0)
-    log.debug(f"  Found {len(base_characters)} base characters")
-    
-    log.debug("=== Collecting DLC Characters ===")
-    dlc_characters = []
-    dlc_chars_dir = BASE_DIR / "dlcs" / "dlc_1" / "characters"
-    if dlc_chars_dir.exists():
-        dlc_characters = collect_characters(dlc_chars_dir, dlc=1)
-    log.debug(f"  Found {len(dlc_characters)} DLC characters")
-    
-    all_weapons = base_weapons + dlc_weapons
-    all_items = base_items + dlc_items
-    all_characters = base_characters + dlc_characters
-    
+    sets_content = load_item_sets()
+    all_weapons = [parse_weapon(f, sid) for f, sid, _ in sets_content['weapons']]
+    all_items = [parse_item(f, sid, field) for f, sid, field in sets_content['items']]
+    # characters keep in-game (item set) order
+    all_characters = [parse_character(f, sid) for f, sid, _ in sets_content['characters']]
+
     sort_key = lambda x: (x['tier'], x['name_en'])
     all_weapons.sort(key=sort_key)
     all_items.sort(key=sort_key)
-    all_characters.sort(key=sort_key)
     
     translations = get_relevant_translations()
     log.info(f"  Extracted {len(translations)} relevant translation entries")
@@ -3836,12 +3897,9 @@ def main():
             'weapon_count': len(all_weapons),
             'item_count': len(all_items),
             'character_count': len(all_characters),
-            'base_weapon_count': len(base_weapons),
-            'dlc_weapon_count': len(dlc_weapons),
-            'base_item_count': len(base_items),
-            'dlc_item_count': len(dlc_items),
-            'base_character_count': len(base_characters),
-            'dlc_character_count': len(dlc_characters),
+            'item_sets': [sid for sid, _ in ITEM_SETS],
+            'evolution_icons': EVOLUTION_ICONS,
+            'game_version': re.search(r'const VERSION = "([^"]+)"', (BASE_DIR / 'singletons' / 'progress_data.gd').read_text(encoding='utf-8')).group(1),
             'effects_with_text': len(effects_with_text),
             'effects_without_text': len(effects_without_text),
         }
@@ -3867,7 +3925,9 @@ def main():
     
     log.debug("=== Copying Icons ===")
     all_entries = all_weapons + all_items + all_characters
-    copy_icons(all_entries, OUTPUT_ICONS)
+    extra_icons = [{'icon': p} for p in EVOLUTION_ICONS.values()]
+    extra_icons += [{'icon': e['icon_path']} for x in all_weapons for e in x['effects'] if e.get('icon_path')]
+    copy_icons(all_entries + extra_icons, OUTPUT_ICONS)
     
     for stat_name, icon_path in stat_icons.items():
         src = BASE_DIR / icon_path
@@ -3878,9 +3938,9 @@ def main():
     log.info(f"  Copied stat icons: {len(stat_icons)} files")
     
     log.info("=== Summary ===")
-    log.info(f"  Total weapons: {len(all_weapons)} (base: {len(base_weapons)}, dlc: {len(dlc_weapons)})")
-    log.info(f"  Total items: {len(all_items)} (base: {len(base_items)}, dlc: {len(dlc_items)})")
-    log.info(f"  Total characters: {len(all_characters)} (base: {len(base_characters)}, dlc: {len(dlc_characters)})")
+    for kind, lst in (('weapons', all_weapons), ('items', all_items), ('characters', all_characters)):
+        by_set = {sid: sum(1 for e in lst if e['set'] == sid) for sid, _ in ITEM_SETS}
+        log.info(f"  {kind}: {len(lst)} {by_set}")
     en_size = (OUTPUT_DIR / "data" / "brotato_data.en.json").stat().st_size
     log.info(f"  Per-language JSON size (en): {en_size / 1024:.1f} KB x {len(LANGS)} langs")
     

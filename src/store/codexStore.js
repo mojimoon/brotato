@@ -2,7 +2,7 @@ import { ref, computed, watch, nextTick } from 'vue'
 
 // ---- 数据基准地址 ----
 export const BASE = import.meta.env.MODE === 'production'
-  ? 'https://cdn.jsdmirror.com/gh/mojimoon/brotato@v2.0.2/public/'
+  ? 'https://cdn.jsdmirror.com/gh/mojimoon/brotato@v3.0.0/public/'
   : import.meta.env.BASE_URL
 
 // ---- 共享字符串字典 ----
@@ -36,7 +36,8 @@ export const currentLang = ref(lsGet('brotato_lang', detectLang()))
 export const searchText = ref('')
 export const filterTier = ref(null)
 export const filterType = ref(null)
-export const filterDlc = ref(null)
+export const filterItemSet = ref(null)
+export const filterSpecial = ref(null)
 export const filterSet = ref(null)
 export const selectedItem = ref(null)
 export const currentTierIndex = ref(0)
@@ -56,6 +57,8 @@ export const weaponCountSlider = ref(lsGet('brotato_weaponCount', 6))
 export const showFrames = ref(lsGet('brotato_showFrames', true))
 export const curseEnabled = ref(false)
 export const curseSlider = ref(110)
+export const mecaEnabled = ref(false)
+export const mecaSlider = ref(1)
 export const pendingNavigate = ref(false)
 
 // 武器与道具各自保留独立排序状态，避免切换互相影响。sortBy 镜像当前 tab 的值。
@@ -80,6 +83,10 @@ export const currentSortLabel = computed(() => {
 })
 
 export const priceIconSrc = computed(() => `${BASE}icons/items/materials/harvesting_icon.png`)
+
+// 诅咒 / 机械化互斥（游戏中一件物品只能是其中一种）
+watch(curseEnabled, v => { if (v) mecaEnabled.value = false })
+watch(mecaEnabled, v => { if (v) curseEnabled.value = false })
 
 // 诅咒系数：滑块值 / 100
 export const curseFactor = computed(() => curseEnabled.value ? curseSlider.value / 100 : 0)
@@ -144,6 +151,9 @@ export function applyCurse(curseArg, effectSign, originalValue) {
 
     case 'none':
       return Math.round(curseArg.value)
+
+    case 'threshold':  // e.g. curse extra armor: 2, or 3 when the modifier >= 0.5
+      return cv >= curseArg.at ? curseArg.hi : curseArg.lo
 
     case 'linked':
       return Math.round(curseArg.value)  // placeholder; real calc in renderEffectText
@@ -228,6 +238,50 @@ export function getStatIcon(statKey) {
   return map[statKey] ? `${BASE}icons/${map[statKey]}` : null
 }
 
+// ---- 物品套组（1.2）----
+const ITEM_SET_ABBR = { new_dawn: 'ND', paws_n_claws: 'PC', abyssal_terrors: 'DLC1', primal_dread: 'DLC2' }
+const EVOLUTION_KEYS = { meca: ['MECA_ITEMS'], mutant: ['MUTANT_ITEMS'], both: ['MECA_ITEMS', 'MUTANT_ITEMS'] }
+export const itemSetIds = computed(() => {
+  const list = rawData.value[activeTab.value] || []
+  return (rawData.value.meta?.item_sets || []).filter(id => list.some(i => i.set === id))
+})
+export function itemSetName(id) {
+  if (!id || id === 'base') return S.value.baseGame
+  return rawData.value.translations?.['ITEM_SET_' + id.toUpperCase()] || id
+}
+// 列表角标：DLC2 进化物品用机械 / 异变角标覆盖套组角标；本体无角标
+export function itemSetBadge(item) {
+  if (!item) return null
+  if (item.evolution) return { icons: evolutionIcons(item), cls: 'badge-set-' + item.set + ' badge-evo' }
+  if (ITEM_SET_ABBR[item.set]) return { text: ITEM_SET_ABBR[item.set], cls: 'badge-set-' + item.set }
+  return null
+}
+// 道具「特殊」筛选：化石 / 机械道具 / 异变道具（双路线两者都算）
+export const SPECIAL_FILTERS = ['fossil', 'meca', 'mutant']
+export function matchesSpecial(item, f) {
+  if (f === 'fossil') return !!item.fossil
+  return item.evolution === f || item.evolution === 'both'
+}
+export function specialLabel(f) {
+  if (f === 'fossil') return S.value.fossil
+  return rawData.value.translations?.[f === 'meca' ? 'MECA_ITEMS' : 'MUTANT_ITEMS'] || f
+}
+
+// DLC2 进化物品角标图标：机械部件 / 异变催化果（双路线两个都显示）
+export function evolutionIcons(item) {
+  const icons = rawData.value.meta?.evolution_icons || {}
+  const kinds = item?.evolution === 'both' ? ['meca', 'mutant'] : item?.evolution ? [item.evolution] : []
+  return kinds.map(k => getIconSrc(icons[k]))
+}
+export function evolutionTags(item) {
+  const tr = rawData.value.translations || {}
+  return (EVOLUTION_KEYS[item?.evolution] || []).map(k => ({
+    key: k, cls: 'badge-evo-' + (k === 'MECA_ITEMS' ? 'meca' : 'mutant'),
+    label: tr[k] || k, desc: tr[k + '_DESCRIPTION'] || '',
+    icon: getIconSrc(rawData.value.meta?.evolution_icons?.[k === 'MECA_ITEMS' ? 'meca' : 'mutant']),
+  }))
+}
+
 export function getWeaponById(wid) { return rawData.value.weapons.find(x => x.id === wid) || null }
 
 // ---- 标签翻译（由 build_ui_strings.py 生成，随每语言 JSON 加载到 rawData.ui.tag_translations）----
@@ -239,6 +293,8 @@ function _tagDict() {
 export function tagTr(tag) {
   const d = _tagDict()
   if (d[tag]) return d[tag]
+  const game = rawData.value.translations?.[tag.toUpperCase()]
+  if (game) return game
   return tag.replace(/_/g, ' ').replace(/\w/g, c => c.toUpperCase())
 }
 
@@ -288,6 +344,7 @@ export function getSignColor(eff) {
   const es = eff.effect_sign ?? 3
   if (es === 0) return '#22c55e'; if (es === 1) return '#ef4444'
   if (es === 2) return ''; if (es === 5) return '#a855f7'
+  if (es === 6) return 'var(--mark-meca)'; if (es === 7) return 'var(--mark-mutant)'
   const v = eff.value ?? 0
   return v > 0 ? '#22c55e' : v < 0 ? '#ef4444' : ''
 }
@@ -303,6 +360,7 @@ export function resolveStatIcon(iconKey) {
 }
 
 export function renderEffectPrefix(eff) {
+  if (eff.icon_path) return `<img src="${getIconSrc(eff.icon_path)}" class="stat-prefix-icon" />`
   const iconKey = eff.icon
   if (!iconKey) return '·'
   const src = resolveStatIcon(iconKey)
@@ -406,11 +464,12 @@ export function renderEffectText(eff) {
   }
 
   // Scaling tag: <scaling type="key" value="0.6" /> (may be inside color span)
-  text = text.replace(/(?:<span[^>]*>)?\s*<scaling type="([^"]+)" value="([^"]+)"\s*\/>\s*(?:<\/span>)?/g,
-    (m, icKey, valStr) => {
+  // fixed="1": the game doesn't boost this effect's scaling when cursed
+  text = text.replace(/(?:<span[^>]*>)?\s*<scaling (fixed="1" )?type="([^"]+)" value="([^"]+)"\s*\/>\s*(?:<\/span>)?/g,
+    (m, fixed, icKey, valStr) => {
       const baseVal = parseFloat(valStr)
       const cv = curseFactor.value
-      const cursedVal = curseEnabled.value && cv > 0 ? baseVal * (1 + cv) : baseVal
+      const cursedVal = curseEnabled.value && cv > 0 && !fixed ? baseVal * (1 + cv) : baseVal
       const pct = Math.round(cursedVal * 100)
       const src = resolveStatIcon(icKey)
       if (src) {
@@ -438,7 +497,7 @@ export const weaponFamilies = computed(() => {
   const map = {}
   for (const w of rawData.value.weapons) {
     const wid = w.weapon_id
-    if (!map[wid]) map[wid] = { id: wid, tiers: [], type: w.type, sets: w.sets, icon: w.icon, dlc: w.dlc }
+    if (!map[wid]) map[wid] = { id: wid, tiers: [], type: w.type, sets: w.sets, icon: w.icon, set: w.set }
     map[wid].tiers.push(w)
   }
   for (const key of Object.keys(map)) {
@@ -446,7 +505,7 @@ export const weaponFamilies = computed(() => {
     const t0 = map[key].tiers[0]
     Object.assign(map[key], {
       name_key: t0.name_key, name: t0.name,
-      tier: t0.tier, value: t0.value, icon: t0.icon, type: t0.type, dlc: t0.dlc, sets: t0.sets
+      tier: t0.tier, value: t0.value, icon: t0.icon, type: t0.type, set: t0.set, sets: t0.sets
     })
   }
   // 保留 JSON 插入顺序（后端已按 tier + 英文名排序），不按当前语言名重排
@@ -485,14 +544,15 @@ export const currentDisplayList = computed(() => {
   let list
   if (activeTab.value === 'weapons') list = [...weaponFamilies.value]
   else if (activeTab.value === 'items') list = [...allItemsRaw.value]
-  else list = sortCharacters([...allCharactersRaw.value])
+  else list = [...allCharactersRaw.value]  // JSON 已按游戏内（物品套组）顺序
 
   if (searchText.value) {
     const q = searchText.value.toLowerCase()
     list = list.filter(i => (i.name || '').toLowerCase().includes(q) || (i.id || '').toLowerCase().includes(q))
   }
   if (filterTier.value != null && filterTier.value !== '' && activeTab.value !== 'characters') list = list.filter(i => i.tier === filterTier.value)
-  if (filterDlc.value != null && filterDlc.value !== '') list = list.filter(i => i.dlc === filterDlc.value)
+  if (filterItemSet.value) list = list.filter(i => i.set === filterItemSet.value)
+  if (activeTab.value === 'items' && filterSpecial.value) list = list.filter(i => matchesSpecial(i, filterSpecial.value))
   if (activeTab.value === 'weapons' && filterType.value && filterType.value !== '') list = list.filter(i => i.type === filterType.value)
   if (activeTab.value === 'weapons' && filterSet.value && filterSet.value !== '') list = list.filter(i => (i.sets || []).includes(filterSet.value))
   if ((activeTab.value === 'items' || activeTab.value === 'characters') && filterTag.value && filterTag.value !== '') {
@@ -519,34 +579,6 @@ export const currentDisplayList = computed(() => {
 })
 
 // =============================================================================
-// 角色排序
-// =============================================================================
-const CHAR_BASE_ORDER = [
-  'character_well_rounded', 'character_brawler', 'character_crazy', 'character_ranger',
-  'character_mage', 'character_chunky', 'character_old', 'character_lucky',
-  'character_mutant', 'character_generalist', 'character_loud', 'character_multitasker',
-  'character_wildling', 'character_pacifist', 'character_gladiator', 'character_saver',
-  'character_sick', 'character_farmer', 'character_ghost', 'character_speedy',
-  'character_entrepreneur', 'character_engineer', 'character_explorer', 'character_doctor',
-  'character_hunter', 'character_artificer', 'character_arms_dealer', 'character_streamer',
-  'character_cyborg', 'character_glutton', 'character_jack', 'character_lich',
-  'character_apprentice', 'character_cryptid', 'character_fisherman', 'character_golem',
-  'character_king', 'character_renegade', 'character_one_arm', 'character_bull',
-  'character_soldier', 'character_masochist', 'character_knight', 'character_demon',
-  'character_baby', 'character_vagabond', 'character_technomage', 'character_vampire',
-  'character_beast_master', 'character_wounded',
-  'character_sailor', 'character_curious', 'character_builder', 'character_captain',
-  'character_creature', 'character_chef', 'character_druid', 'character_dwarf',
-  'character_gangster', 'character_diver', 'character_hiker', 'character_buccaneer',
-  'character_ogre', 'character_romantic',
-]
-const CHAR_ORDER_MAP = {}
-CHAR_BASE_ORDER.forEach((id, i) => { CHAR_ORDER_MAP[id] = i })
-export function sortCharacters(chars) {
-  return chars.sort((a, b) => (CHAR_ORDER_MAP[a.id] ?? 9999) - (CHAR_ORDER_MAP[b.id] ?? 9999))
-}
-
-// =============================================================================
 // 当前武器 / 展示数据
 // =============================================================================
 export const activeTierWeapons = computed(() => {
@@ -562,10 +594,31 @@ export const activeWeaponData = computed(() => {
 
 export const activeWeaponTier = computed(() => activeWeaponData.value.tier || 0)
 
-// 受诅咒影响的武器属性
+// 机械化（DLC2Data._boost_evolved_weapon_stats，以基础武器属性为准）
+const MECA_DAMAGE_PER_POWER = 0.05
+const MECA_CRIT_DAMAGE_PER_POWER = 0.02
+const MECA_POWER_PER_PROJECTILE_HIT = 4
+function mecaStats(stats, power) {
+  const dmgMod = MECA_DAMAGE_PER_POWER * power
+  const hits = Math.floor(power / MECA_POWER_PER_PROJECTILE_HIT)
+  const ranged = stats.piercing !== undefined
+  return {
+    ...stats,
+    damage: Math.ceil(stats.damage * (1 + dmgMod)),
+    scaling_stats: (stats.scaling_stats || []).map(([k, v]) => [k, v * (1 + dmgMod)]),
+    crit_damage: Math.round(stats.crit_damage * (1 + MECA_CRIT_DAMAGE_PER_POWER * power) * 10) / 10,
+    lifesteal: stats.lifesteal > 0 ? Math.round(stats.lifesteal * (1 + dmgMod) * 100) / 100 : stats.lifesteal,
+    piercing: ranged && hits > 0 ? stats.piercing + hits : stats.piercing,
+    bounce: ranged && hits > 0 && stats.bounce > 0 ? stats.bounce + hits : stats.bounce,
+  }
+}
+
+// 受诅咒 / 机械化影响的武器属性
+export const statsModified = computed(() => curseEnabled.value || mecaEnabled.value)
 export const displayStats = computed(() => {
   const stats = activeWeaponData.value?.stats
   if (!stats) return null
+  if (mecaEnabled.value) return mecaStats(stats, mecaSlider.value)
   const cv = curseFactor.value
   if (cv <= 0) return stats
   return {
@@ -703,6 +756,16 @@ export function getRecoilDuration(stats, atkSpd) {
     : baseRecoil
 }
 
+// 1.2 动画驱动的近战武器（鞭子、连枷等）：挥击动画时长固定，不受攻速影响
+export function isAnimationDriven(stats) { return Number(stats?.attack_duration) > 0 }
+
+// 1.2 换弹冷却：攻速作用于 round(基础冷却 × 倍率)，且不低于普通冷却
+// （WeaponService.init_ranged_stats 中的 big_reload）
+export function getReloadFrames(stats, atkSpd, wcf) {
+  const big = Math.round(Number(stats.cooldown) * Number(stats.additional_cooldown_multiplier))
+  return Math.max(wcf, getWeaponCooldownFrames(big, atkSpd))
+}
+
 export function getReloadCooldowns(stats, attackSpeed) {
   const shots = Number(stats?.additional_cooldown_every_x_shots)
   const multiplier = Number(stats?.additional_cooldown_multiplier)
@@ -713,7 +776,7 @@ export function getReloadCooldowns(stats, attackSpeed) {
   const range = activeWeaponData.value?.type === 'melee'
     ? getMeleeCooldownRange(stats, atkSpd, count, statRangeSlider.value)
     : getRangedCooldownRange(stats, atkSpd, count)
-  const reloadWeaponCooldownFrames = range.wcf * multiplier
+  const reloadWeaponCooldownFrames = getReloadFrames(stats, atkSpd, range.wcf)
   const recoilDuration = getRecoilDuration(stats, atkSpd)
   const tooltipRecoilFrames = Math.floor(recoilDuration * COOLDOWN_FPS)
   const tooltip = reloadWeaponCooldownFrames / COOLDOWN_FPS + (tooltipRecoilFrames / COOLDOWN_FPS) * 2
@@ -743,6 +806,7 @@ export function calculateTooltipCooldown(stats, attackSpeed, statRange = 0) {
   if (activeWeaponData.value?.type !== 'melee') {
     return attackCooldown + recoilDuration * 2
   }
+  if (isAnimationDriven(stats)) return attackCooldown + Number(stats.attack_duration)
 
   const { attackDuration, backDuration } = getMeleeTiming(stats, atkSpd, statRange)
   return attackCooldown + recoilDuration + attackDuration / 2 + backDuration
@@ -759,6 +823,7 @@ export function weaponSortCooldown(family) {
   if (family.type !== 'melee') {
     return attackCooldown + recoilDuration * 2
   }
+  if (isAnimationDriven(stats)) return attackCooldown + Number(stats.attack_duration)
   const { attackDuration, backDuration } = getMeleeTiming(stats, atkSpd, 0)
   return attackCooldown + recoilDuration + attackDuration / 2 + backDuration
 }
@@ -782,7 +847,7 @@ export function getRangedCooldownRange(stats, atkSpd, weaponCount = DEFAULT_WEAP
   const recoil = getRecoilDuration(stats, atkSpd)
   const add_cd = 2 * getTweenDuration(recoil) - 1
   if (bigReload) {
-    const reloadFrames = wcf * (Number(stats?.additional_cooldown_multiplier) || 1)
+    const reloadFrames = getReloadFrames(stats, atkSpd, wcf)
     return { wcf, add_cd, min: add_cd + reloadFrames, max: add_cd + reloadFrames, avgFrames: add_cd + reloadFrames }
   }
   const maxRand = Math.min((weaponCount * wcf) / 5.0, weaponCount * 5.0)
@@ -794,6 +859,17 @@ export function getRangedCooldownRange(stats, atkSpd, weaponCount = DEFAULT_WEAP
 
 export function getMeleeCooldownRange(stats, atkSpd, weaponCount = DEFAULT_WEAPON_COUNT, statRange = 0, bigReload = false) {
   const wcf = getWeaponCooldownFrames(stats.cooldown, atkSpd)
+  if (isAnimationDriven(stats)) {
+    // ponytail: 冷却在动画播放期间暂停，按动画帧数估算附加帧；未逐帧实测
+    const add_cd = Math.ceil(Number(stats.attack_duration) * COOLDOWN_FPS)
+    const maxRand = Math.min((weaponCount * wcf) / 5.0, weaponCount * 5.0)
+    return {
+      wcf, add_cd,
+      min: add_cd + Math.floor(Math.max(1, wcf - maxRand)) + 1,
+      max: add_cd + Math.ceil(wcf + maxRand),
+      avgFrames: add_cd + getAvgAttackDuration(Math.max(1, wcf - maxRand), wcf + maxRand),
+    }
+  }
   const recoil = getRecoilDuration(stats, atkSpd)
   const { attackDuration, backDuration } = getMeleeTiming(stats, atkSpd, statRange)
   let add_cd = getTweenDuration(recoil) + getTweenDuration(backDuration) - 1
@@ -805,7 +881,7 @@ export function getMeleeCooldownRange(stats, atkSpd, weaponCount = DEFAULT_WEAPO
     add_cd += 2 * tweenAtkQuarter
   }
   if (bigReload) {
-    const reloadFrames = wcf * (Number(stats?.additional_cooldown_multiplier) || 1)
+    const reloadFrames = getReloadFrames(stats, atkSpd, wcf)
     return { wcf, add_cd, min: add_cd + reloadFrames, max: add_cd + reloadFrames, avgFrames: add_cd + reloadFrames }
   }
   const maxRand = Math.min((weaponCount * wcf) / 5.0, weaponCount * 5.0)
@@ -1019,19 +1095,20 @@ export function onKeyDown(e) {
 }
 
 export function onFilterChange() { }
-export const hasActiveFilter = computed(() => searchText.value || filterTier.value !== null || filterType.value || filterSet.value !== null || filterDlc.value !== null || filterTag.value !== null)
+export const hasActiveFilter = computed(() => searchText.value || filterTier.value !== null || filterType.value || filterSet.value !== null || filterItemSet.value !== null || filterSpecial.value !== null || filterTag.value !== null)
 export function clearAllFilters() {
   searchText.value = ''
   filterTier.value = null
   filterType.value = null
   filterSet.value = null
-  filterDlc.value = null
+  filterItemSet.value = null
+  filterSpecial.value = null
   filterTag.value = null
 }
 
 export function onTabChange() {
   filterType.value = null; filterSet.value = null; filterTag.value = null
-  sortBy.value = 'default'; searchText.value = ''; filterTier.value = null; filterDlc.value = null
+  sortBy.value = 'default'; searchText.value = ''; filterTier.value = null; filterItemSet.value = null; filterSpecial.value = null
   if (!pendingNavigate.value) {
     selectedItem.value = null
     if (activeTab.value !== 'resources') {

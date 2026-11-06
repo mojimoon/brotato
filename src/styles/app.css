@@ -145,8 +145,9 @@
 .type-badge { font-size: 11px; padding: 3px 8px; border-radius: 4px; color: #fff; line-height: 1.4; font-weight: 600; }
 .type-badge.melee { background: var(--badge-red); }
 .type-badge.ranged { background: var(--accent-blue); }
-.dlc-badge { font-size: 11px; padding: 3px 8px; border-radius: 4px; background: var(--accent-purple); color: #fff; font-weight: 600; }
-.set-badge { font-size: 11px; padding: 3px 8px; border-radius: 4px; background: var(--badge-bg); color: var(--set-badge-fg); cursor: help; font-weight: 600; transition: background .15s; }
+.dlc-badge { font-size: 11px; padding: 3px 8px; border-radius: 4px; line-height: 1.4; background: var(--accent-purple); color: #fff; font-weight: 600; }
+.dlc-badge.badge-lg { padding: 4px 10px; line-height: 1.4; }
+.set-badge { font-size: 11px; padding: 3px 8px; border-radius: 4px; line-height: 1.4; background: var(--badge-bg); color: var(--set-badge-fg); cursor: help; font-weight: 600; transition: background .15s; }
 .set-badge:hover { background: var(--set-badge-hover-bg); }
 
 /* Tier Tabs */
@@ -190,6 +191,18 @@
   background: var(--curse-active-bg) !important; border-color: var(--curse-active-border) !important; color: var(--curse-active-fg) !important;
   box-shadow: 0 0 8px rgba(139, 92, 246, 0.3);
 }
+.meca-toggle-btn.meca-active {
+  background: #12384a !important; border-color: #1f9fd1 !important; color: #3fcafc !important;
+  box-shadow: 0 0 8px rgba(63, 202, 252, 0.3);
+}
+.meca-slider .el-slider__bar { background: #1f9fd1; }
+/* item set / evolution badges (grid corner + detail header) */
+.badge-set-new_dawn { background: #c99a2e; }
+.badge-set-paws_n_claws { background: #b8663a; }
+.badge-set-abyssal_terrors { background: var(--accent-purple); }
+.badge-set-primal_dread { background: #4d8f3a; }
+.badge-evo-meca { background: #1f8fbf; }
+.badge-evo-mutant { background: #6f9a12; }
 .curse-slider { flex: 1; min-width: 150px; --el-slider-height: 4px; }
 .curse-slider .el-slider__runway { background: var(--curse-off-bg); }
 .curse-slider .el-slider__bar { background: var(--curse-deep); }
@@ -374,3 +387,9 @@
   .res-sub { margin-left: 14px; }
   /* .el-slider__marks-text { font-size: 11px !important; margin-top: 10px !important; } */
 }
+.badge-icon { vertical-align: middle; object-fit: contain; }
+/* detail tags: icon overflows vertically via negative margin so the tag keeps its text height */
+.dlc-badge .badge-icon { width: 18px; height: 18px; margin: -4px 3px -4px 0; }
+/* grid corner: same height as the text badges (17px) */
+.item-dlc-badge.badge-evo { height: 17px; box-sizing: border-box; padding: 1px 3px; display: flex; gap: 2px; align-items: center; }
+.item-dlc-badge.badge-evo .badge-icon { width: 15px; height: 15px; }

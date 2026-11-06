@@ -79,20 +79,37 @@
       </template>
     </el-dropdown>
 
-    <el-dropdown trigger="click" popper-class="dark-dropdown" @command="(v) => { filterDlc = v; onFilterChange(); }">
-      <el-button class="filter-btn" :class="{ 'has-value': filterDlc !== null }">
-        {{ filterDlc === 0 ? S.base : filterDlc === 1 ? 'DLC1' : S.source }}
+    <el-dropdown trigger="click" popper-class="dark-dropdown" @command="(v) => { filterItemSet = v; onFilterChange(); }">
+      <el-button class="filter-btn" :class="{ 'has-value': filterItemSet !== null }">
+        {{ filterItemSet !== null ? itemSetName(filterItemSet) : (rawData.translations?.MENU_ITEMSET || S.source) }}
         <el-icon class="el-icon--right">
           <ArrowDown />
         </el-icon>
       </el-button>
       <template #dropdown>
         <el-dropdown-menu>
-          <el-dropdown-item :command="null" :class="{ 'is-active-opt': filterDlc === null }">{{ S.all
+          <el-dropdown-item :command="null" :class="{ 'is-active-opt': filterItemSet === null }">{{ S.all
           }}</el-dropdown-item>
-          <el-dropdown-item :command="0" :class="{ 'is-active-opt': filterDlc === 0 }">{{ S.baseGame
+          <el-dropdown-item v-for="id in itemSetIds" :key="id" :command="id"
+            :class="{ 'is-active-opt': filterItemSet === id }">{{ itemSetName(id) }}</el-dropdown-item>
+        </el-dropdown-menu>
+      </template>
+    </el-dropdown>
+
+    <el-dropdown v-if="activeTab === 'items'" trigger="click" popper-class="dark-dropdown"
+      @command="(v) => { filterSpecial = v; onFilterChange(); }">
+      <el-button class="filter-btn" :class="{ 'has-value': filterSpecial !== null }">
+        {{ filterSpecial !== null ? specialLabel(filterSpecial) : S.special }}
+        <el-icon class="el-icon--right">
+          <ArrowDown />
+        </el-icon>
+      </el-button>
+      <template #dropdown>
+        <el-dropdown-menu>
+          <el-dropdown-item :command="null" :class="{ 'is-active-opt': filterSpecial === null }">{{ S.all
           }}</el-dropdown-item>
-          <el-dropdown-item :command="1" :class="{ 'is-active-opt': filterDlc === 1 }">DLC1</el-dropdown-item>
+          <el-dropdown-item v-for="f in SPECIAL_FILTERS" :key="f" :command="f"
+            :class="{ 'is-active-opt': filterSpecial === f }">{{ specialLabel(f) }}</el-dropdown-item>
         </el-dropdown-menu>
       </template>
     </el-dropdown>
@@ -160,7 +177,7 @@
 import { Search, Sort, ArrowDown, View, Hide, Close, More, MoreFilled } from '@element-plus/icons-vue'
 import {
   searchText, activeTab, S, filterTier, tierDisplayName, onFilterChange, filterType,
-  filterSet, availableSets, filterTag, allTags, tagTr, filterDlc, hasActiveFilter,
+  filterSet, availableSets, filterTag, allTags, tagTr, filterItemSet, itemSetIds, filterSpecial, SPECIAL_FILTERS, specialLabel, itemSetName, rawData, hasActiveFilter,
   clearAllFilters, sortBy, currentSortLabel, showingPrice, showFrames,
 } from '../store/codexStore'
 </script>

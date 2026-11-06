@@ -2,7 +2,7 @@
   <div>
     <DetailHeader :item="selectedItem" :title="itemName(selectedItem)" :color="charColor" :bg="charBg">
       <template #badges>
-        <span v-if="selectedItem.dlc" class="dlc-badge">DLC</span>
+        <span v-if="selectedItem.set && selectedItem.set !== 'base'" class="dlc-badge" :class="'badge-set-' + selectedItem.set">{{ itemSetName(selectedItem.set) }}</span>
       </template>
     </DetailHeader>
 
@@ -25,11 +25,11 @@
             <img :src="getIconSrc(getWeaponById(wid)?.icon)" />
           </div>
           <div class="item-name-text">{{ getWeaponById(wid) ? itemName(getWeaponById(wid), true) : wid }}</div>
+          <div v-if="itemSetBadge(getWeaponById(wid))" class="item-dlc-badge" :class="itemSetBadge(getWeaponById(wid)).cls">{{
+            itemSetBadge(getWeaponById(wid)).text }}</div>
         </div>
       </div>
     </div>
-    
-    <CurseSection />
   </div>
 </template>
 
@@ -38,9 +38,8 @@ import { computed } from 'vue'
 import DetailHeader from './DetailHeader.vue'
 import TagBadge from './TagBadge.vue'
 import EffectsList from './EffectsList.vue'
-import CurseSection from './CurseSection.vue'
 import {
-  selectedItem, S, itemName, tierColor, tierBgColor, getWeaponById, getIconSrc, navigateToWeapon,
+  selectedItem, S, itemName, tierColor, tierBgColor, getWeaponById, getIconSrc, navigateToWeapon, itemSetName, itemSetBadge,
 } from '../store/codexStore'
 
 const charColor = computed(() => tierColor(selectedItem.value?.tier ?? 0))

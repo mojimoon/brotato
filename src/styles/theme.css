@@ -99,6 +99,7 @@
   --tag-struct-bg-hover: #4a3520; --tag-struct-fg-hover: #ffcc80;
   /* effect markers */
   --mark-green: #22c55e; --mark-red: #ef4444; --mark-purple: #a855f7;
+  --mark-meca: #3fcafc; --mark-mutant: #d2ff5e;
   /* weapon scaling text */
   --scaling: #eae2b0; --scaling-pct: #ddd;
   /* curse toggle (off / active) */
@@ -283,6 +284,7 @@ html.light-theme, body.light-theme {
   --tag-struct-bg: #fff3e0; --tag-struct-fg: #e65100;
   --tag-struct-bg-hover: #ffe0b2; --tag-struct-fg-hover: #bf360c;
   --mark-green: #107535; --mark-red: #dc2626; --mark-purple: #9333ea;
+  --mark-meca: #0b7fb0; --mark-mutant: #5a8a00;
   --scaling: #333; --scaling-pct: #333;
   --curse-off-bg: #f0f0f0; --curse-off-border: #ccc; --curse-off-fg: #888;
   --curse-active-bg: #ede9fe; --curse-active-border: #a78bfa; --curse-active-fg: #7c3aed;
@@ -312,3 +314,5 @@ body.light-theme .el-popper .el-popper__arrow::before { background: #fff !import
 .zvg { color: var(--mark-green); }
 .zvr { color: var(--mark-red); }
 .zvp { color: var(--mark-purple); }
+.zvm { color: var(--mark-meca); }
+.zvu { color: var(--mark-mutant); }

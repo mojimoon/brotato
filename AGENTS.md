@@ -4,7 +4,7 @@
 
 基于反编译游戏数据构建的 Brotato 网页图鉴（13 种语言）。仓库位于反编译游戏根目录下的 `codex/` 子目录中。
 
-**关键前提**：此仓库必须克隆到 GDRE 反编译后的游戏目录内才能运行数据管线（`main.py` 依赖 `CODEX_DIR.parent` 即反编译根目录作为 `BASE_DIR`）。
+**关键前提**：数据管线需要 GDRE 反编译的 **1.2** 游戏工程。`BASE_DIR` 依次取：环境变量 `BROTATO_GAME` → `codex/..`（若其中有 `project.godot`）→ `codex/../1.2`。
 
 ## 技术栈
 
@@ -60,7 +60,14 @@ public/data/brotato_data.<lang>.json ×13 + languages.json + public/icons/
 
 ### main.py（~3900 行）
 
-- `BASE_DIR = CODEX_DIR.parent` — 必须在反编译游戏根目录下运行
+- `BASE_DIR`：见上文；翻译来自单一的 `resources/translations/translations.csv`（含 DLC）
+- 内容清单来自物品套组 `updates/item_sets/*.tres`（`ITEM_SETS`，顺序 = 游戏内顺序），每条记录带 `set`（`base` / `new_dawn` / `paws_n_claws` / `abyssal_terrors` / `primal_dread`）；DLC2 的 `meca_items` / `mutant_items` / `evolution_items` 额外带 `evolution`（`meca` / `mutant` / `both`）。角色保持套组顺序，武器 / 道具按 tier + 英文名排序
+- `.tres` 的内联 `SubResource`（1.2 的 custom_args）由 `parse_tres_file()` 解析到 `sub_resources`
+- `KEYS_NEEDING_OPERATOR` / `KEYS_NEEDING_PERCENT` 启动时与游戏 `singletons/text.gd` 的同名表取并集
+- 1.2 新增效果脚本的参数在 `_dlc2_effect_args()` 中按各脚本 `get_args()` 复刻（以 `eff['script']` 区分）
+- 诅咒：`_build_curse_types()` 开头是 1.2 / DLC2 规则（照 `dlc_1_data.gd curse_item()`，NullEffect 子类只提高 `value`）；`scaling_cursed()` 为 False 的效果在 `<scaling>` 上加 `fixed="1"`，前端诅咒时不放大（燃烧、生成冷却型建筑、光剑反弹等）
+- 道具 `can_be_looted = false` 或 `max_nb = 0` 不进商店，`value` 置 0；`fossil` 标记按 `item_fossil_` 前缀
+- 游戏版本号从 `singletons/progress_data.gd` 的 `VERSION` 读取，写入 `meta.game_version`（页头显示）
 - 语言列表 `LANGS`（13 种）在 `main.py` 与 `build_ui_strings.py` 中各有一份，**顺序必须一致**；`LANG_META` 输出为 `languages.json`
 - 先构建含全部语言的数据，再由 `prune_data_for_lang()` 裁剪为每语言一份 JSON，并把 `ui_strings.json` 中对应语言的文案注入为 `ui` 字段
 - 冷却时间：`spawn_cooldown` 已是秒，**不要**除以 60；`structure_stats.cooldown` 和 `weapon_stats.cooldown` 是帧数，需除以 60
@@ -112,6 +119,9 @@ public/data/brotato_data.<lang>.json ×13 + languages.json + public/icons/
 - 左侧网格：`repeat(auto-fill, minmax(85px, 1fr))` 布局
 - 右侧详情面板：独立滚动
 - 武器按 family 分组（去掉尾部 `_数字` 后缀合并同族武器），详情面板显示 T1-T4 切换
+- 物品套组：列表角标用缩写（ND / PC / DLC1 / DLC2，本体无角标；DLC2 机械 / 异变道具用 MECA / MUT / EVO 覆盖），详情页显示游戏内全名（`ITEM_SET_*`，本体用 `S.baseGame`）
+- 武器详情：诅咒与机械化（`mecaStats()`，复刻 `DLC2Data._boost_evolved_weapon_stats`，强度 1–20）互斥；角色无诅咒预览
+- 冷却：1.2 换弹 = max(普通冷却, 攻速作用于 round(基础冷却 × 倍率))（`getReloadFrames()`）；`attack_duration > 0` 的近战武器（鞭子、连枷等）为动画驱动，提示冷却 = 冷却 + 动画时长
 
 ## CI/CD
 

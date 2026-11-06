@@ -7,16 +7,18 @@
       <img :src="getIconSrc(item.icon)" />
     </div>
     <div class="item-name-text">{{ itemName(item) }}</div>
-    <div v-if="item.dlc" class="item-dlc-badge">DLC1</div>
+    <div v-if="badge" class="item-dlc-badge" :class="badge.cls"><img v-for="(src, i) in badge.icons || []" :key="i" :src="src" class="badge-icon" />{{ badge.text }}</div>
   </div>
 </template>
 
 <script setup>
-import { tierColor, tierBgColor, tierSelectedBg, getIconSrc, itemName, shouldShowCardPrice, getListPrice } from '../store/codexStore'
+import { computed } from 'vue'
+import { tierColor, tierBgColor, tierSelectedBg, getIconSrc, itemName, shouldShowCardPrice, getListPrice, itemSetBadge } from '../store/codexStore'
 
-defineProps({
+const props = defineProps({
   item: { type: Object, required: true },
   selected: { type: Boolean, default: false },
 })
 defineEmits(['select'])
+const badge = computed(() => itemSetBadge(props.item))
 </script>

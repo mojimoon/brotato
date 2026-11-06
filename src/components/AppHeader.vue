@@ -10,7 +10,7 @@
         <img src="https://img.shields.io/github/stars/mojimoon/brotato?style=social" alt="GitHub stars"
           style="height: 20px;" />
       </a>
-      <span>V 1.1.15.4</span>
+      <span v-if="rawData.meta?.game_version">V {{ rawData.meta.game_version }}</span>
       <el-dropdown @command="(cmd) => { currentLang = cmd }" trigger="click" popper-class="dark-dropdown">
         <el-button class="header-btn lang-btn" round>{{ currentLangName }}</el-button>
         <template #dropdown>
@@ -28,7 +28,7 @@
 <script setup>
 import { computed } from 'vue'
 import { Moon, Sunny } from '@element-plus/icons-vue'
-import { currentLang, availableLangs, isDark } from '../store/codexStore'
+import { currentLang, availableLangs, isDark, rawData } from '../store/codexStore'
 
 const currentLangName = computed(() => {
   const found = availableLangs.value.find(l => l.code === currentLang.value)
