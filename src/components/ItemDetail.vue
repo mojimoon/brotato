@@ -17,6 +17,7 @@
     <CurseSection />
     <PriceSection />
     <EffectsList />
+    <RelatedSection :entry="selectedItem" />
   </div>
 </template>
 
@@ -27,6 +28,7 @@ import TagBadge from './TagBadge.vue'
 import CurseSection from './CurseSection.vue'
 import PriceSection from './PriceSection.vue'
 import EffectsList from './EffectsList.vue'
+import RelatedSection from './RelatedSection.vue'
 import {
   selectedItem, S, itemName, isUniqueItem, isLimitedItem, sortedItemTags,
   tierColor, tierBgColor, itemSetName, evolutionTags,

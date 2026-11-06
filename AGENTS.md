@@ -66,6 +66,7 @@ public/data/brotato_data.<lang>.json ×13 + languages.json + public/icons/
 - `KEYS_NEEDING_OPERATOR` / `KEYS_NEEDING_PERCENT` 启动时与游戏 `singletons/text.gd` 的同名表取并集
 - 1.2 新增效果脚本的参数在 `_dlc2_effect_args()` 中按各脚本 `get_args()` 复刻（以 `eff['script']` 区分）
 - 诅咒：`_build_curse_types()` 开头是 1.2 / DLC2 规则（照 `dlc_1_data.gd curse_item()`，NullEffect 子类只提高 `value`）；`scaling_cursed()` 为 False 的效果在 `<scaling>` 上加 `fixed="1"`，前端诅咒时不放大（燃烧、生成冷却型建筑、光剑反弹等）
+- 关联内容 `related`（`add_related()`）：道具按 `replaced_by` 链（沙漏、金鱼、魔镜、扫描仪、恐龙蛋→弹药恐龙）；角色按初始道具 / 武器效果。角色 `starting_items` 是武器选择界面里可选的初始道具（驯兽师）。前端 `RelatedSection.vue`
 - 道具 `can_be_looted = false` 或 `max_nb = 0` 不进商店，`value` 置 0；`fossil` 标记按 `item_fossil_` 前缀
 - 游戏版本号从 `singletons/progress_data.gd` 的 `VERSION` 读取，写入 `meta.game_version`（页头显示）
 - 语言列表 `LANGS`（13 种）在 `main.py` 与 `build_ui_strings.py` 中各有一份，**顺序必须一致**；`LANG_META` 输出为 `languages.json`

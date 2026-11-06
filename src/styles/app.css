@@ -171,6 +171,7 @@
 .ws-label { font-size: 14px; color: var(--text-muted); min-width: 70px; }
 .ws-val { font-size: 15px; color: var(--text-strong); font-weight: 600; }
 .ws-val.curse-modified { color: var(--curse); text-shadow: 0 0 6px rgba(139, 92, 246, 0.3); }
+.ws-val.meca-modified { color: var(--mark-meca); text-shadow: 0 0 6px rgba(63, 202, 252, 0.3); }
 .crit-dmg { color: var(--accent-gold); font-size: 14px; }
 .ws-scaling { font-size: 15px; color: var(--scaling); }
 .ws-scaling-pct { color: var(--scaling-pct); }
@@ -195,7 +196,6 @@
   background: #12384a !important; border-color: #1f9fd1 !important; color: #3fcafc !important;
   box-shadow: 0 0 8px rgba(63, 202, 252, 0.3);
 }
-.meca-slider .el-slider__bar { background: #1f9fd1; }
 /* item set / evolution badges (grid corner + detail header) */
 /* colors follow the in-game set logos: New Dawn gold, Paws & Claws rose, DLC1 curse purple, DLC2 mutant lime -> mecha blue */
 .badge-set-new_dawn { background: #c99a2e; }
@@ -208,6 +208,10 @@
 .curse-slider .el-slider__runway { background: var(--curse-off-bg); }
 .curse-slider .el-slider__bar { background: var(--curse-deep); }
 .curse-slider .el-slider__button { width: 14px; height: 14px; border-color: var(--curse-deep); }
+.curse-slider.meca-slider .el-slider__bar { background: #1f9fd1; }
+.curse-slider.meca-slider .el-slider__button { border-color: #1f9fd1; }
+.curse-slider.meca-slider .el-slider__stop { background-color: var(--text-faint); }
+.meca-section .curse-row { padding-bottom: 14px; }  /* room for slider marks */
 .el-slider__input .el-input-number { width: 100%; }
 
 /* Frames toggle reuses the price-toggle-btn chrome; only the active color (blue) differs. */

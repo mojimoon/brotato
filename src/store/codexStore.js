@@ -336,13 +336,37 @@ export function onTagClick(tag) {
 }
 
 export function navigateToWeapon(wid) {
-  const familyId = wid.replace(/_\d+$/, '')
+  const w = getWeaponById(wid)
+  const familyId = w ? w.weapon_id : wid.replace(/_\d+$/, '')
   pendingNavigate.value = true; activeTab.value = 'weapons'
-  filterType.value = null; filterSet.value = null; filterTag.value = null
+  clearAllFilters()
   setTimeout(() => {
     const family = weaponFamilies.value.find(f => f.id === familyId)
     if (family) selectItem(family)
+    if (w) currentTierIndex.value = w.tier
   }, 100)
+}
+
+export function navigateToItem(id) {
+  if (activeTab.value !== 'items') { pendingNavigate.value = true; activeTab.value = 'items' }
+  clearAllFilters()
+  setTimeout(() => {
+    const item = (rawData.value.items || []).find(x => x.id === id)
+    if (item) selectItem(item)
+  }, 100)
+}
+
+// 关联内容（main.py add_related）：卡片数据 + 点击跳转
+export function relatedEntries(entry, refs = entry?.related) {
+  return (refs || []).map(r => {
+    const data = r.kind === 'weapon' ? getWeaponById(r.id) : (rawData.value.items || []).find(x => x.id === r.id)
+    return data ? { ...r, data, current: r.id === entry.id } : null
+  }).filter(Boolean)
+}
+export function openRelated(r) {
+  if (r.current) return
+  if (r.kind === 'weapon') navigateToWeapon(r.id)
+  else navigateToItem(r.id)
 }
 
 // =============================================================================

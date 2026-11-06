@@ -29,5 +29,11 @@ defineProps({
 .detail-id {
   margin-left: auto; align-self: flex-start; font-family: ui-monospace, Consolas, monospace;
   font-size: 12px; color: var(--text-muted, #888); user-select: all; word-break: break-all; text-align: right;
+  flex: 0 1 auto; max-width: 35%;  /* never squeeze the title */
+}
+/* phones: ID on its own line below icon + title */
+@media (max-width: 768px) {
+  .detail-header { flex-wrap: wrap; row-gap: 6px; }
+  .detail-id { order: 3; flex-basis: 100%; max-width: none; margin-left: 0; text-align: left; }
 }
 </style>

@@ -3470,10 +3470,10 @@ def get_sets_for_weapon(parsed):
                         result.append(set_name)
     return result
 
-def get_upgrades_into(parsed):
+def get_upgrades_into(parsed, field='upgrades_into'):
     ext = parsed['ext_resources']
     data = parsed['data']
-    upgrades_raw = data.get('upgrades_into')
+    upgrades_raw = data.get(field)
     if isinstance(upgrades_raw, dict) and '_ext' in upgrades_raw:
         ext_id = upgrades_raw['_ext']
         if ext_id in ext:
@@ -3494,10 +3494,10 @@ def extract_stats_from_tres(tres_path, parsed):
             return parse_weapon_stats(stats_path)
     return None
 
-def get_starting_weapon_ids(parsed):
+def get_starting_weapon_ids(parsed, field='starting_weapons'):
     ext = parsed['ext_resources']
     data = parsed['data']
-    weapons_raw = data.get('starting_weapons', [])
+    weapons_raw = data.get(field, [])
     result = []
     if isinstance(weapons_raw, list):
         for w in weapons_raw:
@@ -3596,8 +3596,38 @@ def parse_item(data_file, set_id, field='items'):
         **entry,
         'max_nb': data.get('max_nb', -1),
         'tags': tags,
+        'replaced_by': get_upgrades_into(parsed, 'replaced_by'),  # consumed / advancing items (hourglass, dino egg...)
         **({'evolution': EVOLUTION_FIELDS[field]} if field in EVOLUTION_FIELDS else {}),
     }
+
+
+def add_related(items, characters):
+    """'related' = [{'kind': 'item'|'weapon', 'id'}]:
+    items -> the whole replaced_by chain they belong to (dino egg -> ... -> ammosaurus);
+    characters -> starting items / extra starting weapons granted by their effects."""
+    nxt = {i['id']: i['replaced_by'] for i in items if i.get('replaced_by')}
+    prev = {v: k for k, v in nxt.items()}
+    for i in items:
+        root = i['id']
+        while root in prev:
+            root = prev[root]
+        chain = [root]
+        while chain[-1] in nxt:
+            chain.append(nxt[chain[-1]])
+        if len(chain) > 1:
+            i['related'] = [{'kind': 'item', 'id': x} for x in chain]
+    for c in characters:
+        rel = []
+        for e in c['effects']:
+            ck = e.get('custom_key')
+            starting = ck in ('starting_item', 'cursed_starting_item', 'starting_weapon') or                 (e.get('text_key') or '').lower() in ('effect_starting_item', 'effect_cursed_starting_item')
+            k = e.get('key', '')
+            if starting and k.startswith('item_'):
+                rel.append({'kind': 'item', 'id': k})
+            elif starting and k.startswith('weapon_'):
+                rel.append({'kind': 'weapon', 'id': k})
+        if rel:
+            c['related'] = rel
 
 
 def parse_character(data_file, set_id):
@@ -3610,6 +3640,8 @@ def parse_character(data_file, set_id):
         'banned_items': data.get('banned_items', []),
         'banned_upgrades': data.get('banned_upgrades', []),
         'starting_weapons': get_starting_weapon_ids(parsed),
+        # pickable starting items in the weapon selection screen (Beast Master's pets)
+        'starting_items': get_starting_weapon_ids(parsed, 'starting_items'),
         'max_nb': data.get('max_nb', -1),
         'tags': data.get('tags', []),
     }
@@ -3846,6 +3878,7 @@ def main():
     sort_key = lambda x: (x['tier'], x['name_en'])
     all_weapons.sort(key=sort_key)
     all_items.sort(key=sort_key)
+    add_related(all_items, all_characters)
     
     translations = get_relevant_translations()
     log.info(f"  Extracted {len(translations)} relevant translation entries")

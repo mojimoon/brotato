@@ -86,6 +86,7 @@ strings = {
     "curse":              T("Curse", "Malédiction", "诅咒", "呪い", "저주", "詛咒", "Проклятие", "Klątwa", "Maldición", "Maldição", "Fluch", "Lanet", "Maledizione"),
     "special":            T("Special", "Spécial", "特殊", "特殊", "특수", "特殊", "Особые", "Specjalne", "Especial", "Especial", "Spezial", "Özel", "Speciale"),
     "fossil":             T("Fossils", "Fossiles", "化石", "化石", "화석", "化石", "Окаменелости", "Skamieliny", "Fósiles", "Fósseis", "Fossilien", "Fosiller", "Fossili"),
+    "related":            T("Related", "Contenu lié", "关联内容", "関連", "관련 항목", "關聯內容", "Связанное", "Powiązane", "Relacionado", "Relacionado", "Verwandt", "İlgili", "Correlati"),
     "mecha":              T("Mecha", "Méca", "机械化", "メカ化", "기계화", "機械化", "Механизация", "Mechanizacja", "Mecanizar", "Mecanizar", "Mecha", "Mekanik", "Meccanizza"),
     "clear":              T("Clear Filters", "Effacer les filtres", "清除筛选", "フィルターをクリア", "필터 지우기", "清除篩選", "Очистить фильтры", "Wyczyść filtry", "Borrar filtros", "Limpar filtros", "Filter löschen", "Filtreleri temizle", "Cancella filtri"),
     "weaponCount":        T("#Weapon", "#Arme", "武器数量", "武器数", "무기 수", "武器數量", "№ Оружие", "#Bronie", "#Arma", "#Arma", "#Waffe", "#Silah", "#Arma"),
