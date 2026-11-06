@@ -252,7 +252,10 @@ export function itemSetName(id) {
 // 列表角标：DLC2 进化物品用机械 / 异变角标覆盖套组角标；本体无角标
 export function itemSetBadge(item) {
   if (!item) return null
-  if (item.evolution) return { icons: evolutionIcons(item), cls: 'badge-set-' + item.set + ' badge-evo' }
+  if (item.evolution) {
+    if (item.evolution == 'both') return { icons: evolutionIcons(item), cls: 'badge-set-' + item.set + ' badge-evo' }
+    else return { icons: evolutionIcons(item), cls: 'badge-evo-' + item.evolution + ' badge-evo' }
+  }
   if (ITEM_SET_ABBR[item.set]) return { text: ITEM_SET_ABBR[item.set], cls: 'badge-set-' + item.set }
   return null
 }
@@ -270,7 +273,7 @@ export function specialLabel(f) {
 // DLC2 进化物品角标图标：机械部件 / 异变催化果（双路线两个都显示）
 export function evolutionIcons(item) {
   const icons = rawData.value.meta?.evolution_icons || {}
-  const kinds = item?.evolution === 'both' ? ['meca', 'mutant'] : item?.evolution ? [item.evolution] : []
+  const kinds = item?.evolution === 'both' ? ['mutant', 'meca'] : item?.evolution ? [item.evolution] : []
   return kinds.map(k => getIconSrc(icons[k]))
 }
 export function evolutionTags(item) {
@@ -860,7 +863,7 @@ export function getRangedCooldownRange(stats, atkSpd, weaponCount = DEFAULT_WEAP
 export function getMeleeCooldownRange(stats, atkSpd, weaponCount = DEFAULT_WEAPON_COUNT, statRange = 0, bigReload = false) {
   const wcf = getWeaponCooldownFrames(stats.cooldown, atkSpd)
   if (isAnimationDriven(stats)) {
-    // ponytail: 冷却在动画播放期间暂停，按动画帧数估算附加帧；未逐帧实测
+    // 冷却在动画播放期间暂停：一次攻击 = 动画 ceil(0.48×60)=29 帧 + ceil(随机冷却) 帧（1.2.0.1 无头逐帧实测，攻速 -50/0/100 下动画恒为 29 帧）
     const add_cd = Math.ceil(Number(stats.attack_duration) * COOLDOWN_FPS)
     const maxRand = Math.min((weaponCount * wcf) / 5.0, weaponCount * 5.0)
     return {

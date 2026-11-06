@@ -197,10 +197,11 @@
 }
 .meca-slider .el-slider__bar { background: #1f9fd1; }
 /* item set / evolution badges (grid corner + detail header) */
+/* colors follow the in-game set logos: New Dawn gold, Paws & Claws rose, DLC1 curse purple, DLC2 mutant lime -> mecha blue */
 .badge-set-new_dawn { background: #c99a2e; }
-.badge-set-paws_n_claws { background: #b8663a; }
+.badge-set-paws_n_claws { background: #c4505f; }
 .badge-set-abyssal_terrors { background: var(--accent-purple); }
-.badge-set-primal_dread { background: #4d8f3a; }
+.badge-set-primal_dread { background: linear-gradient(90deg, #6f9a12 50%, #1f8fbf 50%); text-shadow: 0 0 2px rgba(0, 0, 0, 0.6); }
 .badge-evo-meca { background: #1f8fbf; }
 .badge-evo-mutant { background: #6f9a12; }
 .curse-slider { flex: 1; min-width: 150px; --el-slider-height: 4px; }
