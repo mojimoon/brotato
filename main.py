@@ -2350,6 +2350,11 @@ def render_effect_text(eff, lang, parent_id='', is_weapon=False):
     custom_key = eff.get('custom_key', '')
     extra = eff.get('extra', {})
     base_color = sign_color(eff)
+    # effect.gd get_text(): FROM_VALUE stat_evolution → every arg EVOLUTION_MECA / _MUTANT
+    # (dual evolution would make it POSITIVE, so the Mad Scientist keeps green)
+    if key == 'stat_evolution' and eff.get('effect_sign', 3) == SIGN_FROM_VALUE and value \
+            and parent_id != 'character_mad_scientist':
+        base_color = 'zvm' if value > 0 else 'zvu'
     tk_upper = (text_key or key).upper()
 
     # Godot: Text.text("[EMPTY]") returns ""
