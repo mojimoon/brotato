@@ -3584,7 +3584,7 @@ def parse_item(data_file, set_id, field='items'):
     parsed = parse_tres_file(data_file)
     data = parsed['data']
     tags = data.get('tags', [])
-    if 'structure' in tags and data.get('my_id') not in ('item_clockwork_wasp', 'item_improved_tools'):
+    if 'structure' in tags and data.get('my_id') not in ('item_clockwork_wasp', 'item_improved_tools', 'item_rusty_antenna'):
         tags.append('structure_real')
     entry = _base_entry(data_file, parsed, set_id)
     # ItemService.init_unlocked_pool skips these: never sold in the shop
