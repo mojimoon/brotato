@@ -15,7 +15,6 @@
         </div>
       </template>
     </div>
-    <div v-if="activeTab === 'weapons'" class="no-mut-copy">{{ S.weaponNoMutCopy }}</div>
   </div>
 </template>
 

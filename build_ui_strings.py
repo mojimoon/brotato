@@ -46,7 +46,6 @@ strings = {
     "badges":             T("Badges", "Badges", "角标", "バッジ", "배지", "角標", "Значки", "Odznaki", "Insignias", "Selos", "Abzeichen", "Rozetler", "Badge"),
     "noMutCopy":          T("Mutation can't copy", "Non copiable par Mutation", "异变无法复制", "変異でコピー不可", "돌연변이 복제 불가", "異變無法複製", "Мутация не копирует", "Mutacja nie kopiuje", "Mutación no copia", "Mutação não copia", "Mutation kopiert nicht", "Mutasyon kopyalayamaz", "Mutazione non copia"),
     "noMutRemove":        T("Mutation can't remove", "Non retirable par Mutation", "异变无法清除", "変異で除去不可", "돌연변이 제거 불가", "異變無法清除", "Мутация не убирает", "Mutacja nie usuwa", "Mutación no elimina", "Mutação não remove", "Mutation entfernt nicht", "Mutasyon kaldıramaz", "Mutazione non rimuove"),
-    "weaponNoMutCopy":    T("Mutation can't copy weapon effects", "Mutation ne copie pas les effets d'armes", "异变无法复制武器效果", "変異は武器の効果をコピー不可", "돌연변이는 무기 효과 복제 불가", "異變無法複製武器效果", "Мутация не копирует эффекты оружия", "Mutacja nie kopiuje efektów broni", "Mutación no copia efectos de armas", "Mutação não copia efeitos de armas", "Mutation kopiert keine Waffeneffekte", "Mutasyon silah etkilerini kopyalayamaz", "Mutazione non copia effetti delle armi"),
     "on":                 T("On", "Activé", "开", "オン", "켜기", "開", "Вкл", "Wł.", "Activado", "Ligado", "An", "Açık", "Attivo"),
     "off":                T("Off", "Désactivé", "关", "オフ", "끄기", "關", "Выкл", "Wył.", "Desactivado", "Desligado", "Aus", "Kapalı", "Disattivo"),
     # sort options
