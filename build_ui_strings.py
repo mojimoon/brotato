@@ -24,7 +24,7 @@ def T(*vals):
 strings = {
     # tabs / top-level
     "weapons":            T("Weapons", "Armes", "武器", "武器", "무기", "武器", "Оружие", "Bronie", "Armas", "Armas", "Waffen", "Silahlar", "Armi"),
-    "items":              T("Items", "Objets", "物品", "アイテム", "아이템", "物品", "Предметы", "Przedmioty", "Objetos", "Itens", "Gegenstände", "Eşyalar", "Oggetti"),
+    "items":              T("Items", "Objets", "道具", "アイテム", "아이템", "道具", "Предметы", "Przedmioty", "Objetos", "Itens", "Gegenstände", "Eşyalar", "Oggetti"),
     "characters":         T("Characters", "Personnages", "角色", "キャラクター", "캐릭터", "角色", "Персонажи", "Postacie", "Personajes", "Personagens", "Charaktere", "Karakterler", "Personaggi"),
     "resources":          T("Resources", "Ressources", "资源", "リソース", "자원", "資源", "Ресурсы", "Zasoby", "Recursos", "Recursos", "Ressourcen", "Kaynaklar", "Risorse"),
     # filters
@@ -197,13 +197,13 @@ SECTION_LABELS = {
     "Community":      T("Community", "Communauté", "社区", "コミュニティ", "커뮤니티", "社區", "Сообщество", "Społeczność", "Comunidad", "Comunidade", "Community", "Topluluk", "Comunità"),
     "Official":       T("Official", "Officiel", "官方", "公式", "공식", "官方", "Официальное", "Oficjalne", "Oficial", "Oficial", "Offiziell", "Resmî", "Ufficiale"),
     "DPS Calculator": T("DPS Calculator", "Calculatrice DPS", "DPS 计算器", "DPS計算機", "DPS 계산기", "DPS 計算機", "Расчёт DPS", "Kalkulator DPS", "Calculadora de DPS", "Calculadora de DPS", "DPS-Rechner", "DPS Hesaplayıcı", "Calcolatore DPS"),
-    "Item Efficiency":T("Item Efficiency", "Efficacité des objets", "物品性价比", "アイテム効率", "아이템 효율", "物品性價比", "Эффективность предметов", "Wydajność przedmiotów", "Eficiencia de objetos", "Eficiência de itens", "Gegenstandseffizienz", "Eşya verimliliği", "Efficienza oggetti"),
+    "Item Efficiency":T("Item Efficiency", "Efficacité des objets", "道具性价比", "アイテム効率", "아이템 효율", "道具性價比", "Эффективность предметов", "Wydajność przedmiotów", "Eficiencia de objetos", "Eficiência de itens", "Gegenstandseffizienz", "Eşya verimliliği", "Efficienza oggetti"),
     "Misc Calculators":T("Misc Calculators", "Calculatrices diverses", "杂项计算器", "その他計算機", "기타 계산기", "雜項計算機", "Прочие калькуляторы", "Różne kalkulatory", "Calculadoras varias", "Calculadoras diversas", "Verschiedene Rechner", "Çeşitli hesaplayıcılar", "Calcolatori vari"),
     "Enemy Calculator":T("Enemy Calculator", "Calculatrice d'ennemis", "敌人计算器", "敵計算機", "적 계산기", "敵人計算機", "Калькулятор врагов", "Kalkulator wrogów", "Calculadora de enemigos", "Calculadora de inimigos", "Feind-Rechner", "Düşman hesaplayıcı", "Calcolatore nemici"),
     "Endless Mode":   T("Endless Mode", "Mode Infini", "无尽模式", "エンドレスモード", "무한 모드", "無盡模式", "Бесконечный режим", "Tryb nieskończony", "Modo infinito", "Modo infinito", "Endlos-Modus", "Sonsuz mod", "Modalità infinita"),
     "Weapons":        T("Weapons", "Armes", "武器", "武器", "무기", "武器", "Оружие", "Bronie", "Armas", "Armas", "Waffen", "Silahlar", "Armi"),
     "Characters":     T("Characters", "Personnages", "角色", "キャラクター", "캐릭터", "角色", "Персонажи", "Postacie", "Personajes", "Personagens", "Charaktere", "Karakterler", "Personaggi"),
-    "Items":          T("Items", "Objets", "物品", "アイテム", "아이템", "物品", "Предметы", "Przedmioty", "Objetos", "Itens", "Gegenstände", "Eşyalar", "Oggetti"),
+    "Items":          T("Items", "Objets", "道具", "アイテム", "아이템", "道具", "Предметы", "Przedmioty", "Objetos", "Itens", "Gegenstände", "Eşyalar", "Oggetti"),
     "Stats":          T("Stats", "Statistiques", "属性", "ステータス", "능력치", "屬性", "Характеристики", "Statystyki", "Estadísticas", "Estatísticas", "Werte", "İstatistikler", "Statistiche"),
     "Enemies":        T("Enemies", "Ennemis", "敌人", "敵", "적", "敵人", "Враги", "Wrogowie", "Enemigos", "Inimigos", "Feinde", "Düşmanlar", "Nemici"),
 }

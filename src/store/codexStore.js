@@ -2,7 +2,7 @@ import { ref, computed, watch, nextTick } from 'vue'
 
 // ---- 数据基准地址 ----
 export const BASE = import.meta.env.MODE === 'production'
-  ? 'https://cdn.jsdmirror.com/gh/mojimoon/brotato@v3.1.3/public/'
+  ? 'https://cdn.jsdmirror.com/gh/mojimoon/brotato@v3.2.0/public/'
   : import.meta.env.BASE_URL
 
 // ---- 共享字符串字典 ----
@@ -193,6 +193,13 @@ const TIER_SELECTED_BG = ['rgba(170,170,170,0.35)', 'rgba(92,196,255,0.30)', 'rg
 export function tierColor(tier) { return TIER_COLORS[tier] || '#aaaaaa' }
 export function tierBgColor(tier) { return TIER_BG_COLORS[tier] || 'rgba(170,170,170,0.1)' }
 export function tierSelectedBg(tier) { return TIER_SELECTED_BG[tier] || TIER_SELECTED_BG[0] }
+// 列表卡片图标框：选中时用 tier 选中底色 + 同色外发光（卡片本身不再有外框）
+export function iconStyle(tier, selected) {
+  const c = tierColor(tier)
+  return selected
+    ? { borderColor: c, background: tierSelectedBg(tier), boxShadow: `0 0 10px ${c}` }
+    : { borderColor: c, background: tierBgColor(tier) }
+}
 export function tierDisplayName(tier) { return ['T1', 'T2', 'T3', 'T4'][tier] || 'T1' }
 export function tierSuffix(tier) { return ['', ' Ⅱ', ' Ⅲ', ' Ⅳ'][tier] || '' }
 export function tierTagType(tier) { return ['info', '', 'warning', 'danger'][tier] || 'info' }

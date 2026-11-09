@@ -3,17 +3,17 @@
     <h3 class="section-title">{{ title || S.related }}</h3>
     <div class="starting-weapons-grid">
       <div v-for="r in list" :key="r.kind + r.id" class="grid-item starting-weapon-card"
-        :class="{ selected: r.current, 'related-current': r.current }"
-        :style="r.current ? { background: tierSelectedBg(r.data.tier), borderColor: tierColor(r.data.tier) } : {}"
-        @click="openRelated(r)">
-        <div v-if="!r.current && r.data.value > 1 && showingPrice" class="item-price-badge">{{ r.data.value }}</div>
-        <div class="item-icon" :style="{ borderColor: tierColor(r.data.tier), background: tierBgColor(r.data.tier) }">
-          <img :src="getIconSrc(r.data.icon)" />
+        :class="{ selected: r.current, 'related-current': r.current }" @click="openRelated(r)">
+        <div class="item-icon-wrap">
+          <div class="item-icon" :style="iconStyle(r.data.tier, r.current)">
+            <img :src="getIconSrc(r.data.icon)" />
+            <span v-if="!r.current && r.data.value > 1 && showingPrice" class="corner-badge corner-tl item-price-badge">{{ r.data.value }}</span>
+          </div>
+          <span v-if="itemSetBadge(r.data)" class="source-badge item-dlc-badge" :class="itemSetBadge(r.data).cls">
+            <img v-for="(src, i) in itemSetBadge(r.data).icons || []" :key="i" :src="src" class="badge-icon" />{{ itemSetBadge(r.data).text }}
+          </span>
         </div>
         <div class="item-name-text">{{ itemName(r.data) + (r.kind === 'weapon' ? tierSuffix(r.data.tier) : '') }}</div>
-        <div v-if="itemSetBadge(r.data)" class="item-dlc-badge" :class="itemSetBadge(r.data).cls">
-          <img v-for="(src, i) in itemSetBadge(r.data).icons || []" :key="i" :src="src" class="badge-icon" />{{ itemSetBadge(r.data).text }}
-        </div>
       </div>
     </div>
   </div>
@@ -22,7 +22,7 @@
 <script setup>
 import { computed } from 'vue'
 import {
-  S, tierColor, tierBgColor, tierSelectedBg, getIconSrc, itemName, tierSuffix, itemSetBadge, showingPrice,
+  S, iconStyle, getIconSrc, itemName, tierSuffix, itemSetBadge, showingPrice,
   relatedEntries, openRelated,
 } from '../store/codexStore'
 
