@@ -397,8 +397,15 @@ def parse_effect_file(filepath):
         'effect_sign': data.get('effect_sign', 3),
     }
     script = data.get('script')
+    script_path = None
     if isinstance(script, dict) and script.get('_ext') in ext:
-        result['script'] = Path(ext[script['_ext']]['path']).stem
+        script_path = ext[script['_ext']]['path']
+        result['script'] = Path(script_path).stem
+    scene = data.get('scene')
+    scene_path = ext[scene['_ext']]['path'] if isinstance(scene, dict) and scene.get('_ext') in ext else None
+    mut = mutation_copyable(result, script_path, scene_path)
+    if mut is not True:
+        result['mut'] = 'no_copy' if mut is False else mut
 
     # Extract set_id for ClassBonusEffect (weapon class bonus)
     if 'set_id' in data:
@@ -1008,6 +1015,68 @@ def _merge_game_key_tables():
 
 
 _merge_game_key_tables()
+
+
+def _load_mutation_rules():
+    """Key lists + effect-script class chains used by DLC2 can_effect_be_copied_by_mutation()."""
+    src = (BASE_DIR / 'dlcs' / 'dlc_2' / 'dlc_2_data.gd').read_text(encoding='utf-8')
+    lists = {}
+    for var in ('mutation_copy_blacklist', 'mutation_boolean_keys', 'mutation_copy_blacklist_scenes', 'mutation_remove_blacklist'):
+        block = re.search(r'var ' + var + r'[^\[]*\[(.*?)\]', src, re.DOTALL).group(1)
+        lists[var] = set(re.findall(r'Keys\.(\w+)_hash', block)) | {p[6:] for p in re.findall(r'"(res://[^"]+)"', block)}
+    by_path, by_name = {}, {}
+    for d in ('effects', 'items/global'):
+        for p in (BASE_DIR / d).rglob('*.gd'):
+            s = p.read_text(encoding='utf-8')
+            cn = re.search(r'^class_name (\w+)', s, re.M)
+            ex = re.search(r'^extends\s+"?(?:res://)?([\w/.]+)"?', s, re.M)
+            rel = p.relative_to(BASE_DIR).as_posix()
+            by_path[rel] = (cn.group(1) if cn else rel, ex.group(1) if ex else None)
+            if cn: by_name[cn.group(1)] = rel
+    return lists, by_path, by_name
+
+
+MUTATION_LISTS, _GD_BY_PATH, _GD_BY_NAME = _load_mutation_rules()
+
+
+def _script_classes(path):
+    chain = []
+    while path in _GD_BY_PATH and len(chain) < 20:
+        name, parent = _GD_BY_PATH[path]
+        chain.append(name)
+        path = _GD_BY_NAME.get(parent, parent)
+    return chain
+
+
+def mutation_copyable(eff, script_path, scene_path):
+    """Returns True / False / 'neg' (removable negative) / 'no_remove' (unremovable negative).
+    Static part of DLC2 can_effect_be_copied_by_mutation(); run-state checks
+    (mutation scale, caps, saturation, difficulty) are treated as passing."""
+    chain = _script_classes(script_path) if script_path else ['Effect']
+    if {'BuilderTurretEffect', 'BuilderTurretUpgradeEffect', 'MultiplyValueEffect', 'ConvertStatEffect'} & set(chain):
+        return False
+    if chain[:1] == ['NullEffect']:
+        return False
+    spawns = 'StructureEffect' in chain or 'PetEffect' in chain
+    key, ckey, value = eff.get('key', ''), eff.get('custom_key', ''), eff.get('value', 0)
+    if not key and not spawns:
+        return False
+    if spawns and scene_path in MUTATION_LISTS['mutation_copy_blacklist_scenes']:
+        return False
+    sign = eff.get('effect_sign', SIGN_FROM_VALUE)
+    if sign in (SIGN_FROM_VALUE, SIGN_FROM_ARG):
+        sign = SIGN_POSITIVE if value > 0 else SIGN_NEGATIVE
+    if sign == SIGN_NEGATIVE:  # _get_removable_negative_effect_indexes(), item-independent part
+        if not key or key in MUTATION_LISTS['mutation_boolean_keys']                 or {key, ckey} & MUTATION_LISTS['mutation_remove_blacklist']:
+            return 'no_remove'
+        return 'neg'
+    if sign != SIGN_POSITIVE or key in MUTATION_LISTS['mutation_boolean_keys']:
+        return False
+    if key == 'instant_gold_attracting' and value >= 100:
+        return False
+    if key == 'weapon_slot' and eff.get('storage_method') == 2:  # STORAGE_METHOD_REPLACE
+        return False
+    return not ({key, ckey} & MUTATION_LISTS['mutation_copy_blacklist'])
 
 # Sign constants (from Effect.Sign enum)
 SIGN_POSITIVE = 0
@@ -3124,6 +3193,10 @@ def render_effect_text(eff, lang, parent_id='', is_weapon=False):
             raw = tr(ak.upper() if ak else key.upper(), lang)
         elif av == 11: # ABS_VALUE
             raw = str(abs(value))
+        elif av == 6:  # SCALING_STAT: icon text, e.g. 50%[attack speed]
+            raw = build_scaling_text([[key, value / 100.0]], lang)
+        elif av == 7:  # SCALING_STAT_VALUE: live stat * value%, 0 with no run (effect.gd get_text default)
+            raw = '0'
         else:
             raw = args[idx]
 
@@ -3537,6 +3610,14 @@ def get_effects(parsed, parent_id='', is_weapon=False):
                         if not text_dict:
                             continue
                         eff_data['text'] = text_dict
+                        # mutation marks: weapons are never mutation sources (only player items + character);
+                        # negatives are removable unless on a character or an item can_item_be_mutated() rejects
+                        mut = eff_data.pop('mut', None)
+                        if mut == 'neg' and (parent_id.startswith('character_') or parent_id in ('item_tumor', 'item_axolotl')
+                                             or 'item_builder_turret' in parent_id or 'evolved_leap' in parent_id):
+                            mut = 'no_remove'
+                        if mut in ('no_copy', 'no_remove') and not is_weapon and eff_data.get('key') != 'stat_evolution':  # evolution = mutation counter, not a downside
+                            eff_data['mut'] = mut
                         # Add stat icon prefix
                         eff_key = eff_data.get('key', '')
                         if eff_key.startswith('stat_') or eff_key in ('xp_gain', 'explosion_size', 'explosion_damage'):

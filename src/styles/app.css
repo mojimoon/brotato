@@ -271,6 +271,8 @@
 .effect-item:hover { background: var(--bg-hover); }
 .eff-prefix { flex-shrink: 0; width: 8px; text-align: center; color: var(--eff-prefix); display: flex; align-items: center; justify-content: center; line-height: 1; }
 .eff-text { flex: 1; min-width: 0; }
+.no-mut-copy { flex-shrink: 0; font-size: 11px; color: var(--text-faint); white-space: nowrap; }
+div.no-mut-copy { margin-top: 6px; white-space: normal; }
 
 /* Starting Weapons Grid */
 .starting-weapons-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(85px, 1fr)); gap: 5px; }

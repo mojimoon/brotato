@@ -162,12 +162,12 @@
       </el-button>
 
       <el-button v-if="activeTab === 'weapons' || activeTab === 'items'" class="filter-btn price-toggle-btn"
-        :class="{ 'has-value': showingPrice }" @click="showingPrice = !showingPrice">
+        :class="{ 'has-value': showBadges }" @click="showBadges = !showBadges">
         <el-icon style="margin-right:4px">
-          <View v-if="showingPrice" />
+          <View v-if="showBadges" />
           <Hide v-else />
         </el-icon>
-        {{ S.price }}
+        {{ S.badges }}
       </el-button>
     </div>
   </div>
@@ -178,6 +178,6 @@ import { Search, Sort, ArrowDown, View, Hide, Close, More, MoreFilled } from '@e
 import {
   searchText, activeTab, S, filterTier, tierDisplayName, onFilterChange, filterType,
   filterSet, availableSets, filterTag, allTags, tagTr, filterItemSet, itemSetIds, filterSpecial, SPECIAL_FILTERS, specialLabel, itemSetName, rawData, hasActiveFilter,
-  clearAllFilters, sortBy, currentSortLabel, showingPrice, showFrames,
+  clearAllFilters, sortBy, currentSortLabel, showBadges, showFrames,
 } from '../store/codexStore'
 </script>

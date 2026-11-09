@@ -6,6 +6,7 @@
         <div class="effect-item">
           <span class="eff-prefix" v-html="renderEffectPrefix(eff)"></span>
           <span class="eff-text" v-html="renderEffectText(eff)"></span>
+          <span v-if="eff.mut" class="no-mut-copy">{{ eff.mut === 'no_remove' ? S.noMutRemove : S.noMutCopy }}</span>
         </div>
         <div v-if="curseEnabled && eff.text?.extra_effects" v-for="(extra, ei) in eff.text.extra_effects"
           :key="'x' + idx + '_' + ei" class="effect-item curse-extra-effect">
@@ -14,9 +15,10 @@
         </div>
       </template>
     </div>
+    <div v-if="activeTab === 'weapons'" class="no-mut-copy">{{ S.weaponNoMutCopy }}</div>
   </div>
 </template>
 
 <script setup>
-import { currentEffects, curseEnabled, renderEffectPrefix, renderEffectText, S } from '../store/codexStore'
+import { activeTab, currentEffects, curseEnabled, renderEffectPrefix, renderEffectText, S } from '../store/codexStore'
 </script>

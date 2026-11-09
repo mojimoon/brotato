@@ -7,9 +7,9 @@
         <div class="item-icon-wrap">
           <div class="item-icon" :style="iconStyle(r.data.tier, r.current)">
             <img :src="getIconSrc(r.data.icon)" />
-            <span v-if="!r.current && r.data.value > 1 && showingPrice" class="corner-badge corner-tl item-price-badge">{{ r.data.value }}</span>
+            <span v-if="!r.current && r.data.value > 1 && showBadges" class="corner-badge corner-tl item-price-badge">{{ r.data.value }}</span>
           </div>
-          <span v-if="itemSetBadge(r.data)" class="source-badge item-dlc-badge" :class="itemSetBadge(r.data).cls">
+          <span v-if="showBadges && itemSetBadge(r.data)" class="source-badge item-dlc-badge" :class="itemSetBadge(r.data).cls">
             <img v-for="(src, i) in itemSetBadge(r.data).icons || []" :key="i" :src="src" class="badge-icon" />{{ itemSetBadge(r.data).text }}
           </span>
         </div>
@@ -22,7 +22,7 @@
 <script setup>
 import { computed } from 'vue'
 import {
-  S, iconStyle, getIconSrc, itemName, tierSuffix, itemSetBadge, showingPrice,
+  S, iconStyle, getIconSrc, itemName, tierSuffix, itemSetBadge, showBadges,
   relatedEntries, openRelated,
 } from '../store/codexStore'
 

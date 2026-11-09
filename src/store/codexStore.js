@@ -2,7 +2,7 @@ import { ref, computed, watch, nextTick } from 'vue'
 
 // ---- 数据基准地址 ----
 export const BASE = import.meta.env.MODE === 'production'
-  ? 'https://cdn.jsdmirror.com/gh/mojimoon/brotato@v3.2.0/public/'
+  ? 'https://cdn.jsdmirror.com/gh/mojimoon/brotato@v3.3.0/public/'
   : import.meta.env.BASE_URL
 
 // ---- 共享字符串字典 ----
@@ -46,7 +46,7 @@ export const stickyTierIndex = ref(0)
 export const filterTag = ref(null)
 export const sortByWeapons = ref(lsGet('brotato_sortBy_weapons', 'default'))
 export const sortByItems = ref(lsGet('brotato_sortBy_items', 'default'))
-export const showingPrice = ref(lsGet('brotato_showingPrice', true))
+export const showBadges = ref(lsGet('brotato_showBadges', true))
 export const isDark = ref(lsGet('brotato_isDark', true))
 export const isMobile = ref(window.innerWidth < 768)
 window.addEventListener('resize', () => { isMobile.value = window.innerWidth < 768 })
@@ -97,7 +97,7 @@ export const curseFactor = computed(() => curseEnabled.value ? curseSlider.value
 
 // ---- 监听器：持久化与主题 ----
 watch(currentLang, v => localStorage.setItem('brotato_lang', v))
-watch(showingPrice, v => localStorage.setItem('brotato_showingPrice', JSON.stringify(v)))
+watch(showBadges, v => localStorage.setItem('brotato_showBadges', JSON.stringify(v)))
 watch(isDark, v => localStorage.setItem('brotato_isDark', JSON.stringify(v)))
 watch(showAttackSpeedCalc, v => localStorage.setItem('brotato_showAtkCalc', JSON.stringify(v)))
 watch(showPriceDetail, v => localStorage.setItem('brotato_showPriceDetail', JSON.stringify(v)))
@@ -1080,7 +1080,7 @@ export function getListPrice(item) {
 }
 
 export function shouldShowCardPrice(item) {
-  if (!showingPrice.value) return false
+  if (!showBadges.value) return false
   if (activeTab.value !== 'weapons' && activeTab.value !== 'items') return false
   return getListPrice(item) > 1
 }
