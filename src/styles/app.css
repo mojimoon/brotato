@@ -406,3 +406,4 @@
 /* grid corner: same height as the text badges (17px) */
 .item-dlc-badge.badge-evo { height: 17px; box-sizing: border-box; padding: 1px 3px; display: flex; gap: 2px; align-items: center; }
 .item-dlc-badge.badge-evo .badge-icon { width: 15px; height: 15px; }
+.eff-text .meca-modified { color: var(--mark-meca); text-shadow: 0 0 6px rgba(63, 202, 252, 0.3); }

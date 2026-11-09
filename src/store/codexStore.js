@@ -2,7 +2,7 @@ import { ref, computed, watch, nextTick } from 'vue'
 
 // ---- 数据基准地址 ----
 export const BASE = import.meta.env.MODE === 'production'
-  ? 'https://cdn.jsdmirror.com/gh/mojimoon/brotato@v3.1.2/public/'
+  ? 'https://cdn.jsdmirror.com/gh/mojimoon/brotato@v3.1.3/public/'
   : import.meta.env.BASE_URL
 
 // ---- 共享字符串字典 ----
@@ -434,6 +434,9 @@ export function renderEffectText(eff) {
 
   if (!text) return `${eff.value} ${statTr(eff.key)}`
 
+  const meca = mecaEnabled.value && eff.text?.meca
+  if (meca && meca[lang]) return renderMecaEffectText(meca, meca[lang])
+
   const effectSign = eff.effect_sign ?? 3
   const origValue = eff.value
 
@@ -495,19 +498,44 @@ export function renderEffectText(eff) {
     }
   }
 
+  const cv = curseFactor.value
+  return renderTags(text, fixed => (curseEnabled.value && cv > 0 && !fixed ? 1 + cv : 1))
+}
+
+// 机械化武器效果中的构筑物（DLC2Data._boost_evolved_structure_effect）：
+// 伤害 ceil(d*(1+m))，冷却 max(2, int(cd/(1+m)))，系数 ×(1+m)，m = 0.05×机械化能量
+function mecaStructureValue(kind, base, mod) {
+  if (kind === 'damage') return String(Math.ceil(base * (1 + mod)))
+  const cd = Math.max(MECA_MIN_COOLDOWN, Math.trunc(base / (1 + mod)))
+  return kind === 'cd_frames' ? fmtDec(cd / 60, 2) : String(cd)
+}
+
+function renderMecaEffectText(meca, template) {
+  const mod = MECA_DAMAGE_PER_POWER * mecaSlider.value
+  let text = template.replace(/\{(m?)(\d+)\}/g, (m, lit, idx) => {
+    const spec = lit ? meca.meca_lits?.[idx] : meca.meca_args?.[idx]
+    if (spec) return `<span class="meca-modified">${mecaStructureValue(spec.kind, spec.base, mod)}</span>`
+    const arg = lit ? null : meca.args?.[idx]
+    if (!arg) return m
+    return arg.decimalPlaces != null ? fmtDec(arg.value, arg.decimalPlaces) : String(Math.round(arg.value))
+  })
+  return renderTags(text, () => (meca.scaling ? 1 + mod : 1), meca.scaling)
+}
+
+// <scaling> 与 <icon> 标签；mult(fixed) 给出系数倍率
+function renderTags(text, mult, mecaMark = false) {
   // Scaling tag: <scaling type="key" value="0.6" /> (may be inside color span)
   // fixed="1": the game doesn't boost this effect's scaling when cursed
   text = text.replace(/(?:<span[^>]*>)?\s*<scaling (fixed="1" )?type="([^"]+)" value="([^"]+)"\s*\/>\s*(?:<\/span>)?/g,
     (m, fixed, icKey, valStr) => {
-      const baseVal = parseFloat(valStr)
-      const cv = curseFactor.value
-      const cursedVal = curseEnabled.value && cv > 0 && !fixed ? baseVal * (1 + cv) : baseVal
+      const cursedVal = parseFloat(valStr) * mult(fixed)
       const pct = Math.round(cursedVal * 100)
       const src = resolveStatIcon(icKey)
+      const num = mecaMark ? `<span class="meca-modified">${pct}%</span>` : pct + '%'
       if (src) {
-        return pct + '%<img src="' + src + '" class="stat-inline-icon" title="' + statTr('stat_' + icKey) + '" />'
+        return num + '<img src="' + src + '" class="stat-inline-icon" title="' + statTr('stat_' + icKey) + '" />'
       }
-      return pct + '%' + statTr('stat_' + icKey)
+      return num + statTr('stat_' + icKey)
     })
 
   // Icon replacement
@@ -630,6 +658,7 @@ export const activeWeaponTier = computed(() => activeWeaponData.value.tier || 0)
 const MECA_DAMAGE_PER_POWER = 0.05
 const MECA_CRIT_DAMAGE_PER_POWER = 0.02
 const MECA_POWER_PER_PROJECTILE_HIT = 4
+const MECA_MIN_COOLDOWN = 2  // WeaponService.MIN_COOLDOWN
 function mecaStats(stats, power) {
   const dmgMod = MECA_DAMAGE_PER_POWER * power
   const hits = Math.floor(power / MECA_POWER_PER_PROJECTILE_HIT)

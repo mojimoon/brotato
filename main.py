@@ -3255,6 +3255,92 @@ def render_effect_text_zh(eff):
     template, _ = render_effect_text(eff, 'zh')
     return template
 
+# ---- 机械化：武器效果中的构筑物（DLC2Data._boost_evolved_structure_effect） ----
+_MECA_SENTINELS = {'damage': 777001, 'spawn_cd': 777002, 'cd_frames': 777003}
+
+
+def _meca_structure_kinds(se):
+    """Which numbers of a StructureEffect mechanization boosts, mirroring the branch order."""
+    st = se.get('structure_stats')
+    if not st:
+        return None
+    subs = se.get('structure_effects') or []
+    if se.get('extra', {}).get('spawn_cooldown', 0) > 0:
+        return ['spawn_cd', 'damage', 'scaling']
+    if st.get('scaling_stats'):
+        return ['damage', 'scaling']
+    if not subs:
+        return ['cd_frames']
+    if subs[0].get('script') == 'burning_effect':
+        return ['scaling']     # only burning_data.scaling_stats
+    return None
+
+
+def build_meca_text(eff, parent_id, is_weapon):
+    """Meca data for a weapon effect that spawns structures: a template whose boosted numbers
+    are {i} (curse args) or {mK} placeholders, plus how to compute each from meca power."""
+    if not is_weapon:
+        return None
+    script = eff.get('script', '')
+    if script == 'spawn_structure_every_killed_enemies_effect':
+        se_path = ('structure_effect',)
+    elif script in ('structure_effect', 'turret_effect'):
+        se_path = ()
+    else:
+        return None   # e.g. CarbonBowStatEffect (NullEffect) is not boosted
+    import copy
+    probe = copy.deepcopy(eff)
+    se = probe
+    for k in se_path:
+        se = se.get(k) or {}
+    kinds = _meca_structure_kinds(se)
+    if not kinds:
+        return None
+    st = se['structure_stats']
+    bases = {}
+    if 'damage' in kinds:
+        bases['damage'] = st.get('damage', 0)
+        st['damage'] = _MECA_SENTINELS['damage']
+    if 'spawn_cd' in kinds:
+        bases['spawn_cd'] = se['extra']['spawn_cooldown']
+        se['extra']['spawn_cooldown'] = _MECA_SENTINELS['spawn_cd']
+    if 'cd_frames' in kinds:
+        bases['cd_frames'] = st.get('cooldown', 0)
+        st['cooldown'] = _MECA_SENTINELS['cd_frames'] * 60
+    by_val = {v: k for k, v in _MECA_SENTINELS.items()}
+
+    texts, args = {}, None
+    for lang in LANGS:
+        t, a = render_effect_text(probe, lang, parent_id, is_weapon)
+        texts[lang] = t or ''
+        if args is None or lang == 'en':
+            args = a
+    meca_args = {}
+    for i, a in enumerate(args or []):
+        v = a.get('value') if isinstance(a, dict) else None
+        kind = by_val.get(int(v)) if isinstance(v, (int, float)) and v == int(v) else None
+        if kind:
+            meca_args[str(i)] = {'kind': kind, 'base': bases[kind]}
+    lits, found = [], set(meca_args[i]['kind'] for i in meca_args)
+    for kind, sv in _MECA_SENTINELS.items():
+        if kind not in bases:
+            continue
+        pat = re.compile(str(sv) + r'(?:\.0+)?(?!\d)')
+        if any(pat.search(t) for t in texts.values()):
+            texts = {l: pat.sub('{m%d}' % len(lits), t) for l, t in texts.items()}
+            lits.append({'kind': kind, 'base': bases[kind]})
+            found.add(kind)
+    missing = [k for k in bases if k not in found]
+    if missing:
+        logging.warning('meca: %s %s: numbers not located in text: %s', parent_id, eff.get('text_key'), missing)
+    result = {lang: texts[lang] for lang in LANGS}
+    result['args'] = args or []
+    result['meca_args'] = meca_args
+    result['meca_lits'] = lits
+    result['scaling'] = 'scaling' in kinds
+    return result
+
+
 def build_effect_text_dict(eff):
     """Build the combined 'text' dict for an effect, with templates and curse args.
 
@@ -3303,6 +3389,10 @@ def build_effect_text_dict(eff):
         if any(ct_texts.values()):
             result['text_cursed'] = {lang: ct_texts[lang] for lang in LANGS}
             result['text_cursed']['args'] = ct_args.get('en') or next((a for a in ct_args.values() if a), [])
+
+    meca = build_meca_text(eff, parent_id, is_weapon)
+    if meca:
+        result['meca'] = meca
 
     # Add special-case metadata
     special = _get_cursed_special(eff, parent_id, is_weapon)
@@ -3782,7 +3872,7 @@ def _prune_text_dict(t, L):
         if k in LANGS:
             if k == L:
                 out[L] = v
-        elif k == 'text_cursed' and isinstance(v, dict):
+        elif k in ('text_cursed', 'meca') and isinstance(v, dict):
             tc = {}
             for kk, vv in v.items():
                 if kk in LANGS:
@@ -3790,7 +3880,7 @@ def _prune_text_dict(t, L):
                         tc[L] = vv
                 else:
                     tc[kk] = vv  # 'args'
-            out['text_cursed'] = tc
+            out[k] = tc
         elif k == 'special' and isinstance(v, dict):
             out['special'] = _prune_special(v, L)
         elif k == 'extra_effects' and isinstance(v, list):
