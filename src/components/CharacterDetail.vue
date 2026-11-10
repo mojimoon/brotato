@@ -17,6 +17,7 @@
     </div>
 
     <RelatedSection :entry="selectedItem" :refs="startingRefs" :title="S.startingWeapons" />
+    <RelatedSection :entry="selectedItem" :refs="bannedRefs" :title="S.bannedItems" />
   </div>
 </template>
 
@@ -35,6 +36,7 @@ const startingRefs = computed(() => [
   ...(selectedItem.value?.starting_weapons || []).map(id => ({ kind: 'weapon', id })),
   ...(selectedItem.value?.starting_items || []).map(id => ({ kind: 'item', id })),
 ])
+const bannedRefs = computed(() => (selectedItem.value?.banned || []).map(id => ({ kind: 'item', id })))
 const charColor = computed(() => tierColor(selectedItem.value?.tier ?? 0))
 const charBg = computed(() => tierBgColor(selectedItem.value?.tier ?? 0))
 </script>

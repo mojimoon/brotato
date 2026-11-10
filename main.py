@@ -3806,10 +3806,26 @@ def add_related(items, characters):
             c['related'] = rel
 
 
+def load_item_groups():
+    """ItemService.item_groups (singletons/item_service.gd): group name -> item ids."""
+    src = (BASE_DIR / 'singletons' / 'item_service.gd').read_text(encoding='utf-8')
+    block = re.search(r'var item_groups: Dictionary = \{(.*?)\n\}', src, re.S).group(1)
+    return {g: re.findall(r'"(\w+)"', ids) for g, ids in re.findall(r'"(\w+)":\s*\[(.*?)\]', block)}
+
+
+ITEM_GROUPS = None
+
+
 def parse_character(data_file, set_id):
+    global ITEM_GROUPS
+    if ITEM_GROUPS is None:
+        ITEM_GROUPS = load_item_groups()
     parsed = parse_tres_file(data_file)
     data = parsed['data']
+    # shop item pool exclusions (ItemService.get_rand_item_from_wave, not in endless waves)
+    banned = [i for g in data.get('banned_item_groups', []) for i in ITEM_GROUPS.get(g, [])] + data.get('banned_items', [])
     return {
+        'banned': list(dict.fromkeys(banned)),
         **_base_entry(data_file, parsed, set_id),
         'wanted_tags': data.get('wanted_tags', []),
         'banned_item_groups': data.get('banned_item_groups', []),

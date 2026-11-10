@@ -72,6 +72,7 @@ strings = {
     # detail panel
     "effects":            T("Effects", "Effets", "效果", "効果", "효과", "效果", "Эффекты", "Efekty", "Efectos", "Efeitos", "Effekte", "Etkiler", "Effetti"),
     "startingWeapons":    T("Starting Weapons", "Armes de départ", "起始武器", "初期武器", "시작 무기", "起始武器", "Стартовое оружие", "Bronie początkowe", "Armas iniciales", "Armas iniciais", "Startwaffen", "Başlangıç silahları", "Armi iniziali"),
+    "bannedItems":        T("Banned Items", "Objets exclus", "禁用道具", "出現しないアイテム", "금지 아이템", "禁用道具", "Запрещённые предметы", "Zablokowane przedmioty", "Objetos excluidos", "Itens excluídos", "Gesperrte Gegenstände", "Yasaklı eşyalar", "Oggetti esclusi"),
     "preferredTags":      T("Preferred Tags", "Étiquettes préférées", "偏好标签", "推奨タグ", "선호 태그", "偏好標籤", "Предпочитаемые теги", "Preferowane tagi", "Etiquetas preferidas", "Etiquetas preferidas", "Bevorzugte Tags", "Tercih edilen etiketler", "Etichette preferite"),
     "unique":             T("Unique", "Unique", "独特", "ユニーク", "고유", "獨特", "Уникальный", "Unikalny", "Único", "Único", "Einzigartig", "Benzersiz", "Unico"),
     "limited":            T("Limited", "Limité", "限制", "制限", "제한", "限制", "Ограниченный", "Ograniczony", "Limitado", "Limitado", "Begrenzt", "Sınırlı", "Limitato"),
