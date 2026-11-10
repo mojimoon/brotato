@@ -406,6 +406,8 @@ def parse_effect_file(filepath):
     mut = mutation_copyable(result, script_path, scene_path)
     if mut is not True:
         result['mut'] = 'no_copy' if mut is False else mut
+    else:
+        result['_mut_info'] = mutation_copy_info(result, script_path)
 
     # Extract set_id for ClassBonusEffect (weapon class bonus)
     if 'set_id' in data:
@@ -1021,8 +1023,9 @@ def _load_mutation_rules():
     """Key lists + effect-script class chains used by DLC2 can_effect_be_copied_by_mutation()."""
     src = (BASE_DIR / 'dlcs' / 'dlc_2' / 'dlc_2_data.gd').read_text(encoding='utf-8')
     lists = {}
-    for var in ('mutation_copy_blacklist', 'mutation_boolean_keys', 'mutation_copy_blacklist_scenes', 'mutation_remove_blacklist'):
-        block = re.search(r'var ' + var + r'[^\[]*\[(.*?)\]', src, re.DOTALL).group(1)
+    for var in ('mutation_copy_blacklist', 'mutation_boolean_keys', 'mutation_copy_blacklist_scenes', 'mutation_remove_blacklist',
+                'mutation_min_scale', 'mutation_unscaled_keys', 'mutation_scaled_explosion_damage_keys'):
+        block = re.search(r'var ' + var + r'[^\[{]*[\[{](.*?)[\]}]', src, re.DOTALL).group(1)
         lists[var] = set(re.findall(r'Keys\.(\w+)_hash', block)) | {p[6:] for p in re.findall(r'"(res://[^"]+)"', block)}
     by_path, by_name = {}, {}
     for d in ('effects', 'items/global'):
@@ -1067,7 +1070,7 @@ def mutation_copyable(eff, script_path, scene_path):
     if sign in (SIGN_FROM_VALUE, SIGN_FROM_ARG):
         sign = SIGN_POSITIVE if value > 0 else SIGN_NEGATIVE
     if sign == SIGN_NEGATIVE:  # _get_removable_negative_effect_indexes(), item-independent part
-        if not key or key in MUTATION_LISTS['mutation_boolean_keys']                 or {key, ckey} & MUTATION_LISTS['mutation_remove_blacklist']:
+        if not key or key in MUTATION_LISTS['mutation_boolean_keys'] or {key, ckey} & MUTATION_LISTS['mutation_remove_blacklist']:
             return 'no_remove'
         return 'neg'
     if sign != SIGN_POSITIVE or key in MUTATION_LISTS['mutation_boolean_keys']:
@@ -1077,6 +1080,25 @@ def mutation_copyable(eff, script_path, scene_path):
     if key == 'weapon_slot' and eff.get('storage_method') == 2:  # STORAGE_METHOD_REPLACE
         return False
     return not ({key, ckey} & MUTATION_LISTS['mutation_copy_blacklist'])
+
+
+# get_mutation_scale() >= 0.7 (MUTATION_ENTITY_MIN_SCALE / mutation_min_scale):
+# 0.1 + 0.9 * sqrt(E / 150) >= 0.7  <=>  E >= 66.7
+MUTATION_MIN_EVOLUTION = 67
+
+
+def mutation_copy_info(eff, script_path):
+    """How a copied effect is scaled (DLC2 _scale_copied_effect): which shown args change."""
+    chain = set(_script_classes(script_path) if script_path else ['Effect'])
+    keys = {eff.get('key', ''), eff.get('custom_key', '')}
+    info = {}
+    info['spawns'] = 'StructureEffect' in chain or 'PetEffect' in chain  # value = count, entity stats unscaled
+    if info['spawns'] or keys & MUTATION_LISTS['mutation_min_scale']:
+        info['min'] = MUTATION_MIN_EVOLUTION
+    info['unscaled'] = bool(keys & MUTATION_LISTS['mutation_unscaled_keys'])
+    info['explode'] = 'ItemExplodingEffect' in chain
+    info['explode_dmg'] = info['explode'] and bool(keys & MUTATION_LISTS['mutation_scaled_explosion_damage_keys'])
+    return info
 
 # Sign constants (from Effect.Sign enum)
 SIGN_POSITIVE = 0
@@ -3588,6 +3610,31 @@ def build_sets_data():
 # Collectors
 # ====================================================================
 
+def _mutation_scaled_args(eff, mi):
+    """[[arg index, mode]] of shown args that _scale_copied_effect changes. 'c' = ceil(|v|*s),
+    'f' = v*s (explosion chance), 'p' = ceil(|v|*100*s)/100. Args are matched by origin: `value`, or the explosion chance
+    (the arg curse caps with max_val) / damage."""
+    if mi.get('unscaled') or mi.get('spawns'):
+        return []
+    args = (eff.get('text') or {}).get('args') or []
+    value = abs(eff.get('value', 0) or 0)
+    out = []
+    for i, a in enumerate(args):
+        if not isinstance(a, dict) or not isinstance(a.get('value'), (int, float)):
+            continue
+        if a.get('decimalPlaces') is not None:  # shown as value/100 (bonus_crit_damage)
+            if value and round(abs(a['value']) * 100) == value:
+                out.append([i, 'p'])
+        elif mi.get('explode'):
+            if a.get('max_val') is not None:
+                out.append([i, 'f'])
+            elif mi.get('explode_dmg'):
+                out.append([i, 'c'])
+        elif value and abs(a['value']) == value:
+            out.append([i, 'c'])
+    return out
+
+
 def get_effects(parsed, parent_id='', is_weapon=False):
     ext = parsed['ext_resources']
     data = parsed['data']
@@ -3616,8 +3663,27 @@ def get_effects(parsed, parent_id='', is_weapon=False):
                         if mut == 'neg' and (parent_id.startswith('character_') or parent_id in ('item_tumor', 'item_axolotl')
                                              or 'item_builder_turret' in parent_id or 'evolved_leap' in parent_id):
                             mut = 'no_remove'
-                        if mut in ('no_copy', 'no_remove') and not is_weapon and eff_data.get('key') != 'stat_evolution':  # evolution = mutation counter, not a downside
-                            eff_data['mut'] = mut
+                        mi = eff_data.pop('_mut_info', None)
+                        # curse-added lines (Sifd's dodge, extra armor...) are plain Effects in item.effects,
+                        # so mutation can copy them like any other effect
+                        for x in ([] if is_weapon else text_dict.get('extra_effects', [])):
+                            xm = mutation_copyable(x, None, None) if x.get('key') != '__text__' else False  # keyless tooltip line
+                            if xm is True:
+                                if _mutation_scaled_args(x, {}):
+                                    x['mut_args'] = _mutation_scaled_args(x, {})
+                            else:
+                                x['mut'] = 'no_copy' if xm is False else ('remove' if xm == 'neg' else xm)
+                        if not is_weapon and eff_data.get('key') != 'stat_evolution':  # evolution = mutation counter, not a downside
+                            if mut in ('no_copy', 'no_remove'):
+                                eff_data['mut'] = mut
+                            elif mut == 'neg':
+                                eff_data['mut'] = 'remove'
+                            elif mi:
+                                if mi.get('min'):
+                                    eff_data['mut_min'] = mi['min']
+                                ma = _mutation_scaled_args(eff_data, mi)
+                                if ma:
+                                    eff_data['mut_args'] = ma
                         # Add stat icon prefix
                         eff_key = eff_data.get('key', '')
                         if eff_key.startswith('stat_') or eff_key in ('xp_gain', 'explosion_size', 'explosion_damage'):

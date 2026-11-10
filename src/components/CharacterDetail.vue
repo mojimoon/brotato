@@ -6,6 +6,7 @@
       </template>
     </DetailHeader>
 
+    <MutationSection />
     <EffectsList />
     <RelatedSection :entry="selectedItem" />
 
@@ -26,6 +27,7 @@ import { computed } from 'vue'
 import DetailHeader from './DetailHeader.vue'
 import TagBadge from './TagBadge.vue'
 import EffectsList from './EffectsList.vue'
+import MutationSection from './MutationSection.vue'
 import RelatedSection from './RelatedSection.vue'
 import {
   selectedItem, S, itemName, tierColor, tierBgColor, itemSetName,

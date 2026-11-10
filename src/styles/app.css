@@ -230,6 +230,12 @@
 .curse-slider.meca-slider .el-slider__button { border-color: #1f9fd1; }
 .curse-slider.meca-slider .el-slider__stop { background-color: var(--text-faint); }
 .meca-section .curse-row { padding-bottom: 14px; }  /* room for slider marks */
+.mut-toggle-btn.mut-active { background: #3a3a10 !important; border-color: var(--mut-copy) !important; color: var(--mut-copy) !important; }
+.curse-slider.mut-slider .el-slider__bar { background: var(--mut-copy); }
+.curse-slider.mut-slider .el-slider__button { border-color: var(--mut-copy); }
+.curse-slider.mut-slider .el-slider__stop { background-color: var(--text-faint); }
+.effect-item.mut-copy { box-shadow: inset 3px 0 0 var(--mut-copy); }
+.effect-item.mut-removed .eff-text { text-decoration: line-through; opacity: .6; }
 .el-slider__input .el-input-number { width: 100%; }
 
 /* Frames toggle reuses the price-toggle-btn chrome; only the active color (blue) differs. */

@@ -2,7 +2,7 @@ import { ref, computed, watch, nextTick } from 'vue'
 
 // ---- 数据基准地址 ----
 export const BASE = import.meta.env.MODE === 'production'
-  ? 'https://cdn.jsdmirror.com/gh/mojimoon/brotato@v3.3.0/public/'
+  ? 'https://cdn.jsdmirror.com/gh/mojimoon/brotato@v3.4.0/public/'
   : import.meta.env.BASE_URL
 
 // ---- 共享字符串字典 ----
@@ -63,6 +63,25 @@ export const curseEnabled = ref(false)
 export const curseSlider = ref(110)
 export const mecaEnabled = ref(false)
 export const mecaSlider = ref(1)
+// 异变复制预览（道具 / 角色页；可与诅咒同时开启：被诅咒道具的效果照样可被复制）
+export const mutEnabled = ref(false)
+export const mutSlider = ref(150)
+export const mutActive = computed(() => mutEnabled.value && (activeTab.value === 'items' || activeTab.value === 'characters'))
+// DLC2Data.get_mutation_scale(): 0.1 + 0.9 * sqrt(min(|evolution| / 150, 1))
+export const mutScale = computed(() => 0.1 + 0.9 * Math.sqrt(Math.min(mutSlider.value / 150, 1)))
+// 当前异变值下此效果能否被复制（需异变 >= mut_min 的效果低于阈值时不能）
+export function mutCopyable(eff) {
+  return mutActive.value && !eff.mut && !(eff.mut_min && mutSlider.value < eff.mut_min)
+}
+// DLC2Data._scale_copied_effect：c = ceil(|v|*s)，f = v*s（爆炸几率），p = 显示为 value/100
+function mutScaleArg(v, mode) {
+  const n = parseFloat(v)
+  if (!isFinite(n)) return v
+  const s = mutScale.value, sg = n < 0 ? -1 : 1
+  if (mode === 'f') return Math.round(n * s)
+  if (mode === 'p') return fmtDec(sg * Math.ceil(Math.abs(n) * 100 * s) / 100, 2)
+  return sg * Math.ceil(Math.abs(n) * s)
+}
 export const pendingNavigate = ref(false)
 
 // 武器与道具各自保留独立排序状态，避免切换互相影响。sortBy 镜像当前 tab 的值。
@@ -446,6 +465,7 @@ export function renderEffectText(eff) {
 
   const effectSign = eff.effect_sign ?? 3
   const origValue = eff.value
+  const mutArgs = mutCopyable(eff) ? Object.fromEntries(eff.mut_args || []) : {}
 
   // Apply curse to placeholders
   if (curseArgs.length > 0) {
@@ -456,6 +476,7 @@ export function renderEffectText(eff) {
     } else if (parentArg) {
       linkedParentVal = Math.round(parentArg.value)
     }
+    if (mutArgs[0]) linkedParentVal = mutScaleArg(linkedParentVal, mutArgs[0])
 
     text = text.replace(/\{(\d+)\}/g, (m, idx) => {
       const i = parseInt(idx)
@@ -473,6 +494,7 @@ export function renderEffectText(eff) {
         } else {
           rawValue = arg.decimalPlaces != null ? fmtDec(arg.value, arg.decimalPlaces) : Math.round(arg.value)
         }
+        if (mutArgs[i]) rawValue = mutScaleArg(rawValue, mutArgs[i])
         return String(rawValue)
       }
       return m

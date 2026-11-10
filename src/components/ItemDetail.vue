@@ -15,6 +15,7 @@
     </DetailHeader>
 
     <CurseSection />
+    <MutationSection />
     <PriceSection />
     <EffectsList />
     <RelatedSection :entry="selectedItem" />
@@ -26,6 +27,7 @@ import { computed } from 'vue'
 import DetailHeader from './DetailHeader.vue'
 import TagBadge from './TagBadge.vue'
 import CurseSection from './CurseSection.vue'
+import MutationSection from './MutationSection.vue'
 import PriceSection from './PriceSection.vue'
 import EffectsList from './EffectsList.vue'
 import RelatedSection from './RelatedSection.vue'

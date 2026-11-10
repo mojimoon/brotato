@@ -46,6 +46,8 @@ strings = {
     "badges":             T("Badges", "Badges", "角标", "バッジ", "배지", "角標", "Значки", "Odznaki", "Insignias", "Selos", "Abzeichen", "Rozetler", "Badge"),
     "noMutCopy":          T("Mutation can't copy", "Non copiable par Mutation", "异变无法复制", "変異でコピー不可", "돌연변이 복제 불가", "異變無法複製", "Мутация не копирует", "Mutacja nie kopiuje", "Mutación no copia", "Mutação não copia", "Mutation kopiert nicht", "Mutasyon kopyalayamaz", "Mutazione non copia"),
     "noMutRemove":        T("Mutation can't remove", "Non retirable par Mutation", "异变无法清除", "変異で除去不可", "돌연변이 제거 불가", "異變無法清除", "Мутация не убирает", "Mutacja nie usuwa", "Mutación no elimina", "Mutação não remove", "Mutation entfernt nicht", "Mutasyon kaldıramaz", "Mutazione non rimuove"),
+    "mutation":           T("Mutation", "Mutation", "异变", "変異", "돌연변이", "異變", "Мутация", "Mutacja", "Mutación", "Mutação", "Mutation", "Mutasyon", "Mutazione"),
+    "mutNeed":            T("Needs Mutation ≥ {0}", "Mutation ≥ {0} requise", "需异变≥{0}", "変異≥{0}が必要", "돌연변이 ≥ {0} 필요", "需異變≥{0}", "Нужна Мутация ≥ {0}", "Wymaga Mutacji ≥ {0}", "Requiere Mutación ≥ {0}", "Requer Mutação ≥ {0}", "Benötigt Mutation ≥ {0}", "Mutasyon ≥ {0} gerekir", "Richiede Mutazione ≥ {0}"),
     "on":                 T("On", "Activé", "开", "オン", "켜기", "開", "Вкл", "Wł.", "Activado", "Ligado", "An", "Açık", "Attivo"),
     "off":                T("Off", "Désactivé", "关", "オフ", "끄기", "關", "Выкл", "Wył.", "Desactivado", "Desligado", "Aus", "Kapalı", "Disattivo"),
     # sort options
