@@ -4,7 +4,7 @@
 
 基于反编译游戏数据构建的 Brotato 网页图鉴（13 种语言）。仓库位于反编译游戏根目录下的 `codex/` 子目录中。
 
-**关键前提**：数据管线需要 GDRE 反编译的 **1.2** 游戏工程。`BASE_DIR` 依次取：环境变量 `BROTATO_GAME` → `codex/..`（若其中有 `project.godot`）→ `codex/../1.2`。
+**关键前提**：数据管线需要 GDRE 反编译的 **1.2** 游戏工程。`BASE_DIR` 依次取：环境变量 `BROTATO_GAME` → `codex/..`（若其中有 `project.godot`）→ `codex/../1.2.0.2`（1.2.0.2 beta）。
 
 ## 技术栈
 

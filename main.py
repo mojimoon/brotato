@@ -13,9 +13,9 @@ logging.basicConfig(
 log = logging.getLogger(__name__)
 
 CODEX_DIR = Path(__file__).resolve().parent            # codex/
-# decompiled 1.2 game root: $BROTATO_GAME, else codex/.. if it is a Godot project, else ../1.2
+# decompiled game root: $BROTATO_GAME, else codex/.. if it is a Godot project, else ../1.2.0.2
 BASE_DIR = Path(os.environ.get('BROTATO_GAME') or (
-    CODEX_DIR.parent if (CODEX_DIR.parent / 'project.godot').exists() else CODEX_DIR.parent / '1.2'))
+    CODEX_DIR.parent if (CODEX_DIR.parent / 'project.godot').exists() else CODEX_DIR.parent / '1.2.0.2'))
 OUTPUT_DIR = CODEX_DIR / "public"
 OUTPUT_JSON = OUTPUT_DIR / "data" / "brotato_data.json"
 OUTPUT_ICONS = OUTPUT_DIR / "icons"
@@ -1083,8 +1083,8 @@ def mutation_copyable(eff, script_path, scene_path):
 
 
 # get_mutation_scale() >= 0.7 (MUTATION_ENTITY_MIN_SCALE / mutation_min_scale):
-# 0.1 + 0.9 * sqrt(E / 150) >= 0.7  <=>  E >= 66.7
-MUTATION_MIN_EVOLUTION = 67
+# 0.1 + 0.9 * (E / 100) ** 0.442 >= 0.7  <=>  E >= 39.98 (1.2.0.2; was sqrt(E / 150), 67)
+MUTATION_MIN_EVOLUTION = 40
 
 
 def mutation_copy_info(eff, script_path):
@@ -1345,6 +1345,8 @@ def _build_curse_types(eff, args, arg_signs, parent_id='', is_weapon=False):
 
     # 12. candy_bag extra_elite_next_wave_chance: none
     if parent_id == 'item_candy_bag' and key == 'extra_elite_next_wave_chance':
+        return curse
+    if key == 'weapon_slot':                         # value = effect.value (cybernetic arm)
         return curse
 
     # 13. hp_start_next_wave: fixed -100

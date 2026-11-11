@@ -3,7 +3,7 @@
     <h3 class="section-title">{{ S.effects }}</h3>
     <div class="effects-list">
       <template v-for="(eff, idx) in currentEffects" :key="idx">
-        <div class="effect-item" :class="{ 'mut-copy': mutCopyable(eff), 'mut-removed': mutActive && eff.mut === 'remove' }">
+        <div class="effect-item" :class="{ 'mut-copy': mutCopyable(eff), 'mut-removed': mutActive && !curseEnabled && eff.mut === 'remove' }">
           <span class="eff-prefix" v-html="renderEffectPrefix(eff)"></span>
           <span class="eff-text" v-html="renderEffectText(eff)"></span>
           <span v-if="eff.mut === 'no_copy' || eff.mut === 'no_remove'" class="no-mut-copy">{{ eff.mut === 'no_remove' ? S.noMutRemove : S.noMutCopy }}</span>

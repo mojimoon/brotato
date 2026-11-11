@@ -2,7 +2,7 @@ import { ref, computed, watch, nextTick } from 'vue'
 
 // ---- 数据基准地址 ----
 export const BASE = import.meta.env.MODE === 'production'
-  ? 'https://cdn.jsdmirror.com/gh/mojimoon/brotato@v3.4.0/public/'
+  ? 'https://cdn.jsdmirror.com/gh/mojimoon/brotato@v3.5.0/public/'
   : import.meta.env.BASE_URL
 
 // ---- 共享字符串字典 ----
@@ -65,10 +65,10 @@ export const mecaEnabled = ref(false)
 export const mecaSlider = ref(1)
 // 异变复制预览（道具 / 角色页；可与诅咒同时开启：被诅咒道具的效果照样可被复制）
 export const mutEnabled = ref(false)
-export const mutSlider = ref(150)
+export const mutSlider = ref(100)
 export const mutActive = computed(() => mutEnabled.value && (activeTab.value === 'items' || activeTab.value === 'characters'))
-// DLC2Data.get_mutation_scale(): 0.1 + 0.9 * sqrt(min(|evolution| / 150, 1))
-export const mutScale = computed(() => 0.1 + 0.9 * Math.sqrt(Math.min(mutSlider.value / 150, 1)))
+// DLC2Data.get_mutation_scale() (1.2.0.2): 0.1 + 0.9 * min(|evolution| / 100, 1) ^ 0.442
+export const mutScale = computed(() => 0.1 + 0.9 * Math.pow(Math.min(mutSlider.value / 100, 1), 0.442))
 // 当前异变值下此效果能否被复制（需异变 >= mut_min 的效果低于阈值时不能）
 export function mutCopyable(eff) {
   return mutActive.value && !eff.mut && !(eff.mut_min && mutSlider.value < eff.mut_min)
