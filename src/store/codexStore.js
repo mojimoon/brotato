@@ -73,12 +73,12 @@ export const mutScale = computed(() => 0.1 + 0.9 * Math.pow(Math.min(mutSlider.v
 export function mutCopyable(eff) {
   return mutActive.value && !eff.mut && !(eff.mut_min && mutSlider.value < eff.mut_min)
 }
-// DLC2Data._scale_copied_effect：c = ceil(|v|*s)，f = v*s（爆炸几率），p = 显示为 value/100
+// DLC2Data._scale_copied_effect：c = ceil(|v|*s)，f = max(1, ceil(v*s))（爆炸几率 %），p = 显示为 value/100
 function mutScaleArg(v, mode) {
   const n = parseFloat(v)
   if (!isFinite(n)) return v
   const s = mutScale.value, sg = n < 0 ? -1 : 1
-  if (mode === 'f') return Math.round(n * s)
+  if (mode === 'f') return Math.max(1, Math.ceil(+(n * s).toFixed(3)))
   if (mode === 'p') return fmtDec(sg * Math.ceil(Math.abs(n) * 100 * s) / 100, 2)
   return sg * Math.ceil(Math.abs(n) * s)
 }
@@ -532,7 +532,7 @@ export function renderEffectText(eff) {
 }
 
 // 机械化武器效果中的构筑物（DLC2Data._boost_evolved_structure_effect）：
-// 伤害 ceil(d*(1+m))，冷却 max(2, int(cd/(1+m)))，系数 ×(1+m)，m = 0.05×机械化能量
+// 伤害 ceil(d*(1+m))，冷却 max(2, int(cd/(1+m)))，系数 ×(1+m)，m = 0.03×机械化能量
 function mecaStructureValue(kind, base, mod) {
   if (kind === 'damage') return String(Math.ceil(base * (1 + mod)))
   const cd = Math.max(MECA_MIN_COOLDOWN, Math.trunc(base / (1 + mod)))
@@ -684,22 +684,17 @@ export const activeWeaponData = computed(() => {
 export const activeWeaponTier = computed(() => activeWeaponData.value.tier || 0)
 
 // 机械化（DLC2Data._boost_evolved_weapon_stats，以基础武器属性为准）
-const MECA_DAMAGE_PER_POWER = 0.05
+const MECA_DAMAGE_PER_POWER = 0.03
 const MECA_CRIT_DAMAGE_PER_POWER = 0.02
-const MECA_POWER_PER_PROJECTILE_HIT = 4
 const MECA_MIN_COOLDOWN = 2  // WeaponService.MIN_COOLDOWN
 function mecaStats(stats, power) {
   const dmgMod = MECA_DAMAGE_PER_POWER * power
-  const hits = Math.floor(power / MECA_POWER_PER_PROJECTILE_HIT)
-  const ranged = stats.piercing !== undefined
   return {
     ...stats,
     damage: Math.ceil(stats.damage * (1 + dmgMod)),
     scaling_stats: (stats.scaling_stats || []).map(([k, v]) => [k, v * (1 + dmgMod)]),
     crit_damage: Math.round(stats.crit_damage * (1 + MECA_CRIT_DAMAGE_PER_POWER * power) * 10) / 10,
     lifesteal: stats.lifesteal > 0 ? Math.round(stats.lifesteal * (1 + dmgMod) * 100) / 100 : stats.lifesteal,
-    piercing: ranged && hits > 0 ? stats.piercing + hits : stats.piercing,
-    bounce: ranged && hits > 0 && stats.bounce > 0 ? stats.bounce + hits : stats.bounce,
   }
 }
 

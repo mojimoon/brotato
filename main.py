@@ -3614,7 +3614,7 @@ def build_sets_data():
 
 def _mutation_scaled_args(eff, mi):
     """[[arg index, mode]] of shown args that _scale_copied_effect changes. 'c' = ceil(|v|*s),
-    'f' = v*s (explosion chance), 'p' = ceil(|v|*100*s)/100. Args are matched by origin: `value`, or the explosion chance
+    'f' = max(1, ceil(v*s)) (explosion chance %), 'p' = ceil(|v|*100*s)/100. Args are matched by origin: `value`, or the explosion chance
     (the arg curse caps with max_val) / damage."""
     if mi.get('unscaled') or mi.get('spawns'):
         return []
