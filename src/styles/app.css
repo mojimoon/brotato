@@ -430,3 +430,31 @@ div.no-mut-copy { margin-top: 6px; white-space: normal; }
 /* detail tags: icon overflows vertically via negative margin so the tag keeps its text height */
 .dlc-badge .badge-icon { width: 18px; height: 18px; margin: -4px 3px -4px 0; }
 .eff-text .meca-modified { color: var(--mark-meca); text-shadow: 0 0 6px rgba(63, 202, 252, 0.3); }
+
+/* ---- update history ---- */
+.hist-list { display: flex; flex-direction: column; gap: 8px; }
+.hist-ver { display: flex; gap: 8px; align-items: flex-start; }
+.hist-ver-tag { flex: none; min-width: 92px; padding: 1px 6px; border-radius: 4px; background: var(--bg-tag); color: var(--text-muted); font-size: 11px; font-variant-numeric: tabular-nums; text-align: center; line-height: 18px; }
+.hist-lines { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 3px; font-size: 13px; line-height: 20px; min-width: 0; }
+.hist-lines li { overflow-wrap: anywhere; }
+.hist-old { opacity: 0.55; text-decoration: line-through; }
+.hist-arrow { margin: 0 6px; color: var(--text-faint); }
+.hist-label { color: var(--text-muted); margin-right: 6px; }
+.hist-label::after { content: ':'; }
+.hist-tier { display: inline-block; margin-right: 6px; padding: 0 5px; border-radius: 3px; background: var(--bg-inset); color: var(--text-muted); font-size: 11px; }
+.hist-badge { display: inline-block; margin-right: 6px; padding: 0 5px; border-radius: 3px; font-size: 11px; line-height: 18px; }
+.hist-badge.add { background: color-mix(in srgb, var(--mark-green) 18%, transparent); color: var(--mark-green); }
+.hist-badge.del { background: color-mix(in srgb, var(--mark-red) 18%, transparent); color: var(--mark-red); }
+.hist-plus { color: var(--mark-green); }
+.hist-minus { color: var(--mark-red); }
+.hist-lines .stat-inline-icon { vertical-align: middle; }
+@media (max-width: 600px) {
+  .hist-ver { flex-direction: column; gap: 4px; }
+}
+.res-mech { grid-column: 1 / -1; padding-top: 6px; padding-bottom: 6px; }
+.res-mech .el-collapse { border: none; --el-collapse-header-bg-color: transparent; --el-collapse-content-bg-color: transparent; }
+.res-mech .el-collapse-item__header { border-bottom: none; height: auto; min-height: 48px; }
+.res-mech .el-collapse-item__wrap { border-bottom: none; }
+.res-mech-head { margin-bottom: 0; }
+.res-mech-desc { margin-top: 0; }
+.res-mech .el-collapse-item__content { color: var(--text); font-size: inherit; padding-bottom: 12px; }

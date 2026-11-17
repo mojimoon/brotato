@@ -19,6 +19,7 @@
 
     <RelatedSection :entry="selectedItem" :refs="startingRefs" :title="S.startingWeapons" />
     <RelatedSection :entry="selectedItem" :refs="bannedRefs" :title="S.bannedItems" />
+    <HistorySection :entry-id="selectedItem.id" />
   </div>
 </template>
 
@@ -27,6 +28,7 @@ import { computed } from 'vue'
 import DetailHeader from './DetailHeader.vue'
 import TagBadge from './TagBadge.vue'
 import EffectsList from './EffectsList.vue'
+import HistorySection from './HistorySection.vue'
 import MutationSection from './MutationSection.vue'
 import RelatedSection from './RelatedSection.vue'
 import {

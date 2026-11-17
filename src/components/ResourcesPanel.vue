@@ -92,14 +92,32 @@
           </div>
         </section>
       </div>
+      <!-- Mechanics update history (shop, bans, mutation, mechanization) -->
+      <section v-if="mechHistory.length" class="res-section res-mech">
+        <el-collapse v-model="mechOpen">
+          <el-collapse-item name="mech">
+            <template #title>
+              <div class="res-section-head res-mech-head">
+                <el-icon class="res-section-icon"><Clock /></el-icon>
+                <span class="res-section-title">{{ S.mechHistory }}</span>
+              </div>
+            </template>
+            <p class="res-about-text res-mech-desc">{{ S.mechHistoryDesc }}</p>
+            <HistoryList :list="mechHistory" />
+          </el-collapse-item>
+        </el-collapse>
+      </section>
     </div>
   </div>
 </template>
 
 <script setup>
-import { markRaw, computed } from 'vue'
-import { InfoFilled, Star, Files, ChatDotRound, OfficeBuilding, TopRight } from '@element-plus/icons-vue'
-import { S, rawData } from '../store/codexStore'
+import { markRaw, computed, ref } from 'vue'
+import { InfoFilled, Star, Files, ChatDotRound, OfficeBuilding, TopRight, Clock } from '@element-plus/icons-vue'
+import { S, rawData, mechHistory } from '../store/codexStore'
+import HistoryList from './HistoryList.vue'
+
+const mechOpen = ref([])
 import BrandIcon from './BrandIcon.vue'
 
 const githubUrl = 'https://github.com/mojimoon/brotato'

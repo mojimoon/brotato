@@ -1,4 +1,5 @@
 import os
+from update_history import build_history, prune_lang
 import re
 import json
 import logging
@@ -4122,6 +4123,8 @@ def prune_data_for_lang(data, L, ui_strings):
         'characters': [_prune_entry(c, L) for c in data['characters']],
         'translations': {k: (v.get(L) or v.get('en') or k) for k, v in data['translations'].items()},
         'sets': _prune_sets(data['sets'], L),
+        'history': prune_lang(data['history'], L),
+        'mech_history': prune_lang(data['mech_history'], L),
         'ui': ui,
     }
 
@@ -4206,6 +4209,7 @@ def main():
         }
     }
     
+    data['history'], data['mech_history'] = build_history(data, tr, render_effect_text)
     data = clean_arrays_for_json(data)
 
     ui_strings = load_ui_strings()

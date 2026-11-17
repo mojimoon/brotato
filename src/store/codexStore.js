@@ -556,6 +556,40 @@ function renderMecaEffectText(meca, template) {
   return renderTags(text, () => (meca.scaling ? 1 + mod : 1), meca.scaling)
 }
 
+// 更新历史（main.py ← update_history.py）：条目 id / 武器族 id → [{v, lines}]
+export const historyFor = id => (rawData.value.history || {})[id] || []
+export const mechHistory = computed(() => rawData.value.mech_history || [])
+
+export function historyLineHtml(line) {
+  const R = t => renderTags(t || '', () => 1)
+  const s = S.value
+  const old = t => `<span class="hist-old">${R(t)}</span>`
+  const arrow = '<span class="hist-arrow">→</span>'
+  const names = (list, cls, sign) => (list || []).map(n => `<span class="${cls}">${sign}${n}</span>`).join(sign ? ' ' : ', ')
+  const badge = (cls, t) => `<span class="hist-badge ${cls}">${t}</span>`
+  let h
+  switch (line.k) {
+    case 'chg': h = old(line.from) + arrow + R(line.to); break
+    case 'add': h = badge('add', s.histAdded) + R(line.text); break
+    case 'del': h = badge('del', s.histRemoved) + old(line.text); break
+    case 'stat': {
+      const label = line.label_text ? R(line.label_text) : (line.label ? s[line.label] : '')
+      h = (label ? `<span class="hist-label">${label}</span>` : '') + old(line.from) + arrow + R(line.to)
+      break
+    }
+    case 'start':
+      h = `<span class="hist-label">${s.startingWeapons}</span>` + [names(line.add, 'hist-plus', '+'), names(line.del, 'hist-minus', '−')].filter(Boolean).join(' ')
+      break
+    case 'ban': h = `<span class="hist-label">${s.histBanned}</span>` + names(line.add, '', ''); break
+    case 'no_upgrade': h = `<span class="hist-label">${s.histNoUpgrade}</span>${line.stat}`; break
+    case 'start_for': h = `<span class="hist-label">${s.histStartFor}</span>` + names(line.names, '', ''); break
+    case 'tier_del': h = `<span class="hist-label">${s.histTierRemoved}</span>${line.list}`; break
+    case 'new': h = badge('add', s.histNew); break
+    default: h = R(line.text)
+  }
+  return line.tiers ? `<span class="hist-tier">${line.tiers}</span>${h}` : h
+}
+
 // <scaling> 与 <icon> 标签；mult(fixed) 给出系数倍率
 function renderTags(text, mult, mecaMark = false) {
   // Scaling tag: <scaling type="key" value="0.6" /> (may be inside color span)

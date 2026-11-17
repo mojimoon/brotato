@@ -80,6 +80,13 @@ public/data/brotato_data.<lang>.json ×13 + languages.json + public/icons/
 - 输出时 `separators=(',', ':')` 生成紧凑 JSON
 - 无法渲染的效果写入 `public/data/unrenderable_effects.md`
 
+### update_history.py（更新历史）
+
+- 1.2.0.0 起的平衡性更新：`ENTRY_HISTORY`（武器 / 道具 / 角色详情页底部，武器按 family id）+ `MECH_HISTORY`（资源页「机制更新历史」，可折叠）。来源是官方更新日志（`../other_mods/update_log.txt`），与游戏文件不符时以文件为准；敌人改动、bug 修复不收录；1.2.0.2 的两个 beta 合并
+- 操作：`snap`（对比本仓库 git tag 的数据快照，`cur` = 当前构建；效果文本数字不变的视为改写，忽略）、`eff`（当前效果 + 旧值覆盖重新渲染）、`add_eff` / `del_eff` / `start` / `ban` / `no_upgrade` / `start_for` / `new` / `note`
+- 自由文本 `N(...)` 必须写满 13 种语言；`{@KEY}` 替换为游戏翻译（物品 / 角色名等）
+- 新版本：给上一版本的数据打 tag 后在 `SNAP_*` 中引用；前端渲染在 `historyLineHtml()`，组件 `HistorySection` / `HistoryList`
+
 ### build_ui_strings.py
 
 - 所有前端 UI 文案（tab、筛选、资源页 sections、标签翻译等）在此用 `T(...)` 按 `LANGS` 顺序写 13 个值，生成 `ui_strings.json`

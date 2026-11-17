@@ -28,6 +28,7 @@
     <AttackSpeedCalculator />
     <PriceSection />
     <EffectsList />
+    <HistorySection :entry-id="selectedItem.id" />
   </div>
 </template>
 
@@ -41,6 +42,7 @@ import MecaSection from './MecaSection.vue'
 import AttackSpeedCalculator from './AttackSpeedCalculator.vue'
 import PriceSection from './PriceSection.vue'
 import EffectsList from './EffectsList.vue'
+import HistorySection from './HistorySection.vue'
 import {
   selectedItem, S, itemName, activeWeaponTier, activeWeaponData, tierSuffix, tierColor, tierBgColor,
   setTr, getSetBonuses, setBonusText, itemSetName,

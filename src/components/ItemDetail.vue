@@ -19,6 +19,7 @@
     <PriceSection />
     <EffectsList />
     <RelatedSection :entry="selectedItem" />
+    <HistorySection :entry-id="selectedItem.id" />
   </div>
 </template>
 
@@ -31,6 +32,7 @@ import MutationSection from './MutationSection.vue'
 import PriceSection from './PriceSection.vue'
 import EffectsList from './EffectsList.vue'
 import RelatedSection from './RelatedSection.vue'
+import HistorySection from './HistorySection.vue'
 import {
   selectedItem, S, itemName, isUniqueItem, isLimitedItem, sortedItemTags,
   tierColor, tierBgColor, itemSetName, evolutionTags,
