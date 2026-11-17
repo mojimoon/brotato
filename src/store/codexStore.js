@@ -2,7 +2,7 @@ import { ref, computed, watch, nextTick } from 'vue'
 
 // ---- 数据基准地址 ----
 export const BASE = import.meta.env.MODE === 'production'
-  ? 'https://cdn.jsdmirror.com/gh/mojimoon/brotato@v3.6.0/public/'
+  ? 'https://cdn.jsdmirror.com/gh/mojimoon/brotato@v3.7.0/public/'
   : import.meta.env.BASE_URL
 
 // ---- 共享字符串字典 ----
@@ -67,7 +67,7 @@ export const mecaSlider = ref(1)
 export const mutEnabled = ref(false)
 export const mutSlider = ref(100)
 export const mutActive = computed(() => mutEnabled.value && (activeTab.value === 'items' || activeTab.value === 'characters'))
-// DLC2Data.get_mutation_scale() (1.2.0.2): 0.1 + 0.9 * min(|evolution| / 100, 1) ^ 0.442
+// DLC2Data.get_mutation_scale() (1.2.0.2+): 0.1 + 0.9 * min(|evolution| / 100, 1) ^ 0.442
 export const mutScale = computed(() => 0.1 + 0.9 * Math.pow(Math.min(mutSlider.value / 100, 1), 0.442))
 // 当前异变值下此效果能否被复制（需异变 >= mut_min 的效果低于阈值时不能）
 export function mutCopyable(eff) {
@@ -174,6 +174,11 @@ export function applyCurse(curseArg, effectSign, originalValue) {
 
     case 'none':
       return Math.round(curseArg.value)
+
+    case 'stat_threshold': {  // DLC1Data._get_cursed_stat_threshold (1.2.0.4): modifier 0.1~1.1 → ×0.8~0.6
+      const progress = Math.min(1, Math.max(0, (cv - 0.1) / 1.0))
+      return Math.max(1, Math.round(absV * (0.8 + (0.6 - 0.8) * progress)))
+    }
 
     case 'threshold':  // e.g. curse extra armor: 2, or 3 when the modifier >= 0.5
       return cv >= curseArg.at ? curseArg.hi : curseArg.lo

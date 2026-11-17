@@ -13,9 +13,9 @@ logging.basicConfig(
 log = logging.getLogger(__name__)
 
 CODEX_DIR = Path(__file__).resolve().parent            # codex/
-# decompiled game root: $BROTATO_GAME, else codex/.. if it is a Godot project, else ../1.2.0.2
+# decompiled game root: $BROTATO_GAME, else codex/.. if it is a Godot project, else ../1.2.0.4
 BASE_DIR = Path(os.environ.get('BROTATO_GAME') or (
-    CODEX_DIR.parent if (CODEX_DIR.parent / 'project.godot').exists() else CODEX_DIR.parent / '1.2.0.2'))
+    CODEX_DIR.parent if (CODEX_DIR.parent / 'project.godot').exists() else CODEX_DIR.parent / '1.2.0.4'))
 OUTPUT_DIR = CODEX_DIR / "public"
 OUTPUT_JSON = OUTPUT_DIR / "data" / "brotato_data.json"
 OUTPUT_ICONS = OUTPUT_DIR / "icons"
@@ -1201,8 +1201,10 @@ _CURSE_NO_VISIBLE_CHANGE = {
 def scaling_cursed(eff):
     """Does the game boost this effect's scaling stats when cursed? (curse_item)"""
     script = eff.get('script', '')
-    if script in _CURSE_NO_VISIBLE_CHANGE or script == 'carbon_bow_stat_effect':
+    if script in _CURSE_NO_VISIBLE_CHANGE:
         return False
+    if script == 'carbon_bow_stat_effect':   # 1.2.0.4: only the landmine's stats are boosted
+        return bool(eff.get('structure_effect', {}).get('structure_stats'))
     if eff.get('key') in ('effect_burning', 'burn_chance', 'effect_burn_chance'):
         return False   # BurningEffect / BurnChanceEffect: only damage & duration
     if script in ('structure_effect', 'turret_effect') and eff.get('extra', {}).get('spawn_cooldown', 0) > 0:
@@ -1260,11 +1262,17 @@ def _build_curse_types(eff, args, arg_signs, parent_id='', is_weapon=False):
     if script in ('weapon_timed_slow_on_hit_effect',):
         c(0, type='positive')
         return curse
-    if script == 'weapon_damage_multiplier_if_stat_effect':  # stat threshold is `value`
-        c(1, type='positive')
+    if script == 'weapon_damage_multiplier_if_stat_effect':  # 1.2.0.4 _get_cursed_stat_threshold
+        c(1, type='stat_threshold')               # args = [stat name, value]
         return curse
-    if script == 'carbon_bow_stat_effect':           # burning line shows burning_data (unchanged)
-        if not eff.get('burning_data'):
+    if script == 'carbon_bow_stat_effect':           # 1.2.0.4: burning_data / landmine damage boosted too
+        if eff.get('burning_data'):                  # [duration, damage, scaling]
+            c(0, type='positive')
+            c(1, type='positive')
+        elif eff.get('structure_effect', {}).get('structure_stats'):  # [value, damage, scaling]
+            c(0, type='positive')
+            c(1, type='positive')
+        else:
             c(0, type='positive')
         return curse
     if script == 'slow_time_when_below_hp_effect':   # duration_secs = ceil(d * (1+m))
@@ -2890,7 +2898,7 @@ def render_effect_text(eff, lang, parent_id='', is_weapon=False):
                 'EFFECT_TEMP_STATS_PER_INTERVAL': extra.get('interval', 5),
                 'EFFECT_DECAYING_STAT_ON_CONSUMABLE': extra.get('value2', extra.get('duration_secs', 2)),
                 'EFFECT_DECAYING_STAT_ON_HIT': extra.get('value2', extra.get('duration_secs', 0)),
-                'EFFECT_GAIN_STAT_WHEN_ATTACK_KILLED_ENEMIES': extra.get('stat_nb', extra.get('nb_stat_scaled', 2)),
+                'EFFECT_GAIN_STAT_WHEN_ATTACK_KILLED_ENEMIES': extra.get('value2', 5),  # DoubleValueEffect: value2 = kills
                 'EFFECT_CONSUMABLE_STAT_WHILE_MAX_LIMITED': extra.get('value2', extra.get('max_stacks', 3)),
             }
             v = val_map.get(tk_upper, 0)
