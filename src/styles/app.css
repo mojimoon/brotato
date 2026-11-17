@@ -434,7 +434,7 @@ div.no-mut-copy { margin-top: 6px; white-space: normal; }
 /* ---- update history ---- */
 .hist-list { display: flex; flex-direction: column; gap: 8px; }
 .hist-ver { display: flex; gap: 8px; align-items: flex-start; }
-.hist-ver-tag { flex: none; min-width: 92px; padding: 1px 6px; border-radius: 4px; background: var(--bg-tag); color: var(--text-muted); font-size: 11px; font-variant-numeric: tabular-nums; text-align: center; line-height: 18px; }
+.hist-ver-tag { flex: none; min-width: 46px; padding: 1px 6px; border-radius: 4px; background: var(--bg-tag); color: var(--text-muted); font-size: 11px; font-variant-numeric: tabular-nums; text-align: center; line-height: 18px; }
 .hist-lines { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 3px; font-size: 13px; line-height: 20px; min-width: 0; }
 .hist-lines li { overflow-wrap: anywhere; }
 .hist-old { opacity: 0.55; text-decoration: line-through; }

@@ -96,8 +96,8 @@ ENTRY_HISTORY = [
     # ---- 1.2.0.3 ----
     ('1.2.0.3', 'character_caveman', [('start', [], ['weapon_boomerang_1'])]),
 
-    # ---- 1.2.0.4-beta0 ----
-    ('1.2.0.4-beta0', 'weapon_carbon_bow', [
+    # ---- 1.2.0.4 ----
+    ('1.2.0.4', 'weapon_carbon_bow', [
         ('snap', SNAP_1202, 'cur'),
         ('start_for', ['character_engineer', 'character_well_rounded']),
         ('note', N(
@@ -116,12 +116,12 @@ ENTRY_HISTORY = [
             it='Quando maledetto, ora aumentano anche i danni da ustione e delle mine',
         )),
     ]),
-    ('1.2.0.4-beta0', 'weapon_boomerang', [
+    ('1.2.0.4', 'weapon_boomerang', [
         ('snap', SNAP_1202, 'cur'),
         ('start_for', ['character_wildling']),
     ]),
-    ('1.2.0.4-beta0', 'weapon_tranq_rifle', [('snap', SNAP_1202, 'cur')]),
-    ('1.2.0.4-beta0', 'weapon_molotov', [
+    ('1.2.0.4', 'weapon_tranq_rifle', [('snap', SNAP_1202, 'cur')]),
+    ('1.2.0.4', 'weapon_molotov', [
         ('snap', SNAP_1202, 'cur'),
         ('note', N(
             en='Fire pool size doubled at every tier',
@@ -154,7 +154,7 @@ ENTRY_HISTORY = [
             it='Con la perforazione, ogni nemico attraversato dal proiettile lascia una pozza di fuoco',
         )),
     ]),
-    ('1.2.0.4-beta0', 'weapon_sticky_grenade', [
+    ('1.2.0.4', 'weapon_sticky_grenade', [
         ('snap', SNAP_1202, 'cur'),
         ('note', N(
             en='With piercing, the grenade sticks to every enemy it passes through and keeps flying',
@@ -172,7 +172,7 @@ ENTRY_HISTORY = [
             it='Con la perforazione, la granata si attacca a ogni nemico attraversato e prosegue',
         )),
     ]),
-    ('1.2.0.4-beta0', 'weapon_flail', [
+    ('1.2.0.4', 'weapon_flail', [
         ('snap', SNAP_1202, 'cur'),
         ('note', N(
             en='Larger hitbox (taller), and the guaranteed-crit zone at the tip is 20% bigger',
@@ -190,11 +190,11 @@ ENTRY_HISTORY = [
             it='Area di colpo più alta e la zona di critico garantito sulla punta è più grande del 20%',
         )),
     ]),
-    ('1.2.0.4-beta0', 'item_chimera_cells', [('snap', SNAP_1202, 'cur')]),
-    ('1.2.0.4-beta0', 'character_engineer', [('start', ['weapon_carbon_bow_1'], [])]),
-    ('1.2.0.4-beta0', 'character_well_rounded', [('start', ['weapon_carbon_bow_1'], [])]),
-    ('1.2.0.4-beta0', 'character_wildling', [('start', ['weapon_boomerang_1'], [])]),
-    ('1.2.0.4-beta0', 'character_caveman', [('note', N(
+    ('1.2.0.4', 'item_chimera_cells', [('snap', SNAP_1202, 'cur')]),
+    ('1.2.0.4', 'character_engineer', [('start', ['weapon_carbon_bow_1'], [])]),
+    ('1.2.0.4', 'character_well_rounded', [('start', ['weapon_carbon_bow_1'], [])]),
+    ('1.2.0.4', 'character_wildling', [('start', ['weapon_boomerang_1'], [])]),
+    ('1.2.0.4', 'character_caveman', [('note', N(
         en='As long as at least one weapon is ignited, the fog does not thicken in the next wave',
         fr='Tant qu\'au moins une arme est enflammée, le brouillard ne s\'épaissit pas à la vague suivante',
         zh='只要点燃了至少一把武器，下一波的迷雾就不会继续变浓',
@@ -216,7 +216,7 @@ ENTRY_HISTORY = [
 # Mechanics history (resources page)
 # ---------------------------------------------------------------------------
 MECH_HISTORY = [
-    ('1.2.0.4-beta0', [
+    ('1.2.0.4', [
         N(en='{@MECA_PARTS_CONSUMABLE}: drop chance per mechanized enemy killed 1.5% → 2.5%',
           fr='{@MECA_PARTS_CONSUMABLE} : chance de butin par ennemi mécanisé tué 1,5 % → 2,5 %',
           zh='{@MECA_PARTS_CONSUMABLE}：每击杀一名机械化敌人的掉落几率 1.5% → 2.5%',
