@@ -4,7 +4,7 @@
 
 基于反编译游戏数据构建的 Brotato 网页图鉴（13 种语言）。仓库位于反编译游戏根目录下的 `codex/` 子目录中。
 
-**关键前提**：数据管线需要 GDRE 反编译的 **1.2** 游戏工程。`BASE_DIR` 依次取：环境变量 `BROTATO_GAME` → `codex/..`（若其中有 `project.godot`）→ `codex/../1.2.0.4`（1.2.0.4 beta）。
+**关键前提**：数据管线需要 GDRE 反编译的 **1.2** 游戏工程。`BASE_DIR` 依次取：环境变量 `BROTATO_GAME` → `codex/..`（若其中有 `project.godot`）→ `codex/../1.2.0.4-beta1`（1.2.0.4 beta1）。
 
 ## 技术栈
 
@@ -82,7 +82,7 @@ public/data/brotato_data.<lang>.json ×13 + languages.json + public/icons/
 
 ### update_history.py（更新历史）
 
-- 1.2.0.0 起的平衡性更新：`ENTRY_HISTORY`（武器 / 道具 / 角色详情页底部，武器按 family id）+ `MECH_HISTORY`（资源页「机制更新历史」，可折叠）。来源是官方更新日志（`../other_mods/update_log.txt`），与游戏文件不符时以文件为准；敌人改动、bug 修复不收录；1.2.0.2 的两个 beta 合并
+- 1.2.0.0 起的平衡性更新：`ENTRY_HISTORY`（武器 / 道具 / 角色详情页底部，武器按 family id）+ `MECH_HISTORY`（资源页「机制更新历史」，可折叠）。来源是官方更新日志（`../other_mods/update_log.txt`），与游戏文件不符时以文件为准；敌人改动、bug 修复不收录；1.2.0.2、1.2.0.4 的各 beta 合并为一个版本。整理并勘误后的官方日志在 `docs/official-patch-notes-1.2.md`，新版本先更新该文件
 - 操作：`snap`（对比本仓库 git tag 的数据快照，`cur` = 当前构建；效果文本数字不变的视为改写，忽略）、`eff`（当前效果 + 旧值覆盖重新渲染）、`add_eff` / `del_eff` / `start` / `ban` / `no_upgrade` / `start_for` / `new` / `note`
 - 自由文本 `N(...)` 必须写满 13 种语言；`{@KEY}` 替换为游戏翻译（物品 / 角色名等）
 - 新版本：给上一版本的数据打 tag 后在 `SNAP_*` 中引用；前端渲染在 `historyLineHtml()`，组件 `HistorySection` / `HistoryList`

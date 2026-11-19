@@ -20,8 +20,8 @@ Entry ops (ENTRY_HISTORY):
   ('note', N(...))            free text, 13 languages; {@KEY} -> game translation of KEY
 
 Patch notes: other_mods/update_log.txt. Where the notes and the game files disagree, the files
-win (e.g. Hiker 1.2.0.0: 5 -> 6 materials every 10 steps; Molotov 1.2.0.4 burning per tier).
-1.2.0.2-beta0 / beta1 are merged into 1.2.0.2. Enemy changes and bug fixes are left out.
+win (e.g. Hiker 1.2.0.0: 5 -> 6 materials every 10 steps). Corrected notes: docs/official-patch-notes-1.2.md.
+1.2.0.2-beta0 / beta1 are merged into 1.2.0.2, 1.2.0.4-beta0 / beta1 into 1.2.0.4. Enemy changes and bug fixes are left out.
 """
 import copy
 import difflib
@@ -47,6 +47,37 @@ def N(**kw):
 # ---------------------------------------------------------------------------
 # Per-entry history (newest version first in the output; order here is free)
 # ---------------------------------------------------------------------------
+FARTHEST = N(
+        en='Now targets the farthest enemy in range instead of the closest, so each swing sweeps through more enemies',
+        fr="Vise désormais l'ennemi le plus éloigné à portée au lieu du plus proche, pour balayer plus d'ennemis à chaque coup",
+        zh='现在优先瞄准攻击范围内最远的敌人而非最近的敌人，每次挥击能扫中更多敌人',
+        ja='射程内で最も近い敵ではなく最も遠い敵を狙うようになり、1振りでより多くの敵を巻き込む',
+        ko='이제 사거리 내 가장 가까운 적이 아닌 가장 먼 적을 노려, 한 번 휘두를 때 더 많은 적을 맞힘',
+        zh_TW='現在優先瞄準攻擊範圍內最遠的敵人而非最近的敵人，每次揮擊能掃中更多敵人',
+        ru='Теперь целится в самого дальнего врага в радиусе, а не в ближайшего, поэтому каждый взмах задевает больше врагов',
+        pl='Celuje teraz w najdalszego wroga w zasięgu zamiast najbliższego, więc każdy zamach trafia więcej wrogów',
+        es='Ahora apunta al enemigo más lejano dentro del alcance en vez del más cercano, para barrer más enemigos en cada golpe',
+        pt='Agora mira o inimigo mais distante no alcance em vez do mais próximo, atingindo mais inimigos a cada golpe',
+        de='Zielt jetzt auf den entferntesten statt den nächsten Gegner in Reichweite, damit jeder Schwung mehr Gegner trifft',
+        tr='Artık menzildeki en yakın yerine en uzak düşmanı hedefler; her savuruş daha fazla düşmana çarpar',
+        it='Ora mira al nemico più lontano entro la gittata invece del più vicino, così ogni colpo travolge più nemici',
+    )
+NOMECA = N(
+        en='No longer drops Mecha Fruits and cannot pick up those dropped by other players',
+        fr='Ne fait plus apparaître de fruits méca et ne peut plus ramasser ceux des autres joueurs',
+        zh='不再掉落机械果，也无法拾取其他玩家掉落的机械果',
+        ja='メカの果実を落とさなくなり、他のプレイヤーが落としたものも拾えない',
+        ko='더 이상 기계 열매가 떨어지지 않으며 다른 플레이어가 떨어뜨린 것도 주울 수 없음',
+        zh_TW='不再掉落機械果，也無法拾取其他玩家掉落的機械果',
+        ru='Механические плоды больше не выпадают, и подбирать выпавшие у других игроков нельзя',
+        pl='Nie wypadają już owoce mecha i nie można podnosić tych upuszczonych przez innych graczy',
+        es='Ya no aparecen frutas meca y no puede recoger las que suelten otros jugadores',
+        pt='Não dropa mais frutas meca e não pode pegar as que outros jogadores deixarem',
+        de='Lässt keine Mecha-Früchte mehr fallen und kann die anderer Spieler nicht aufheben',
+        tr='Artık mekanik meyve düşürmez ve diğer oyuncuların düşürdüklerini de alamaz',
+        it='Non fa più cadere frutti meca e non può raccogliere quelli degli altri giocatori',
+    )
+
 ENTRY_HISTORY = [
     # ---- 1.2.0.0 ----
     ('1.2.0.0', 'character_diver', [('eff', 'enemy_health', {'value': 250})]),
@@ -209,6 +240,49 @@ ENTRY_HISTORY = [
         tr='En az bir silah tutuşturulduğu sürece sis bir sonraki dalgada yoğunlaşmaz',
         it='Finché almeno un\'arma è accesa, la nebbia non si infittisce nell\'ondata successiva',
     ))]),
+    # ---- 1.2.0.4-beta1 (merged into 1.2.0.4; the 1.2.0.4 snaps compare 1.2.0.2 with the current build) ----
+    ('1.2.0.4', 'weapon_whip', [('note', FARTHEST)]),
+    ('1.2.0.4', 'weapon_flail', [('note', FARTHEST)]),
+    ('1.2.0.4', 'weapon_crowbar', [('snap', SNAP_1202, 'cur')]),
+    ('1.2.0.4', 'weapon_awl', [('snap', SNAP_1202, 'cur')]),
+    ('1.2.0.4', 'weapon_sticky_grenade', [
+        ('note', N(
+            en='Bounces off the arena edges instead of exploding outside the playable area',
+            fr="Rebondit sur les bords de l'arène au lieu d'exploser hors de la zone jouable",
+            zh='现在会从场地边界反弹，而不是落到可游玩区域外爆炸',
+            ja='プレイエリア外で爆発せず、アリーナの端で跳ね返るようになった',
+            ko='플레이 영역 밖에서 폭발하지 않고 경기장 가장자리에서 튕겨 나옴',
+            zh_TW='現在會從場地邊界反彈，而不是落到可遊玩區域外爆炸',
+            ru='Отскакивает от краёв арены, а не взрывается за пределами игровой зоны',
+            pl='Odbija się od krawędzi areny zamiast wybuchać poza obszarem gry',
+            es='Rebota en los bordes de la arena en lugar de explotar fuera de la zona jugable',
+            pt='Ricocheteia nas bordas da arena em vez de explodir fora da área jogável',
+            de='Prallt am Arenarand ab, statt außerhalb des Spielbereichs zu explodieren',
+            tr='Oynanabilir alanın dışında patlamak yerine arena kenarlarından seker',
+            it="Rimbalza sui bordi dell'arena invece di esplodere fuori dall'area di gioco",
+        )),
+    ]),
+    ('1.2.0.4', 'item_lost_organ', [('snap', SNAP_1202, 'cur')]),
+    ('1.2.0.4', 'item_sunken_bell', [('snap', SNAP_1202, 'cur')]),
+    ('1.2.0.4', 'character_wounded', [('ban', ['item_magma_boots'])]),
+    ('1.2.0.4', 'character_bull', [('note', NOMECA)]),
+    ('1.2.0.4', 'character_beast_master', [('note', NOMECA)]),
+    ('1.2.0.4', 'character_hiker', [('start', ['weapon_spoon_1'], ['weapon_meat_tenderizer_1'])]),
+    ('1.2.0.4', 'character_one_arm', [('note', N(
+        en='Its weapon class bonus can no longer be copied by mutation',
+        fr="Son bonus de classe d'arme ne peut plus être copié par la mutation",
+        zh='武器类别加成无法再被异变复制',
+        ja='武器種類ボーナスが変異でコピーされなくなった',
+        ko='무기 분류 보너스를 더 이상 돌연변이로 복제할 수 없음',
+        zh_TW='武器類別加成無法再被異變複製',
+        ru='Бонус класса оружия больше нельзя скопировать мутацией',
+        pl='Premii klasy broni nie da się już skopiować mutacją',
+        es='Su bonificación de clase de arma ya no puede copiarse con mutación',
+        pt='Seu bônus de classe de arma não pode mais ser copiado pela mutação',
+        de='Sein Waffenklassenbonus kann nicht mehr per Mutation kopiert werden',
+        tr='Silah sınıfı bonusu artık mutasyonla kopyalanamaz',
+        it="Il suo bonus di classe d'arma non può più essere copiato dalla mutazione",
+    ))]),
 ]
 
 
@@ -217,6 +291,19 @@ ENTRY_HISTORY = [
 # ---------------------------------------------------------------------------
 MECH_HISTORY = [
     ('1.2.0.4', [
+        N(en="Mutation: burn chance effects (e.g. {@ITEM_SCARED_SAUSAGE}) can be copied even when burn chance is already 100%, since each copy still adds damage; the copy's burning damage scales with mutation strength",
+          fr="Mutation : les effets de chance de brûlure (ex. {@ITEM_SCARED_SAUSAGE}) peuvent être copiés même à 100 % de chance de brûlure, car chaque copie ajoute des dégâts ; les dégâts de brûlure copiés suivent la puissance de mutation",
+          zh="异变：燃烧几率效果（如{@ITEM_SCARED_SAUSAGE}）在燃烧几率已达100%时仍可复制，因为每次复制依然会增加伤害；复制的燃烧伤害随异变强度缩放",
+          ja="変異：燃焼確率の効果（{@ITEM_SCARED_SAUSAGE}など）は燃焼確率が100%でもコピーできる（コピーごとにダメージが増えるため）。コピーされた燃焼ダメージは変異の強度に応じて変わる",
+          ko="돌연변이: 화상 확률 효과({@ITEM_SCARED_SAUSAGE} 등)는 화상 확률이 이미 100%여도 복제 가능 (복제할 때마다 대미지가 늘어나므로). 복제된 화상 대미지는 돌연변이 강도에 비례",
+          zh_TW="異變：燃燒機率效果（如{@ITEM_SCARED_SAUSAGE}）在燃燒機率已達100%時仍可複製，因為每次複製依然會增加傷害；複製的燃燒傷害隨異變強度縮放",
+          ru="Мутация: эффекты шанса поджога (напр. {@ITEM_SCARED_SAUSAGE}) копируются даже при 100% шансе поджога, ведь каждая копия добавляет урон; урон горения копии зависит от силы мутации",
+          pl="Mutacja: efekty szansy na podpalenie (np. {@ITEM_SCARED_SAUSAGE}) można kopiować nawet przy 100% szansy, bo każda kopia dodaje obrażenia; obrażenia od podpalenia kopii skalują się z siłą mutacji",
+          es="Mutación: los efectos de probabilidad de quemadura (p. ej. {@ITEM_SCARED_SAUSAGE}) se pueden copiar aunque la probabilidad ya sea del 100%, pues cada copia añade daño; el daño de quemadura copiado escala con la potencia de la mutación",
+          pt="Mutação: efeitos de chance de queimadura (ex.: {@ITEM_SCARED_SAUSAGE}) podem ser copiados mesmo com chance já em 100%, pois cada cópia ainda adiciona dano; o dano de queimadura copiado escala com a força da mutação",
+          de="Mutation: Brandchance-Effekte (z. B. {@ITEM_SCARED_SAUSAGE}) können auch bei 100% Brandchance kopiert werden, da jede Kopie weiteren Schaden bringt; der kopierte Brandschaden skaliert mit der Mutationsstärke",
+          tr="Mutasyon: yanma şansı efektleri (örn. {@ITEM_SCARED_SAUSAGE}) yanma şansı zaten %100 olsa da kopyalanabilir, çünkü her kopya hasar ekler; kopyanın yanma hasarı mutasyon gücüyle ölçeklenir",
+          it="Mutazione: gli effetti di probabilità di ustione (es. {@ITEM_SCARED_SAUSAGE}) si possono copiare anche con probabilità già al 100%, perché ogni copia aggiunge danni; i danni da ustione copiati scalano con la potenza della mutazione"),
         N(en='{@MECA_PARTS_CONSUMABLE}: drop chance per mechanized enemy killed 1.5% → 2.5%',
           fr='{@MECA_PARTS_CONSUMABLE} : chance de butin par ennemi mécanisé tué 1,5 % → 2,5 %',
           zh='{@MECA_PARTS_CONSUMABLE}：每击杀一名机械化敌人的掉落几率 1.5% → 2.5%',
@@ -590,6 +677,7 @@ _PCT = lambda v: _fmt(v * 100) + '%'
 _WEAPON_STATS = [
     ('damage', 'damage', _fmt),
     ('crit_chance', 'crit', _PCT),
+    ('crit_damage', 'crit', lambda v: '×' + _fmt(v, 2)),
     ('cooldown', 'cooldown', lambda v: _fmt(v / 60, 2) + 's'),
     ('knockback', 'knockback', _fmt),
     ('max_range', 'range', _fmt),
@@ -619,25 +707,22 @@ def _snap_weapon(ctx, old_ref, new_ref, fam):
     if removed:
         lines.append({'k': 'tier_del', 'list': ' / '.join(ROMAN[t] for t in removed)})
     common = sorted(set(old_t) & set(new_t))
+    if common:   # weapon classes (all tiers share them)
+        sa, sb = old_t[common[0]].get('sets') or [], new_t[common[0]].get('sets') or []
+        if sa != sb:
+            cls = lambda ks: {L: ', '.join(ctx.tr(k, L) for k in ks) for L in LANGS}
+            lines.append({'k': 'stat', 'label': 'set', 'from': cls(sa), 'to': cls(sb)})
     for key, label, f in _WEAPON_STATS:
         ov = [old_t[t]['stats'].get(key) for t in common]
         nv = [new_t[t]['stats'].get(key) for t in common]
         if ov != nv and None not in ov + nv:
             lines.append({'k': 'stat', 'label': label, 'from': _join([f(v) for v in ov]),
                           'to': _join([f(v) for v in nv])})
-    # scaling stats, per stat
-    stats = []
-    for t in common:
-        for s, _ in old_t[t]['stats'].get('scaling_stats', []) + new_t[t]['stats'].get('scaling_stats', []):
-            if s not in stats:
-                stats.append(s)
-    for s in stats:
-        get = lambda e: dict((k, v) for k, v in e['stats'].get('scaling_stats', [])).get(s, 0)
-        ov, nv = [get(old_t[t]) for t in common], [get(new_t[t]) for t in common]
-        if ov != nv:
-            tag = lambda v: f'<scaling type="{s[5:]}" value="{v}" />'
-            lines.append({'k': 'stat', 'label': '', 'from': _join([tag(v) for v in ov]),
-                          'to': _join([tag(v) for v in nv])})
+    # scaling stats: one line, all stats of a tier together
+    tags = lambda e: ''.join(f'<scaling type="{k[5:]}" value="{v}" />' for k, v in e['stats'].get('scaling_stats', []))
+    ov, nv = [tags(old_t[t]) for t in common], [tags(new_t[t]) for t in common]
+    if ov != nv:
+        lines.append({'k': 'stat', 'label': '', 'from': _join(ov), 'to': _join(nv)})
     # effects, grouped by identical change across tiers
     groups = {}
     for t in common:
@@ -690,6 +775,9 @@ def _entry_lines(ctx, eid, ops):
                 continue
             lines += _diff_effects(ctx.snap_effs(a, cat, eid) or [], ctx.snap_effs(b, cat, eid) or [])
             ea, eb = ctx.snap_entry(a, cat, eid), ctx.snap_entry(b, cat, eid)
+            if ea and eb and ea.get('value') != eb.get('value'):
+                lines.append({'k': 'stat', 'label': 'price', 'from': _fmt(ea.get('value')),
+                              'to': _fmt(eb.get('value'))})
             if ea and eb and ea.get('max_nb') != eb.get('max_nb'):
                 lines.append({'k': 'stat', 'label': 'histMaxNb', 'from': _fmt(ea.get('max_nb')),
                               'to': _fmt(eb.get('max_nb'))})
@@ -741,7 +829,12 @@ def build_history(data, tr, render):
     ctx = _Ctx(data, tr, render)
     hist = {}
     for v, eid, ops in ENTRY_HISTORY:
-        hist.setdefault(eid, []).append({'v': v, 'lines': _entry_lines(ctx, eid, ops)})
+        lst = hist.setdefault(eid, [])
+        same = next((x for x in lst if x['v'] == v), None)
+        if same:
+            same['lines'] += _entry_lines(ctx, eid, ops)
+        else:
+            lst.append({'v': v, 'lines': _entry_lines(ctx, eid, ops)})
     for lst in hist.values():
         lst.sort(key=lambda x: _vkey(x['v']), reverse=True)
     mech = [{'v': v, 'lines': [{'k': 'note', 'text': {L: ctx.subst(n[L], L) for L in LANGS}} for n in notes]}

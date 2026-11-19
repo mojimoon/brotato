@@ -14,9 +14,9 @@ logging.basicConfig(
 log = logging.getLogger(__name__)
 
 CODEX_DIR = Path(__file__).resolve().parent            # codex/
-# decompiled game root: $BROTATO_GAME, else codex/.. if it is a Godot project, else ../1.2.0.4
+# decompiled game root: $BROTATO_GAME, else codex/.. if it is a Godot project, else ../1.2.0.4-beta1
 BASE_DIR = Path(os.environ.get('BROTATO_GAME') or (
-    CODEX_DIR.parent if (CODEX_DIR.parent / 'project.godot').exists() else CODEX_DIR.parent / '1.2.0.4'))
+    CODEX_DIR.parent if (CODEX_DIR.parent / 'project.godot').exists() else CODEX_DIR.parent / '1.2.0.4-beta1'))
 OUTPUT_DIR = CODEX_DIR / "public"
 OUTPUT_JSON = OUTPUT_DIR / "data" / "brotato_data.json"
 OUTPUT_ICONS = OUTPUT_DIR / "icons"
@@ -402,6 +402,8 @@ def parse_effect_file(filepath):
     if isinstance(script, dict) and script.get('_ext') in ext:
         script_path = ext[script['_ext']]['path']
         result['script'] = Path(script_path).stem
+        if result['script'] == 'dart_trap_effect':   # 1.2.0.4-beta1 DartTrapEffect extends StructureEffect (+nb_darts)
+            result['script'] = 'structure_effect'
     scene = data.get('scene')
     scene_path = ext[scene['_ext']]['path'] if isinstance(scene, dict) and scene.get('_ext') in ext else None
     mut = mutation_copyable(result, script_path, scene_path)
@@ -426,7 +428,7 @@ def parse_effect_file(filepath):
                          'for_every_health_percent', 'stat_nb', 'double_chance',
                          # 1.2 / DLC2 effect scripts
                          'duration', 'radius', 'fuse_duration', 'puddle_lifetime',
-                         'hp_threshold', 'bonus_damage_per_fruit']:
+                         'hp_threshold', 'bonus_damage_per_fruit', 'nb_darts']:
         if field_name in data:
             extra_numerics[field_name] = data[field_name]
     if extra_numerics:
@@ -1098,6 +1100,7 @@ def mutation_copy_info(eff, script_path):
         info['min'] = MUTATION_MIN_EVOLUTION
     info['unscaled'] = bool(keys & MUTATION_LISTS['mutation_unscaled_keys'])
     info['explode'] = 'ItemExplodingEffect' in chain
+    info['burn'] = 'BurnChanceEffect' in chain   # 1.2.0.4-beta1: only burning_data.damage scales
     info['explode_dmg'] = info['explode'] and bool(keys & MUTATION_LISTS['mutation_scaled_explosion_damage_keys'])
     return info
 
@@ -2387,7 +2390,8 @@ def _dlc2_effect_args(eff, lang):
     tk = (eff.get('text_key') or '').lower()
     if script == 'structure_effect' and tk == 'effect_dart_trap':
         st = eff.get('structure_stats') or {}
-        return [_g(value), _g(ex.get('spawn_cooldown', 0)), _g(st.get('damage', 0)), sc(st.get('scaling_stats'))]
+        return [_g(value), _g(ex.get('spawn_cooldown', 0)), _g(st.get('damage', 0)), sc(st.get('scaling_stats')),
+                _g(ex.get('nb_darts', 6))]
     if script == 'turret_effect' and tk == 'effect_turret_damage_taken':
         st = eff.get('structure_stats') or {}
         return [_g(st.get('damage', 0)), sc(st.get('scaling_stats')), _g(st.get('nb_projectiles', 1)),
@@ -2421,8 +2425,8 @@ def _dlc2_effect_args(eff, lang):
         return [tr(eff.get('key', '').upper(), lang), _g(value)]
     if eff.get('key') == 'charm_evolved_on_hit':   # DoubleValueEffect
         return [_g(value), tr('CHARM_EVOLVED_ON_HIT', lang), _g(ex.get('value2', 0))]
-    if script == 'delayed_exploding_effect':
-        return [_g(ex.get('fuse_duration', 0.75))]
+    if script == 'delayed_exploding_effect':        # 1.2.0.4-beta1: + explosion size %
+        return [_g(ex.get('fuse_duration', 0.75)), _g(int(round(ex.get('scale', 1.0) * 100)))]
     if script == 'carbon_bow_stat_effect':
         if bd:
             return [_g(bd.get('duration', 0)), _g(bd.get('damage', 0)), sc(bd.get('scaling_stats'))]
@@ -3630,6 +3634,10 @@ def _mutation_scaled_args(eff, mi):
     args = (eff.get('text') or {}).get('args') or []
     value = abs(eff.get('value', 0) or 0)
     out = []
+    if mi.get('burn'):   # shown args are renumbered; the burning damage is the last arg equal to it
+        dmg = (eff.get('burning_data') or {}).get('damage')
+        idx = [i for i, a in enumerate(args) if isinstance(a, dict) and a.get('value') == dmg]
+        return [[idx[-1], 'c']] if dmg and idx else []
     for i, a in enumerate(args):
         if not isinstance(a, dict) or not isinstance(a.get('value'), (int, float)):
             continue
