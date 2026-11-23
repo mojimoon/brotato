@@ -48,20 +48,20 @@ def N(**kw):
 # Per-entry history (newest version first in the output; order here is free)
 # ---------------------------------------------------------------------------
 FARTHEST = N(
-        en='Now targets the farthest enemy in range instead of the closest, so each swing sweeps through more enemies',
-        fr="Vise désormais l'ennemi le plus éloigné à portée au lieu du plus proche, pour balayer plus d'ennemis à chaque coup",
-        zh='现在优先瞄准攻击范围内最远的敌人而非最近的敌人，每次挥击能扫中更多敌人',
-        ja='射程内で最も近い敵ではなく最も遠い敵を狙うようになり、1振りでより多くの敵を巻き込む',
-        ko='이제 사거리 내 가장 가까운 적이 아닌 가장 먼 적을 노려, 한 번 휘두를 때 더 많은 적을 맞힘',
-        zh_TW='現在優先瞄準攻擊範圍內最遠的敵人而非最近的敵人，每次揮擊能掃中更多敵人',
-        ru='Теперь целится в самого дальнего врага в радиусе, а не в ближайшего, поэтому каждый взмах задевает больше врагов',
-        pl='Celuje teraz w najdalszego wroga w zasięgu zamiast najbliższego, więc każdy zamach trafia więcej wrogów',
-        es='Ahora apunta al enemigo más lejano dentro del alcance en vez del más cercano, para barrer más enemigos en cada golpe',
-        pt='Agora mira o inimigo mais distante no alcance em vez do mais próximo, atingindo mais inimigos a cada golpe',
-        de='Zielt jetzt auf den entferntesten statt den nächsten Gegner in Reichweite, damit jeder Schwung mehr Gegner trifft',
-        tr='Artık menzildeki en yakın yerine en uzak düşmanı hedefler; her savuruş daha fazla düşmana çarpar',
-        it='Ora mira al nemico più lontano entro la gittata invece del più vicino, così ogni colpo travolge più nemici',
-    )
+    en='Now targets the farthest enemy in range instead of the closest and keeps tracking it during the swing, so each attack sweeps through more enemies',
+    fr="Vise désormais l'ennemi le plus éloigné à portée au lieu du plus proche et le suit pendant le coup, pour balayer plus d'ennemis à chaque attaque",
+    zh='现在优先瞄准攻击范围内最远的敌人而非最近的敌人，并在挥击过程中持续追踪目标，每次攻击能扫中更多敌人',
+    ja='射程内で最も近い敵ではなく最も遠い敵を狙い、振っている間も追尾するようになり、1回の攻撃でより多くの敵を巻き込む',
+    ko='이제 사거리 내 가장 가까운 적이 아닌 가장 먼 적을 노리고 휘두르는 동안 계속 추적해, 한 번 공격할 때 더 많은 적을 맞힘',
+    zh_TW='現在優先瞄準攻擊範圍內最遠的敵人而非最近的敵人，並在揮擊過程中持續追蹤目標，每次攻擊能掃中更多敵人',
+    ru='Теперь целится в самого дальнего врага в радиусе, а не в ближайшего, и следит за ним во время взмаха, поэтому каждая атака задевает больше врагов',
+    pl='Celuje teraz w najdalszego wroga w zasięgu zamiast najbliższego i śledzi go podczas zamachu, więc każdy atak trafia więcej wrogów',
+    es='Ahora apunta al enemigo más lejano dentro del alcance en vez del más cercano y lo sigue durante el golpe, para barrer más enemigos en cada ataque',
+    pt='Agora mira o inimigo mais distante no alcance em vez do mais próximo e o acompanha durante o golpe, atingindo mais inimigos a cada ataque',
+    de='Zielt jetzt auf den entferntesten statt den nächsten Gegner in Reichweite und verfolgt ihn während des Schwungs, damit jeder Angriff mehr Gegner trifft',
+    tr='Artık menzildeki en yakın yerine en uzak düşmanı hedefler ve savuruş boyunca onu takip eder; her saldırı daha fazla düşmana çarpar',
+    it='Ora mira al nemico più lontano entro la gittata invece del più vicino e lo segue durante il colpo, così ogni attacco travolge più nemici',
+)
 NOMECA = N(
         en='No longer drops Mecha Fruits and cannot pick up those dropped by other players',
         fr='Ne fait plus apparaître de fruits méca et ne peut plus ramasser ceux des autres joueurs',
@@ -127,7 +127,7 @@ ENTRY_HISTORY = [
     # ---- 1.2.0.3 ----
     ('1.2.0.3', 'character_caveman', [('start', [], ['weapon_boomerang_1'])]),
 
-    # ---- 1.2.0.4 ----
+    # ---- 1.2.0.4-beta0 ----
     ('1.2.0.4', 'weapon_carbon_bow', [
         ('snap', SNAP_1202, 'cur'),
         ('start_for', ['character_engineer', 'character_well_rounded']),
@@ -224,7 +224,7 @@ ENTRY_HISTORY = [
     ('1.2.0.4', 'item_chimera_cells', [('snap', SNAP_1202, 'cur')]),
     ('1.2.0.4', 'character_engineer', [('start', ['weapon_carbon_bow_1'], [])]),
     ('1.2.0.4', 'character_well_rounded', [('start', ['weapon_carbon_bow_1'], [])]),
-    ('1.2.0.4', 'character_wildling', [('start', ['weapon_boomerang_1'], [])]),
+    ('1.2.0.4', 'character_wildling', [('start', ['weapon_boomerang_1'], ['weapon_flail_1'])]),
     ('1.2.0.4', 'character_caveman', [('note', N(
         en='As long as at least one weapon is ignited, the fog does not thicken in the next wave',
         fr='Tant qu\'au moins une arme est enflammée, le brouillard ne s\'épaissit pas à la vague suivante',
@@ -240,7 +240,7 @@ ENTRY_HISTORY = [
         tr='En az bir silah tutuşturulduğu sürece sis bir sonraki dalgada yoğunlaşmaz',
         it='Finché almeno un\'arma è accesa, la nebbia non si infittisce nell\'ondata successiva',
     ))]),
-    # ---- 1.2.0.4-beta1 (merged into 1.2.0.4; the 1.2.0.4 snaps compare 1.2.0.2 with the current build) ----
+    # ---- 1.2.0.4-beta1 ----
     ('1.2.0.4', 'weapon_whip', [('note', FARTHEST)]),
     ('1.2.0.4', 'weapon_flail', [('note', FARTHEST)]),
     ('1.2.0.4', 'weapon_crowbar', [('snap', SNAP_1202, 'cur')]),
@@ -283,6 +283,58 @@ ENTRY_HISTORY = [
         tr='Silah sınıfı bonusu artık mutasyonla kopyalanamaz',
         it="Il suo bonus di classe d'arma non può più essere copiato dalla mutazione",
     ))]),
+    # ---- 1.2.0.4 release ----
+    ('1.2.0.4', 'character_druid', [('start', [], ['weapon_meat_tenderizer_1'])]),
+    ('1.2.0.4', 'character_hunter', [('ban', ['item_lost_organ'])]),
+    ('1.2.0.4', 'character_knight', [('ban', ['item_lost_organ'])]),
+    ('1.2.0.4', 'character_sailor', [('ban', ['item_lost_organ'])]),
+    ('1.2.0.4', 'item_dart_trap', [('snap', SNAP_1202, 'cur')]),
+    ('1.2.0.4', 'item_bleeding_turret', [('snap', SNAP_1202, 'cur')]),
+    ('1.2.0.4', 'character_arsonist', [('note', N(
+        en='{@STAT_ELEMENTAL_DAMAGE} and explosive items now appear more often in the shop',
+        fr="Les objets de {@STAT_ELEMENTAL_DAMAGE} et explosifs apparaissent plus souvent en boutique",
+        zh='{@STAT_ELEMENTAL_DAMAGE}类和爆炸类道具会更频繁地出现在商店中',
+        ja='{@STAT_ELEMENTAL_DAMAGE}系と爆発系のアイテムがショップに出やすくなった',
+        ko='{@STAT_ELEMENTAL_DAMAGE} 및 폭발 아이템이 상점에 더 자주 등장',
+        zh_TW='{@STAT_ELEMENTAL_DAMAGE}類和爆炸類道具會更頻繁地出現在商店中',
+        ru='Предметы на {@STAT_ELEMENTAL_DAMAGE} и взрывы чаще появляются в магазине',
+        pl='Przedmioty na {@STAT_ELEMENTAL_DAMAGE} i wybuchowe częściej pojawiają się w sklepie',
+        es='Los objetos de {@STAT_ELEMENTAL_DAMAGE} y explosivos aparecen más a menudo en la tienda',
+        pt='Itens de {@STAT_ELEMENTAL_DAMAGE} e explosivos aparecem com mais frequência na loja',
+        de='Gegenstände für {@STAT_ELEMENTAL_DAMAGE} und Explosionen erscheinen öfter im Shop',
+        tr='{@STAT_ELEMENTAL_DAMAGE} ve patlayıcı eşyalar mağazada daha sık çıkar',
+        it='Gli oggetti di {@STAT_ELEMENTAL_DAMAGE} ed esplosivi compaiono più spesso nel negozio',
+    ))]),
+    ('1.2.0.4', 'item_pyromaniac', [('note', N(
+        en='Burning from pets and turrets now stacks too, just like burning from weapons',
+        fr='La brûlure des familiers et des tourelles se cumule désormais aussi, comme celle des armes',
+        zh='宠物和炮塔造成的燃烧现在也会像武器造成的燃烧一样叠加',
+        ja='ペットとタレットの燃焼も、武器の燃焼と同じように重なるようになった',
+        ko='이제 펫과 포탑의 화상도 무기의 화상처럼 중첩됨',
+        zh_TW='寵物和砲塔造成的燃燒現在也會像武器造成的燃燒一樣疊加',
+        ru='Горение от питомцев и турелей теперь тоже складывается, как от оружия',
+        pl='Podpalenie od zwierzaków i wieżyczek teraz też się kumuluje, tak jak od broni',
+        es='La quemadura de mascotas y torretas ahora también se acumula, igual que la de las armas',
+        pt='A queimadura de mascotes e torretas agora também acumula, como a das armas',
+        de='Brand von Haustieren und Geschützen stapelt sich jetzt ebenfalls, wie der von Waffen',
+        tr='Evcil hayvan ve taretlerin yanması da artık silahlarınki gibi birikir',
+        it="L'ustione di animali e torrette ora si accumula come quella delle armi",
+    ))]),
+    ('1.2.0.4', 'weapon_cestus', [('note', N(
+        en='When cursed, the Knockback needed for double damage now drops to 6–8 instead of rising',
+        fr="Une fois maudit, le Recul requis pour doubler les dégâts baisse désormais à 6–8 au lieu d'augmenter",
+        zh='被诅咒时，触发双倍伤害所需的击退改为降低到 6–8，不再提高',
+        ja='呪われた時、ダメージ2倍に必要なノックバックが上がらず、6～8に下がるようになった',
+        ko='저주받으면 대미지 2배에 필요한 넉백이 오르지 않고 6~8로 낮아짐',
+        zh_TW='被詛咒時，觸發雙倍傷害所需的擊退改為降低到 6–8，不再提高',
+        ru='Под проклятием отбрасывание, нужное для двойного урона, теперь снижается до 6–8, а не растёт',
+        pl='Po przeklęciu odrzut potrzebny do podwójnych obrażeń spada teraz do 6–8 zamiast rosnąć',
+        es='Al estar maldito, el Retroceso necesario para el doble de daño ahora baja a 6–8 en lugar de subir',
+        pt='Quando amaldiçoado, o Repulsão necessário para dano dobrado agora cai para 6–8 em vez de subir',
+        de='Wenn verflucht, sinkt der für doppelten Schaden nötige Rückstoß jetzt auf 6–8, statt zu steigen',
+        tr='Lanetlendiğinde çift hasar için gereken geri itme artık artmak yerine 6–8\'e düşer',
+        it="Quando maledetto, il Contraccolpo necessario per il doppio dei danni ora scende a 6–8 invece di salire",
+    ))]),
 ]
 
 
@@ -291,6 +343,32 @@ ENTRY_HISTORY = [
 # ---------------------------------------------------------------------------
 MECH_HISTORY = [
     ('1.2.0.4', [
+        N(en='Mutation strength curve: 70% at about 58 {@STAT_EVOLUTION} and 100% at 130 (was 40 and 100); pets, turrets and other effects that need 70% strength become copyable from about 58',
+          fr='Courbe de puissance de la mutation : 70 % vers 58 de {@STAT_EVOLUTION} et 100 % à 130 (avant 40 et 100) ; familiers, tourelles et autres effets exigeant 70 % deviennent copiables vers 58',
+          zh='异变强度曲线：约58点{@STAT_EVOLUTION}时达到70%，130点时达到100%（原为40点和100点）；宠物、炮塔等需要70%强度的效果约从58点起可以复制',
+          ja='変異の強度曲線：{@STAT_EVOLUTION}約58で70%、130で100%（以前は40と100）。ペット・タレットなど強度70%が必要な効果は約58からコピー可能',
+          ko='돌연변이 강도 곡선: {@STAT_EVOLUTION} 약 58에서 70%, 130에서 100% (이전 40과 100). 펫, 포탑 등 70% 강도가 필요한 효과는 약 58부터 복제 가능',
+          zh_TW='異變強度曲線：約58點{@STAT_EVOLUTION}時達到70%，130點時達到100%（原為40點和100點）；寵物、砲塔等需要70%強度的效果約從58點起可以複製',
+          ru='Кривая силы мутации: 70% примерно при 58 ед. {@STAT_EVOLUTION} и 100% при 130 (было 40 и 100); питомцы, турели и другие эффекты, требующие 70%, копируются примерно с 58',
+          pl='Krzywa siły mutacji: 70% przy ok. 58 pkt. {@STAT_EVOLUTION} i 100% przy 130 (wcześniej 40 i 100); zwierzaki, wieżyczki i inne efekty wymagające 70% można kopiować od ok. 58',
+          es='Curva de potencia de la mutación: 70% con unos 58 de {@STAT_EVOLUTION} y 100% con 130 (antes 40 y 100); mascotas, torretas y otros efectos que requieren 70% se pueden copiar desde unos 58',
+          pt='Curva de força da mutação: 70% com cerca de 58 de {@STAT_EVOLUTION} e 100% com 130 (antes 40 e 100); mascotes, torretas e outros efeitos que exigem 70% podem ser copiados a partir de cerca de 58',
+          de='Kurve der Mutationsstärke: 70% bei etwa 58 {@STAT_EVOLUTION}, 100% bei 130 (vorher 40 und 100); Haustiere, Geschütze und andere Effekte, die 70% brauchen, sind ab etwa 58 kopierbar',
+          tr='Mutasyon gücü eğrisi: yaklaşık 58 {@STAT_EVOLUTION} ile %70, 130 ile %100 (önceden 40 ve 100); %70 güç gerektiren evcil hayvan, taret ve diğer efektler yaklaşık 58\'den itibaren kopyalanabilir',
+          it='Curva della potenza della mutazione: 70% a circa 58 di {@STAT_EVOLUTION} e 100% a 130 (prima 40 e 100); animali, torrette e altri effetti che richiedono il 70% si possono copiare da circa 58'),
+        N(en='Bosses always evolve when the players\' total {@STAT_EVOLUTION} is above 30 or below −30',
+          fr='Les boss évoluent toujours quand la {@STAT_EVOLUTION} totale des joueurs dépasse 30 ou est inférieure à −30',
+          zh='玩家的{@STAT_EVOLUTION}总和高于30或低于−30时，头目必定进化',
+          ja='プレイヤーの{@STAT_EVOLUTION}合計が30を超えるか−30未満のとき、ボスは必ず進化する',
+          ko='플레이어의 {@STAT_EVOLUTION} 합계가 30 초과 또는 −30 미만이면 보스가 반드시 진화함',
+          zh_TW='玩家的{@STAT_EVOLUTION}總和高於30或低於−30時，頭目必定進化',
+          ru='Боссы всегда эволюционируют, если суммарная {@STAT_EVOLUTION} игроков выше 30 или ниже −30',
+          pl='Bossowie zawsze ewoluują, gdy łączna {@STAT_EVOLUTION} graczy przekracza 30 lub jest poniżej −30',
+          es='Los jefes siempre evolucionan cuando la {@STAT_EVOLUTION} total de los jugadores supera 30 o es inferior a −30',
+          pt='Os chefes sempre evoluem quando a {@STAT_EVOLUTION} total dos jogadores passa de 30 ou fica abaixo de −30',
+          de='Bosse entwickeln sich immer, wenn die gesamte {@STAT_EVOLUTION} der Spieler über 30 oder unter −30 liegt',
+          tr='Oyuncuların toplam {@STAT_EVOLUTION} değeri 30\'un üstünde veya −30\'un altındaysa bosslar her zaman evrimleşir',
+          it="I boss evolvono sempre quando l'{@STAT_EVOLUTION} totale dei giocatori supera 30 o è sotto −30"),
         N(en="Mutation: burn chance effects (e.g. {@ITEM_SCARED_SAUSAGE}) can be copied even when burn chance is already 100%, since each copy still adds damage; the copy's burning damage scales with mutation strength",
           fr="Mutation : les effets de chance de brûlure (ex. {@ITEM_SCARED_SAUSAGE}) peuvent être copiés même à 100 % de chance de brûlure, car chaque copie ajoute des dégâts ; les dégâts de brûlure copiés suivent la puissance de mutation",
           zh="异变：燃烧几率效果（如{@ITEM_SCARED_SAUSAGE}）在燃烧几率已达100%时仍可复制，因为每次复制依然会增加伤害；复制的燃烧伤害随异变强度缩放",
@@ -644,7 +722,12 @@ class _Ctx:
 
 
 def _nums(html):
-    return re.findall(r'\d+(?:\.\d+)?', re.sub(r'<(?!scaling)[^>]+>', '', html or ''))
+    return re.findall(r'\d+(?:\.\d+)?', _cmp_text(html))
+
+
+def _cmp_text(html):
+    """Text for comparison: markup removed except scaling tags, without their curse-only fixed="1"."""
+    return re.sub(r'<(?!scaling)[^>]+>', '', html or '').replace(' fixed="1"', '')
 
 
 def _join(vals):
@@ -654,7 +737,7 @@ def _join(vals):
 
 def _diff_effects(old, new):
     """Align two effect-text lists ([{lang: text}]) -> [line]."""
-    key = lambda d: _plain(d['en'])
+    key = lambda d: _cmp_text(d['en'])   # keeps scaling values
     sm = difflib.SequenceMatcher(a=[key(x) for x in old], b=[key(x) for x in new], autojunk=False)
     lines = []
     for op, i1, i2, j1, j2 in sm.get_opcodes():

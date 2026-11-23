@@ -1,6 +1,7 @@
 import os
 from update_history import build_history, prune_lang
 import re
+import math
 import json
 import logging
 import shutil
@@ -14,9 +15,9 @@ logging.basicConfig(
 log = logging.getLogger(__name__)
 
 CODEX_DIR = Path(__file__).resolve().parent            # codex/
-# decompiled game root: $BROTATO_GAME, else codex/.. if it is a Godot project, else ../1.2.0.4-beta1
+# decompiled game root: $BROTATO_GAME, else codex/.. if it is a Godot project, else ../1.2.0.4
 BASE_DIR = Path(os.environ.get('BROTATO_GAME') or (
-    CODEX_DIR.parent if (CODEX_DIR.parent / 'project.godot').exists() else CODEX_DIR.parent / '1.2.0.4-beta1'))
+    CODEX_DIR.parent if (CODEX_DIR.parent / 'project.godot').exists() else CODEX_DIR.parent / '1.2.0.4'))
 OUTPUT_DIR = CODEX_DIR / "public"
 OUTPUT_JSON = OUTPUT_DIR / "data" / "brotato_data.json"
 OUTPUT_ICONS = OUTPUT_DIR / "icons"
@@ -1086,8 +1087,21 @@ def mutation_copyable(eff, script_path, scene_path):
 
 
 # get_mutation_scale() >= 0.7 (MUTATION_ENTITY_MIN_SCALE / mutation_min_scale):
-# 0.1 + 0.9 * (E / 100) ** 0.442 >= 0.7  <=>  E >= 39.98 (1.2.0.2; was sqrt(E / 150), 67)
-MUTATION_MIN_EVOLUTION = 40
+def _load_mutation_curve():
+    """DLC2Data.get_mutation_scale(): BASE + (1 - BASE) * min(|E| / MAX, 1) ^ EXP; copying entities
+    needs scale >= MUTATION_ENTITY_MIN_SCALE. 1.2.0.4: 0.1 / 130 / 0.5 / 0.7 -> E >= 58
+    (1.2.0.2: 100 / 0.442 -> 40; before: 150 / 0.5 -> 67)."""
+    src = (BASE_DIR / 'dlcs' / 'dlc_2' / 'dlc_2_data.gd').read_text(encoding='utf-8')
+    c = {k: float(re.search(r'const ' + k + r'\s*:?\s*=\s*([\d.]+)', src).group(1))
+         for k in ('MUTATION_SCALE_BASE', 'MUTATION_SCALE_MAX_EVOLUTION', 'MUTATION_SCALE_EXPONENT', 'MUTATION_ENTITY_MIN_SCALE')}
+    base, mx, ex, mn = (c['MUTATION_SCALE_BASE'], c['MUTATION_SCALE_MAX_EVOLUTION'],
+                        c['MUTATION_SCALE_EXPONENT'], c['MUTATION_ENTITY_MIN_SCALE'])
+    min_evo = math.ceil(mx * ((mn - base) / (1 - base)) ** (1 / ex) - 1e-9)
+    return {'base': base, 'max': mx, 'exp': ex, 'min_scale': mn, 'min_evo': min_evo}
+
+
+MUTATION_CURVE = _load_mutation_curve()
+MUTATION_MIN_EVOLUTION = MUTATION_CURVE['min_evo']
 
 
 def mutation_copy_info(eff, script_path):
@@ -4211,6 +4225,7 @@ def main():
             'character_count': len(all_characters),
             'item_sets': [sid for sid, _ in ITEM_SETS],
             'evolution_icons': EVOLUTION_ICONS,
+            'mutation_curve': MUTATION_CURVE,
             'game_version': re.search(r'const VERSION = "([^"]+)"', (BASE_DIR / 'singletons' / 'progress_data.gd').read_text(encoding='utf-8')).group(1),
             'effects_with_text': len(effects_with_text),
             'effects_without_text': len(effects_without_text),
